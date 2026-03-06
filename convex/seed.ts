@@ -593,3 +593,41 @@ export const run = action({
     return { success: true, message: "Seed data inserted successfully." };
   },
 });
+
+// ── Remove duplicate rows (keeps the first by _creationTime) ───────────────
+
+export const deduplicate = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const tables = [
+      "services",
+      "membershipTiers",
+      "faqs",
+      "products",
+    ] as const;
+    let totalRemoved = 0;
+
+    for (const table of tables) {
+      const rows = await ctx.db.query(table).collect();
+      const seen = new Map<string, boolean>();
+      for (const row of rows) {
+        const key = (row as Record<string, unknown>).slug as string;
+        if (seen.has(key)) {
+          await ctx.db.delete(row._id);
+          totalRemoved++;
+        } else {
+          seen.set(key, true);
+        }
+      }
+    }
+    return { totalRemoved };
+  },
+});
+
+export const runDedup = action({
+  args: {},
+  handler: async (ctx) => {
+    const result = await ctx.runMutation(internal.seed.deduplicate);
+    return { success: true, ...result };
+  },
+});
