@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "skills": {
+    "aceternity-ui": {
+      "source": "secondsky/claude-skills",
+      "sourceType": "github",
+      "computedHash": "95e02ef102bc79c776fe76ecf20193392d85a1f10991583cfa033a61b205e3dd"
+    },
+    "animation-micro-interaction-pack": {
+      "source": "patricio0312rev/skills",
+      "sourceType": "github",
+      "computedHash": "6710c76c1eddba8f57f98957780a57eb1a5a0b027395b0e8f0eac9dba87e22c1"
+    },
+    "convex-quickstart": {
+      "source": "get-convex/convex-agent-plugins",
+      "sourceType": "github",
+      "computedHash": "2029638f4c73f2645721f6f737f56f14c945dc844d7c565f1d1ef687b217d82a"
+    },
+    "e-commerce-retail": {
+      "source": "dylantarre/animation-principles",
+      "sourceType": "github",
+      "computedHash": "30f664bb02feaf1c87d0d98485f4093c231a1530a5098cd5c05062a3d273c201"
+    },
+    "ecommerce-copywriting": {
+      "source": "vos91/agent-skills",
+      "sourceType": "github",
+      "computedHash": "54d4f175d33dcb44a39d3f8cc626f83a00f7764454263b32b2833ee0235d623c"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "25872a21881a950edc3db1f3329664d60405d539660ce05b3265db2de06a7dfd"
+    },
+    "mobile-ux-optimizer": {
+      "source": "erichowens/some_claude_skills",
+      "sourceType": "github",
+      "computedHash": "06e7301426d1360ec4986b03537500ca7b787b635c30ad623d59fc583e1c24a6"
+    },
+    "responsive-design-system": {
+      "source": "patricio0312rev/skills",
+      "sourceType": "github",
+      "computedHash": "0003ce8ee7d56d26b35e3c56f83369f26e156edef5735b54eb42db355b831466"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "941f6f4db0f79248f6480256cf1838ed19bc1a0d70f499bb756f491142625cb4"
+    },
+    "stripe-one-time-payment": {
+      "source": "eng0ai/eng0-template-skills",
+      "sourceType": "github",
+      "computedHash": "2f13dbb406a02b689ca1b6e1d23c5f14bad1e120c433f0af847e5989dc2c23e5"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "10eb4ec94577b79ae98c63ce3e7f35f8a6a06436a4011bff083b397de6960eeb"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "3ff06f0712886f7c2660d6746856c22d3127bd6568ddde29ddad8b72dbaaa226"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "d8e7d3afe37dcc8a97b99ffb5afdb4d0919ae0092ea8b68f44eb201f035e33ac"
+    }
+  }
+}
