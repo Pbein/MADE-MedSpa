@@ -91,7 +91,7 @@ export default function TestimonialSection() {
         >
           {/* Decorative quote mark */}
           <div
-            className="accent-text pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none opacity-15"
+            className="accent-text pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none opacity-5"
             style={{
               fontSize: "clamp(6rem, 4rem + 10vw, 12rem)",
               lineHeight: 1,
