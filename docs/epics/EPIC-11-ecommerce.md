@@ -85,7 +85,7 @@ See [DECISIONS.md](../DECISIONS.md) for the full architectural decision record.
 ---
 
 ### 11.3: Shopping Cart
-- [~] **In Progress**
+- [~] **In Progress** ("Add to Cart" button exists on product pages but NO cart state management, context, or cart page implemented; Convex `cartItems` table exists but not connected to UI)
 
 **As a** shopper,
 **I want** a persistent shopping cart,
@@ -114,11 +114,12 @@ See [DECISIONS.md](../DECISIONS.md) for the full architectural decision record.
 - Session storage fallback for guest carts
 - Cart merge logic: on Clerk sign-in event, merge session cart into Convex cart
 - Use optimistic updates for add/remove/quantity changes
+- **Current state:** "Add to Cart" button renders but no cart logic behind it
 
 ---
 
 ### 11.4: Checkout Flow with Stripe
-- [~] **In Progress**
+- [~] **In Progress** (API route at `/api/checkout` exists with Stripe Checkout Session creation; NO checkout page UI; needs Stripe keys for testing)
 
 **As a** shopper,
 **I want** to securely pay for my products,
@@ -149,7 +150,7 @@ See [DECISIONS.md](../DECISIONS.md) for the full architectural decision record.
 ---
 
 ### 11.5: Order Confirmation & Email
-- [~] **In Progress**
+- [~] **In Progress** (confirmation page at `/shop/checkout/success` exists; NO email service implemented)
 
 **As a** customer,
 **I want** to see my order confirmation and receive an email receipt,
@@ -200,7 +201,7 @@ See [DECISIONS.md](../DECISIONS.md) for the full architectural decision record.
 ---
 
 ### 11.7: Admin Product Management
-- [~] **In Progress** (admin UI built with full CRUD; needs image upload wiring)
+- [x] **Complete** (list, create, edit pages all wired to Convex mutations; search, filters, status toggles, delete all functional; image upload still needs wiring to Convex File Storage)
 
 **As an** admin,
 **I want** to manage the product catalog,
@@ -243,7 +244,7 @@ See [DECISIONS.md](../DECISIONS.md) for the full architectural decision record.
 ---
 
 ### 11.8: Admin Order Management
-- [~] **In Progress** (admin UI built with demo data; needs Convex order queries wiring)
+- [x] **Complete** (list page wired to `api.orders.list`; status filter, order detail expansion, status updates via `api.orders.updateStatus`, notes via `api.orders.updateNotes` all functional)
 
 **As an** admin,
 **I want** to view and manage orders,

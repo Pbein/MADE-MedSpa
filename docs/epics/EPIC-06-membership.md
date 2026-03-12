@@ -98,26 +98,26 @@ Build a 4-tier membership system with a multi-step signup flow, Stripe subscript
 ---
 
 ### 6.4: Member Dashboard
-- [x] **Complete**
+- [~] **In Progress** (UI built with layout and sections; uses PLACEHOLDER hardcoded data — not wired to Convex member/booking/order queries)
 
 **As a** member,
 **I want** a dashboard to view my membership details,
 **So that** I can manage my account and see my benefits.
 
 **Acceptance Criteria:**
-- [ ] Protected page at `/membership/dashboard`
-- [ ] Current tier and status displayed
-- [ ] Next billing date
-- [ ] Benefits summary for current tier
-- [ ] Recent bookings list
-- [ ] Order history (from e-commerce purchases)
-- [ ] Quick action buttons: Book Appointment, Browse Shop, Manage Subscription
-- [ ] Link to Stripe Customer Portal for billing management
+- [x] Protected page at `/membership/dashboard`
+- [~] Current tier and status displayed (placeholder data)
+- [ ] Next billing date (placeholder)
+- [~] Benefits summary for current tier (placeholder)
+- [ ] Recent bookings list (placeholder)
+- [ ] Order history (placeholder)
+- [x] Quick action buttons: Book Appointment, Browse Shop, Manage Subscription
+- [x] Link to Stripe Customer Portal for billing management
 
 **Implementation Notes:**
 - Gate behind Clerk authentication
-- Query Convex for member data, bookings, and orders
-- Use Convex query with user identity filter
+- Currently uses PLACEHOLDER_TIER and PLACEHOLDER_BOOKINGS hardcoded data
+- Needs wiring to Convex queries for real user membership, bookings, orders
 
 ---
 

@@ -99,7 +99,7 @@ Build a comprehensive admin dashboard for managing all aspects of the MADE Med S
 ---
 
 ### 10.5: Booking Management
-- [~] **In Progress** (list page wired to Convex `api.bookings.list`; status filter and search working; status update calls `api.bookings.updateStatus`)
+- [~] **In Progress ~80%** (list page wired to Convex `api.bookings.list`; status filter and search working; status update calls `api.bookings.updateStatus`; missing date range filter and notes)
 
 **As an** admin,
 **I want** to view and manage bookings,
@@ -120,7 +120,7 @@ Build a comprehensive admin dashboard for managing all aspects of the MADE Med S
 ---
 
 ### 10.6: Member Management
-- [~] **In Progress** (UI built with demo data; needs wiring to Convex `members` queries)
+- [~] **In Progress ~65%** (UI wired to Convex `api.members.listAll`, `api.membershipTiers.listAll`, `api.users.list`; filtering and search working; view-only — no mutations wired)
 
 **As an** admin,
 **I want** to view and manage members,
@@ -129,18 +129,19 @@ Build a comprehensive admin dashboard for managing all aspects of the MADE Med S
 **Acceptance Criteria:**
 - [x] Members list at `/admin/members` with data table layout
 - [x] Filter by tier and status UI
-- [ ] Wired to Convex member data (currently demo data)
-- [ ] Link to Stripe Customer for billing management
+- [x] Wired to Convex member data (listAll, tiers, users queries)
+- [x] Link to Stripe subscription view
 - [x] Search by name or email UI
+- [ ] Mutations for status/tier changes not wired (view-only)
 
 **Implementation Notes:**
-- Convex `members.listActive`, `members.listByStatus` queries exist
-- Need to wire UI to real queries
+- Convex `members.listAll`, `membershipTiers.listAll`, `users.list` queries wired
+- `members.updateStatus`, `members.updateTier` mutations exist but not called from UI
 
 ---
 
 ### 10.7: Contact Submission Management
-- [~] **In Progress** (list page wired to Convex `api.contactSubmissions.list`; expandable messages; mailto reply button)
+- [~] **In Progress ~85%** (list page wired to Convex `api.contactSubmissions.list`; expandable messages; mailto reply button; missing status tracking and delete)
 
 **As an** admin,
 **I want** to view and respond to contact form submissions,
