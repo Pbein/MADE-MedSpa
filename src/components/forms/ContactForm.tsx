@@ -149,7 +149,7 @@ export default function ContactForm() {
           />
           {errors.firstName && (
             <p
-              className="mt-2 text-[var(--color-burgundy)]"
+              className="mt-2 text-[var(--color-accent-text)]"
               style={{ fontSize: "var(--text-xs)" }}
             >
               {errors.firstName}
@@ -183,7 +183,7 @@ export default function ContactForm() {
           />
           {errors.lastName && (
             <p
-              className="mt-2 text-[var(--color-burgundy)]"
+              className="mt-2 text-[var(--color-accent-text)]"
               style={{ fontSize: "var(--text-xs)" }}
             >
               {errors.lastName}
@@ -218,7 +218,7 @@ export default function ContactForm() {
         />
         {errors.email && (
           <p
-            className="mt-2 text-[var(--color-burgundy)]"
+            className="mt-2 text-[var(--color-accent-text)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
             {errors.email}
@@ -276,7 +276,7 @@ export default function ContactForm() {
         />
         {errors.message && (
           <p
-            className="mt-2 text-[var(--color-burgundy)]"
+            className="mt-2 text-[var(--color-accent-text)]"
             style={{ fontSize: "var(--text-xs)" }}
           >
             {errors.message}
@@ -289,12 +289,12 @@ export default function ContactForm() {
         <div
           className="rounded-[var(--border-radius-sm)] border px-4 py-3"
           style={{
-            borderColor: "var(--color-burgundy)",
+            borderColor: "var(--color-accent-text)",
             backgroundColor: "rgba(122, 0, 0, 0.05)",
           }}
         >
           <p
-            className="text-[var(--color-burgundy)]"
+            className="text-[var(--color-accent-text)]"
             style={{ fontSize: "var(--text-sm)" }}
           >
             {submitError}

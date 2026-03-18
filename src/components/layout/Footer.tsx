@@ -75,7 +75,7 @@ export default function Footer() {
                   key={social}
                   href="#"
                   aria-label={social}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-stone-dark)]/30 text-xs text-[var(--color-stone)] transition-all hover:border-[var(--color-burgundy)] hover:text-[var(--color-ivory)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-stone-dark)]/30 text-xs text-[var(--color-stone)] transition-all hover:border-[var(--color-accent-text)] hover:text-[var(--color-ivory)]"
                   style={{
                     transitionDuration: "var(--duration-normal)",
                     transitionTimingFunction: "var(--ease-smooth)",
@@ -182,7 +182,7 @@ export default function Footer() {
                 placeholder="Your email"
                 aria-label="Email for newsletter"
                 disabled={status === "loading"}
-                className="flex-1 border-b border-[var(--color-stone-dark)]/30 bg-transparent px-0 py-2 text-sm text-[var(--color-ivory)] placeholder:text-[var(--color-stone-dark)] outline-none transition-colors focus:border-[var(--color-burgundy)] disabled:opacity-50"
+                className="flex-1 border-b border-[var(--color-stone-dark)]/30 bg-transparent px-0 py-2 text-sm text-[var(--color-ivory)] placeholder:text-[var(--color-stone-dark)] outline-none transition-colors focus:border-[var(--color-accent-text)] disabled:opacity-50"
                 style={{
                   transitionDuration: "var(--duration-normal)",
                 }}

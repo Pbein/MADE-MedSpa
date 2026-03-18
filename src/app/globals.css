@@ -5,18 +5,21 @@
    ============================================ */
 
 :root {
-  /* --- Colors: Warm Palette --- */
-  --color-ivory: #FAF7F4;
-  --color-cream: #F5F0EB;
-  --color-white: #EEEEEE;
-  --color-burgundy: #7A0000;
-  --color-burgundy-light: #9A1A1A;
-  --color-burgundy-dark: #5C0000;
-  --color-brown: #574944;
-  --color-brown-dark: #3A2E2A;
-  --color-chocolate: #2C2220;
-  --color-stone: #D2C8BE;
-  --color-stone-dark: #B8ACA2;
+  /* --- Colors: MADE Warm Brown Palette --- */
+  --color-ivory: #F7F3EF;
+  --color-cream: #F0EAE3;
+  --color-white: #EDE8E3;
+  --color-burgundy: #C9A96E;        /* Accent — swappable via theme switcher */
+  --color-burgundy-light: #D4B87E;  /* Accent light */
+  --color-burgundy-dark: #B8955A;   /* Accent dark */
+  --color-accent-text: #816c46;     /* Darkened accent for text on light bg */
+  --color-accent-contrast: #2D1E17; /* Text on accent bg (buttons) */
+  --color-brown: #796254;           /* Roman Coffee */
+  --color-brown-dark: #523F31;      /* Judge Gray */
+  --color-chocolate: #2D1E17;       /* Oil */
+  --color-stone: #C4B8AD;           /* Derived from Pale Oyster */
+  --color-stone-dark: #9D8A7C;      /* Pale Oyster */
+  --accent-font-style: italic;      /* Toggled by mood switcher */
 
   /* --- Typography --- */
   --font-headline: var(--font-playfair), "Playfair Display", Georgia, serif;
@@ -149,7 +152,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-burgundy);
+  color: var(--color-accent-text);
 }
 
 /* --- Selection --- */
@@ -179,7 +182,7 @@ a:hover {
 /* --- Utility Classes --- */
 .accent-text {
   font-family: var(--font-accent);
-  font-style: italic;
+  font-style: var(--accent-font-style);
   font-weight: 400;
 }
 
@@ -216,12 +219,12 @@ a:hover {
 
 .btn-primary {
   background-color: var(--color-burgundy);
-  color: var(--color-ivory);
+  color: var(--color-accent-contrast);
 }
 
 .btn-primary:hover {
   background-color: var(--color-burgundy-light);
-  color: var(--color-ivory);
+  color: var(--color-accent-contrast);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -233,8 +236,8 @@ a:hover {
 }
 
 .btn-outline:hover {
-  border-color: var(--color-burgundy);
-  color: var(--color-burgundy);
+  border-color: var(--color-accent-text);
+  color: var(--color-accent-text);
 }
 
 /* Secondary — black outlined (from spec) */
@@ -252,7 +255,7 @@ a:hover {
 /* Accent — burgundy CTA */
 .btn-accent {
   background-color: var(--color-burgundy);
-  color: var(--color-ivory);
+  color: var(--color-accent-contrast);
   border: 1px solid var(--color-burgundy);
 }
 

@@ -40,7 +40,7 @@ export default function AboutTeaser() {
               }}
             >
               Where{" "}
-              <span className="accent-text text-[var(--color-burgundy)]">
+              <span className="accent-text text-[var(--color-accent-text)]">
                 Science
               </span>{" "}
               Meets Artistry

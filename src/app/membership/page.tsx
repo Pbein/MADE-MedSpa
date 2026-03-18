@@ -4,7 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 /* -- Framer Motion helpers -- */
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -108,7 +108,7 @@ function FaqItem({
         <motion.span
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.3, ease }}
-          className="flex h-8 w-8 shrink-0 items-center justify-center text-xl text-[var(--color-burgundy)]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center text-xl text-[var(--color-accent-text)]"
         >
           +
         </motion.span>
@@ -131,6 +131,180 @@ function FaqItem({
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* -- Comparison Table Component -- */
+function ComparisonTable({
+  tiers,
+}: {
+  tiers: {
+    _id: string;
+    name: string;
+    monthlyPrice: number;
+    benefits: string[];
+  }[];
+}) {
+  const allBenefits = useMemo(() => {
+    const seen = new Set<string>();
+    const ordered: string[] = [];
+    for (const tier of tiers) {
+      for (const b of tier.benefits) {
+        if (!seen.has(b)) {
+          seen.add(b);
+          ordered.push(b);
+        }
+      }
+    }
+    return ordered;
+  }, [tiers]);
+
+  return (
+    <section
+      className="px-6 lg:px-10"
+      style={{
+        backgroundColor: "var(--color-ivory)",
+        paddingTop: "var(--space-section)",
+        paddingBottom: "var(--space-section)",
+      }}
+    >
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+        className="mx-auto max-w-[var(--max-width)]"
+      >
+        <motion.div variants={revealUp} className="mb-16 text-center">
+          <div className="editorial-spacing mb-4 text-[var(--color-stone-dark)]">
+            Compare
+          </div>
+          <h2
+            className="headline-text"
+            style={{
+              fontSize: "var(--text-4xl)",
+              color: "var(--color-chocolate)",
+            }}
+          >
+            Side by <span className="accent-text">Side</span>
+          </h2>
+        </motion.div>
+
+        <motion.div
+          variants={revealUp}
+          className="overflow-x-auto"
+          style={{
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <table
+            className="w-full border-collapse"
+            style={{ minWidth: "600px" }}
+          >
+            <thead>
+              <tr>
+                <th
+                  className="text-left"
+                  style={{
+                    padding: "var(--space-md) var(--space-lg)",
+                    borderBottom: "2px solid var(--color-stone)",
+                    color: "var(--color-brown)",
+                    fontSize: "var(--text-sm)",
+                    fontWeight: 400,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Benefits
+                </th>
+                {tiers.map((tier) => (
+                  <th
+                    key={tier._id}
+                    className="text-center"
+                    style={{
+                      padding: "var(--space-md) var(--space-lg)",
+                      borderBottom: "2px solid var(--color-stone)",
+                    }}
+                  >
+                    <div
+                      className="headline-text"
+                      style={{
+                        fontSize: "var(--text-xl)",
+                        color: "var(--color-chocolate)",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {tier.name}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "var(--text-sm)",
+                        color: "var(--color-accent-text)",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {formatPrice(tier.monthlyPrice)}
+                      <span
+                        style={{
+                          color: "var(--color-stone-dark)",
+                          fontWeight: 400,
+                        }}
+                      >
+                        /mo
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {allBenefits.map((benefit, i) => (
+                <tr
+                  key={benefit}
+                  style={{
+                    backgroundColor:
+                      i % 2 === 0
+                        ? "transparent"
+                        : "var(--color-cream)",
+                  }}
+                >
+                  <td
+                    style={{
+                      padding: "var(--space-sm) var(--space-lg)",
+                      color: "var(--color-brown)",
+                      fontSize: "var(--text-sm)",
+                      lineHeight: 1.6,
+                      borderBottom: "1px solid var(--color-stone)",
+                    }}
+                  >
+                    {benefit}
+                  </td>
+                  {tiers.map((tier) => {
+                    const included = tier.benefits.includes(benefit);
+                    return (
+                      <td
+                        key={tier._id}
+                        className="text-center"
+                        style={{
+                          padding: "var(--space-sm) var(--space-lg)",
+                          borderBottom: "1px solid var(--color-stone)",
+                          fontSize: "var(--text-lg)",
+                          color: included
+                            ? "var(--color-accent-text)"
+                            : "var(--color-stone)",
+                        }}
+                      >
+                        {included ? "\u2713" : "\u2014"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
+      </motion.div>
+    </section>
   );
 }
 
@@ -247,7 +421,7 @@ export default function MembershipPage() {
                       backgroundColor: "var(--color-ivory)",
                       borderRadius: "var(--border-radius-sm)",
                       border: isPopular
-                        ? "2px solid var(--color-burgundy)"
+                        ? "2px solid var(--color-accent-text)"
                         : "1px solid var(--color-stone)",
                     }}
                   >
@@ -282,7 +456,7 @@ export default function MembershipPage() {
                           className="headline-text"
                           style={{
                             fontSize: "var(--text-4xl)",
-                            color: "var(--color-burgundy)",
+                            color: "var(--color-accent-text)",
                           }}
                         >
                           {formatPrice(tier.monthlyPrice)}
@@ -310,7 +484,7 @@ export default function MembershipPage() {
                             style={{ fontSize: "var(--text-sm)" }}
                           >
                             <span
-                              className="mt-0.5 shrink-0 text-[var(--color-burgundy)]"
+                              className="mt-0.5 shrink-0 text-[var(--color-accent-text)]"
                               style={{ fontSize: "var(--text-sm)" }}
                             >
                               &#10003;
@@ -338,6 +512,11 @@ export default function MembershipPage() {
           )}
         </motion.div>
       </section>
+
+      {/* COMPARISON TABLE */}
+      {tiers && tiers.length > 0 && (
+        <ComparisonTable tiers={tiers} />
+      )}
 
       {/* HOW IT WORKS */}
       <section

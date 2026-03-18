@@ -259,7 +259,7 @@ export default function Navigation() {
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="headline-text block text-2xl text-[var(--color-chocolate)] transition-colors hover:text-[var(--color-burgundy)]"
+                      className="headline-text block text-2xl text-[var(--color-chocolate)] transition-colors hover:text-[var(--color-accent-text)]"
                     >
                       {link.label}
                     </Link>

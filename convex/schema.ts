@@ -99,6 +99,7 @@ export default defineSchema({
     ),
     reminderSentAt: v.optional(v.number()),
     reviewRequestSentAt: v.optional(v.number()),
+    notes: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_calBookingId", ["calBookingId"])
@@ -113,6 +114,7 @@ export default defineSchema({
     phone: v.optional(v.string()),
     message: v.string(),
     source: v.string(),
+    status: v.optional(v.union(v.literal("new"), v.literal("read"), v.literal("replied"))),
     hermesSyncedAt: v.optional(v.number()),
     createdAt: v.number(),
   }).index("by_email", ["email"]),

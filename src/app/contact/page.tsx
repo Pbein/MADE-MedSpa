@@ -175,7 +175,7 @@ export default function ContactPage() {
               <div className="flex flex-col gap-3">
                 <a
                   href={contactInfo.phoneHref}
-                  className="inline-flex items-center gap-3 text-[var(--color-brown)] transition-colors hover:text-[var(--color-burgundy)]"
+                  className="inline-flex items-center gap-3 text-[var(--color-brown)] transition-colors hover:text-[var(--color-accent-text)]"
                   style={{
                     fontSize: "var(--text-base)",
                     transitionDuration: "var(--duration-fast)",
@@ -191,7 +191,7 @@ export default function ContactPage() {
                 </a>
                 <a
                   href={contactInfo.emailHref}
-                  className="inline-flex items-center gap-3 text-[var(--color-brown)] transition-colors hover:text-[var(--color-burgundy)]"
+                  className="inline-flex items-center gap-3 text-[var(--color-brown)] transition-colors hover:text-[var(--color-accent-text)]"
                   style={{
                     fontSize: "var(--text-base)",
                     transitionDuration: "var(--duration-fast)",
@@ -267,7 +267,7 @@ export default function ContactPage() {
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border text-xs text-[var(--color-brown)] transition-all hover:border-[var(--color-burgundy)] hover:text-[var(--color-burgundy)]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border text-xs text-[var(--color-brown)] transition-all hover:border-[var(--color-accent-text)] hover:text-[var(--color-accent-text)]"
                     style={{
                       borderColor: "var(--color-stone)",
                       transitionDuration: "var(--duration-normal)",

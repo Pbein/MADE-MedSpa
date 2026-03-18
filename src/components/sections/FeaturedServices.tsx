@@ -64,7 +64,7 @@ export default function FeaturedServices() {
             }}
           >
             Signature{" "}
-            <span className="accent-text text-[var(--color-burgundy)]">
+            <span className="accent-text text-[var(--color-accent-text)]">
               Treatments
             </span>
           </h2>
@@ -131,7 +131,7 @@ export default function FeaturedServices() {
                       >
                         {service.shortDescription}
                       </p>
-                      <span className="btn-text text-[var(--color-burgundy)]">
+                      <span className="btn-text text-[var(--color-accent-text)]">
                         <span
                           className="editorial-spacing"
                           style={{ fontSize: "0.65rem" }}

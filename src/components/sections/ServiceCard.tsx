@@ -55,7 +55,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             className="editorial-spacing mb-3 inline-block"
             style={{
               fontSize: "var(--text-xs)",
-              color: "var(--color-burgundy)",
+              color: "var(--color-accent-text)",
             }}
           >
             {service.category}

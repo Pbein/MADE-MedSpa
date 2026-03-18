@@ -120,7 +120,7 @@ export default function FAQPage() {
           Frequently{" "}
           <span
             className="accent-text"
-            style={{ color: "var(--color-burgundy)" }}
+            style={{ color: "var(--color-accent-text)" }}
           >
             Asked
           </span>{" "}
@@ -210,7 +210,7 @@ export default function FAQPage() {
                   border: "none",
                   cursor: "pointer",
                   color: isActive
-                    ? "var(--color-burgundy)"
+                    ? "var(--color-accent-text)"
                     : "var(--color-brown)",
                   fontSize: "var(--text-xs)",
                 }}

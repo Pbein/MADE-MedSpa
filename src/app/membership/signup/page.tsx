@@ -145,7 +145,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
                   fontSize: "var(--text-xs, 0.75rem)",
                   color:
                     isActive
-                      ? "var(--color-burgundy)"
+                      ? "var(--color-accent-text)"
                       : "var(--color-stone-dark)",
                   fontWeight: isActive ? 600 : 400,
                   maxWidth: "5rem",
@@ -202,7 +202,7 @@ function TierConfirmation({
       <div className="flex items-center justify-center py-16">
         <div
           className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
-          style={{ borderColor: "var(--color-burgundy)", borderTopColor: "transparent" }}
+          style={{ borderColor: "var(--color-accent-text)", borderTopColor: "transparent" }}
         />
       </div>
     );
@@ -272,7 +272,7 @@ function TierConfirmation({
             className="headline-text"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-burgundy)",
+              color: "var(--color-accent-text)",
             }}
           >
             ${tier.monthlyPrice}
@@ -493,7 +493,7 @@ function PaymentStep({
               className="headline-text"
               style={{
                 fontSize: "var(--text-xl)",
-                color: "var(--color-burgundy)",
+                color: "var(--color-accent-text)",
               }}
             >
               ${tier.monthlyPrice}/mo
@@ -785,7 +785,7 @@ export default function MembershipSignupPage() {
           <div
             className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
             style={{
-              borderColor: "var(--color-burgundy)",
+              borderColor: "var(--color-accent-text)",
               borderTopColor: "transparent",
             }}
           />

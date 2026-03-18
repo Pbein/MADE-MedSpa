@@ -166,7 +166,7 @@ export default function AdminMembersPage() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "9999px",
-              border: statusFilter === pill.value ? "2px solid var(--color-burgundy)" : "1px solid var(--color-stone)",
+              border: statusFilter === pill.value ? "2px solid var(--color-accent-text)" : "1px solid var(--color-stone)",
               backgroundColor: statusFilter === pill.value ? "var(--color-burgundy)" : "#fff",
               color: statusFilter === pill.value ? "#fff" : "var(--color-stone-dark)",
               fontSize: "0.8rem",
@@ -188,7 +188,7 @@ export default function AdminMembersPage() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "9999px",
-              border: tierFilter === pill.value ? "2px solid var(--color-burgundy)" : "1px solid var(--color-stone)",
+              border: tierFilter === pill.value ? "2px solid var(--color-accent-text)" : "1px solid var(--color-stone)",
               backgroundColor: tierFilter === pill.value ? "var(--color-burgundy)" : "#fff",
               color: tierFilter === pill.value ? "#fff" : "var(--color-stone-dark)",
               fontSize: "0.8rem",
@@ -287,7 +287,7 @@ export default function AdminMembersPage() {
                             border: "1px solid var(--color-stone)",
                             borderRadius: "0.375rem",
                             backgroundColor: "transparent",
-                            color: "var(--color-burgundy)",
+                            color: "var(--color-accent-text)",
                             fontSize: "0.8rem",
                             cursor: "pointer",
                             textDecoration: "none",

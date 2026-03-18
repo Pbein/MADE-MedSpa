@@ -1,10 +1,10 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 
 /* ── Framer Motion helpers ─────────────────────────── */
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -19,72 +19,12 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-/* ── Placeholder data ──────────────────────────────── */
-const PLACEHOLDER_TIER = {
-  name: "Radiance",
-  price: 19900,
-  status: "Active" as const,
-  nextBillingDate: "April 1, 2026",
-  benefits: [
-    "One signature facial per month",
-    "15% off all additional services",
-    "10% off retail products",
-    "Priority booking access",
-    "Complimentary skincare consultation",
-    "Birthday month bonus treatment",
-  ],
+/* ── Fallback data (shown when no membership exists) ─ */
+const FALLBACK_TIER = {
+  name: "No Active Membership",
+  monthlyPrice: 0,
+  benefits: [] as string[],
 };
-
-const PLACEHOLDER_BOOKINGS = [
-  {
-    id: 1,
-    date: "Mar 12, 2026",
-    service: "HydraFacial Signature",
-    status: "Upcoming",
-  },
-  {
-    id: 2,
-    date: "Feb 14, 2026",
-    service: "Botox - Forehead",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    date: "Jan 20, 2026",
-    service: "Chemical Peel - Light",
-    status: "Completed",
-  },
-  {
-    id: 4,
-    date: "Dec 18, 2025",
-    service: "Signature Facial",
-    status: "Completed",
-  },
-];
-
-const PLACEHOLDER_ORDERS = [
-  {
-    id: "ORD-4821",
-    date: "Feb 28, 2026",
-    items: "SkinCeuticals CE Ferulic, Moisturizer",
-    total: 18500,
-    status: "Delivered",
-  },
-  {
-    id: "ORD-4790",
-    date: "Jan 15, 2026",
-    items: "EltaMD UV Clear SPF 46",
-    total: 3900,
-    status: "Delivered",
-  },
-  {
-    id: "ORD-4756",
-    date: "Dec 22, 2025",
-    items: "Gift Set - Holiday Glow Collection",
-    total: 12500,
-    status: "Delivered",
-  },
-];
 
 /* ── Status badge colors ───────────────────────────── */
 function statusColor(status: string) {
@@ -94,11 +34,18 @@ function statusColor(status: string) {
     case "delivered":
       return { bg: "#e8f5e9", color: "#2e7d32" };
     case "upcoming":
+    case "confirmed":
       return { bg: "#e3f2fd", color: "#1565c0" };
+    case "past_due":
     case "past due":
       return { bg: "#fff8e1", color: "#f57f17" };
     case "cancelled":
+    case "expired":
+    case "no_show":
       return { bg: "#fce4ec", color: "#c62828" };
+    case "pending":
+    case "rescheduled":
+      return { bg: "#f3e5f5", color: "#7b1fa2" };
     default:
       return { bg: "#f5f5f5", color: "#616161" };
   }
@@ -108,11 +55,62 @@ function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
+function formatDate(timestamp: number) {
+  return new Date(timestamp).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function displayStatus(status: string) {
+  return status
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 /* ── Component ─────────────────────────────────────── */
 export default function MemberDashboardPage() {
-  const { user, isLoaded } = useUser();
+  const { user: clerkUser, isLoaded } = useUser();
 
-  if (!isLoaded) {
+  // Convex queries
+  const convexUser = useQuery(
+    api.users.getByAuthId,
+    clerkUser?.id ? { authId: clerkUser.id } : "skip"
+  );
+
+  const member = useQuery(
+    api.members.getByUserId,
+    convexUser?._id ? { userId: convexUser._id } : "skip"
+  );
+
+  const allTiers = useQuery(api.membershipTiers.listAll);
+
+  const bookings = useQuery(
+    api.bookings.listByUserId,
+    convexUser?._id ? { userId: convexUser._id } : "skip"
+  );
+
+  const orders = useQuery(
+    api.orders.listByUser,
+    convexUser?._id ? { userId: convexUser._id } : "skip"
+  );
+
+  // Derive tier from member record
+  const tier =
+    member && allTiers
+      ? allTiers.find((t) => t._id === member.tierId)
+      : undefined;
+
+  const activeTier = tier || FALLBACK_TIER;
+  const memberStatus = member?.status ?? "none";
+  const hasMembership = !!member && !!tier;
+
+  // Latest 4 bookings, latest 3 orders
+  const recentBookings = bookings?.slice(0, 4) ?? [];
+  const recentOrders = orders?.slice(0, 3) ?? [];
+
+  if (!isLoaded || (clerkUser && convexUser === undefined)) {
     return (
       <div style={styles.loadingWrap}>
         <motion.div
@@ -126,10 +124,10 @@ export default function MemberDashboardPage() {
     );
   }
 
-  const firstName = user?.firstName || "Member";
-  const email = user?.primaryEmailAddress?.emailAddress || "";
-  const fullName = user?.fullName || firstName;
-  const avatarUrl = user?.imageUrl;
+  const firstName = clerkUser?.firstName || "Member";
+  const email = clerkUser?.primaryEmailAddress?.emailAddress || "";
+  const fullName = clerkUser?.fullName || firstName;
+  const avatarUrl = clerkUser?.imageUrl;
 
   return (
     <main style={styles.page}>
@@ -158,15 +156,17 @@ export default function MemberDashboardPage() {
               </p>
             </div>
           </div>
-          <div
-            style={{
-              ...styles.statusBadge,
-              backgroundColor: statusColor(PLACEHOLDER_TIER.status).bg,
-              color: statusColor(PLACEHOLDER_TIER.status).color,
-            }}
-          >
-            {PLACEHOLDER_TIER.status}
-          </div>
+          {hasMembership && (
+            <div
+              style={{
+                ...styles.statusBadge,
+                backgroundColor: statusColor(memberStatus).bg,
+                color: statusColor(memberStatus).color,
+              }}
+            >
+              {displayStatus(memberStatus)}
+            </div>
+          )}
         </motion.div>
       </motion.section>
 
@@ -182,11 +182,11 @@ export default function MemberDashboardPage() {
           <div style={styles.membershipCardHeader}>
             <div>
               <p style={styles.cardLabel}>Current Membership</p>
-              <h2 style={styles.tierName}>{PLACEHOLDER_TIER.name}</h2>
+              <h2 style={styles.tierName}>{activeTier.name}</h2>
             </div>
             <div style={styles.priceBlock}>
               <span style={styles.priceAmount}>
-                {formatPrice(PLACEHOLDER_TIER.price)}
+                {formatPrice(activeTier.monthlyPrice)}
               </span>
               <span style={styles.priceInterval}>/month</span>
             </div>
@@ -198,32 +198,46 @@ export default function MemberDashboardPage() {
               <span
                 style={{
                   ...styles.statusBadgeSmall,
-                  backgroundColor: statusColor(PLACEHOLDER_TIER.status).bg,
-                  color: statusColor(PLACEHOLDER_TIER.status).color,
+                  backgroundColor: statusColor(memberStatus).bg,
+                  color: statusColor(memberStatus).color,
                 }}
               >
-                {PLACEHOLDER_TIER.status}
+                {hasMembership ? displayStatus(memberStatus) : "None"}
               </span>
             </div>
             <div style={styles.metaItem}>
               <span style={styles.metaLabel}>Next Billing</span>
               <span style={styles.metaValue}>
-                {PLACEHOLDER_TIER.nextBillingDate}
+                {member?.nextBillingDate
+                  ? formatDate(member.nextBillingDate)
+                  : "N/A"}
               </span>
             </div>
           </div>
 
           <div style={styles.membershipActions}>
-            <button className="btn btn-primary" style={styles.manageBtn}>
-              Manage Subscription
-            </button>
-            <Link
-              href="/membership"
-              className="btn btn-outline"
-              style={styles.changeTierLink}
-            >
-              Change Tier
-            </Link>
+            {hasMembership ? (
+              <>
+                <button className="btn btn-primary" style={styles.manageBtn}>
+                  Manage Subscription
+                </button>
+                <Link
+                  href="/membership"
+                  className="btn btn-outline"
+                  style={styles.changeTierLink}
+                >
+                  Change Tier
+                </Link>
+              </>
+            ) : (
+              <Link
+                href="/membership"
+                className="btn btn-primary"
+                style={styles.manageBtn}
+              >
+                Explore Memberships
+              </Link>
+            )}
           </div>
         </motion.div>
 
@@ -253,16 +267,25 @@ export default function MemberDashboardPage() {
         <motion.div style={styles.card} variants={revealUp}>
           <h3 style={styles.cardTitle}>Your Benefits</h3>
           <p style={styles.cardSubtitle}>
-            Included with your {PLACEHOLDER_TIER.name} membership
+            {hasMembership
+              ? `Included with your ${activeTier.name} membership`
+              : "Join a membership to unlock exclusive benefits"}
           </p>
-          <ul style={styles.benefitsList}>
-            {PLACEHOLDER_TIER.benefits.map((benefit, i) => (
-              <li key={i} style={styles.benefitItem}>
-                <span style={styles.checkmark}>&#10003;</span>
-                {benefit}
-              </li>
-            ))}
-          </ul>
+          {activeTier.benefits.length > 0 ? (
+            <ul style={styles.benefitsList}>
+              {activeTier.benefits.map((benefit, i) => (
+                <li key={i} style={styles.benefitItem}>
+                  <span style={styles.checkmark}>&#10003;</span>
+                  {benefit}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p style={styles.emptyState}>
+              No benefits to display. Explore our membership tiers to get
+              started.
+            </p>
+          )}
         </motion.div>
 
         {/* ── Recent Bookings ─────────────────── */}
@@ -273,36 +296,42 @@ export default function MemberDashboardPage() {
               View All &rarr;
             </Link>
           </div>
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Date</th>
-                  <th style={styles.th}>Service</th>
-                  <th style={styles.th}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PLACEHOLDER_BOOKINGS.map((b) => (
-                  <tr key={b.id}>
-                    <td style={styles.td}>{b.date}</td>
-                    <td style={styles.td}>{b.service}</td>
-                    <td style={styles.td}>
-                      <span
-                        style={{
-                          ...styles.statusBadgeSmall,
-                          backgroundColor: statusColor(b.status).bg,
-                          color: statusColor(b.status).color,
-                        }}
-                      >
-                        {b.status}
-                      </span>
-                    </td>
+          {recentBookings.length > 0 ? (
+            <div style={styles.tableWrap}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Date</th>
+                    <th style={styles.th}>Guest</th>
+                    <th style={styles.th}>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentBookings.map((b) => (
+                    <tr key={b._id}>
+                      <td style={styles.td}>{formatDate(b.startTime)}</td>
+                      <td style={styles.td}>{b.guestName}</td>
+                      <td style={styles.td}>
+                        <span
+                          style={{
+                            ...styles.statusBadgeSmall,
+                            backgroundColor: statusColor(b.status).bg,
+                            color: statusColor(b.status).color,
+                          }}
+                        >
+                          {displayStatus(b.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p style={styles.emptyState}>
+              No bookings yet. Book your first appointment to get started.
+            </p>
+          )}
         </motion.div>
 
         {/* ── Order History ───────────────────── */}
@@ -313,40 +342,50 @@ export default function MemberDashboardPage() {
               View All &rarr;
             </Link>
           </div>
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Order #</th>
-                  <th style={styles.th}>Date</th>
-                  <th style={styles.th}>Items</th>
-                  <th style={styles.th}>Total</th>
-                  <th style={styles.th}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PLACEHOLDER_ORDERS.map((o) => (
-                  <tr key={o.id}>
-                    <td style={{ ...styles.td, fontWeight: 600 }}>{o.id}</td>
-                    <td style={styles.td}>{o.date}</td>
-                    <td style={styles.td}>{o.items}</td>
-                    <td style={styles.td}>{formatPrice(o.total)}</td>
-                    <td style={styles.td}>
-                      <span
-                        style={{
-                          ...styles.statusBadgeSmall,
-                          backgroundColor: statusColor(o.status).bg,
-                          color: statusColor(o.status).color,
-                        }}
-                      >
-                        {o.status}
-                      </span>
-                    </td>
+          {recentOrders.length > 0 ? (
+            <div style={styles.tableWrap}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Order #</th>
+                    <th style={styles.th}>Date</th>
+                    <th style={styles.th}>Items</th>
+                    <th style={styles.th}>Total</th>
+                    <th style={styles.th}>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentOrders.map((o) => (
+                    <tr key={o._id}>
+                      <td style={{ ...styles.td, fontWeight: 600 }}>
+                        {o.orderNumber}
+                      </td>
+                      <td style={styles.td}>{formatDate(o.createdAt)}</td>
+                      <td style={styles.td}>
+                        {o.items.map((i) => i.productName).join(", ")}
+                      </td>
+                      <td style={styles.td}>{formatPrice(o.total)}</td>
+                      <td style={styles.td}>
+                        <span
+                          style={{
+                            ...styles.statusBadgeSmall,
+                            backgroundColor: statusColor(o.status).bg,
+                            color: statusColor(o.status).color,
+                          }}
+                        >
+                          {displayStatus(o.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p style={styles.emptyState}>
+              No orders yet. Visit our shop to browse products.
+            </p>
+          )}
         </motion.div>
 
         {/* ── Account Section ─────────────────── */}
@@ -670,6 +709,16 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: "var(--color-cream, #faf7f2)",
     borderRadius: "50%",
     flexShrink: 0,
+  },
+
+  /* Empty state */
+  emptyState: {
+    fontFamily: "var(--font-body, sans-serif)",
+    fontSize: 14,
+    color: "var(--color-brown, #7a6552)",
+    fontStyle: "italic" as const,
+    padding: "20px 0",
+    margin: 0,
   },
 
   /* Table */

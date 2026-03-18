@@ -214,7 +214,7 @@ function BookingContent() {
                       }}
                     >
                       <div
-                        className="editorial-spacing mb-3 text-[var(--color-burgundy)]"
+                        className="editorial-spacing mb-3 text-[var(--color-accent-text)]"
                         style={{ fontSize: "var(--text-xs)" }}
                       >
                         {service.category}
@@ -242,7 +242,7 @@ function BookingContent() {
                       </p>
                       <div className="flex items-center justify-between">
                         <span
-                          className="accent-text text-[var(--color-burgundy)]"
+                          className="accent-text text-[var(--color-accent-text)]"
                           style={{ fontSize: "var(--text-lg)" }}
                         >
                           ${service.priceRange || "Varies"}
@@ -313,7 +313,7 @@ function BookingContent() {
                 className="mb-8 flex items-center justify-center gap-6"
               >
                 <span
-                  className="accent-text text-[var(--color-burgundy)]"
+                  className="accent-text text-[var(--color-accent-text)]"
                   style={{ fontSize: "var(--text-xl)" }}
                 >
                   ${selectedService.priceRange || "Varies"}
@@ -358,7 +358,7 @@ function BookingContent() {
                 }}
               >
                 <span
-                  className="headline-text text-[var(--color-burgundy)]"
+                  className="headline-text text-[var(--color-accent-text)]"
                   style={{ fontSize: "var(--text-2xl)" }}
                 >
                   C
@@ -425,7 +425,7 @@ function BookingContent() {
               <div className="mt-6 text-center">
                 <Link
                   href="/booking"
-                  className="text-[var(--color-burgundy)] transition-colors hover:text-[var(--color-chocolate)]"
+                  className="text-[var(--color-accent-text)] transition-colors hover:text-[var(--color-chocolate)]"
                   style={{
                     fontSize: "var(--text-sm)",
                     textDecoration: "underline",

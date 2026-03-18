@@ -165,7 +165,7 @@ export default function AdminEditProductPage({
         </p>
         <Link
           href="/admin/products"
-          style={{ color: "#722F37", textDecoration: "none", fontWeight: 500 }}
+          style={{ color: "var(--color-accent-text)", textDecoration: "none", fontWeight: 500 }}
         >
           Back to Products
         </Link>
@@ -305,7 +305,7 @@ export default function AdminEditProductPage({
             id="featured"
             checked={isFeatured}
             onChange={(e) => setIsFeatured(e.target.checked)}
-            style={{ width: 18, height: 18, accentColor: "#722F37" }}
+            style={{ width: 18, height: 18, accentColor: "var(--color-burgundy)" }}
           />
           <label htmlFor="featured" style={{ fontSize: "0.875rem", fontWeight: 500, color: "#1a1a1a", cursor: "pointer" }}>
             Featured product
@@ -331,7 +331,7 @@ export default function AdminEditProductPage({
             disabled={submitting}
             style={{
               padding: "0.65rem 1.5rem",
-              backgroundColor: submitting ? "#a8a29e" : "#722F37",
+              backgroundColor: submitting ? "#a8a29e" : "var(--color-burgundy)",
               color: "#fff",
               border: "none",
               borderRadius: "0.5rem",

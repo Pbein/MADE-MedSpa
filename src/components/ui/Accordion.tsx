@@ -55,7 +55,7 @@ export default function Accordion({ items }: AccordionProps) {
                 className="flex-shrink-0"
                 style={{
                   fontSize: "var(--text-2xl)",
-                  color: "var(--color-burgundy)",
+                  color: "var(--color-accent-text)",
                   lineHeight: 1,
                   fontWeight: 300,
                 }}

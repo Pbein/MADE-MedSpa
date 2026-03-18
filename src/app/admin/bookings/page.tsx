@@ -27,9 +27,15 @@ const STATUS_TABS: { label: string; value: StatusTab }[] = [
 export default function AdminBookingsPage() {
   const bookings = useQuery(api.bookings.list);
   const updateStatus = useMutation(api.bookings.updateStatus);
+  const updateNotes = useMutation(api.bookings.updateNotes);
 
   const [statusFilter, setStatusFilter] = useState<StatusTab>("all");
   const [search, setSearch] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [notesMap, setNotesMap] = useState<Record<string, string>>({});
+  const [savingNotes, setSavingNotes] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     if (!bookings) return [];
@@ -48,13 +54,42 @@ export default function AdminBookingsPage() {
       list = list.filter((b) => b.status === statusFilter);
     }
 
+    if (dateFrom) {
+      const fromTs = new Date(dateFrom).getTime();
+      list = list.filter((b) => b.startTime >= fromTs);
+    }
+
+    if (dateTo) {
+      const toTs = new Date(dateTo).getTime() + 86400000; // end of day
+      list = list.filter((b) => b.startTime < toTs);
+    }
+
     return list;
-  }, [bookings, search, statusFilter]);
+  }, [bookings, search, statusFilter, dateFrom, dateTo]);
 
   async function handleUpdateStatus(id: Id<"bookings">, status: "completed" | "no_show" | "cancelled") {
     const labels: Record<string, string> = { completed: "Completed", no_show: "No-Show", cancelled: "Cancelled" };
     if (!window.confirm(`Mark this booking as ${labels[status]}?`)) return;
     await updateStatus({ id, status });
+  }
+
+  function getNotesValue(bookingId: string, existingNotes?: string): string {
+    if (bookingId in notesMap) return notesMap[bookingId];
+    return existingNotes ?? "";
+  }
+
+  async function handleSaveNotes(id: Id<"bookings">, bookingId: string) {
+    const notes = notesMap[bookingId];
+    if (notes === undefined) return;
+    setSavingNotes(bookingId);
+    await updateNotes({ id, notes });
+    // Remove from local map since it's saved
+    setNotesMap((prev) => {
+      const next = { ...prev };
+      delete next[bookingId];
+      return next;
+    });
+    setSavingNotes(null);
   }
 
   function formatDate(ts: number) {
@@ -77,23 +112,68 @@ export default function AdminBookingsPage() {
         </span>
       </div>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search by name or email..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{
-          width: "100%",
-          maxWidth: "24rem",
-          padding: "0.6rem 1rem",
-          border: "1px solid #d6d3d1",
-          borderRadius: "0.5rem",
-          fontSize: "0.875rem",
-          marginBottom: "1rem",
-          boxSizing: "border-box",
-        }}
-      />
+      {/* Search + Date Filters */}
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap", alignItems: "flex-end" }}>
+        <div>
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              width: "100%",
+              maxWidth: "24rem",
+              padding: "0.6rem 1rem",
+              border: "1px solid #d6d3d1",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <label style={{ fontSize: "0.8rem", color: "#57534e" }}>From:</label>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: "1px solid #d6d3d1",
+              borderRadius: "0.5rem",
+              fontSize: "0.8rem",
+            }}
+          />
+          <label style={{ fontSize: "0.8rem", color: "#57534e" }}>To:</label>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            style={{
+              padding: "0.5rem 0.75rem",
+              border: "1px solid #d6d3d1",
+              borderRadius: "0.5rem",
+              fontSize: "0.8rem",
+            }}
+          />
+          {(dateFrom || dateTo) && (
+            <button
+              onClick={() => { setDateFrom(""); setDateTo(""); }}
+              style={{
+                padding: "0.4rem 0.6rem",
+                border: "1px solid #d6d3d1",
+                borderRadius: "0.375rem",
+                backgroundColor: "transparent",
+                color: "#78716c",
+                fontSize: "0.75rem",
+                cursor: "pointer",
+              }}
+            >
+              Clear dates
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Status tabs */}
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
@@ -104,8 +184,8 @@ export default function AdminBookingsPage() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "9999px",
-              border: statusFilter === tab.value ? "2px solid #722F37" : "1px solid #d6d3d1",
-              backgroundColor: statusFilter === tab.value ? "#722F37" : "#fff",
+              border: statusFilter === tab.value ? "2px solid var(--color-accent-text)" : "1px solid #d6d3d1",
+              backgroundColor: statusFilter === tab.value ? "var(--color-burgundy)" : "#fff",
               color: statusFilter === tab.value ? "#fff" : "#57534e",
               fontSize: "0.8rem",
               fontWeight: 500,
@@ -127,7 +207,7 @@ export default function AdminBookingsPage() {
         <div style={{ textAlign: "center", padding: "3rem 0", color: "#78716c" }}>
           <p style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>No bookings found.</p>
           <p style={{ fontSize: "0.875rem" }}>
-            {search || statusFilter !== "all"
+            {search || statusFilter !== "all" || dateFrom || dateTo
               ? "Try adjusting your search or filters."
               : "No bookings have been made yet."}
           </p>
@@ -151,94 +231,155 @@ export default function AdminBookingsPage() {
             <tbody>
               {filtered.map((booking, idx) => {
                 const colors = STATUS_COLORS[booking.status] || STATUS_COLORS.confirmed;
+                const isExpanded = expandedId === booking._id;
+                const notesValue = getNotesValue(booking._id, booking.notes);
+                const hasUnsavedNotes = booking._id in notesMap;
                 return (
-                  <tr
-                    key={booking._id}
-                    style={{
-                      borderBottom: "1px solid #d6d3d1",
-                      backgroundColor: idx % 2 === 0 ? "#FFFFF0" : "#fafaf9",
-                    }}
-                  >
-                    <td style={{ padding: "0.75rem 1rem", color: "#3E2723", fontWeight: 500 }}>
-                      {booking.guestName}
-                    </td>
-                    <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>{booking.guestEmail}</td>
-                    <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>
-                      {booking.calEventTypeSlug || "---"}
-                    </td>
-                    <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>
-                      <div>{formatDate(booking.startTime)}</div>
-                      <div style={{ fontSize: "0.75rem", color: "#a8a29e" }}>{formatTime(booking.startTime)}</div>
-                    </td>
-                    <td style={{ padding: "0.75rem 1rem" }}>
-                      <span
+                  <>
+                    <tr
+                      key={booking._id}
+                      onClick={() => setExpandedId(isExpanded ? null : booking._id)}
+                      style={{
+                        borderBottom: isExpanded ? "none" : "1px solid #d6d3d1",
+                        backgroundColor: idx % 2 === 0 ? "var(--color-ivory)" : "#fafaf9",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <td style={{ padding: "0.75rem 1rem", color: "#3E2723", fontWeight: 500 }}>
+                        {booking.guestName}
+                      </td>
+                      <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>{booking.guestEmail}</td>
+                      <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>
+                        {booking.calEventTypeSlug || "---"}
+                      </td>
+                      <td style={{ padding: "0.75rem 1rem", color: "#57534e" }}>
+                        <div>{formatDate(booking.startTime)}</div>
+                        <div style={{ fontSize: "0.75rem", color: "#a8a29e" }}>{formatTime(booking.startTime)}</div>
+                      </td>
+                      <td style={{ padding: "0.75rem 1rem" }}>
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            padding: "0.125rem 0.5rem",
+                            borderRadius: "9999px",
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            backgroundColor: colors.bg,
+                            color: colors.text,
+                          }}
+                        >
+                          {booking.status.replace("_", " ")}
+                        </span>
+                      </td>
+                      <td style={{ padding: "0.75rem 1rem" }}>
+                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+                          {booking.status === "confirmed" && (
+                            <>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleUpdateStatus(booking._id, "completed"); }}
+                                style={{
+                                  padding: "0.3rem 0.6rem",
+                                  border: "1px solid #d6d3d1",
+                                  borderRadius: "0.375rem",
+                                  backgroundColor: "transparent",
+                                  color: "#1e40af",
+                                  fontSize: "0.8rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleUpdateStatus(booking._id, "no_show"); }}
+                                style={{
+                                  padding: "0.3rem 0.6rem",
+                                  border: "1px solid #d6d3d1",
+                                  borderRadius: "0.375rem",
+                                  backgroundColor: "transparent",
+                                  color: "#6b7280",
+                                  fontSize: "0.8rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                No-Show
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleUpdateStatus(booking._id, "cancelled"); }}
+                                style={{
+                                  padding: "0.3rem 0.6rem",
+                                  border: "1px solid #fca5a5",
+                                  borderRadius: "0.375rem",
+                                  backgroundColor: "transparent",
+                                  color: "#dc2626",
+                                  fontSize: "0.8rem",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          )}
+                          {booking.status !== "confirmed" && (
+                            <span style={{ fontSize: "0.8rem", color: "#a8a29e" }}>---</span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr
+                        key={`${booking._id}-notes`}
                         style={{
-                          display: "inline-flex",
-                          padding: "0.125rem 0.5rem",
-                          borderRadius: "9999px",
-                          fontSize: "0.75rem",
-                          fontWeight: 500,
-                          backgroundColor: colors.bg,
-                          color: colors.text,
+                          borderBottom: "1px solid #d6d3d1",
+                          backgroundColor: idx % 2 === 0 ? "var(--color-ivory)" : "#fafaf9",
                         }}
                       >
-                        {booking.status.replace("_", " ")}
-                      </span>
-                    </td>
-                    <td style={{ padding: "0.75rem 1rem" }}>
-                      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-                        {booking.status === "confirmed" && (
-                          <>
-                            <button
-                              onClick={() => handleUpdateStatus(booking._id, "completed")}
+                        <td
+                          colSpan={6}
+                          style={{ padding: "0.5rem 1rem 1rem 1rem" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div style={{ maxWidth: "600px" }}>
+                            <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "#3E2723", marginBottom: "0.4rem" }}>
+                              Notes
+                            </label>
+                            <textarea
+                              value={notesValue}
+                              onChange={(e) => setNotesMap((prev) => ({ ...prev, [booking._id]: e.target.value }))}
+                              placeholder="Add notes about this booking..."
+                              rows={3}
                               style={{
-                                padding: "0.3rem 0.6rem",
+                                width: "100%",
+                                padding: "0.5rem 0.75rem",
                                 border: "1px solid #d6d3d1",
                                 borderRadius: "0.375rem",
-                                backgroundColor: "transparent",
-                                color: "#1e40af",
                                 fontSize: "0.8rem",
-                                cursor: "pointer",
+                                fontFamily: "inherit",
+                                resize: "vertical",
+                                boxSizing: "border-box",
                               }}
-                            >
-                              Complete
-                            </button>
+                            />
                             <button
-                              onClick={() => handleUpdateStatus(booking._id, "no_show")}
+                              onClick={() => handleSaveNotes(booking._id as Id<"bookings">, booking._id)}
+                              disabled={!hasUnsavedNotes || savingNotes === booking._id}
                               style={{
-                                padding: "0.3rem 0.6rem",
-                                border: "1px solid #d6d3d1",
+                                marginTop: "0.4rem",
+                                padding: "0.4rem 1rem",
+                                border: "none",
                                 borderRadius: "0.375rem",
-                                backgroundColor: "transparent",
-                                color: "#6b7280",
+                                backgroundColor: hasUnsavedNotes ? "var(--color-burgundy)" : "#d6d3d1",
+                                color: hasUnsavedNotes ? "#fff" : "#78716c",
                                 fontSize: "0.8rem",
-                                cursor: "pointer",
+                                fontWeight: 500,
+                                cursor: hasUnsavedNotes ? "pointer" : "default",
                               }}
                             >
-                              No-Show
+                              {savingNotes === booking._id ? "Saving..." : "Save Notes"}
                             </button>
-                            <button
-                              onClick={() => handleUpdateStatus(booking._id, "cancelled")}
-                              style={{
-                                padding: "0.3rem 0.6rem",
-                                border: "1px solid #fca5a5",
-                                borderRadius: "0.375rem",
-                                backgroundColor: "transparent",
-                                color: "#dc2626",
-                                fontSize: "0.8rem",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        {booking.status !== "confirmed" && (
-                          <span style={{ fontSize: "0.8rem", color: "#a8a29e" }}>---</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 );
               })}
             </tbody>

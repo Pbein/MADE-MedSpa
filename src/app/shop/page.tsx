@@ -147,7 +147,7 @@ export default function ShopPage() {
           Curated{" "}
           <span
             className="accent-text"
-            style={{ color: "var(--color-burgundy)" }}
+            style={{ color: "var(--color-accent-text)" }}
           >
             Essentials
           </span>
@@ -197,7 +197,7 @@ export default function ShopPage() {
                     border: "none",
                     cursor: "pointer",
                     color: isActive
-                      ? "var(--color-burgundy)"
+                      ? "var(--color-accent-text)"
                       : "var(--color-brown)",
                     fontSize: "var(--text-xs)",
                   }}
@@ -234,7 +234,7 @@ export default function ShopPage() {
               placeholder="Search products..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full rounded-[var(--border-radius-sm)] border px-4 py-2 pl-10 outline-none transition-colors focus:border-[var(--color-burgundy)]"
+              className="w-full rounded-[var(--border-radius-sm)] border px-4 py-2 pl-10 outline-none transition-colors focus:border-[var(--color-accent-text)]"
               style={{
                 borderColor: "var(--color-stone)",
                 backgroundColor: "var(--color-white, #fff)",
@@ -272,7 +272,7 @@ export default function ShopPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="rounded-[var(--border-radius-sm)] border px-3 py-2 outline-none transition-colors focus:border-[var(--color-burgundy)]"
+              className="rounded-[var(--border-radius-sm)] border px-3 py-2 outline-none transition-colors focus:border-[var(--color-accent-text)]"
               style={{
                 borderColor: "var(--color-stone)",
                 backgroundColor: "var(--color-white, #fff)",
@@ -465,7 +465,7 @@ export default function ShopPage() {
                         </p>
                         <Link href={`/shop/${product.slug}`}>
                           <h3
-                            className="headline-text mb-2 transition-colors group-hover:text-[var(--color-burgundy)]"
+                            className="headline-text mb-2 transition-colors group-hover:text-[var(--color-accent-text)]"
                             style={{
                               fontSize: "var(--text-base)",
                               color: "var(--color-chocolate)",

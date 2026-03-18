@@ -63,7 +63,7 @@ export default function MembershipTeaser() {
               }}
             >
               Become a{" "}
-              <span className="accent-text text-[var(--color-burgundy)]">
+              <span className="accent-text text-[var(--color-accent-text)]">
                 MADE
               </span>{" "}
               Member

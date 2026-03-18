@@ -43,7 +43,7 @@ export default function AdminServicesPage() {
         <button
           style={{
             padding: "0.6rem 1.25rem",
-            backgroundColor: "#722F37",
+            backgroundColor: "var(--color-burgundy)",
             color: "#fff",
             borderRadius: "0.5rem",
             border: "none",
@@ -82,8 +82,8 @@ export default function AdminServicesPage() {
           style={{
             padding: "0.4rem 1rem",
             borderRadius: "9999px",
-            border: categoryFilter === "all" ? "2px solid #722F37" : "1px solid #d6d3d1",
-            backgroundColor: categoryFilter === "all" ? "#722F37" : "#fff",
+            border: categoryFilter === "all" ? "2px solid var(--color-accent-text)" : "1px solid #d6d3d1",
+            backgroundColor: categoryFilter === "all" ? "var(--color-burgundy)" : "#fff",
             color: categoryFilter === "all" ? "#fff" : "#57534e",
             fontSize: "0.8rem",
             fontWeight: 500,
@@ -99,8 +99,8 @@ export default function AdminServicesPage() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "9999px",
-              border: categoryFilter === cat ? "2px solid #722F37" : "1px solid #d6d3d1",
-              backgroundColor: categoryFilter === cat ? "#722F37" : "#fff",
+              border: categoryFilter === cat ? "2px solid var(--color-accent-text)" : "1px solid #d6d3d1",
+              backgroundColor: categoryFilter === cat ? "var(--color-burgundy)" : "#fff",
               color: categoryFilter === cat ? "#fff" : "#57534e",
               fontSize: "0.8rem",
               fontWeight: 500,
@@ -150,7 +150,7 @@ export default function AdminServicesPage() {
                   key={service._id}
                   style={{
                     borderBottom: "1px solid #d6d3d1",
-                    backgroundColor: idx % 2 === 0 ? "#FFFFF0" : "#fafaf9",
+                    backgroundColor: idx % 2 === 0 ? "var(--color-ivory)" : "#fafaf9",
                   }}
                 >
                   <td style={{ padding: "0.75rem 1rem", color: "#3E2723", fontWeight: 500 }}>{service.name}</td>
@@ -181,7 +181,7 @@ export default function AdminServicesPage() {
                           border: "1px solid #d6d3d1",
                           borderRadius: "0.375rem",
                           backgroundColor: "transparent",
-                          color: "#722F37",
+                          color: "var(--color-accent-text)",
                           fontSize: "0.8rem",
                           cursor: "pointer",
                         }}

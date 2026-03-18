@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 interface ContentBlock {
   key: string;
@@ -43,10 +45,33 @@ const PLACEHOLDER_CONTENT: ContentBlock[] = [
 ];
 
 export default function AdminContentPage() {
-  const [content, setContent] = useState<ContentBlock[]>(PLACEHOLDER_CONTENT);
+  const dbContent = useQuery(api.siteContent.list);
+  const upsertContent = useMutation(api.siteContent.upsert);
+
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editBody, setEditBody] = useState("");
+  const [savedKey, setSavedKey] = useState<string | null>(null);
+
+  // Merge DB content with placeholder defaults
+  const content: ContentBlock[] = useMemo(() => {
+    if (!dbContent) return PLACEHOLDER_CONTENT;
+
+    const dbMap = new Map(dbContent.map((row) => [row.key, row]));
+
+    return PLACEHOLDER_CONTENT.map((placeholder) => {
+      const dbRow = dbMap.get(placeholder.key);
+      if (dbRow) {
+        return {
+          key: placeholder.key,
+          label: placeholder.label,
+          title: dbRow.title ?? placeholder.title,
+          body: dbRow.body ?? placeholder.body,
+        };
+      }
+      return placeholder;
+    });
+  }, [dbContent]);
 
   function handleStartEdit(block: ContentBlock) {
     setEditingKey(block.key);
@@ -54,20 +79,29 @@ export default function AdminContentPage() {
     setEditBody(block.body);
   }
 
-  function handleSave(key: string) {
-    setContent((prev) =>
-      prev.map((block) =>
-        block.key === key ? { ...block, title: editTitle, body: editBody } : block
-      )
-    );
+  async function handleSave(key: string) {
+    await upsertContent({ key, title: editTitle, body: editBody });
     setEditingKey(null);
-    alert("Content saved locally. Convex persistence coming soon.");
+    setSavedKey(key);
+    setTimeout(() => setSavedKey(null), 2000);
   }
 
   function handleCancel() {
     setEditingKey(null);
     setEditTitle("");
     setEditBody("");
+  }
+
+  // Loading state
+  if (dbContent === undefined) {
+    return (
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#3E2723", margin: "0 0 0.25rem 0" }}>Site Content</h1>
+          <p style={{ fontSize: "0.875rem", color: "#78716c", margin: 0 }}>Loading content...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -84,12 +118,13 @@ export default function AdminContentPage() {
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         {content.map((block) => {
           const isEditing = editingKey === block.key;
+          const justSaved = savedKey === block.key;
 
           return (
             <div
               key={block.key}
               style={{
-                backgroundColor: "#FFFFF0",
+                backgroundColor: "var(--color-ivory)",
                 border: "1px solid #d6d3d1",
                 borderRadius: "0.5rem",
                 padding: "1.25rem 1.5rem",
@@ -118,23 +153,30 @@ export default function AdminContentPage() {
                     </h3>
                   )}
                 </div>
-                {!isEditing && (
-                  <button
-                    onClick={() => handleStartEdit(block)}
-                    style={{
-                      padding: "0.4rem 0.8rem",
-                      border: "1px solid #d6d3d1",
-                      borderRadius: "0.375rem",
-                      backgroundColor: "transparent",
-                      color: "#722F37",
-                      fontSize: "0.8rem",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Edit
-                  </button>
-                )}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  {justSaved && (
+                    <span style={{ fontSize: "0.8rem", color: "#16a34a", fontWeight: 500 }}>
+                      Saved!
+                    </span>
+                  )}
+                  {!isEditing && (
+                    <button
+                      onClick={() => handleStartEdit(block)}
+                      style={{
+                        padding: "0.4rem 0.8rem",
+                        border: "1px solid #d6d3d1",
+                        borderRadius: "0.375rem",
+                        backgroundColor: "transparent",
+                        color: "var(--color-accent-text)",
+                        fontSize: "0.8rem",
+                        fontWeight: 500,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* View mode */}
@@ -207,7 +249,7 @@ export default function AdminContentPage() {
                         padding: "0.4rem 0.8rem",
                         border: "none",
                         borderRadius: "0.375rem",
-                        backgroundColor: "#722F37",
+                        backgroundColor: "var(--color-burgundy)",
                         color: "#fff",
                         fontSize: "0.8rem",
                         fontWeight: 500,

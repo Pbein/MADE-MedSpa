@@ -438,7 +438,7 @@ export default function AboutPage() {
                     {member.name}
                   </h3>
                   <p
-                    className="accent-text mb-3 text-[var(--color-burgundy)]"
+                    className="accent-text mb-3 text-[var(--color-accent-text)]"
                     style={{ fontSize: "var(--text-sm)" }}
                   >
                     {member.title}

@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "convex/react";
@@ -29,6 +29,21 @@ export default function ServiceDetailPage({
   const { slug } = use(params);
   const service = useQuery(api.services.getBySlug, { slug });
   const allServices = useQuery(api.services.list);
+  const tiers = useQuery(api.membershipTiers.list);
+
+  const maxDiscount = useMemo(() => {
+    if (!tiers) return null;
+    let max = 0;
+    for (const tier of tiers) {
+      for (const benefit of tier.benefits) {
+        const match = benefit.match(/(\d+)%\s*off/i);
+        if (match) {
+          max = Math.max(max, parseInt(match[1]));
+        }
+      }
+    }
+    return max > 0 ? max : null;
+  }, [tiers]);
 
   // Related services: same category, different slug
   const relatedServices =
@@ -118,14 +133,14 @@ export default function ServiceDetailPage({
         >
           <Link
             href="/"
-            className="transition-colors hover:text-[var(--color-burgundy)]"
+            className="transition-colors hover:text-[var(--color-accent-text)]"
           >
             Home
           </Link>
           <span style={{ color: "var(--color-stone)" }}>/</span>
           <Link
             href="/services"
-            className="transition-colors hover:text-[var(--color-burgundy)]"
+            className="transition-colors hover:text-[var(--color-accent-text)]"
           >
             Services
           </Link>
@@ -144,7 +159,7 @@ export default function ServiceDetailPage({
           initial="hidden"
           animate="visible"
           className="editorial-spacing mb-4"
-          style={{ color: "var(--color-burgundy)" }}
+          style={{ color: "var(--color-accent-text)" }}
         >
           {service.category}
         </motion.div>
@@ -298,6 +313,59 @@ export default function ServiceDetailPage({
                   {service.priceRange}
                 </span>
               </motion.div>
+            )}
+
+            {/* Member Savings Callout */}
+            {tiers && tiers.length > 0 && (
+              <>
+                <div
+                  className="hidden h-12 sm:block"
+                  style={{
+                    width: "1px",
+                    backgroundColor: "var(--color-stone)",
+                  }}
+                />
+                <motion.div
+                  custom={0.5}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex flex-col items-center text-center"
+                >
+                  <span
+                    className="editorial-spacing mb-2"
+                    style={{
+                      color: "var(--color-stone-dark)",
+                      fontSize: "var(--text-xs)",
+                    }}
+                  >
+                    Member Savings
+                  </span>
+                  <span
+                    className="headline-text"
+                    style={{
+                      fontSize: "var(--text-2xl)",
+                      color: "var(--color-accent-text)",
+                    }}
+                  >
+                    {maxDiscount ? `Up to ${maxDiscount}% Off` : "Exclusive Pricing"}
+                  </span>
+                  <Link
+                    href="/membership"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-sm)",
+                      color: "var(--color-accent-text)",
+                      marginTop: "var(--space-xs)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: "3px",
+                    }}
+                    className="transition-opacity hover:opacity-70"
+                  >
+                    Become a Member
+                  </Link>
+                </motion.div>
+              </>
             )}
           </div>
         </section>

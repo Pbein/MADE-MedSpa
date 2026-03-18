@@ -626,7 +626,7 @@ export const deduplicate = internalMutation({
 
 export const runDedup = action({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<{ success: boolean; totalRemoved: number }> => {
     const result = await ctx.runMutation(internal.seed.deduplicate);
     return { success: true, ...result };
   },

@@ -92,6 +92,16 @@ export const markReminderSent = mutation({
   },
 });
 
+export const updateNotes = mutation({
+  args: {
+    id: v.id("bookings"),
+    notes: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { notes: args.notes });
+  },
+});
+
 export const markReviewRequestSent = mutation({
   args: { id: v.id("bookings") },
   handler: async (ctx, args) => {

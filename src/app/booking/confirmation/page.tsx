@@ -78,7 +78,7 @@ function ConfirmationContent() {
             className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full"
             style={{
               backgroundColor: "var(--color-cream)",
-              border: "2px solid var(--color-burgundy)",
+              border: "2px solid var(--color-accent-text)",
             }}
           >
             <svg

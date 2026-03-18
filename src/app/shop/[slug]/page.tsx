@@ -71,7 +71,7 @@ function AccordionSection({
           style={{
             fontSize: "var(--text-2xl)",
             lineHeight: 1,
-            color: "var(--color-burgundy)",
+            color: "var(--color-accent-text)",
           }}
         >
           +
@@ -182,8 +182,12 @@ export default function ProductDetailPage({
     .slice(0, 4);
 
   function handleAddToCart() {
-    if (isOutOfStock) return;
-    // TODO: integrate with cart context/store when available
+    if (isOutOfStock || !product) return;
+    const key = "made-cart";
+    const cart: Record<string, number> = JSON.parse(localStorage.getItem(key) || "{}");
+    cart[product._id] = (cart[product._id] || 0) + quantity;
+    localStorage.setItem(key, JSON.stringify(cart));
+    window.dispatchEvent(new CustomEvent("cart-updated"));
     setAddedFeedback(true);
     setTimeout(() => setAddedFeedback(false), 2000);
   }
@@ -209,14 +213,14 @@ export default function ProductDetailPage({
           >
             <Link
               href="/"
-              className="transition-colors hover:text-[var(--color-burgundy)]"
+              className="transition-colors hover:text-[var(--color-accent-text)]"
             >
               Home
             </Link>
             <span style={{ color: "var(--color-stone)" }}>/</span>
             <Link
               href="/shop"
-              className="transition-colors hover:text-[var(--color-burgundy)]"
+              className="transition-colors hover:text-[var(--color-accent-text)]"
             >
               Shop
             </Link>
@@ -297,7 +301,7 @@ export default function ProductDetailPage({
                 className="headline-text"
                 style={{
                   fontSize: "var(--text-2xl)",
-                  color: "var(--color-burgundy)",
+                  color: "var(--color-accent-text)",
                 }}
               >
                 {formatPrice(product.price)}
@@ -518,7 +522,7 @@ export default function ProductDetailPage({
                   available soon. For specific ingredient inquiries, please{" "}
                   <Link
                     href="/contact"
-                    className="underline transition-colors hover:text-[var(--color-burgundy)]"
+                    className="underline transition-colors hover:text-[var(--color-accent-text)]"
                   >
                     contact us
                   </Link>
@@ -533,7 +537,7 @@ export default function ProductDetailPage({
                   advice, we recommend{" "}
                   <Link
                     href="/booking"
-                    className="underline transition-colors hover:text-[var(--color-burgundy)]"
+                    className="underline transition-colors hover:text-[var(--color-accent-text)]"
                   >
                     booking a consultation
                   </Link>{" "}
@@ -629,7 +633,7 @@ export default function ProductDetailPage({
                         {relProduct.category}
                       </div>
                       <h3
-                        className="headline-text mb-2 transition-colors group-hover:text-[var(--color-burgundy)]"
+                        className="headline-text mb-2 transition-colors group-hover:text-[var(--color-accent-text)]"
                         style={{
                           fontSize: "var(--text-lg)",
                           color: "var(--color-chocolate)",
@@ -641,7 +645,7 @@ export default function ProductDetailPage({
                         <span
                           style={{
                             fontSize: "var(--text-base)",
-                            color: "var(--color-burgundy)",
+                            color: "var(--color-accent-text)",
                             fontWeight: 500,
                           }}
                         >

@@ -65,7 +65,7 @@ export default function FeaturedProducts() {
             }}
           >
             Curated{" "}
-            <span className="accent-text text-[var(--color-burgundy)]">
+            <span className="accent-text text-[var(--color-accent-text)]">
               Essentials
             </span>
           </h2>
@@ -136,7 +136,7 @@ export default function FeaturedProducts() {
                         {product.category}
                       </p>
                       <h3
-                        className="headline-text mb-2 transition-colors group-hover:text-[var(--color-burgundy)]"
+                        className="headline-text mb-2 transition-colors group-hover:text-[var(--color-accent-text)]"
                         style={{
                           fontSize: "var(--text-base)",
                           color: "var(--color-chocolate)",

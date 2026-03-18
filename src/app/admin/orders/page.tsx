@@ -227,9 +227,9 @@ export default function AdminOrdersPage() {
                   padding: "0.4rem 1rem",
                   borderRadius: "9999px",
                   border: isActive
-                    ? "2px solid var(--color-burgundy, #6B1D3B)"
+                    ? "2px solid var(--color-burgundy)"
                     : "1px solid #d6d3d1",
-                  background: isActive ? "var(--color-burgundy, #6B1D3B)" : "#fff",
+                  background: isActive ? "var(--color-burgundy)" : "#fff",
                   color: isActive ? "#fff" : "var(--color-brown, #5C3A2E)",
                   fontSize: "0.85rem",
                   fontWeight: isActive ? 600 : 400,
@@ -747,7 +747,7 @@ export default function AdminOrdersPage() {
                         disabled={statusUpdating}
                         style={{
                           padding: "0.45rem 1.25rem",
-                          background: "var(--color-burgundy, #6B1D3B)",
+                          background: "var(--color-burgundy)",
                           color: "#fff",
                           border: "none",
                           borderRadius: "0.5rem",
@@ -800,7 +800,7 @@ export default function AdminOrdersPage() {
                         style={{
                           marginTop: "0.5rem",
                           padding: "0.45rem 1.25rem",
-                          background: "var(--color-burgundy, #6B1D3B)",
+                          background: "var(--color-burgundy)",
                           color: "#fff",
                           border: "none",
                           borderRadius: "0.5rem",

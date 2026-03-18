@@ -74,7 +74,7 @@ export default function AdminProductsPage() {
           style={{
             display: "inline-block",
             padding: "0.6rem 1.25rem",
-            backgroundColor: "#722F37",
+            backgroundColor: "var(--color-burgundy)",
             color: "#fff",
             borderRadius: "0.5rem",
             textDecoration: "none",
@@ -112,8 +112,8 @@ export default function AdminProductsPage() {
             style={{
               padding: "0.4rem 1rem",
               borderRadius: "9999px",
-              border: filter === pill.value ? "2px solid #722F37" : "1px solid #d6d3d1",
-              backgroundColor: filter === pill.value ? "#722F37" : "#fff",
+              border: filter === pill.value ? "2px solid var(--color-accent-text)" : "1px solid #d6d3d1",
+              backgroundColor: filter === pill.value ? "var(--color-burgundy)" : "#fff",
               color: filter === pill.value ? "#fff" : "#57534e",
               fontSize: "0.8rem",
               fontWeight: 500,
@@ -162,14 +162,14 @@ export default function AdminProductsPage() {
                   key={product._id}
                   style={{
                     borderBottom: "1px solid #e7e5e4",
-                    backgroundColor: "#FFFFF0",
+                    backgroundColor: "var(--color-ivory)",
                   }}
                 >
                   {/* Name */}
                   <td style={{ padding: "0.75rem 0.5rem" }}>
                     <Link
                       href={`/admin/products/${product._id}`}
-                      style={{ color: "#722F37", textDecoration: "none", fontWeight: 500 }}
+                      style={{ color: "var(--color-accent-text)", textDecoration: "none", fontWeight: 500 }}
                     >
                       {product.name}
                     </Link>

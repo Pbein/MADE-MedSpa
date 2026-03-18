@@ -22,7 +22,7 @@ export default function AdminDashboard() {
     {
       label: "Total Products",
       value: products ? products.length : "--",
-      color: "var(--color-burgundy)",
+      color: "var(--color-accent-text)",
     },
     {
       label: "Total Orders",

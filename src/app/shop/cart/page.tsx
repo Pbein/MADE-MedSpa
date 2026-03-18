@@ -408,7 +408,7 @@ export default function CartPage() {
                         </div>
                         <button
                           onClick={() => removeItem(item.productId)}
-                          className="flex h-8 w-8 items-center justify-center text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-burgundy)]"
+                          className="flex h-8 w-8 items-center justify-center text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-accent-text)]"
                           style={{ cursor: "pointer" }}
                           aria-label={`Remove ${item.productName}`}
                         >
@@ -485,7 +485,7 @@ export default function CartPage() {
                       {/* Desktop-only: remove button */}
                       <button
                         onClick={() => removeItem(item.productId)}
-                        className="hidden h-8 w-8 items-center justify-center text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-burgundy)] lg:flex"
+                        className="hidden h-8 w-8 items-center justify-center text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-accent-text)] lg:flex"
                         style={{ cursor: "pointer" }}
                         aria-label={`Remove ${item.productName}`}
                       >

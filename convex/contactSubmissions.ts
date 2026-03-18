@@ -46,3 +46,13 @@ export const create = mutation({
     return id;
   },
 });
+
+export const updateStatus = mutation({
+  args: {
+    id: v.id("contactSubmissions"),
+    status: v.union(v.literal("new"), v.literal("read"), v.literal("replied")),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { status: args.status });
+  },
+});

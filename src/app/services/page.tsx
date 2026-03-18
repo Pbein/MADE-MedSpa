@@ -73,7 +73,7 @@ export default function ServicesPage() {
             color: "var(--color-chocolate)",
           }}
         >
-          <span className="accent-text" style={{ color: "var(--color-burgundy)" }}>
+          <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>
             Discover
           </span>{" "}
           Our Services
@@ -107,7 +107,7 @@ export default function ServicesPage() {
                   border: "none",
                   cursor: "pointer",
                   color: isActive
-                    ? "var(--color-burgundy)"
+                    ? "var(--color-accent-text)"
                     : "var(--color-brown)",
                   fontSize: "var(--text-xs)",
                 }}
