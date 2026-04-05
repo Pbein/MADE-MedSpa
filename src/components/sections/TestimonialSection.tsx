@@ -41,7 +41,6 @@ export default function TestimonialSection() {
     );
   }, []);
 
-  // Auto-rotate every 6 seconds
   useEffect(() => {
     const interval = setInterval(next, 6000);
     return () => clearInterval(interval);
@@ -50,9 +49,11 @@ export default function TestimonialSection() {
   return (
     <section
       ref={ref}
-      className="section-dark relative overflow-hidden"
+      className="relative overflow-hidden"
       style={{
-        padding: "clamp(4rem, 3rem + 5vw, 8rem) 0",
+        backgroundColor: "var(--color-linen)",
+        paddingTop: "var(--space-section-lg)",
+        paddingBottom: "var(--space-section-lg)",
       }}
     >
       <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
@@ -64,7 +65,7 @@ export default function TestimonialSection() {
         >
           <span
             className="editorial-spacing mb-4 block"
-            style={{ color: "var(--color-stone)" }}
+            style={{ color: "var(--color-cream)" }}
           >
             Testimonials
           </span>
@@ -72,30 +73,31 @@ export default function TestimonialSection() {
             className="headline-text"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-white)",
+              color: "var(--color-deep-cocoa)",
             }}
           >
             Words from{" "}
-            <span className="accent-text" style={{ color: "var(--color-stone)" }}>
+            <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>
               Our Clients
             </span>
           </h2>
         </motion.div>
 
-        {/* Quote carousel */}
+        {/* Quote carousel — minimal, centered, large quotes */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3, ease: luxuryEase }}
           className="relative mx-auto max-w-3xl text-center"
         >
-          {/* Decorative quote mark */}
+          {/* Decorative large quote mark */}
           <div
-            className="accent-text pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none opacity-5"
+            className="accent-text pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none"
             style={{
               fontSize: "clamp(6rem, 4rem + 10vw, 12rem)",
               lineHeight: 1,
-              color: "var(--color-stone)",
+              color: "var(--color-cream)",
+              opacity: 0.15,
             }}
           >
             &ldquo;
@@ -115,7 +117,7 @@ export default function TestimonialSection() {
                   className="accent-text mb-8 leading-relaxed"
                   style={{
                     fontSize: "var(--text-2xl)",
-                    color: "var(--color-cream)",
+                    color: "var(--color-deep-cocoa)",
                   }}
                 >
                   &ldquo;{testimonials[current].quote}&rdquo;
@@ -125,7 +127,7 @@ export default function TestimonialSection() {
                     className="editorial-spacing mb-1"
                     style={{
                       fontSize: "var(--text-xs)",
-                      color: "var(--color-white)",
+                      color: "var(--color-espresso)",
                       letterSpacing: "0.2em",
                     }}
                   >
@@ -135,7 +137,7 @@ export default function TestimonialSection() {
                     className="accent-text"
                     style={{
                       fontSize: "var(--text-sm)",
-                      color: "var(--color-stone-dark)",
+                      color: "var(--color-warm-taupe)",
                     }}
                   >
                     {testimonials[current].treatment}
@@ -149,7 +151,11 @@ export default function TestimonialSection() {
           <div className="mt-10 flex items-center justify-center gap-6">
             <button
               onClick={prev}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-stone-dark)]/30 text-[var(--color-stone)] transition-colors hover:border-[var(--color-stone)] hover:text-[var(--color-cream)]"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+              style={{
+                border: "1px solid var(--color-border-strong)",
+                color: "var(--color-espresso)",
+              }}
               aria-label="Previous testimonial"
             >
               &larr;
@@ -164,8 +170,8 @@ export default function TestimonialSection() {
                   style={{
                     backgroundColor:
                       i === current
-                        ? "var(--color-burgundy)"
-                        : "var(--color-stone-dark)",
+                        ? "var(--color-deep-cocoa)"
+                        : "var(--color-cream)",
                     width: i === current ? "2rem" : "0.5rem",
                     borderRadius: "var(--border-radius-full)",
                     transition:
@@ -178,7 +184,11 @@ export default function TestimonialSection() {
 
             <button
               onClick={next}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-stone-dark)]/30 text-[var(--color-stone)] transition-colors hover:border-[var(--color-stone)] hover:text-[var(--color-cream)]"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+              style={{
+                border: "1px solid var(--color-border-strong)",
+                color: "var(--color-espresso)",
+              }}
               aria-label="Next testimonial"
             >
               &rarr;

@@ -197,3 +197,50 @@ Resend was chosen over SendGrid, Mailgun, and AWS SES.
 - Generous free tier (100 emails/day)
 - Built by the creator of React Email
 - Easy integration with Next.js and Convex actions
+
+---
+
+## ADR-006: Pabau as EMR / CRM (Replacing Hermes)
+
+### Date
+2026-03-26
+
+### Status
+**Accepted**
+
+### Context
+
+MADE Med Spa needs an EMR (Electronic Medical Records) system to manage patient records, clinical notes, consent forms, and treatment history. The original plan included Hermes as a lightweight CRM for contact sync and event tracking (Epic 7). However, the client selected Pabau as their practice management / EMR platform, which provides a superset of CRM functionality plus clinical record-keeping.
+
+### Decision
+
+**Pabau** replaces Hermes as the EMR/CRM integration. All references to Hermes in the codebase and documentation have been updated to Pabau.
+
+### Rationale
+
+1. **Client Requirement**: The client has chosen Pabau as their practice management system. All clinical operations will run through Pabau.
+
+2. **EMR Capabilities**: Pabau provides full EMR functionality (patient records, treatment notes, consent forms, medical history) that a CRM like Hermes cannot offer. This is essential for a medical spa.
+
+3. **Built-in Online Booking**: Pabau includes online booking, which may replace or supplement Cal.com — reducing the number of third-party integrations.
+
+4. **Packages & Memberships**: Pabau has native membership/package management, which can complement the Stripe-based membership system.
+
+5. **Marketing Tools**: Built-in email/SMS marketing reduces dependency on Resend for non-transactional communications.
+
+6. **Single Source of Truth**: Patient data lives in Pabau for clinical/operational use; Convex remains the website's data layer. The sync module bridges both systems.
+
+### Trade-offs Acknowledged
+
+- **GraphQL API**: Pabau uses GraphQL, adding complexity over a simple REST API. Requires typed query/mutation builders.
+- **Booking System Overlap**: Pabau's online booking may overlap with Cal.com. A decision is needed on which to use for website scheduling (see Epic 5/7).
+- **Two Data Stores**: Patient data will exist in both Convex (for website features) and Pabau (for clinical operations). Sync must be reliable and bi-directional where needed.
+- **API Maturity**: Pabau's API may have limitations compared to dedicated CRM APIs. Testing required.
+
+### Consequences
+
+- Epic 7 rewritten from "Hermes Integration" to "Pabau EMR Integration"
+- Environment variables changed: `HERMES_*` → `PABAU_*`
+- Schema field `hermesContactId` to be renamed `pabauPatientId`
+- Booking system (Epic 5) needs re-evaluation: Cal.com vs Pabau booking
+- All CRM sync patterns adapted for Pabau's GraphQL API

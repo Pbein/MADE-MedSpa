@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { getProductImage } from "@/lib/demo-images";
-
-/* ── Design-system tokens ─────────────────────────────────── */
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -41,13 +39,9 @@ const sortLabels: Record<SortOption, string> = {
   newest: "Newest",
 };
 
-/* ── Helpers ──────────────────────────────────────────────── */
-
 function formatPrice(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`;
 }
-
-/* ── Component ────────────────────────────────────────────── */
 
 export default function ShopPage() {
   const products = useQuery(api.products.list);
@@ -58,27 +52,22 @@ export default function ShopPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Placeholder auth state — swap for real auth later
   const isAuthenticated = false;
 
-  /* Debounced search (300ms) */
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchInput), 300);
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  /* Derived product list */
   const displayProducts = useMemo(() => {
     if (!products) return undefined;
 
     let filtered = products;
 
-    // Category filter
     if (activeCategory !== "All") {
       filtered = filtered.filter((p) => p.category === activeCategory);
     }
 
-    // Search filter
     if (debouncedSearch.trim()) {
       const q = debouncedSearch.toLowerCase();
       filtered = filtered.filter(
@@ -89,7 +78,6 @@ export default function ShopPage() {
       );
     }
 
-    // Sort
     const sorted = [...filtered];
     switch (sortBy) {
       case "price-asc":
@@ -111,14 +99,11 @@ export default function ShopPage() {
   }, [products, activeCategory, debouncedSearch, sortBy]);
 
   return (
-    <main
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--color-ivory)" }}
-    >
-      {/* ── Hero Section ──────────────────────────────────── */}
+    <main className="min-h-screen">
+      {/* Hero */}
       <section
         ref={heroRef}
-        className="flex flex-col items-center justify-center px-6 text-center"
+        className="section-warm flex flex-col items-center justify-center px-6 text-center"
         style={{
           paddingTop: "calc(var(--nav-height) + var(--space-5xl))",
           paddingBottom: "var(--space-4xl)",
@@ -129,7 +114,7 @@ export default function ShopPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease }}
           className="editorial-spacing mb-6"
-          style={{ color: "var(--color-stone-dark)" }}
+          style={{ color: "var(--color-cream)" }}
         >
           The Shop
         </motion.div>
@@ -139,16 +124,10 @@ export default function ShopPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.15 }}
           className="headline-text mb-6"
-          style={{
-            fontSize: "var(--text-5xl)",
-            color: "var(--color-chocolate)",
-          }}
+          style={{ fontSize: "var(--text-5xl)", color: "var(--color-soft-ivory)" }}
         >
           Curated{" "}
-          <span
-            className="accent-text"
-            style={{ color: "var(--color-accent-text)" }}
-          >
+          <span className="accent-text" style={{ color: "var(--color-accent)" }}>
             Essentials
           </span>
         </motion.h1>
@@ -158,10 +137,7 @@ export default function ShopPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease, delay: 0.3 }}
           className="mx-auto max-w-lg"
-          style={{
-            fontSize: "var(--text-lg)",
-            color: "var(--color-brown)",
-          }}
+          style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}
         >
           Professional-grade skincare and wellness products, handpicked by our
           experts to extend your results at home.
@@ -175,9 +151,8 @@ export default function ShopPage() {
         />
       </section>
 
-      {/* ── Toolbar: Categories / Search / Sort ───────────── */}
-      <section className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
-        {/* Category filter pills */}
+      {/* Toolbar: Categories / Search / Sort */}
+      <section className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10" style={{ paddingTop: "var(--space-3xl)" }}>
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -196,9 +171,7 @@ export default function ShopPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: isActive
-                      ? "var(--color-accent-text)"
-                      : "var(--color-brown)",
+                    color: isActive ? "var(--color-accent-text)" : "var(--color-warm-taupe)",
                     fontSize: "var(--text-xs)",
                   }}
                 >
@@ -207,10 +180,7 @@ export default function ShopPage() {
                     <motion.div
                       layoutId="shopCategoryUnderline"
                       className="absolute bottom-0 left-0 right-0"
-                      style={{
-                        height: "1.5px",
-                        backgroundColor: "var(--color-burgundy)",
-                      }}
+                      style={{ height: "1.5px", backgroundColor: "var(--color-accent)" }}
                       transition={{ duration: 0.3, ease }}
                     />
                   )}
@@ -220,36 +190,34 @@ export default function ShopPage() {
           </LayoutGroup>
         </motion.div>
 
-        {/* Search + Sort row */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease, delay: 0.6 }}
           className="mb-12 flex flex-col items-center justify-between gap-4 sm:flex-row"
         >
-          {/* Search input */}
           <div className="relative w-full sm:max-w-xs">
             <input
               type="text"
               placeholder="Search products..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full rounded-[var(--border-radius-sm)] border px-4 py-2 pl-10 outline-none transition-colors focus:border-[var(--color-accent-text)]"
+              className="w-full border px-4 py-2 pl-10 outline-none transition-colors focus:border-[var(--color-accent-text)]"
               style={{
-                borderColor: "var(--color-stone)",
-                backgroundColor: "var(--color-white, #fff)",
+                borderColor: "var(--color-border)",
+                backgroundColor: "var(--color-linen)",
+                borderRadius: "var(--border-radius-full)",
                 fontFamily: "var(--font-body)",
                 fontSize: "var(--text-sm)",
-                color: "var(--color-chocolate)",
+                color: "var(--color-deep-cocoa)",
               }}
             />
-            {/* Search icon */}
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2"
               width="16"
               height="16"
               fill="none"
-              stroke="var(--color-stone-dark)"
+              stroke="var(--color-cream)"
               strokeWidth="2"
               viewBox="0 0 24 24"
             >
@@ -258,27 +226,21 @@ export default function ShopPage() {
             </svg>
           </div>
 
-          {/* Sort dropdown */}
           <div className="flex items-center gap-2">
-            <span
-              className="editorial-spacing"
-              style={{
-                fontSize: "var(--text-xs)",
-                color: "var(--color-stone-dark)",
-              }}
-            >
+            <span className="editorial-spacing" style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}>
               Sort by
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="rounded-[var(--border-radius-sm)] border px-3 py-2 outline-none transition-colors focus:border-[var(--color-accent-text)]"
+              className="border px-3 py-2 outline-none transition-colors focus:border-[var(--color-accent-text)]"
               style={{
-                borderColor: "var(--color-stone)",
-                backgroundColor: "var(--color-white, #fff)",
+                borderColor: "var(--color-border)",
+                backgroundColor: "var(--color-linen)",
+                borderRadius: "var(--border-radius-full)",
                 fontFamily: "var(--font-body)",
                 fontSize: "var(--text-sm)",
-                color: "var(--color-chocolate)",
+                color: "var(--color-deep-cocoa)",
                 cursor: "pointer",
               }}
             >
@@ -293,18 +255,18 @@ export default function ShopPage() {
           </div>
         </motion.div>
 
-        {/* Member pricing note */}
         {isAuthenticated && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease }}
-            className="mb-8 rounded-[var(--border-radius-sm)] px-4 py-3 text-center"
+            className="mb-8 px-4 py-3 text-center"
             style={{
-              backgroundColor: "var(--color-burgundy)",
-              color: "var(--color-ivory)",
+              backgroundColor: "var(--color-accent)",
+              color: "var(--color-deep-cocoa)",
               fontSize: "var(--text-sm)",
               fontFamily: "var(--font-body)",
+              borderRadius: "var(--border-radius-full)",
             }}
           >
             Member pricing applied — enjoy exclusive discounts on all products.
@@ -312,76 +274,31 @@ export default function ShopPage() {
         )}
       </section>
 
-      {/* ── Product Grid ──────────────────────────────────── */}
+      {/* Product Grid */}
       <section
         className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
         style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-          backgroundColor: "var(--color-cream)",
-          borderRadius: "var(--border-radius-md)",
+          paddingTop: "var(--space-xl)",
+          paddingBottom: "var(--space-section-lg)",
         }}
       >
         {displayProducts === undefined ? (
-          /* ── Loading skeletons ── */
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="overflow-hidden rounded-[var(--border-radius-md)] bg-[var(--color-white,#fff)]"
-              >
-                <div
-                  className="animate-pulse"
-                  style={{
-                    aspectRatio: "1/1",
-                    backgroundColor: "var(--color-stone)",
-                    opacity: 0.3,
-                  }}
-                />
+              <div key={i} className="overflow-hidden" style={{ borderRadius: "var(--border-radius-lg)", backgroundColor: "var(--color-linen)" }}>
+                <div className="animate-pulse" style={{ aspectRatio: "1/1", backgroundColor: "var(--color-cream)", opacity: 0.3 }} />
                 <div className="space-y-2 p-5">
-                  <div
-                    className="h-3 w-1/3 animate-pulse rounded"
-                    style={{
-                      backgroundColor: "var(--color-stone)",
-                      opacity: 0.2,
-                    }}
-                  />
-                  <div
-                    className="h-4 w-2/3 animate-pulse rounded"
-                    style={{
-                      backgroundColor: "var(--color-stone)",
-                      opacity: 0.3,
-                    }}
-                  />
-                  <div
-                    className="h-4 w-1/4 animate-pulse rounded"
-                    style={{
-                      backgroundColor: "var(--color-stone)",
-                      opacity: 0.25,
-                    }}
-                  />
-                  <div
-                    className="mt-3 h-9 w-full animate-pulse rounded"
-                    style={{
-                      backgroundColor: "var(--color-stone)",
-                      opacity: 0.15,
-                    }}
-                  />
+                  <div className="h-3 w-1/3 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.2 }} />
+                  <div className="h-4 w-2/3 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.3 }} />
+                  <div className="h-4 w-1/4 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.25 }} />
+                  <div className="mt-3 h-9 w-full animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.15 }} />
                 </div>
               </div>
             ))}
           </div>
         ) : displayProducts.length === 0 ? (
-          /* ── Empty state ── */
           <div className="py-20 text-center">
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-lg)",
-                color: "var(--color-brown)",
-                marginBottom: "0.5rem",
-              }}
-            >
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-lg)", color: "var(--color-warm-taupe)", marginBottom: "0.5rem" }}>
               No products match your current filters.
             </p>
             <button
@@ -397,7 +314,6 @@ export default function ShopPage() {
             </button>
           </div>
         ) : (
-          /* ── Product cards ── */
           <LayoutGroup>
             <motion.div
               variants={staggerContainer}
@@ -417,13 +333,13 @@ export default function ShopPage() {
                     exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3 } }}
                   >
                     <div
-                      className="group flex h-full flex-col overflow-hidden rounded-[var(--border-radius-md)] bg-[var(--color-white,#fff)] hover-lift"
+                      className="group flex h-full flex-col overflow-hidden hover-lift"
                       style={{
-                        transition:
-                          "transform var(--duration-fast) var(--ease-luxury), box-shadow var(--duration-fast) var(--ease-luxury)",
+                        borderRadius: "var(--border-radius-lg)",
+                        backgroundColor: "var(--color-linen)",
+                        boxShadow: "var(--shadow-card)",
                       }}
                     >
-                      {/* Image area */}
                       <Link
                         href={`/shop/${product.slug}`}
                         className="hover-zoom relative block overflow-hidden"
@@ -438,16 +354,17 @@ export default function ShopPage() {
                           className="h-full w-full object-cover"
                           loading="lazy"
                         />
-                        {/* Sale badge */}
                         {product.compareAtPrice && (
                           <span
-                            className="absolute top-3 right-3 rounded-[var(--border-radius-sm)] px-2 py-1 text-[var(--color-ivory)]"
+                            className="absolute top-3 right-3 rounded-full px-3 py-1"
                             style={{
-                              backgroundColor: "var(--color-burgundy)",
+                              backgroundColor: "var(--color-accent)",
+                              color: "var(--color-deep-cocoa)",
                               fontSize: "0.65rem",
                               letterSpacing: "0.1em",
                               textTransform: "uppercase",
                               fontFamily: "var(--font-body)",
+                              fontWeight: 500,
                             }}
                           >
                             Sale
@@ -455,48 +372,33 @@ export default function ShopPage() {
                         )}
                       </Link>
 
-                      {/* Details */}
                       <div className="flex flex-1 flex-col p-5">
-                        <p
-                          className="editorial-spacing mb-1 text-[var(--color-stone-dark)]"
-                          style={{ fontSize: "0.6rem" }}
-                        >
+                        <p className="editorial-spacing mb-1" style={{ fontSize: "0.6rem", color: "var(--color-cream)" }}>
                           {product.category}
                         </p>
                         <Link href={`/shop/${product.slug}`}>
                           <h3
                             className="headline-text mb-2 transition-colors group-hover:text-[var(--color-accent-text)]"
-                            style={{
-                              fontSize: "var(--text-base)",
-                              color: "var(--color-chocolate)",
-                            }}
+                            style={{ fontSize: "var(--text-base)", color: "var(--color-deep-cocoa)" }}
                           >
                             {product.name}
                           </h3>
                         </Link>
 
-                        {/* Price */}
                         <div className="mb-4 flex items-center gap-2">
-                          <span
-                            className="font-medium text-[var(--color-chocolate)]"
-                            style={{ fontSize: "var(--text-base)" }}
-                          >
+                          <span className="font-medium" style={{ fontSize: "var(--text-base)", color: "var(--color-deep-cocoa)" }}>
                             {formatPrice(product.price)}
                           </span>
                           {product.compareAtPrice && (
-                            <span
-                              className="text-[var(--color-stone-dark)] line-through"
-                              style={{ fontSize: "var(--text-sm)" }}
-                            >
+                            <span className="line-through" style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}>
                               {formatPrice(product.compareAtPrice)}
                             </span>
                           )}
                         </div>
 
-                        {/* Actions — pushed to bottom */}
                         <div className="mt-auto flex items-center gap-2">
                           <button
-                            className="btn btn-accent flex-1"
+                            className="btn btn-primary flex-1"
                             style={{ fontSize: "var(--text-sm)", padding: "0.5rem 1rem" }}
                           >
                             Add to Cart

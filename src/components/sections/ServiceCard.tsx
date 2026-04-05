@@ -33,7 +33,6 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       <Link
         href={`/services/${service.slug}`}
         className="service-card group block"
-        style={{ borderRadius: "var(--border-radius-sm)" }}
       >
         {/* Image */}
         <div className="image-container hover-zoom relative">
@@ -50,7 +49,6 @@ export default function ServiceCard({ service }: ServiceCardProps) {
 
         {/* Content */}
         <div className="content">
-          {/* Category badge */}
           <span
             className="editorial-spacing mb-3 inline-block"
             style={{
@@ -61,26 +59,25 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             {service.category}
           </span>
 
-          {/* Service name */}
           <h3
             className="headline-text mb-2"
             style={{
               fontSize: "var(--text-xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-deep-cocoa)",
               lineHeight: 1.3,
             }}
           >
             {service.name}
           </h3>
 
-          {/* Short description */}
           <p
             className="mb-4"
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "var(--text-sm)",
-              color: "var(--color-brown)",
+              color: "var(--color-warm-taupe)",
               lineHeight: 1.6,
+              fontWeight: 300,
               display: "-webkit-box",
               WebkitLineClamp: 3,
               WebkitBoxOrient: "vertical",
@@ -90,14 +87,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             {service.shortDescription}
           </p>
 
-          {/* Price range */}
           {service.priceRange && (
             <p
               className="mb-4"
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "var(--text-sm)",
-                color: "var(--color-stone-dark)",
+                color: "var(--color-cream)",
                 fontWeight: 400,
               }}
             >
@@ -105,7 +101,6 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             </p>
           )}
 
-          {/* Arrow link */}
           <span
             className="btn-text"
             style={{
@@ -113,7 +108,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
               fontSize: "var(--text-sm)",
               letterSpacing: "0.1em",
               textTransform: "uppercase" as const,
-              color: "var(--color-chocolate)",
+              color: "var(--color-deep-cocoa)",
             }}
           >
             Learn More{" "}

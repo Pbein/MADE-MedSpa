@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers the setup and configuration of all third-party services used by the MADE Med Spa application: Stripe, Cal.com, Hermes, and Resend.
+This guide covers the setup and configuration of all third-party services used by the MADE Med Spa application: Stripe, Cal.com, Pabau (EMR), and Resend.
 
 ---
 
@@ -124,84 +124,97 @@ const serviceToCalEvent: Record<string, string> = {
 
 ---
 
-## 3. Hermes CRM Setup
+## 3. Pabau EMR Setup
 
 ### Account & API Access
 
-1. Set up a Hermes CRM account
-2. Obtain API credentials:
+1. Set up a Pabau account at [pabau.com](https://www.pabau.com)
+2. Navigate to **Setup > Integrations > API** in Pabau
+3. Generate API credentials:
    - API Key
-   - Workspace ID
-   - API Base URL
-3. Set environment variables:
-   - `HERMES_API_KEY`
-   - `HERMES_API_URL`
-   - `HERMES_WORKSPACE_ID`
+   - Company ID
+4. Set environment variables:
+   - `PABAU_API_KEY`
+   - `PABAU_API_URL` (e.g., `https://api.pabau.com/graphql`)
+   - `PABAU_COMPANY_ID`
 
-### Contact Properties
+### Patient Record Mapping
 
-Configure the following custom properties in Hermes for MADE contacts:
+Map MADE website data to Pabau patient records:
 
-| Property | Type | Description |
+| MADE Field | Pabau Field | Sync Trigger |
 | --- | --- | --- |
-| `source` | String | How the contact was acquired (website-contact, booking, membership, purchase) |
-| `membership_tier` | String | Current membership tier (essential, premium, elite, vip) |
-| `first_booking_date` | Date | Date of first appointment |
-| `total_purchases` | Number | Lifetime purchase count |
-| `lifetime_value` | Number | Total spend across all channels |
+| Contact form name/email | Patient name/email | On form submission |
+| Membership tier | Custom field / Tag | On membership signup/change |
+| Booking details | Appointment record | On booking created |
+| Purchase history | Patient notes / Custom field | On order completed |
+| Newsletter subscription | Marketing consent flag | On newsletter signup |
 
-### Tags
+### Pabau Online Booking
 
-Set up the following tags in Hermes:
+Pabau includes built-in online booking. Evaluate whether to:
+- **Option A**: Use Pabau's online booking widget (replaces Cal.com entirely)
+- **Option B**: Keep Cal.com for website booking, sync appointments to Pabau via API
+- **Option C**: Use Pabau's booking API to build a custom booking UI
 
-- `newsletter-subscriber`
-- `member-essential`, `member-premium`, `member-elite`, `member-vip`
-- `booked-consultation`
-- `completed-visit`
-- `product-customer`
-- `membership-cancelled`
+### Webhook / Event Sync
 
-### Event Types
+Configure sync events from the MADE website to Pabau:
 
-Register these custom event types:
-
-- `contact-form-submitted`
-- `newsletter-subscribed`
-- `booking-created`
-- `booking-cancelled`
-- `visit-completed`
-- `membership-started`
-- `membership-tier-changed`
-- `membership-cancelled`
-- `product-purchased`
-- `review-requested`
+| Website Event | Pabau Action |
+| --- | --- |
+| Contact form submitted | Create/update patient, add note |
+| Newsletter subscribed | Update marketing consent |
+| Booking created | Create appointment (if not using Pabau booking) |
+| Booking cancelled | Cancel appointment |
+| Visit completed | Update appointment status |
+| Membership started | Add membership tag, create package |
+| Membership tier changed | Update membership tag/package |
+| Membership cancelled | Remove membership tag |
+| Product purchased | Add purchase note / log event |
 
 ### API Integration Pattern
 
 ```typescript
-// Example Hermes API usage from Convex action
+// Example Pabau API usage from Convex action
 import { action } from "./_generated/server";
 
-export const syncContact = action({
+export const syncPatient = action({
   args: { name: v.string(), email: v.string(), source: v.string() },
   handler: async (ctx, args) => {
-    const response = await fetch(`${process.env.HERMES_API_URL}/contacts`, {
+    const response = await fetch(process.env.PABAU_API_URL!, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.HERMES_API_KEY}`,
+        "Authorization": `Bearer ${process.env.PABAU_API_KEY}`,
         "Content-Type": "application/json",
-        "X-Workspace-Id": process.env.HERMES_WORKSPACE_ID!,
+        "X-Company-Id": process.env.PABAU_COMPANY_ID!,
       },
       body: JSON.stringify({
-        email: args.email,
-        name: args.name,
-        properties: { source: args.source },
+        query: `mutation CreatePatient($input: PatientInput!) {
+          createPatient(input: $input) { id }
+        }`,
+        variables: {
+          input: {
+            email: args.email,
+            name: args.name,
+            source: args.source,
+          },
+        },
       }),
     });
     return await response.json();
   },
 });
 ```
+
+### Pabau Features Relevant to MADE
+
+- **Online Booking**: Built-in scheduling widget (potential Cal.com replacement)
+- **Patient Records**: Full EMR with treatment history, consent forms, medical history
+- **Packages & Memberships**: Native membership/package management
+- **Marketing**: Built-in email/SMS marketing tools
+- **Payments**: POS integration (in-clinic), invoicing
+- **Reporting**: Revenue, retention, and clinical reporting
 
 ---
 
@@ -303,9 +316,9 @@ This starts the Convex development server, watches for schema/function changes, 
 ```bash
 npx convex env set STRIPE_SECRET_KEY sk_test_...
 npx convex env set STRIPE_WEBHOOK_SECRET whsec_...
-npx convex env set HERMES_API_KEY herm_...
-npx convex env set HERMES_API_URL https://api.hermes.com/v1
-npx convex env set HERMES_WORKSPACE_ID ws_...
+npx convex env set PABAU_API_KEY pab_...
+npx convex env set PABAU_API_URL https://api.pabau.com/graphql
+npx convex env set PABAU_COMPANY_ID comp_...
 npx convex env set RESEND_API_KEY re_...
 npx convex env set RESEND_FROM_EMAIL hello@mademedispa.com
 npx convex env set CALCOM_WEBHOOK_SECRET whsec_...
@@ -354,7 +367,7 @@ npx convex deploy
 - [ ] Stripe CLI installed and forwarding webhooks locally
 - [ ] Cal.com event types created
 - [ ] Resend API key configured (use test key or verified domain)
-- [ ] Hermes API credentials configured
+- [ ] Pabau API credentials configured
 - [ ] All environment variables in `.env.local`
 - [ ] All Convex environment variables set via `npx convex env set`
 - [ ] Seed data loaded via `npx convex run seed:run`

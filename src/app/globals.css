@@ -1,44 +1,56 @@
 @import "tailwindcss";
 
 /* ============================================
-   MADE Med Spa Design System
+   MADE Med Spa Design System — Luxury Editorial
+   "Textured, layered, editorial luxury for women of color"
    ============================================ */
 
 :root {
-  /* --- Colors: MADE Warm Brown Palette --- */
-  --color-ivory: #F7F3EF;
-  --color-cream: #F0EAE3;
-  --color-white: #EDE8E3;
-  --color-burgundy: #C9A96E;        /* Accent — swappable via theme switcher */
-  --color-burgundy-light: #D4B87E;  /* Accent light */
-  --color-burgundy-dark: #B8955A;   /* Accent dark */
-  --color-accent-text: #816c46;     /* Darkened accent for text on light bg */
-  --color-accent-contrast: #2D1E17; /* Text on accent bg (buttons) */
-  --color-brown: #796254;           /* Roman Coffee */
-  --color-brown-dark: #523F31;      /* Judge Gray */
-  --color-chocolate: #2D1E17;       /* Oil */
-  --color-stone: #C4B8AD;           /* Derived from Pale Oyster */
-  --color-stone-dark: #9D8A7C;      /* Pale Oyster */
-  --accent-font-style: italic;      /* Toggled by mood switcher */
+  /* --- Colors: Chocolate-Inspired Warm Palette --- */
+  --color-deep-cocoa: #2D1E17;       /* Primary: dark backgrounds, nav, accents */
+  --color-espresso: #523F31;          /* Secondary: overlays, warm sections */
+  --color-warm-taupe: #796254;        /* Cards, UI surfaces, mid-tone */
+  --color-cream: #9D8A7C;            /* Muted cream, subtle elements */
+  --color-soft-ivory: #EDE5DC;        /* Main page background */
+  --color-linen: #F5F0EB;            /* Lightest — card surfaces, inputs */
+
+  /* Accent */
+  --color-accent: #C9A96E;           /* Gold accent */
+  --color-accent-light: #D4B87E;
+  --color-accent-dark: #B8955A;
+  --color-accent-text: #8B7340;       /* Legible gold for text on light bg */
+
+  /* Utility neutrals (warm, never pure) */
+  --color-text-primary: #2D1E17;
+  --color-text-secondary: #523F31;
+  --color-text-muted: #796254;
+  --color-border: rgba(121, 98, 84, 0.2);
+  --color-border-strong: rgba(82, 63, 49, 0.35);
+
+  /* Semantic aliases */
+  --background: var(--color-soft-ivory);
+  --foreground: var(--color-espresso);
+  --accent-font-style: italic;
 
   /* --- Typography --- */
   --font-headline: var(--font-playfair), "Playfair Display", Georgia, serif;
   --font-accent: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-body: var(--font-jost), "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-inter), "Inter", "Helvetica Neue", Arial, sans-serif;
 
   /* --- Font Sizes (fluid) --- */
-  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);
+  --text-xs: clamp(0.65rem, 0.6rem + 0.25vw, 0.72rem);
   --text-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);
-  --text-base: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
-  --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
-  --text-xl: clamp(1.15rem, 1rem + 0.75vw, 1.25rem);
-  --text-2xl: clamp(1.4rem, 1.1rem + 1.5vw, 1.75rem);
-  --text-3xl: clamp(1.75rem, 1.3rem + 2.25vw, 2.25rem);
-  --text-4xl: clamp(2.25rem, 1.5rem + 3.75vw, 3.25rem);
-  --text-5xl: clamp(2.75rem, 1.75rem + 5vw, 4.5rem);
-  --text-6xl: clamp(3.5rem, 2rem + 7.5vw, 6rem);
+  --text-base: clamp(0.925rem, 0.875rem + 0.25vw, 1rem);
+  --text-lg: clamp(1.05rem, 0.95rem + 0.5vw, 1.15rem);
+  --text-xl: clamp(1.2rem, 1.05rem + 0.75vw, 1.35rem);
+  --text-2xl: clamp(1.5rem, 1.15rem + 1.75vw, 1.875rem);
+  --text-3xl: clamp(1.875rem, 1.4rem + 2.4vw, 2.5rem);
+  --text-4xl: clamp(2.5rem, 1.6rem + 4.5vw, 3.5rem);
+  --text-5xl: clamp(3rem, 1.8rem + 6vw, 5rem);
+  --text-6xl: clamp(3.75rem, 2rem + 8.75vw, 6.5rem);
+  --text-hero: clamp(4.5rem, 2.5rem + 10vw, 8rem);
 
-  /* --- Spacing --- */
+  /* --- Spacing (generous — luxury = breathing room) --- */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -48,9 +60,11 @@
   --space-3xl: 4rem;
   --space-4xl: 6rem;
   --space-5xl: 8rem;
-  --space-section: clamp(4rem, 3rem + 5vw, 8rem);
+  --space-6xl: 10rem;
+  --space-section: clamp(5rem, 4rem + 6vw, 9rem);
+  --space-section-lg: clamp(6rem, 5rem + 7vw, 11rem);
 
-  /* --- Animation & Easing (from design system spec) --- */
+  /* --- Animation & Easing --- */
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
@@ -67,36 +81,32 @@
   --max-width: 1400px;
   --nav-height: 80px;
   --border-radius-sm: 4px;
-  --border-radius-md: 8px;
+  --border-radius-md: 10px;
   --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
   --border-radius-full: 9999px;
 
-  /* --- Shadows --- */
-  --shadow-sm: 0 1px 3px rgba(44, 34, 32, 0.06);
-  --shadow-md: 0 4px 12px rgba(44, 34, 32, 0.08);
-  --shadow-lg: 0 8px 30px rgba(44, 34, 32, 0.12);
-  --shadow-xl: 0 16px 50px rgba(44, 34, 32, 0.16);
-
-  /* --- Background & Foreground --- */
-  --background: var(--color-ivory);
-  --foreground: var(--color-brown-dark);
+  /* --- Shadows (warm-tinted) --- */
+  --shadow-sm: 0 1px 3px rgba(45, 30, 23, 0.04);
+  --shadow-md: 0 4px 16px rgba(45, 30, 23, 0.06);
+  --shadow-lg: 0 8px 30px rgba(45, 30, 23, 0.1);
+  --shadow-xl: 0 20px 60px rgba(45, 30, 23, 0.14);
+  --shadow-card: 0 2px 12px rgba(45, 30, 23, 0.05);
 }
 
 /* --- Tailwind v4 Theme Integration --- */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ivory: var(--color-ivory);
+  --color-soft-ivory: var(--color-soft-ivory);
+  --color-linen: var(--color-linen);
+  --color-deep-cocoa: var(--color-deep-cocoa);
+  --color-espresso: var(--color-espresso);
+  --color-warm-taupe: var(--color-warm-taupe);
   --color-cream: var(--color-cream);
-  --color-warm-white: var(--color-white);
-  --color-burgundy: var(--color-burgundy);
-  --color-burgundy-light: var(--color-burgundy-light);
-  --color-burgundy-dark: var(--color-burgundy-dark);
-  --color-brown: var(--color-brown);
-  --color-brown-dark: var(--color-brown-dark);
-  --color-chocolate: var(--color-chocolate);
-  --color-stone: var(--color-stone);
-  --color-stone-dark: var(--color-stone-dark);
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-accent-dark: var(--color-accent-dark);
   --font-sans: var(--font-body);
   --font-headline: var(--font-headline);
   --font-accent: var(--font-accent);
@@ -123,18 +133,31 @@ body {
   color: var(--foreground);
   font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.7;
+  font-weight: 300;
+  line-height: 1.75;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* Paper grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
 }
 
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headline);
   font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--color-chocolate);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--color-deep-cocoa);
 }
 
 h1 { font-size: var(--text-6xl); }
@@ -157,29 +180,32 @@ a:hover {
 
 /* --- Selection --- */
 ::selection {
-  background-color: var(--color-burgundy);
-  color: var(--color-ivory);
+  background-color: var(--color-accent);
+  color: var(--color-soft-ivory);
 }
 
 /* --- Scrollbar --- */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-cream);
+  background: var(--color-soft-ivory);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-stone-dark);
+  background: var(--color-cream);
   border-radius: var(--border-radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brown);
+  background: var(--color-warm-taupe);
 }
 
-/* --- Utility Classes --- */
+/* ============================================
+   Typography Utilities
+   ============================================ */
+
 .accent-text {
   font-family: var(--font-accent);
   font-style: var(--accent-font-style);
@@ -191,6 +217,7 @@ a:hover {
   font-weight: 400;
 }
 
+/* Micro typography — uppercase labels */
 .editorial-spacing {
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -199,76 +226,129 @@ a:hover {
   font-weight: 300;
 }
 
-/* --- Button Base --- */
+/* Display text — large editorial statement */
+.display-text {
+  font-family: var(--font-headline);
+  font-size: var(--text-hero);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+/* Large italic accent for pull quotes / hero subtitles */
+.accent-display {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 300;
+  font-size: var(--text-3xl);
+  line-height: 1.35;
+}
+
+/* ============================================
+   Button System — Rounded, Soft, Intentional
+   ============================================ */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 2rem;
+  padding: 0.875rem 2.25rem;
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 400;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-smooth);
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-full);
 }
 
+/* Primary — deep cocoa bg */
 .btn-primary {
-  background-color: var(--color-burgundy);
-  color: var(--color-accent-contrast);
+  background-color: var(--color-deep-cocoa);
+  color: var(--color-soft-ivory);
+  border: 1px solid var(--color-deep-cocoa);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-burgundy-light);
-  color: var(--color-accent-contrast);
+  background-color: var(--color-espresso);
+  border-color: var(--color-espresso);
+  color: var(--color-soft-ivory);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
+/* Outline — transparent with warm border */
 .btn-outline {
   background-color: transparent;
-  color: var(--color-chocolate);
-  border: 1px solid var(--color-stone);
+  color: var(--color-deep-cocoa);
+  border: 1px solid var(--color-border-strong);
 }
 
 .btn-outline:hover {
-  border-color: var(--color-accent-text);
-  color: var(--color-accent-text);
+  border-color: var(--color-deep-cocoa);
+  background-color: var(--color-deep-cocoa);
+  color: var(--color-soft-ivory);
 }
 
-/* Secondary — black outlined (from spec) */
+/* Secondary — lighter border */
 .btn-secondary {
   background-color: transparent;
-  color: var(--color-chocolate);
-  border: 1px solid var(--color-chocolate);
+  color: var(--color-deep-cocoa);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-chocolate);
-  color: var(--color-ivory);
+  background-color: var(--color-deep-cocoa);
+  color: var(--color-soft-ivory);
+  border-color: var(--color-deep-cocoa);
 }
 
-/* Accent — burgundy CTA */
+/* Accent — gold CTA */
 .btn-accent {
-  background-color: var(--color-burgundy);
-  color: var(--color-accent-contrast);
-  border: 1px solid var(--color-burgundy);
+  background-color: var(--color-accent);
+  color: var(--color-deep-cocoa);
+  border: 1px solid var(--color-accent);
 }
 
 .btn-accent:hover {
-  background-color: var(--color-burgundy-dark);
-  border-color: var(--color-burgundy-dark);
+  background-color: var(--color-accent-dark);
+  border-color: var(--color-accent-dark);
+  transform: translateY(-1px);
+}
+
+/* Light — for dark backgrounds (cream/ivory bg) */
+.btn-light {
+  background-color: var(--color-soft-ivory);
+  color: var(--color-deep-cocoa);
+  border: 1px solid var(--color-soft-ivory);
+}
+
+.btn-light:hover {
+  background-color: var(--color-linen);
+  border-color: var(--color-linen);
+  transform: translateY(-1px);
+}
+
+/* Light outline — for dark backgrounds */
+.btn-light-outline {
+  background-color: transparent;
+  color: var(--color-soft-ivory);
+  border: 1px solid rgba(237, 229, 220, 0.35);
+}
+
+.btn-light-outline:hover {
+  border-color: var(--color-soft-ivory);
+  background-color: rgba(237, 229, 220, 0.1);
 }
 
 /* Text link CTA — arrow pattern */
 .btn-text {
   background: none;
   border: none;
-  color: var(--color-chocolate);
+  color: var(--color-deep-cocoa);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -284,21 +364,82 @@ a:hover {
 }
 
 /* ============================================
-   Dark Section Treatment
+   Section Treatments — Editorial Rhythm
    ============================================ */
 
+/* Dark — deepest cocoa (#2D1E17) */
 .section-dark {
-  background-color: var(--color-chocolate);
-  color: var(--color-cream);
+  background-color: var(--color-deep-cocoa);
+  color: rgba(237, 229, 220, 0.8);
 }
 
+.section-dark h1,
 .section-dark h2,
-.section-dark h3 {
-  color: var(--color-white);
+.section-dark h3,
+.section-dark h4 {
+  color: var(--color-soft-ivory);
 }
 
 .section-dark .accent-text {
-  color: var(--color-stone);
+  color: var(--color-cream);
+}
+
+.section-dark .editorial-spacing {
+  color: var(--color-cream);
+}
+
+.section-dark a:hover {
+  color: var(--color-accent);
+}
+
+/* Warm — espresso brown (#523F31) */
+.section-warm {
+  background-color: var(--color-espresso);
+  color: rgba(237, 229, 220, 0.8);
+}
+
+.section-warm h1,
+.section-warm h2,
+.section-warm h3,
+.section-warm h4 {
+  color: var(--color-soft-ivory);
+}
+
+.section-warm .accent-text {
+  color: var(--color-accent);
+}
+
+.section-warm .editorial-spacing {
+  color: var(--color-cream);
+}
+
+/* Stone — muted mid-tone */
+.section-stone {
+  background-color: var(--color-cream);
+  color: var(--color-deep-cocoa);
+}
+
+.section-stone h1,
+.section-stone h2,
+.section-stone h3,
+.section-stone h4 {
+  color: var(--color-deep-cocoa);
+}
+
+.section-stone .accent-text {
+  color: var(--color-espresso);
+}
+
+/* Cream — soft ivory bg */
+.section-cream {
+  background-color: var(--color-soft-ivory);
+  color: var(--color-espresso);
+}
+
+/* Linen — lightest variant */
+.section-linen {
+  background-color: var(--color-linen);
+  color: var(--color-espresso);
 }
 
 /* ============================================
@@ -371,7 +512,7 @@ a:hover {
 .stagger-children > *:nth-child(6) { transition-delay: calc(var(--stagger-delay) * 5); }
 
 /* ============================================
-   Hover Animations
+   Hover Animations — Subtle Only
    ============================================ */
 
 .hover-zoom {
@@ -383,7 +524,7 @@ a:hover {
 }
 
 .hover-zoom:hover img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .hover-underline {
@@ -411,23 +552,27 @@ a:hover {
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(87, 73, 68, 0.15);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ============================================
    Component Patterns
    ============================================ */
 
-/* Service card */
+/* Service card — soft radius, layered feel */
 .service-card {
-  background: var(--color-white);
+  background: var(--color-linen);
   overflow: hidden;
-  transition: transform var(--duration-medium) var(--ease-luxury);
+  border-radius: var(--border-radius-md);
+  transition: transform var(--duration-medium) var(--ease-luxury),
+              box-shadow var(--duration-medium) var(--ease-luxury);
+  box-shadow: var(--shadow-card);
 }
 
 .service-card:hover {
   transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .service-card .image-container {
@@ -443,7 +588,7 @@ a:hover {
 }
 
 .service-card:hover .image-container img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .service-card .content {
@@ -452,24 +597,25 @@ a:hover {
 
 /* Membership tier card */
 .tier-card {
-  background: var(--color-cream);
-  border: 1px solid var(--color-stone-dark);
+  background: var(--color-linen);
+  border: 1px solid var(--color-border);
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
+  border-radius: var(--border-radius-lg);
   transition: all var(--duration-medium) var(--ease-luxury);
 }
 
 .tier-card.featured {
-  background: var(--color-chocolate);
-  color: var(--color-ivory);
-  border-color: var(--color-chocolate);
+  background: var(--color-deep-cocoa);
+  color: var(--color-soft-ivory);
+  border-color: var(--color-deep-cocoa);
   transform: scale(1.03);
 }
 
-/* Dividers */
+/* Dividers — thin, elegant */
 .divider {
   height: 1px;
-  background: var(--color-stone-dark);
+  background: var(--color-border);
   width: 100%;
   margin: var(--space-3xl) 0;
 }
@@ -477,7 +623,7 @@ a:hover {
 .accent-line {
   width: 60px;
   height: 1px;
-  background: var(--color-burgundy);
+  background: var(--color-accent);
   margin-bottom: var(--space-md);
 }
 
@@ -487,19 +633,19 @@ a:hover {
   align-items: baseline;
   gap: var(--space-lg);
   padding: var(--space-lg) 0;
-  border-bottom: 1px solid var(--color-stone-dark);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .numbered-item .number {
   font-family: var(--font-body);
   font-size: var(--text-3xl);
-  font-weight: 300;
-  color: var(--color-stone);
+  font-weight: 200;
+  color: var(--color-cream);
   min-width: 3rem;
 }
 
 /* ============================================
-   Image Treatments
+   Image Treatments — Warm, Natural
    ============================================ */
 
 .image-warm {
@@ -512,8 +658,8 @@ a:hover {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(87, 73, 68, 0.05),
-    rgba(87, 73, 68, 0.1)
+    rgba(45, 30, 23, 0.03),
+    rgba(45, 30, 23, 0.08)
   );
   pointer-events: none;
 }
@@ -522,3 +668,36 @@ a:hover {
 .image-landscape { aspect-ratio: 16/9; }
 .image-square    { aspect-ratio: 1/1; }
 .image-editorial { aspect-ratio: 4/5; }
+
+/* ============================================
+   Page Header — Editorial Intros
+   ============================================ */
+
+.page-header {
+  padding: calc(var(--nav-height) + var(--space-4xl)) 0 var(--space-4xl);
+  text-align: center;
+}
+
+.page-header-dark {
+  background-color: var(--color-deep-cocoa);
+  color: rgba(237, 229, 220, 0.8);
+  padding: calc(var(--nav-height) + var(--space-5xl)) 0 var(--space-5xl);
+  text-align: center;
+}
+
+.page-header-dark h1,
+.page-header-dark h2 {
+  color: var(--color-soft-ivory);
+}
+
+.page-header-warm {
+  background-color: var(--color-espresso);
+  color: rgba(237, 229, 220, 0.8);
+  padding: calc(var(--nav-height) + var(--space-5xl)) 0 var(--space-5xl);
+  text-align: center;
+}
+
+.page-header-warm h1,
+.page-header-warm h2 {
+  color: var(--color-soft-ivory);
+}

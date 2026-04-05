@@ -38,39 +38,46 @@ export default function MembershipTeaser() {
   return (
     <section
       ref={ref}
-      className="relative"
+      className="section-dark relative"
       style={{
-        backgroundColor: "var(--color-ivory)",
-        padding: "clamp(4rem, 3rem + 5vw, 8rem) 0",
+        paddingTop: "var(--space-section-lg)",
+        paddingBottom: "var(--space-section-lg)",
       }}
     >
       <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
-        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
+        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
           {/* Left: Content */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.9, ease: luxuryEase }}
           >
-            <span className="editorial-spacing mb-4 block text-[var(--color-stone-dark)]">
+            <span
+              className="editorial-spacing mb-4 block"
+              style={{ color: "var(--color-cream)" }}
+            >
               Membership
             </span>
             <h2
               className="headline-text mb-6"
               style={{
                 fontSize: "var(--text-4xl)",
-                color: "var(--color-chocolate)",
+                color: "var(--color-soft-ivory)",
               }}
             >
               Become a{" "}
-              <span className="accent-text text-[var(--color-accent-text)]">
+              <span className="accent-text" style={{ color: "var(--color-accent)" }}>
                 MADE
               </span>{" "}
               Member
             </h2>
             <p
-              className="mb-10 max-w-md leading-relaxed text-[var(--color-brown)]"
-              style={{ fontSize: "var(--text-base)" }}
+              className="mb-10 max-w-md leading-relaxed"
+              style={{
+                fontSize: "var(--text-base)",
+                color: "rgba(237, 229, 220, 0.7)",
+                fontWeight: 300,
+              }}
             >
               Join an exclusive community dedicated to elevated self-care.
               Our membership tiers are designed to make luxury aesthetics
@@ -90,23 +97,35 @@ export default function MembershipTeaser() {
                     delay: 0.3 + i * 0.12,
                     ease: luxuryEase,
                   }}
-                  className="numbered-item"
+                  className="flex items-baseline gap-6 border-b py-5"
+                  style={{ borderColor: "rgba(157, 138, 124, 0.2)" }}
                 >
-                  <span className="number">{benefit.number}</span>
+                  <span
+                    className="min-w-[3rem]"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-3xl)",
+                      fontWeight: 200,
+                      color: "var(--color-warm-taupe)",
+                    }}
+                  >
+                    {benefit.number}
+                  </span>
                   <div>
                     <h4
                       className="headline-text mb-1"
                       style={{
                         fontSize: "var(--text-lg)",
-                        color: "var(--color-chocolate)",
+                        color: "var(--color-soft-ivory)",
                       }}
                     >
                       {benefit.title}
                     </h4>
-                    <p
-                      className="text-[var(--color-brown)]"
-                      style={{ fontSize: "var(--text-sm)" }}
-                    >
+                    <p style={{
+                      fontSize: "var(--text-sm)",
+                      color: "rgba(237, 229, 220, 0.6)",
+                      fontWeight: 300,
+                    }}>
                       {benefit.description}
                     </p>
                   </div>
@@ -114,12 +133,12 @@ export default function MembershipTeaser() {
               ))}
             </div>
 
-            <Link href="/membership" className="btn btn-primary">
+            <Link href="/membership" className="btn btn-light">
               Explore Membership
             </Link>
           </motion.div>
 
-          {/* Right: Image placeholder */}
+          {/* Right: Image */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -127,7 +146,7 @@ export default function MembershipTeaser() {
             className="relative"
           >
             <div
-              className="image-warm overflow-hidden rounded-[var(--border-radius-md)]"
+              className="image-warm overflow-hidden rounded-[var(--border-radius-lg)]"
               style={{ aspectRatio: "4/5" }}
             >
               <Image
@@ -141,13 +160,12 @@ export default function MembershipTeaser() {
               />
             </div>
 
-            {/* Decorative accent */}
             <div
-              className="absolute -bottom-4 -left-4 -z-10 rounded-[var(--border-radius-md)]"
+              className="absolute -bottom-4 -left-4 -z-10 rounded-[var(--border-radius-lg)]"
               style={{
                 width: "100%",
                 height: "100%",
-                border: "1px solid var(--color-stone)",
+                border: "1px solid rgba(157, 138, 124, 0.2)",
               }}
             />
           </motion.div>

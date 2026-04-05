@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-/* ── Framer Motion helpers ─────────────────────────── */
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const revealUp = {
@@ -30,7 +29,6 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-/* ── Info data ─────────────────────────────────────── */
 const whatToExpect = [
   {
     number: "01",
@@ -70,7 +68,6 @@ const cancellationPolicy = {
   ],
 };
 
-/* ── Booking Content (reads search params) ─────────── */
 function BookingContent() {
   const searchParams = useSearchParams();
   const serviceParam = searchParams.get("service");
@@ -84,10 +81,9 @@ function BookingContent() {
 
   return (
     <>
-      {/* ═══════════════ HERO ═══════════════ */}
+      {/* HERO */}
       <section
-        className="relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center"
-        style={{ backgroundColor: "var(--color-ivory)" }}
+        className="section-warm relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center"
       >
         <motion.div
           initial="hidden"
@@ -97,7 +93,8 @@ function BookingContent() {
         >
           <motion.div
             variants={revealUp}
-            className="editorial-spacing mb-6 text-[var(--color-stone-dark)]"
+            className="editorial-spacing mb-6"
+            style={{ color: "var(--color-cream)" }}
           >
             Book Online
           </motion.div>
@@ -107,16 +104,16 @@ function BookingContent() {
             className="headline-text mb-6"
             style={{
               fontSize: "var(--text-5xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-soft-ivory)",
             }}
           >
-            Schedule Your <span className="accent-text">Visit</span>
+            Schedule Your <span className="accent-text" style={{ color: "var(--color-accent)" }}>Visit</span>
           </motion.h1>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto max-w-xl leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
+            className="mx-auto max-w-xl leading-relaxed"
+            style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}
           >
             {selectedService
               ? `You are booking: ${selectedService.name}. Select your preferred date and time below.`
@@ -124,19 +121,18 @@ function BookingContent() {
           </motion.p>
         </motion.div>
 
-        {/* Bottom decorative line */}
         <div
           className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "var(--color-stone)" }}
+          style={{ backgroundColor: "rgba(157, 138, 124, 0.3)" }}
         />
       </section>
 
-      {/* ═══════════════ SERVICE QUICK-SELECT ═══════════════ */}
+      {/* SERVICE QUICK-SELECT */}
       {!selectedService && (
         <section
           className="px-6 lg:px-10"
           style={{
-            backgroundColor: "var(--color-cream)",
+            backgroundColor: "var(--color-soft-ivory)",
             paddingTop: "var(--space-section)",
             paddingBottom: "var(--space-section)",
           }}
@@ -149,26 +145,20 @@ function BookingContent() {
               variants={staggerContainer}
               className="mb-16 text-center"
             >
-              <motion.div
-                variants={revealUp}
-                className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
-              >
+              <motion.div variants={revealUp} className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
                 Select a Service
               </motion.div>
               <motion.h2
                 variants={revealUp}
                 className="headline-text mb-4"
-                style={{
-                  fontSize: "var(--text-4xl)",
-                  color: "var(--color-chocolate)",
-                }}
+                style={{ fontSize: "var(--text-4xl)", color: "var(--color-deep-cocoa)" }}
               >
-                What brings you <span className="accent-text">in today</span>?
+                What brings you <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>in today</span>?
               </motion.h2>
               <motion.p
                 variants={revealUp}
-                className="mx-auto max-w-lg leading-relaxed text-[var(--color-brown)]"
-                style={{ fontSize: "var(--text-base)" }}
+                className="mx-auto max-w-lg leading-relaxed"
+                style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
               >
                 Choose from our curated menu of treatments to get started with
                 your booking.
@@ -181,8 +171,8 @@ function BookingContent() {
                   <div
                     key={i}
                     style={{
-                      backgroundColor: "var(--color-ivory)",
-                      borderRadius: "var(--border-radius-sm)",
+                      backgroundColor: "var(--color-linen)",
+                      borderRadius: "var(--border-radius-lg)",
                       padding: "var(--space-xl)",
                       animation: "pulse 2s ease-in-out infinite",
                       minHeight: "180px",
@@ -204,34 +194,27 @@ function BookingContent() {
                       href={`/booking?service=${service.name.toLowerCase().replace(/\s+/g, "-")}`}
                       className="hover-lift group block"
                       style={{
-                        backgroundColor: "var(--color-ivory)",
-                        borderRadius: "var(--border-radius-sm)",
+                        backgroundColor: "var(--color-linen)",
+                        borderRadius: "var(--border-radius-lg)",
                         padding: "var(--space-xl)",
-                        textDecoration: "none",
-                        display: "block",
-                        transition:
-                          "transform var(--duration-normal) var(--ease-smooth)",
+                        boxShadow: "var(--shadow-card)",
                       }}
                     >
-                      <div
-                        className="editorial-spacing mb-3 text-[var(--color-accent-text)]"
-                        style={{ fontSize: "var(--text-xs)" }}
-                      >
+                      <div className="editorial-spacing mb-3" style={{ fontSize: "var(--text-xs)", color: "var(--color-accent-text)" }}>
                         {service.category}
                       </div>
                       <h3
                         className="headline-text mb-3"
-                        style={{
-                          fontSize: "var(--text-xl)",
-                          color: "var(--color-chocolate)",
-                        }}
+                        style={{ fontSize: "var(--text-xl)", color: "var(--color-deep-cocoa)" }}
                       >
                         {service.name}
                       </h3>
                       <p
-                        className="mb-4 leading-relaxed text-[var(--color-brown)]"
+                        className="mb-4 leading-relaxed"
                         style={{
                           fontSize: "var(--text-sm)",
+                          color: "var(--color-warm-taupe)",
+                          fontWeight: 300,
                           display: "-webkit-box",
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: "vertical",
@@ -241,16 +224,10 @@ function BookingContent() {
                         {service.shortDescription}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span
-                          className="accent-text text-[var(--color-accent-text)]"
-                          style={{ fontSize: "var(--text-lg)" }}
-                        >
+                        <span className="accent-text" style={{ fontSize: "var(--text-lg)", color: "var(--color-accent-text)" }}>
                           ${service.priceRange || "Varies"}
                         </span>
-                        <span
-                          className="editorial-spacing text-[var(--color-stone-dark)]"
-                          style={{ fontSize: "var(--text-xs)" }}
-                        >
+                        <span className="editorial-spacing" style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}>
                           {service.duration} min
                         </span>
                       </div>
@@ -263,13 +240,11 @@ function BookingContent() {
         </section>
       )}
 
-      {/* ═══════════════ CAL.COM EMBED ═══════════════ */}
+      {/* CAL.COM EMBED */}
       <section
         className="px-6 lg:px-10"
         style={{
-          backgroundColor: selectedService
-            ? "var(--color-cream)"
-            : "var(--color-ivory)",
+          backgroundColor: selectedService ? "var(--color-soft-ivory)" : "var(--color-linen)",
           paddingTop: "var(--space-section)",
           paddingBottom: "var(--space-section)",
         }}
@@ -282,27 +257,21 @@ function BookingContent() {
             variants={staggerContainer}
             className="text-center"
           >
-            <motion.div
-              variants={revealUp}
-              className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
-            >
+            <motion.div variants={revealUp} className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
               {selectedService ? selectedService.name : "Choose a Time"}
             </motion.div>
             <motion.h2
               variants={revealUp}
               className="headline-text mb-4"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-chocolate)",
-              }}
+              style={{ fontSize: "var(--text-3xl)", color: "var(--color-deep-cocoa)" }}
             >
-              Book Your <span className="accent-text">Appointment</span>
+              Book Your <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Appointment</span>
             </motion.h2>
             {selectedService && (
               <motion.p
                 variants={revealUp}
-                className="mx-auto mb-2 max-w-md leading-relaxed text-[var(--color-brown)]"
-                style={{ fontSize: "var(--text-base)" }}
+                className="mx-auto mb-2 max-w-md leading-relaxed"
+                style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
               >
                 {selectedService.shortDescription}
               </motion.p>
@@ -312,27 +281,17 @@ function BookingContent() {
                 variants={revealUp}
                 className="mb-8 flex items-center justify-center gap-6"
               >
-                <span
-                  className="accent-text text-[var(--color-accent-text)]"
-                  style={{ fontSize: "var(--text-xl)" }}
-                >
+                <span className="accent-text" style={{ fontSize: "var(--text-xl)", color: "var(--color-accent-text)" }}>
                   ${selectedService.priceRange || "Varies"}
                 </span>
-                <span
-                  className="h-4 w-[1px]"
-                  style={{ backgroundColor: "var(--color-stone)" }}
-                />
-                <span
-                  className="text-[var(--color-brown)]"
-                  style={{ fontSize: "var(--text-sm)" }}
-                >
+                <span className="h-4 w-[1px]" style={{ backgroundColor: "var(--color-border)" }} />
+                <span style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)" }}>
                   {selectedService.duration} minutes
                 </span>
               </motion.div>
             )}
           </motion.div>
 
-          {/* Cal.com Embed Placeholder */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -343,9 +302,9 @@ function BookingContent() {
             <div
               className="flex flex-col items-center justify-center text-center"
               style={{
-                backgroundColor: "var(--color-ivory)",
-                border: "1px solid var(--color-stone)",
-                borderRadius: "var(--border-radius-sm)",
+                backgroundColor: "var(--color-linen)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--border-radius-lg)",
                 padding: "var(--space-4xl) var(--space-xl)",
                 minHeight: "400px",
               }}
@@ -353,37 +312,25 @@ function BookingContent() {
               <div
                 className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
                 style={{
-                  backgroundColor: "var(--color-cream)",
-                  border: "1px solid var(--color-stone)",
+                  backgroundColor: "var(--color-soft-ivory)",
+                  border: "1px solid var(--color-border)",
                 }}
               >
-                <span
-                  className="headline-text text-[var(--color-accent-text)]"
-                  style={{ fontSize: "var(--text-2xl)" }}
-                >
+                <span className="headline-text" style={{ fontSize: "var(--text-2xl)", color: "var(--color-accent-text)" }}>
                   C
                 </span>
               </div>
 
-              <h3
-                className="headline-text mb-3"
-                style={{
-                  fontSize: "var(--text-2xl)",
-                  color: "var(--color-chocolate)",
-                }}
-              >
+              <h3 className="headline-text mb-3" style={{ fontSize: "var(--text-2xl)", color: "var(--color-deep-cocoa)" }}>
                 Cal.com Scheduling Widget
               </h3>
 
-              <p
-                className="mx-auto mb-6 max-w-md leading-relaxed text-[var(--color-brown)]"
-                style={{ fontSize: "var(--text-base)" }}
-              >
+              <p className="mx-auto mb-6 max-w-md leading-relaxed" style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
                 The Cal.com booking calendar will be embedded here. Install{" "}
                 <code
                   style={{
                     fontFamily: "monospace",
-                    backgroundColor: "var(--color-cream)",
+                    backgroundColor: "var(--color-soft-ivory)",
                     padding: "2px 6px",
                     borderRadius: "4px",
                     fontSize: "var(--text-sm)",
@@ -398,12 +345,12 @@ function BookingContent() {
               <div
                 className="mx-auto mb-6 max-w-sm"
                 style={{
-                  backgroundColor: "var(--color-cream)",
-                  borderRadius: "var(--border-radius-sm)",
+                  backgroundColor: "var(--color-soft-ivory)",
+                  borderRadius: "var(--border-radius-md)",
                   padding: "var(--space-md) var(--space-lg)",
                   fontSize: "var(--text-sm)",
                   fontFamily: "monospace",
-                  color: "var(--color-brown)",
+                  color: "var(--color-warm-taupe)",
                   textAlign: "left",
                   lineHeight: 1.6,
                 }}
@@ -411,10 +358,7 @@ function BookingContent() {
                 npm install @calcom/embed-react
               </div>
 
-              <p
-                className="text-[var(--color-stone-dark)]"
-                style={{ fontSize: "var(--text-sm)" }}
-              >
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}>
                 {selectedService
                   ? `Pre-selected service: ${selectedService.name}`
                   : "No service pre-selected. Guests will choose during booking."}
@@ -425,9 +369,10 @@ function BookingContent() {
               <div className="mt-6 text-center">
                 <Link
                   href="/booking"
-                  className="text-[var(--color-accent-text)] transition-colors hover:text-[var(--color-chocolate)]"
+                  className="transition-colors hover:text-[var(--color-deep-cocoa)]"
                   style={{
                     fontSize: "var(--text-sm)",
+                    color: "var(--color-accent-text)",
                     textDecoration: "underline",
                     textUnderlineOffset: "4px",
                     transitionDuration: "var(--duration-fast)",
@@ -441,12 +386,12 @@ function BookingContent() {
         </div>
       </section>
 
-      {/* ═══════════════ WHAT TO EXPECT ═══════════════ */}
+      {/* WHAT TO EXPECT */}
       <section
         className="section-dark px-6 lg:px-10"
         style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
+          paddingTop: "var(--space-section-lg)",
+          paddingBottom: "var(--space-section-lg)",
         }}
       >
         <motion.div
@@ -456,47 +401,34 @@ function BookingContent() {
           variants={staggerContainer}
           className="mx-auto max-w-[var(--max-width)]"
         >
-          <motion.div variants={revealUp} className="mb-16 text-center">
-            <div className="editorial-spacing mb-4 text-[var(--color-stone)]">
+          <motion.div variants={revealUp} className="mb-20 text-center">
+            <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
               Your Visit
             </div>
-            <h2
-              className="headline-text"
-              style={{ fontSize: "var(--text-4xl)" }}
-            >
-              What to <span className="accent-text">Expect</span>
+            <h2 className="headline-text" style={{ fontSize: "var(--text-4xl)" }}>
+              What to <span className="accent-text" style={{ color: "var(--color-accent)" }}>Expect</span>
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-16">
             {whatToExpect.map((step) => (
-              <motion.div
-                key={step.number}
-                variants={revealUp}
-                className="text-center"
-              >
+              <motion.div key={step.number} variants={revealUp} className="text-center">
                 <div
                   className="mx-auto mb-6"
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: "var(--text-4xl)",
-                    fontWeight: 300,
-                    color: "var(--color-burgundy-light)",
+                    fontWeight: 200,
+                    color: "var(--color-accent-light)",
                     letterSpacing: "0.05em",
                   }}
                 >
                   {step.number}
                 </div>
-                <h3
-                  className="headline-text mb-4"
-                  style={{ fontSize: "var(--text-2xl)" }}
-                >
+                <h3 className="headline-text mb-4" style={{ fontSize: "var(--text-2xl)" }}>
                   {step.title}
                 </h3>
-                <p
-                  className="mx-auto max-w-xs leading-relaxed text-[var(--color-stone)]"
-                  style={{ fontSize: "var(--text-sm)" }}
-                >
+                <p className="mx-auto max-w-xs leading-relaxed" style={{ fontSize: "var(--text-sm)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}>
                   {step.description}
                 </p>
               </motion.div>
@@ -505,38 +437,31 @@ function BookingContent() {
         </motion.div>
       </section>
 
-      {/* ═══════════════ PREPARATION + CANCELLATION ═══════════════ */}
+      {/* PREPARATION + CANCELLATION */}
       <section
         className="px-6 lg:px-10"
         style={{
-          backgroundColor: "var(--color-cream)",
+          backgroundColor: "var(--color-soft-ivory)",
           paddingTop: "var(--space-section)",
           paddingBottom: "var(--space-section)",
         }}
       >
-        <div className="mx-auto grid max-w-[var(--max-width)] items-start gap-16 lg:grid-cols-2 lg:gap-20">
-          {/* Preparation Tips */}
+        <div className="mx-auto grid max-w-[var(--max-width)] items-start gap-16 lg:grid-cols-2 lg:gap-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
-            <motion.div
-              variants={revealLeft}
-              className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
-            >
+            <motion.div variants={revealLeft} className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
               Before Your Visit
             </motion.div>
             <motion.h2
               variants={revealLeft}
               className="headline-text mb-8"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-chocolate)",
-              }}
+              style={{ fontSize: "var(--text-3xl)", color: "var(--color-deep-cocoa)" }}
             >
-              Preparation <span className="accent-text">Tips</span>
+              Preparation <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Tips</span>
             </motion.h2>
 
             <ul className="flex flex-col gap-4">
@@ -544,14 +469,14 @@ function BookingContent() {
                 <motion.li
                   key={i}
                   variants={revealLeft}
-                  className="flex items-start gap-4 text-[var(--color-brown)]"
-                  style={{ fontSize: "var(--text-sm)" }}
+                  className="flex items-start gap-4"
+                  style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
                 >
                   <span
                     className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full"
                     style={{
-                      backgroundColor: "var(--color-burgundy)",
-                      color: "var(--color-ivory)",
+                      backgroundColor: "var(--color-accent)",
+                      color: "var(--color-deep-cocoa)",
                       fontSize: "10px",
                       fontWeight: 600,
                     }}
@@ -564,34 +489,27 @@ function BookingContent() {
             </ul>
           </motion.div>
 
-          {/* Cancellation Policy */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
-            <motion.div
-              variants={revealRight}
-              className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
-            >
+            <motion.div variants={revealRight} className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
               Good to Know
             </motion.div>
             <motion.h2
               variants={revealRight}
               className="headline-text mb-8"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-chocolate)",
-              }}
+              style={{ fontSize: "var(--text-3xl)", color: "var(--color-deep-cocoa)" }}
             >
-              Cancellation <span className="accent-text">Policy</span>
+              Cancellation <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Policy</span>
             </motion.h2>
 
             <div
               style={{
-                backgroundColor: "var(--color-ivory)",
-                borderRadius: "var(--border-radius-sm)",
+                backgroundColor: "var(--color-linen)",
+                borderRadius: "var(--border-radius-lg)",
                 padding: "var(--space-xl)",
               }}
             >
@@ -600,12 +518,12 @@ function BookingContent() {
                   <motion.li
                     key={i}
                     variants={revealRight}
-                    className="flex items-start gap-3 text-[var(--color-brown)]"
-                    style={{ fontSize: "var(--text-sm)" }}
+                    className="flex items-start gap-3"
+                    style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
                   >
                     <span
                       className="mt-[2px] h-[6px] w-[6px] flex-shrink-0 rounded-full"
-                      style={{ backgroundColor: "var(--color-stone-dark)" }}
+                      style={{ backgroundColor: "var(--color-cream)" }}
                     />
                     <span className="leading-relaxed">{item}</span>
                   </motion.li>
@@ -616,11 +534,11 @@ function BookingContent() {
         </div>
       </section>
 
-      {/* ═══════════════ CTA ═══════════════ */}
+      {/* CTA */}
       <section
         className="px-6 text-center lg:px-10"
         style={{
-          backgroundColor: "var(--color-ivory)",
+          backgroundColor: "var(--color-linen)",
           paddingTop: "var(--space-section)",
           paddingBottom: "var(--space-section)",
         }}
@@ -632,26 +550,20 @@ function BookingContent() {
           variants={staggerContainer}
           className="mx-auto max-w-2xl"
         >
-          <motion.div
-            variants={revealUp}
-            className="accent-line mx-auto mb-8"
-          />
+          <motion.div variants={revealUp} className="accent-line mx-auto mb-8" />
 
           <motion.h2
             variants={revealUp}
             className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
-            }}
+            style={{ fontSize: "var(--text-4xl)", color: "var(--color-deep-cocoa)" }}
           >
-            Have <span className="accent-text">questions</span> before booking?
+            Have <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>questions</span> before booking?
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
+            className="mx-auto mb-10 max-w-lg leading-relaxed"
+            style={{ fontSize: "var(--text-lg)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
           >
             Our team is here to help you choose the perfect treatment and answer
             any questions you may have.
@@ -674,20 +586,16 @@ function BookingContent() {
   );
 }
 
-/* ── Page Component ────────────────────────────────── */
 export default function BookingPage() {
   return (
     <Suspense
       fallback={
         <div
           className="flex min-h-screen items-center justify-center"
-          style={{ backgroundColor: "var(--color-ivory)" }}
+          style={{ backgroundColor: "var(--color-soft-ivory)" }}
         >
           <div className="text-center">
-            <div
-              className="editorial-spacing text-[var(--color-stone-dark)]"
-              style={{ fontSize: "var(--text-sm)" }}
-            >
+            <div className="editorial-spacing" style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}>
               Loading
             </div>
           </div>

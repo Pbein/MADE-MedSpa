@@ -27,7 +27,7 @@ This document tracks all 11 epics for the MADE Med Spa web application. Each epi
 | 4  | FAQ Page                              | [x]    | 4       | [EPIC-04](./epics/EPIC-04-faq.md)            |
 | 5  | Booking System (Cal.com)              | [~]    | 6       | [EPIC-05](./epics/EPIC-05-booking.md)        |
 | 6  | Membership System                     | [~]    | 7       | [EPIC-06](./epics/EPIC-06-membership.md)     |
-| 7  | Hermes Integration & Communication    | [ ]    | 5       | [EPIC-07](./epics/EPIC-07-hermes.md)         |
+| 7  | Pabau EMR Integration & Communication | [ ]    | 5       | [EPIC-07](./epics/EPIC-07-pabau.md)          |
 | 8  | Photo/Video Content                   | [ ]    | 5       | [EPIC-08](./epics/EPIC-08-media.md)          |
 | 9  | SEO, Performance & Polish             | [ ]    | 6       | [EPIC-09](./epics/EPIC-09-seo-polish.md)     |
 | 10 | Admin Dashboard                       | [~]    | 8       | [EPIC-10](./epics/EPIC-10-admin.md)          |
@@ -49,7 +49,7 @@ This document tracks all 11 epics for the MADE Med Spa web application. Each epi
 ### Phase 3: Core Functionality
 - [~] Epic 5: Booking System (3 of 6 done; 5.1 needs Cal.com account)
 - [~] Epic 6: Membership System (4 of 7 done; 6.2-6.3 need Stripe keys)
-- [ ] Epic 7: Hermes Integration (0/5 — not started)
+- [ ] Epic 7: Pabau EMR Integration (0/5 — not started)
 
 ### Phase 4: E-Commerce
 - [~] Epic 11: E-Commerce (2 of 8 done, 5 in progress)
@@ -97,9 +97,9 @@ This document tracks all 11 epics for the MADE Med Spa web application. Each epi
 - 5.5 (post-visit review request)
 - 6.6 (membership tier change)
 - 6.7 (membership cancellation)
-- 7.1-7.5 (Hermes integration — 5 stories)
+- 7.1-7.5 (Pabau EMR integration — 5 stories)
 - 8.1-8.5 (media/photo/video — 5 stories)
 - 9.1-9.6 (SEO, a11y, performance — 6 stories)
 - 11.6 (order history in dashboard)
 
-_Last updated: 2026-03-05_
+_Last updated: 2026-03-26_

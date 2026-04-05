@@ -10,8 +10,8 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.18,
-      delayChildren: 0.3,
+      staggerChildren: 0.2,
+      delayChildren: 0.4,
     },
   },
 };
@@ -21,7 +21,7 @@ const fadeUpVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, ease: luxuryEase },
+    transition: { duration: 1.1, ease: luxuryEase },
   },
 };
 
@@ -29,13 +29,13 @@ const lineVariants = {
   hidden: { scaleY: 0 },
   visible: {
     scaleY: 1,
-    transition: { duration: 1.2, ease: luxuryEase, delay: 1.6 },
+    transition: { duration: 1.2, ease: luxuryEase, delay: 2 },
   },
 };
 
 export default function HeroSection() {
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
         <video
@@ -49,72 +49,84 @@ export default function HeroSection() {
           <source src={demoImages.hero.videoWebm} type="video/webm" />
           <source src={demoImages.hero.video} type="video/mp4" />
         </video>
-        {/* Warm dark overlay for text readability */}
+        {/* Warm layered gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(44, 34, 32, 0.55) 0%, rgba(44, 34, 32, 0.35) 30%, rgba(44, 34, 32, 0.45) 60%, rgba(44, 34, 32, 0.65) 100%)",
+              "linear-gradient(180deg, rgba(45,30,23,0.6) 0%, rgba(45,30,23,0.3) 40%, rgba(45,30,23,0.4) 70%, rgba(45,30,23,0.7) 100%)",
           }}
         />
       </div>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 flex flex-col items-center"
-      >
-        {/* Overline */}
+      {/* Content — left-aligned on desktop, centered on mobile */}
+      <div className="relative z-10 mx-auto w-full max-w-[var(--max-width)] px-6 lg:px-10">
         <motion.div
-          variants={fadeUpVariants}
-          className="editorial-spacing mb-8"
-          style={{ color: "var(--color-stone)" }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex max-w-2xl flex-col items-start text-left"
         >
-          Luxury Aesthetic Studio
+          {/* Overline label */}
+          <motion.div
+            variants={fadeUpVariants}
+            className="editorial-spacing mb-6"
+            style={{ color: "var(--color-accent-light)" }}
+          >
+            Luxury Aesthetic Studio
+          </motion.div>
+
+          {/* Headline — large, editorial */}
+          <motion.h1
+            variants={fadeUpVariants}
+            style={{
+              fontFamily: "var(--font-headline)",
+              fontSize: "var(--text-hero)",
+              color: "var(--color-soft-ivory)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.02,
+              fontWeight: 400,
+            }}
+          >
+            Elevated Beauty,
+            <br />
+            <span
+              className="accent-text"
+              style={{ color: "var(--color-cream)" }}
+            >
+              Thoughtfully
+            </span>{" "}
+            Designed
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            variants={fadeUpVariants}
+            className="mt-8 max-w-md leading-relaxed"
+            style={{
+              fontSize: "var(--text-lg)",
+              color: "rgba(237, 229, 220, 0.75)",
+              fontWeight: 300,
+            }}
+          >
+            Personalized aesthetic treatments crafted with precision,
+            artistry, and an unwavering commitment to your unique radiance.
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div
+            variants={fadeUpVariants}
+            className="mt-10 flex flex-col gap-4 sm:flex-row"
+          >
+            <Link href="/booking" className="btn btn-light">
+              Book Consultation
+            </Link>
+            <Link href="/services" className="btn btn-light-outline">
+              Explore Services
+            </Link>
+          </motion.div>
         </motion.div>
-
-        {/* Headline */}
-        <motion.h1
-          variants={fadeUpVariants}
-          className="headline-text mb-6 max-w-4xl"
-          style={{
-            fontSize: "var(--text-5xl)",
-            color: "var(--color-ivory)",
-            letterSpacing: "-0.01em",
-            lineHeight: 1.1,
-          }}
-        >
-          Elevate Your{" "}
-          <span className="accent-text" style={{ color: "var(--color-stone)" }}>
-            Natural
-          </span>{" "}
-          Beauty
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          variants={fadeUpVariants}
-          className="mx-auto mb-12 max-w-lg leading-relaxed"
-          style={{ fontSize: "var(--text-lg)", color: "var(--color-stone)" }}
-        >
-          Personalized aesthetic treatments crafted with precision,
-          artistry, and an unwavering commitment to your unique radiance.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          variants={fadeUpVariants}
-          className="flex flex-col items-center gap-4 sm:flex-row"
-        >
-          <Link href="/services" className="btn btn-primary" style={{ backgroundColor: "var(--color-ivory)", color: "var(--color-chocolate)", borderColor: "var(--color-ivory)" }}>
-            Explore Services
-          </Link>
-          <Link href="/contact" className="btn btn-outline" style={{ borderColor: "var(--color-ivory)", color: "var(--color-ivory)" }}>
-            Book a Consultation
-          </Link>
-        </motion.div>
-      </motion.div>
+      </div>
 
       {/* Decorative scroll indicator */}
       <motion.div
@@ -126,13 +138,17 @@ export default function HeroSection() {
       >
         <span
           className="editorial-spacing"
-          style={{ fontSize: "0.6rem", letterSpacing: "0.25em", color: "var(--color-stone)" }}
+          style={{
+            fontSize: "0.6rem",
+            letterSpacing: "0.25em",
+            color: "rgba(237, 229, 220, 0.5)",
+          }}
         >
           Scroll
         </span>
         <div
           className="h-12 w-[1px]"
-          style={{ backgroundColor: "var(--color-stone)" }}
+          style={{ backgroundColor: "rgba(237, 229, 220, 0.3)" }}
         />
       </motion.div>
     </section>

@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-/* -- Framer Motion helpers -- */
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const revealUp = {
@@ -19,7 +18,6 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-/* -- FAQ data -- */
 const membershipFaqs = [
   {
     question: "How does billing work?",
@@ -48,7 +46,6 @@ const membershipFaqs = [
   },
 ];
 
-/* -- How it Works steps -- */
 const steps = [
   {
     number: "01",
@@ -70,12 +67,10 @@ const steps = [
   },
 ];
 
-/* -- Helper: format price -- */
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(0)}`;
 }
 
-/* -- FAQ Accordion Item -- */
 function FaqItem({
   question,
   answer,
@@ -88,27 +83,19 @@ function FaqItem({
   onToggle: () => void;
 }) {
   return (
-    <div
-      className="border-b"
-      style={{ borderColor: "var(--color-stone)" }}
-    >
+    <div className="border-b" style={{ borderColor: "var(--color-border)" }}>
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between py-5 text-left"
       >
-        <span
-          className="headline-text"
-          style={{
-            fontSize: "var(--text-lg)",
-            color: "var(--color-chocolate)",
-          }}
-        >
+        <span className="headline-text" style={{ fontSize: "var(--text-lg)", color: "var(--color-deep-cocoa)" }}>
           {question}
         </span>
         <motion.span
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.3, ease }}
-          className="flex h-8 w-8 shrink-0 items-center justify-center text-xl text-[var(--color-accent-text)]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center text-xl"
+          style={{ color: "var(--color-accent-text)" }}
         >
           +
         </motion.span>
@@ -121,10 +108,7 @@ function FaqItem({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease }}
           >
-            <p
-              className="pb-5 leading-relaxed text-[var(--color-brown)]"
-              style={{ fontSize: "var(--text-base)" }}
-            >
+            <p className="pb-5 leading-relaxed" style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
               {answer}
             </p>
           </motion.div>
@@ -134,7 +118,6 @@ function FaqItem({
   );
 }
 
-/* -- Comparison Table Component -- */
 function ComparisonTable({
   tiers,
 }: {
@@ -163,7 +146,7 @@ function ComparisonTable({
     <section
       className="px-6 lg:px-10"
       style={{
-        backgroundColor: "var(--color-ivory)",
+        backgroundColor: "var(--color-linen)",
         paddingTop: "var(--space-section)",
         paddingBottom: "var(--space-section)",
       }}
@@ -176,39 +159,24 @@ function ComparisonTable({
         className="mx-auto max-w-[var(--max-width)]"
       >
         <motion.div variants={revealUp} className="mb-16 text-center">
-          <div className="editorial-spacing mb-4 text-[var(--color-stone-dark)]">
+          <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
             Compare
           </div>
-          <h2
-            className="headline-text"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
-            }}
-          >
-            Side by <span className="accent-text">Side</span>
+          <h2 className="headline-text" style={{ fontSize: "var(--text-4xl)", color: "var(--color-deep-cocoa)" }}>
+            Side by <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Side</span>
           </h2>
         </motion.div>
 
-        <motion.div
-          variants={revealUp}
-          className="overflow-x-auto"
-          style={{
-            WebkitOverflowScrolling: "touch",
-          }}
-        >
-          <table
-            className="w-full border-collapse"
-            style={{ minWidth: "600px" }}
-          >
+        <motion.div variants={revealUp} className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+          <table className="w-full border-collapse" style={{ minWidth: "600px" }}>
             <thead>
               <tr>
                 <th
                   className="text-left"
                   style={{
                     padding: "var(--space-md) var(--space-lg)",
-                    borderBottom: "2px solid var(--color-stone)",
-                    color: "var(--color-brown)",
+                    borderBottom: "2px solid var(--color-border-strong)",
+                    color: "var(--color-warm-taupe)",
                     fontSize: "var(--text-sm)",
                     fontWeight: 400,
                     letterSpacing: "0.08em",
@@ -223,35 +191,15 @@ function ComparisonTable({
                     className="text-center"
                     style={{
                       padding: "var(--space-md) var(--space-lg)",
-                      borderBottom: "2px solid var(--color-stone)",
+                      borderBottom: "2px solid var(--color-border-strong)",
                     }}
                   >
-                    <div
-                      className="headline-text"
-                      style={{
-                        fontSize: "var(--text-xl)",
-                        color: "var(--color-chocolate)",
-                        marginBottom: "4px",
-                      }}
-                    >
+                    <div className="headline-text" style={{ fontSize: "var(--text-xl)", color: "var(--color-deep-cocoa)", marginBottom: "4px" }}>
                       {tier.name}
                     </div>
-                    <div
-                      style={{
-                        fontSize: "var(--text-sm)",
-                        color: "var(--color-accent-text)",
-                        fontWeight: 500,
-                      }}
-                    >
+                    <div style={{ fontSize: "var(--text-sm)", color: "var(--color-accent-text)", fontWeight: 500 }}>
                       {formatPrice(tier.monthlyPrice)}
-                      <span
-                        style={{
-                          color: "var(--color-stone-dark)",
-                          fontWeight: 400,
-                        }}
-                      >
-                        /mo
-                      </span>
+                      <span style={{ color: "var(--color-cream)", fontWeight: 400 }}>/mo</span>
                     </div>
                   </th>
                 ))}
@@ -259,24 +207,8 @@ function ComparisonTable({
             </thead>
             <tbody>
               {allBenefits.map((benefit, i) => (
-                <tr
-                  key={benefit}
-                  style={{
-                    backgroundColor:
-                      i % 2 === 0
-                        ? "transparent"
-                        : "var(--color-cream)",
-                  }}
-                >
-                  <td
-                    style={{
-                      padding: "var(--space-sm) var(--space-lg)",
-                      color: "var(--color-brown)",
-                      fontSize: "var(--text-sm)",
-                      lineHeight: 1.6,
-                      borderBottom: "1px solid var(--color-stone)",
-                    }}
-                  >
+                <tr key={benefit} style={{ backgroundColor: i % 2 === 0 ? "transparent" : "var(--color-soft-ivory)" }}>
+                  <td style={{ padding: "var(--space-sm) var(--space-lg)", color: "var(--color-warm-taupe)", fontSize: "var(--text-sm)", lineHeight: 1.6, borderBottom: "1px solid var(--color-border)", fontWeight: 300 }}>
                     {benefit}
                   </td>
                   {tiers.map((tier) => {
@@ -287,11 +219,9 @@ function ComparisonTable({
                         className="text-center"
                         style={{
                           padding: "var(--space-sm) var(--space-lg)",
-                          borderBottom: "1px solid var(--color-stone)",
+                          borderBottom: "1px solid var(--color-border)",
                           fontSize: "var(--text-lg)",
-                          color: included
-                            ? "var(--color-accent-text)"
-                            : "var(--color-stone)",
+                          color: included ? "var(--color-accent-text)" : "var(--color-cream)",
                         }}
                       >
                         {included ? "\u2713" : "\u2014"}
@@ -308,7 +238,6 @@ function ComparisonTable({
   );
 }
 
-/* -- Page Component -- */
 export default function MembershipPage() {
   const tiers = useQuery(api.membershipTiers.list);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -316,98 +245,43 @@ export default function MembershipPage() {
   return (
     <>
       {/* HERO */}
-      <section
-        className="relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center"
-        style={{ backgroundColor: "var(--color-ivory)" }}
-      >
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="pt-[var(--nav-height)]"
-        >
-          <motion.div
-            variants={revealUp}
-            className="editorial-spacing mb-6 text-[var(--color-stone-dark)]"
-          >
+      <section className="section-warm relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
+        <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="pt-[var(--nav-height)]">
+          <motion.div variants={revealUp} className="editorial-spacing mb-6" style={{ color: "var(--color-cream)" }}>
             Membership
           </motion.div>
 
-          <motion.h1
-            variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-5xl)",
-              color: "var(--color-chocolate)",
-            }}
-          >
-            Elevate Your <span className="accent-text">Beauty</span>
+          <motion.h1 variants={revealUp} className="headline-text mb-6" style={{ fontSize: "var(--text-5xl)", color: "var(--color-soft-ivory)" }}>
+            Elevate Your <span className="accent-text" style={{ color: "var(--color-accent)" }}>Beauty</span>
           </motion.h1>
 
-          <motion.p
-            variants={revealUp}
-            className="mx-auto max-w-xl leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
-          >
+          <motion.p variants={revealUp} className="mx-auto max-w-xl leading-relaxed" style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}>
             Exclusive tiers designed for every lifestyle. Enjoy monthly
             treatments, member-only pricing, priority booking, and more.
           </motion.p>
         </motion.div>
 
-        <div
-          className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "var(--color-stone)" }}
-        />
+        <div className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2" style={{ backgroundColor: "rgba(157, 138, 124, 0.3)" }} />
       </section>
 
       {/* TIER CARDS */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-cream)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="mx-auto max-w-[var(--max-width)]"
-        >
+      <section className="px-6 lg:px-10" style={{ backgroundColor: "var(--color-soft-ivory)", paddingTop: "var(--space-section-lg)", paddingBottom: "var(--space-section-lg)" }}>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="mx-auto max-w-[var(--max-width)]">
           <motion.div variants={revealUp} className="mb-16 text-center">
-            <div className="editorial-spacing mb-4 text-[var(--color-stone-dark)]">
-              Choose Your Tier
-            </div>
-            <h2
-              className="headline-text"
-              style={{
-                fontSize: "var(--text-4xl)",
-                color: "var(--color-chocolate)",
-              }}
-            >
-              Find Your <span className="accent-text">Perfect</span> Plan
+            <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>Choose Your Tier</div>
+            <h2 className="headline-text" style={{ fontSize: "var(--text-4xl)", color: "var(--color-deep-cocoa)" }}>
+              Find Your <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Perfect</span> Plan
             </h2>
           </motion.div>
 
-          {/* Loading skeletons */}
           {!tiers && (
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse rounded-[var(--border-radius-sm)]"
-                  style={{
-                    backgroundColor: "var(--color-ivory)",
-                    height: "420px",
-                  }}
-                />
+                <div key={i} className="animate-pulse" style={{ backgroundColor: "var(--color-linen)", height: "420px", borderRadius: "var(--border-radius-lg)" }} />
               ))}
             </div>
           )}
 
-          {/* Tier cards */}
           {tiers && (
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {tiers.map((tier, index) => {
@@ -418,75 +292,38 @@ export default function MembershipPage() {
                     variants={revealUp}
                     className="hover-lift relative flex flex-col overflow-hidden"
                     style={{
-                      backgroundColor: "var(--color-ivory)",
-                      borderRadius: "var(--border-radius-sm)",
-                      border: isPopular
-                        ? "2px solid var(--color-accent-text)"
-                        : "1px solid var(--color-stone)",
+                      backgroundColor: "var(--color-linen)",
+                      borderRadius: "var(--border-radius-lg)",
+                      border: isPopular ? "2px solid var(--color-accent-text)" : "1px solid var(--color-border)",
+                      boxShadow: "var(--shadow-card)",
                     }}
                   >
                     {isPopular && (
-                      <div
-                        className="py-2 text-center text-xs font-medium tracking-widest uppercase text-white"
-                        style={{ backgroundColor: "var(--color-burgundy)" }}
-                      >
+                      <div className="py-2 text-center text-xs font-medium tracking-widest uppercase" style={{ backgroundColor: "var(--color-accent)", color: "var(--color-deep-cocoa)" }}>
                         Most Popular
                       </div>
                     )}
 
-                    <div
-                      className="flex flex-1 flex-col"
-                      style={{
-                        padding:
-                          "var(--space-xl) var(--space-lg) var(--space-lg)",
-                      }}
-                    >
-                      <h3
-                        className="headline-text mb-2"
-                        style={{
-                          fontSize: "var(--text-2xl)",
-                          color: "var(--color-chocolate)",
-                        }}
-                      >
+                    <div className="flex flex-1 flex-col" style={{ padding: "var(--space-xl) var(--space-lg) var(--space-lg)" }}>
+                      <h3 className="headline-text mb-2" style={{ fontSize: "var(--text-2xl)", color: "var(--color-deep-cocoa)" }}>
                         {tier.name}
                       </h3>
 
                       <div className="mb-4">
-                        <span
-                          className="headline-text"
-                          style={{
-                            fontSize: "var(--text-4xl)",
-                            color: "var(--color-accent-text)",
-                          }}
-                        >
+                        <span className="headline-text" style={{ fontSize: "var(--text-4xl)", color: "var(--color-accent-text)" }}>
                           {formatPrice(tier.monthlyPrice)}
                         </span>
-                        <span
-                          className="text-[var(--color-stone-dark)]"
-                          style={{ fontSize: "var(--text-sm)" }}
-                        >
-                          /month
-                        </span>
+                        <span style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}>/month</span>
                       </div>
 
-                      <p
-                        className="mb-6 leading-relaxed text-[var(--color-brown)]"
-                        style={{ fontSize: "var(--text-sm)" }}
-                      >
+                      <p className="mb-6 leading-relaxed" style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
                         {tier.description}
                       </p>
 
                       <ul className="mb-8 flex flex-1 flex-col gap-3">
                         {tier.benefits.map((benefit, i) => (
-                          <li
-                            key={i}
-                            className="flex items-start gap-2 text-[var(--color-brown)]"
-                            style={{ fontSize: "var(--text-sm)" }}
-                          >
-                            <span
-                              className="mt-0.5 shrink-0 text-[var(--color-accent-text)]"
-                              style={{ fontSize: "var(--text-sm)" }}
-                            >
+                          <li key={i} className="flex items-start gap-2" style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
+                            <span className="mt-0.5 shrink-0" style={{ fontSize: "var(--text-sm)", color: "var(--color-accent-text)" }}>
                               &#10003;
                             </span>
                             {benefit}
@@ -496,11 +333,7 @@ export default function MembershipPage() {
 
                       <Link
                         href={`/membership/signup?tier=${tier.slug}`}
-                        className={
-                          isPopular
-                            ? "btn btn-primary w-full text-center"
-                            : "btn btn-outline w-full text-center"
-                        }
+                        className={isPopular ? "btn btn-primary w-full text-center" : "btn btn-outline w-full text-center"}
                       >
                         Join Now
                       </Link>
@@ -513,67 +346,28 @@ export default function MembershipPage() {
         </motion.div>
       </section>
 
-      {/* COMPARISON TABLE */}
-      {tiers && tiers.length > 0 && (
-        <ComparisonTable tiers={tiers} />
-      )}
+      {tiers && tiers.length > 0 && <ComparisonTable tiers={tiers} />}
 
       {/* HOW IT WORKS */}
-      <section
-        className="section-dark px-6 lg:px-10"
-        style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="mx-auto max-w-[var(--max-width)]"
-        >
-          <motion.div variants={revealUp} className="mb-16 text-center">
-            <div className="editorial-spacing mb-4 text-[var(--color-stone)]">
-              Getting Started
-            </div>
-            <h2
-              className="headline-text"
-              style={{ fontSize: "var(--text-4xl)" }}
-            >
-              How It <span className="accent-text">Works</span>
+      <section className="section-dark px-6 lg:px-10" style={{ paddingTop: "var(--space-section-lg)", paddingBottom: "var(--space-section-lg)" }}>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="mx-auto max-w-[var(--max-width)]">
+          <motion.div variants={revealUp} className="mb-20 text-center">
+            <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>Getting Started</div>
+            <h2 className="headline-text" style={{ fontSize: "var(--text-4xl)" }}>
+              How It <span className="accent-text" style={{ color: "var(--color-accent)" }}>Works</span>
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-16">
             {steps.map((step) => (
-              <motion.div
-                key={step.number}
-                variants={revealUp}
-                className="text-center"
-              >
-                <div
-                  className="mx-auto mb-6"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "var(--text-4xl)",
-                    fontWeight: 300,
-                    color: "var(--color-burgundy-light)",
-                    letterSpacing: "0.05em",
-                  }}
-                >
+              <motion.div key={step.number} variants={revealUp} className="text-center">
+                <div className="mx-auto mb-6" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-4xl)", fontWeight: 200, color: "var(--color-accent-light)", letterSpacing: "0.05em" }}>
                   {step.number}
                 </div>
-                <h3
-                  className="headline-text mb-4"
-                  style={{ fontSize: "var(--text-2xl)" }}
-                >
+                <h3 className="headline-text mb-4" style={{ fontSize: "var(--text-2xl)" }}>
                   {step.title}
                 </h3>
-                <p
-                  className="mx-auto max-w-xs leading-relaxed text-[var(--color-stone)]"
-                  style={{ fontSize: "var(--text-sm)" }}
-                >
+                <p className="mx-auto max-w-xs leading-relaxed" style={{ fontSize: "var(--text-sm)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}>
                   {step.description}
                 </p>
               </motion.div>
@@ -583,33 +377,12 @@ export default function MembershipPage() {
       </section>
 
       {/* FAQ */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-cream)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="mx-auto max-w-2xl"
-        >
+      <section className="px-6 lg:px-10" style={{ backgroundColor: "var(--color-soft-ivory)", paddingTop: "var(--space-section)", paddingBottom: "var(--space-section)" }}>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="mx-auto max-w-2xl">
           <motion.div variants={revealUp} className="mb-12 text-center">
-            <div className="editorial-spacing mb-4 text-[var(--color-stone-dark)]">
-              Questions
-            </div>
-            <h2
-              className="headline-text"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-chocolate)",
-              }}
-            >
-              Membership <span className="accent-text">FAQ</span>
+            <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>Questions</div>
+            <h2 className="headline-text" style={{ fontSize: "var(--text-3xl)", color: "var(--color-deep-cocoa)" }}>
+              Membership <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>FAQ</span>
             </h2>
           </motion.div>
 
@@ -628,51 +401,20 @@ export default function MembershipPage() {
       </section>
 
       {/* CTA */}
-      <section
-        className="px-6 text-center lg:px-10"
-        style={{
-          backgroundColor: "var(--color-ivory)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="mx-auto max-w-2xl"
-        >
-          <motion.div
-            variants={revealUp}
-            className="accent-line mx-auto mb-8"
-          />
+      <section className="px-6 text-center lg:px-10" style={{ backgroundColor: "var(--color-linen)", paddingTop: "var(--space-section)", paddingBottom: "var(--space-section)" }}>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="mx-auto max-w-2xl">
+          <motion.div variants={revealUp} className="accent-line mx-auto mb-8" />
 
-          <motion.h2
-            variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
-            }}
-          >
-            Ready to become a{" "}
-            <span className="accent-text">member</span>?
+          <motion.h2 variants={revealUp} className="headline-text mb-6" style={{ fontSize: "var(--text-4xl)", color: "var(--color-deep-cocoa)" }}>
+            Ready to become a <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>member</span>?
           </motion.h2>
 
-          <motion.p
-            variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
-          >
+          <motion.p variants={revealUp} className="mx-auto mb-10 max-w-lg leading-relaxed" style={{ fontSize: "var(--text-lg)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
             Join the MADE family and unlock exclusive treatments, priority
             booking, and member-only pricing on every visit.
           </motion.p>
 
-          <motion.div
-            variants={revealUp}
-            className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
-          >
+          <motion.div variants={revealUp} className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link href="/membership/signup" className="btn btn-primary">
               Become a Member
             </Link>

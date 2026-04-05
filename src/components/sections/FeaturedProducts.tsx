@@ -40,10 +40,10 @@ export default function FeaturedProducts() {
   return (
     <section
       ref={ref}
-      className="relative"
       style={{
-        backgroundColor: "var(--color-cream)",
-        padding: "clamp(4rem, 3rem + 5vw, 8rem) 0",
+        backgroundColor: "var(--color-soft-ivory)",
+        paddingTop: "var(--space-section-lg)",
+        paddingBottom: "var(--space-section-lg)",
       }}
     >
       <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
@@ -54,24 +54,31 @@ export default function FeaturedProducts() {
           transition={{ duration: 0.8, ease: luxuryEase }}
           className="mb-16 text-center"
         >
-          <span className="editorial-spacing mb-4 block text-[var(--color-stone-dark)]">
+          <span
+            className="editorial-spacing mb-4 block"
+            style={{ color: "var(--color-cream)" }}
+          >
             The Shop
           </span>
           <h2
             className="headline-text mb-4"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-deep-cocoa)",
             }}
           >
             Curated{" "}
-            <span className="accent-text text-[var(--color-accent-text)]">
+            <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>
               Essentials
             </span>
           </h2>
           <p
-            className="mx-auto max-w-md text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-base)" }}
+            className="mx-auto max-w-md"
+            style={{
+              fontSize: "var(--text-base)",
+              color: "var(--color-warm-taupe)",
+              fontWeight: 300,
+            }}
           >
             Professional-grade skincare and wellness products, handpicked by
             our experts to extend your results at home.
@@ -90,10 +97,10 @@ export default function FeaturedProducts() {
                 <motion.div key={product._id} variants={cardVariants}>
                   <Link
                     href={`/shop/${product.slug}`}
-                    className="group block overflow-hidden rounded-[var(--border-radius-md)] bg-[var(--color-white)] hover-lift"
+                    className="group block overflow-hidden rounded-[var(--border-radius-lg)] hover-lift"
                     style={{
-                      transition:
-                        "transform var(--duration-fast) var(--ease-luxury), box-shadow var(--duration-fast) var(--ease-luxury)",
+                      backgroundColor: "var(--color-linen)",
+                      boxShadow: "var(--shadow-card)",
                     }}
                   >
                     {/* Image */}
@@ -113,13 +120,15 @@ export default function FeaturedProducts() {
                       {/* Sale badge */}
                       {product.compareAtPrice && (
                         <span
-                          className="absolute top-3 right-3 rounded-[var(--border-radius-sm)] px-2 py-1 text-[var(--color-ivory)]"
+                          className="absolute top-3 right-3 rounded-full px-3 py-1"
                           style={{
-                            backgroundColor: "var(--color-burgundy)",
+                            backgroundColor: "var(--color-accent)",
+                            color: "var(--color-deep-cocoa)",
                             fontSize: "0.65rem",
                             letterSpacing: "0.1em",
                             textTransform: "uppercase",
                             fontFamily: "var(--font-body)",
+                            fontWeight: 500,
                           }}
                         >
                           Sale
@@ -130,8 +139,8 @@ export default function FeaturedProducts() {
                     {/* Details */}
                     <div className="p-5">
                       <p
-                        className="editorial-spacing mb-1 text-[var(--color-stone-dark)]"
-                        style={{ fontSize: "0.6rem" }}
+                        className="editorial-spacing mb-1"
+                        style={{ fontSize: "0.6rem", color: "var(--color-cream)" }}
                       >
                         {product.category}
                       </p>
@@ -139,22 +148,28 @@ export default function FeaturedProducts() {
                         className="headline-text mb-2 transition-colors group-hover:text-[var(--color-accent-text)]"
                         style={{
                           fontSize: "var(--text-base)",
-                          color: "var(--color-chocolate)",
+                          color: "var(--color-deep-cocoa)",
                         }}
                       >
                         {product.name}
                       </h3>
                       <div className="flex items-center gap-2">
                         <span
-                          className="font-medium text-[var(--color-chocolate)]"
-                          style={{ fontSize: "var(--text-base)" }}
+                          className="font-medium"
+                          style={{
+                            fontSize: "var(--text-base)",
+                            color: "var(--color-deep-cocoa)",
+                          }}
                         >
                           {formatPrice(product.price)}
                         </span>
                         {product.compareAtPrice && (
                           <span
-                            className="text-[var(--color-stone-dark)] line-through"
-                            style={{ fontSize: "var(--text-sm)" }}
+                            className="line-through"
+                            style={{
+                              fontSize: "var(--text-sm)",
+                              color: "var(--color-cream)",
+                            }}
                           >
                             {formatPrice(product.compareAtPrice)}
                           </span>
@@ -167,15 +182,22 @@ export default function FeaturedProducts() {
             : /* Loading skeleton */
               Array.from({ length: 4 }).map((_, i) => (
                 <motion.div key={i} variants={cardVariants}>
-                  <div className="overflow-hidden rounded-[var(--border-radius-md)] bg-[var(--color-white)]">
+                  <div
+                    className="overflow-hidden rounded-[var(--border-radius-lg)]"
+                    style={{ backgroundColor: "var(--color-linen)" }}
+                  >
                     <div
-                      className="animate-pulse bg-[var(--color-stone)]/30"
-                      style={{ aspectRatio: "1/1" }}
+                      className="animate-pulse"
+                      style={{
+                        aspectRatio: "1/1",
+                        backgroundColor: "var(--color-cream)",
+                        opacity: 0.3,
+                      }}
                     />
                     <div className="space-y-2 p-5">
-                      <div className="h-3 w-1/3 animate-pulse rounded bg-[var(--color-stone)]/20" />
-                      <div className="h-4 w-2/3 animate-pulse rounded bg-[var(--color-stone)]/30" />
-                      <div className="h-4 w-1/4 animate-pulse rounded bg-[var(--color-stone)]/25" />
+                      <div className="h-3 w-1/3 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.2 }} />
+                      <div className="h-4 w-2/3 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.3 }} />
+                      <div className="h-4 w-1/4 animate-pulse rounded" style={{ backgroundColor: "var(--color-cream)", opacity: 0.25 }} />
                     </div>
                   </div>
                 </motion.div>
@@ -187,7 +209,7 @@ export default function FeaturedProducts() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.6, ease: luxuryEase }}
-          className="mt-14 text-center"
+          className="mt-16 text-center"
         >
           <Link href="/shop" className="btn btn-outline">
             Browse All Products

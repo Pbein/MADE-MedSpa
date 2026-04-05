@@ -23,7 +23,7 @@ function CartIcon({ count, light }: { count: number; light?: boolean }) {
       className="relative flex h-10 w-10 items-center justify-center transition-colors"
       aria-label={`Shopping cart${count > 0 ? `, ${count} items` : ""}`}
       style={{
-        color: light ? "var(--color-ivory)" : "var(--color-chocolate)",
+        color: light ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
         transitionDuration: "var(--duration-fast)",
       }}
     >
@@ -43,12 +43,13 @@ function CartIcon({ count, light }: { count: number; light?: boolean }) {
       </svg>
       {count > 0 && (
         <span
-          className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full text-white"
+          className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full"
           style={{
-            backgroundColor: "var(--color-burgundy)",
+            backgroundColor: "var(--color-accent)",
+            color: "var(--color-deep-cocoa)",
             fontSize: "0.6rem",
             fontFamily: "var(--font-body)",
-            fontWeight: 500,
+            fontWeight: 600,
           }}
         >
           {count > 9 ? "9+" : count}
@@ -64,7 +65,6 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
-  // On homepage over the dark hero video, use light nav text
   const isHeroOverlay = pathname === "/" && !isScrolled;
 
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Read cart count from localStorage
   useEffect(() => {
     const updateCartCount = () => {
       try {
@@ -89,7 +88,6 @@ export default function Navigation() {
 
     updateCartCount();
     window.addEventListener("storage", updateCartCount);
-    // Custom event for same-tab updates
     window.addEventListener("cart-updated", updateCartCount);
     return () => {
       window.removeEventListener("storage", updateCartCount);
@@ -97,7 +95,6 @@ export default function Navigation() {
     };
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -113,26 +110,28 @@ export default function Navigation() {
     <>
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all",
-          isScrolled
-            ? "bg-[var(--color-ivory)]/90 backdrop-blur-md shadow-[var(--shadow-sm)]"
-            : "bg-transparent"
+          "fixed top-0 left-0 right-0 z-50 transition-all"
         )}
         style={{
           height: "var(--nav-height)",
-          transitionDuration: "var(--duration-normal)",
+          transitionDuration: "var(--duration-medium)",
           transitionTimingFunction: "var(--ease-smooth)",
-          color: isHeroOverlay ? "var(--color-ivory)" : undefined,
+          backgroundColor: isScrolled
+            ? "rgba(237, 229, 220, 0.92)"
+            : "transparent",
+          backdropFilter: isScrolled ? "blur(16px)" : undefined,
+          boxShadow: isScrolled ? "var(--shadow-sm)" : undefined,
+          color: isHeroOverlay ? "var(--color-soft-ivory)" : undefined,
         }}
       >
         <div className="mx-auto flex h-full max-w-[var(--max-width)] items-center justify-between px-6 lg:px-10">
           {/* Logo */}
           <Link
             href="/"
-            className="headline-text text-2xl tracking-[0.15em] transition-colors"
+            className="headline-text text-2xl tracking-[0.2em] transition-colors"
             style={{
               fontFamily: "var(--font-headline)",
-              color: isHeroOverlay ? "var(--color-ivory)" : "var(--color-chocolate)",
+              color: isHeroOverlay ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
               transitionDuration: "var(--duration-normal)",
             }}
           >
@@ -145,9 +144,11 @@ export default function Navigation() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="editorial-spacing transition-colors duration-[var(--duration-fast)]"
+                  className="editorial-spacing hover-underline transition-colors duration-[var(--duration-fast)]"
                   style={{
-                    color: isHeroOverlay ? "rgba(250, 247, 244, 0.85)" : undefined,
+                    color: isHeroOverlay
+                      ? "rgba(237, 229, 220, 0.8)"
+                      : "var(--color-warm-taupe)",
                   }}
                 >
                   {link.label}
@@ -161,12 +162,8 @@ export default function Navigation() {
             <CartIcon count={cartCount} light={isHeroOverlay} />
             <Link
               href="/booking"
-              className="btn btn-primary"
-              style={isHeroOverlay ? {
-                backgroundColor: "var(--color-burgundy)",
-                borderColor: "var(--color-burgundy)",
-                color: "var(--color-ivory)",
-              } : undefined}
+              className={cn("btn", isHeroOverlay ? "btn-light" : "btn-primary")}
+              style={{ padding: "0.625rem 1.75rem" }}
             >
               Book Now
             </Link>
@@ -187,7 +184,11 @@ export default function Navigation() {
                   isMobileMenuOpen && "translate-y-[4.5px] rotate-45"
                 )}
                 style={{
-                  backgroundColor: isHeroOverlay ? "var(--color-ivory)" : "var(--color-chocolate)",
+                  backgroundColor: isMobileMenuOpen
+                    ? "var(--color-soft-ivory)"
+                    : isHeroOverlay
+                      ? "var(--color-soft-ivory)"
+                      : "var(--color-deep-cocoa)",
                   transitionDuration: "var(--duration-normal)",
                   transitionTimingFunction: "var(--ease-smooth)",
                 }}
@@ -198,7 +199,11 @@ export default function Navigation() {
                   isMobileMenuOpen && "opacity-0"
                 )}
                 style={{
-                  backgroundColor: isHeroOverlay ? "var(--color-ivory)" : "var(--color-chocolate)",
+                  backgroundColor: isMobileMenuOpen
+                    ? "var(--color-soft-ivory)"
+                    : isHeroOverlay
+                      ? "var(--color-soft-ivory)"
+                      : "var(--color-deep-cocoa)",
                   transitionDuration: "var(--duration-fast)",
                 }}
               />
@@ -208,7 +213,11 @@ export default function Navigation() {
                   isMobileMenuOpen && "-translate-y-[4.5px] -rotate-45"
                 )}
                 style={{
-                  backgroundColor: isHeroOverlay ? "var(--color-ivory)" : "var(--color-chocolate)",
+                  backgroundColor: isMobileMenuOpen
+                    ? "var(--color-soft-ivory)"
+                    : isHeroOverlay
+                      ? "var(--color-soft-ivory)"
+                      : "var(--color-deep-cocoa)",
                   transitionDuration: "var(--duration-normal)",
                   transitionTimingFunction: "var(--ease-smooth)",
                 }}
@@ -222,17 +231,15 @@ export default function Navigation() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 bg-[var(--color-chocolate)]/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-[var(--color-deep-cocoa)]/60 backdrop-blur-sm lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Slide-in Panel */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -242,7 +249,8 @@ export default function Navigation() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col bg-[var(--color-ivory)] px-8 pt-28 pb-10 shadow-[var(--shadow-xl)] lg:hidden"
+              className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col px-8 pt-28 pb-10 shadow-[var(--shadow-xl)] lg:hidden"
+              style={{ backgroundColor: "var(--color-espresso)" }}
             >
               <ul className="flex flex-col gap-6">
                 {navLinks.map((link, index) => (
@@ -259,7 +267,8 @@ export default function Navigation() {
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="headline-text block text-2xl text-[var(--color-chocolate)] transition-colors hover:text-[var(--color-accent-text)]"
+                      className="headline-text block text-2xl transition-colors"
+                      style={{ color: "var(--color-soft-ivory)" }}
                     >
                       {link.label}
                     </Link>
@@ -280,9 +289,9 @@ export default function Navigation() {
                 <Link
                   href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="btn btn-primary w-full text-center"
+                  className="btn btn-light w-full text-center"
                 >
-                  Book Now
+                  Book Consultation
                 </Link>
               </motion.div>
             </motion.div>

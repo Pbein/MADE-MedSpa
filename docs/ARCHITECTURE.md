@@ -15,7 +15,7 @@ MADE Med Spa is a full-stack web application built with Next.js (App Router) and
 | Authentication   | Clerk                             |
 | Payments         | Stripe (subscriptions + one-time) |
 | Booking          | Cal.com (embedded)                |
-| CRM              | Hermes                            |
+| EMR / CRM        | Pabau                             |
 | Email            | Resend + React Email              |
 | Styling          | Tailwind CSS                      |
 | UI Components    | shadcn/ui                         |
@@ -48,8 +48,8 @@ MADE Med Spa is a full-stack web application built with Next.js (App Router) and
     +------+------+                  +-------------+
            |
     +------v------+     +-------------+
-    |   Convex    |     |   Hermes    |
-    |  Webhook    |     |   (CRM)     |
+    |   Convex    |     |   Pabau     |
+    |  Webhook    |     |  (EMR/CRM)  |
     |  Handlers   |     +------+------+
     +-------------+            |
                         +------v------+
@@ -66,7 +66,7 @@ MADE Med Spa is a full-stack web application built with Next.js (App Router) and
 ```
 User selects service -> Cal.com embed loads -> User books appointment
 -> Cal.com webhook fires -> Convex webhook handler processes
--> Booking stored in Convex -> Hermes contact updated
+-> Booking stored in Convex -> Pabau patient record updated
 -> Confirmation email via Resend -> Reminder emails scheduled
 -> Post-visit review request triggered
 ```
@@ -80,13 +80,13 @@ User selects tier -> Multi-step form:
   Step 4: Stripe payment (subscription)
   Step 5: Confirmation page
 -> Stripe webhook confirms payment -> Member record created in Convex
--> Welcome email via Resend -> Hermes contact tagged
+-> Welcome email via Resend -> Pabau patient tagged
 ```
 
 ### 3. Contact Form Flow
 ```
 User submits contact form -> Convex mutation stores submission
--> Hermes contact created/updated -> Notification email to admin
+-> Pabau lead/patient created/updated -> Notification email to admin
 -> Auto-reply email to user via Resend
 ```
 
@@ -97,7 +97,7 @@ User browses product catalog -> Adds items to cart
 -> Proceeds to checkout -> Stripe Checkout Session created
 -> Payment processed -> Stripe webhook confirms
 -> Order record created in Convex -> Inventory decremented
--> Confirmation email via Resend -> Hermes event logged
+-> Confirmation email via Resend -> Pabau event logged
 -> Order visible in member dashboard
 ```
 
@@ -142,7 +142,7 @@ contacts: defineTable({
   phone: v.optional(v.string()),
   message: v.string(),
   source: v.string(),
-  hermesContactId: v.optional(v.string()),
+  pabauPatientId: v.optional(v.string()),
   status: v.union(v.literal("new"), v.literal("read"), v.literal("replied")),
   createdAt: v.number(),
 })
@@ -350,10 +350,12 @@ orders: defineTable({
 - **Event Types**: Mapped to services
 - **Webhooks**: Booking created, cancelled, rescheduled
 
-### Hermes (CRM)
-- **Contact Sync**: All form submissions, bookings, and purchases
+### Pabau (EMR / CRM)
+- **Patient Records**: All form submissions, bookings, and purchases synced to Pabau
+- **Appointment Management**: Booking scheduling and lifecycle management
 - **Event Tracking**: Touchpoint logging for customer journey
-- **Segmentation**: Membership tier, purchase history
+- **Segmentation**: Membership tier, purchase history, treatment history
+- **Clinical Records**: Treatment notes, consent forms, medical history (managed in Pabau)
 
 ### Resend
 - **Transactional Emails**: Booking confirmations, order confirmations

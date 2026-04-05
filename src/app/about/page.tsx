@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { demoImages } from "@/lib/demo-images";
 
-/* ── Framer Motion helpers ─────────────────────────── */
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const revealUp = {
@@ -30,7 +29,6 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-/* ── Team data (hardcoded for now) ─────────────────── */
 const teamMembers = [
   {
     name: "Dr. Karlyne",
@@ -58,7 +56,6 @@ const teamMembers = [
   },
 ];
 
-/* ── Values data ───────────────────────────────────── */
 const values = [
   {
     number: "01",
@@ -80,7 +77,6 @@ const values = [
   },
 ];
 
-/* ── Page Component ────────────────────────────────── */
 export default function AboutPage() {
   const story = useQuery(api.siteContent.getByKey, { key: "about_story" });
   const mission = useQuery(api.siteContent.getByKey, { key: "about_mission" });
@@ -90,10 +86,9 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* ═══════════════ HERO ═══════════════ */}
+      {/* HERO */}
       <section
-        className="relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center"
-        style={{ backgroundColor: "var(--color-ivory)" }}
+        className="section-dark relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center"
       >
         <motion.div
           initial="hidden"
@@ -103,7 +98,8 @@ export default function AboutPage() {
         >
           <motion.div
             variants={revealUp}
-            className="editorial-spacing mb-6 text-[var(--color-stone-dark)]"
+            className="editorial-spacing mb-6"
+            style={{ color: "var(--color-cream)" }}
           >
             About MADE
           </motion.div>
@@ -113,40 +109,38 @@ export default function AboutPage() {
             className="headline-text mb-6"
             style={{
               fontSize: "var(--text-5xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-soft-ivory)",
             }}
           >
-            Our <span className="accent-text">Story</span>
+            Our <span className="accent-text" style={{ color: "var(--color-accent)" }}>Story</span>
           </motion.h1>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto max-w-xl leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
+            className="mx-auto max-w-xl leading-relaxed"
+            style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}
           >
             A luxury aesthetic studio built on the belief that beauty is
             personal, science is essential, and every detail matters.
           </motion.p>
         </motion.div>
 
-        {/* Bottom decorative line */}
         <div
           className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "var(--color-stone)" }}
+          style={{ backgroundColor: "rgba(157, 138, 124, 0.3)" }}
         />
       </section>
 
-      {/* ═══════════════ STORY ═══════════════ */}
+      {/* STORY */}
       <section
         className="px-6 lg:px-10"
         style={{
-          backgroundColor: "var(--color-cream)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
+          backgroundColor: "var(--color-soft-ivory)",
+          paddingTop: "var(--space-section-lg)",
+          paddingBottom: "var(--space-section-lg)",
         }}
       >
-        <div className="mx-auto grid max-w-[var(--max-width)] items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Studio Image */}
+        <div className="mx-auto grid max-w-[var(--max-width)] items-center gap-12 lg:grid-cols-2 lg:gap-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -154,7 +148,7 @@ export default function AboutPage() {
             variants={revealLeft}
             className="image-editorial image-warm overflow-hidden"
             style={{
-              borderRadius: "var(--border-radius-sm)",
+              borderRadius: "var(--border-radius-lg)",
               aspectRatio: "4/5",
             }}
           >
@@ -169,7 +163,6 @@ export default function AboutPage() {
             />
           </motion.div>
 
-          {/* Text content */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -178,7 +171,8 @@ export default function AboutPage() {
           >
             <motion.div
               variants={revealRight}
-              className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
+              className="editorial-spacing mb-4"
+              style={{ color: "var(--color-cream)" }}
             >
               Our Beginning
             </motion.div>
@@ -188,7 +182,7 @@ export default function AboutPage() {
               className="headline-text mb-6"
               style={{
                 fontSize: "var(--text-4xl)",
-                color: "var(--color-chocolate)",
+                color: "var(--color-deep-cocoa)",
               }}
             >
               {story?.title || "Founded on Passion"}
@@ -196,8 +190,8 @@ export default function AboutPage() {
 
             <motion.div
               variants={revealRight}
-              className="space-y-4 leading-relaxed text-[var(--color-brown)]"
-              style={{ fontSize: "var(--text-base)" }}
+              className="space-y-4 leading-relaxed"
+              style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
             >
               {story?.body ? (
                 story.body.split("\n\n").map((paragraph, i) => (
@@ -225,11 +219,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ═══════════════ MISSION ═══════════════ */}
+      {/* MISSION */}
       <section
         className="px-6 lg:px-10"
         style={{
-          backgroundColor: "var(--color-ivory)",
+          backgroundColor: "var(--color-linen)",
           paddingTop: "var(--space-section)",
           paddingBottom: "var(--space-section)",
         }}
@@ -241,7 +235,6 @@ export default function AboutPage() {
           variants={staggerContainer}
           className="mx-auto max-w-2xl text-center"
         >
-          {/* Accent line */}
           <motion.div
             variants={revealUp}
             className="accent-line mx-auto mb-8"
@@ -249,7 +242,8 @@ export default function AboutPage() {
 
           <motion.div
             variants={revealUp}
-            className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
+            className="editorial-spacing mb-4"
+            style={{ color: "var(--color-cream)" }}
           >
             Our Mission
           </motion.div>
@@ -259,7 +253,7 @@ export default function AboutPage() {
             className="headline-text mb-8"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-deep-cocoa)",
             }}
           >
             {mission?.title || "Elevating Natural Beauty"}
@@ -267,8 +261,8 @@ export default function AboutPage() {
 
           <motion.p
             variants={revealUp}
-            className="accent-text leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-2xl)" }}
+            className="accent-text leading-relaxed"
+            style={{ fontSize: "var(--text-2xl)", color: "var(--color-warm-taupe)" }}
           >
             {mission?.body ||
               "To empower every guest with confidence through personalized, science-backed aesthetic treatments delivered in an atmosphere of warmth, luxury, and unwavering care."}
@@ -276,12 +270,12 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* ═══════════════ VALUES ═══════════════ */}
+      {/* VALUES */}
       <section
         className="section-dark px-6 lg:px-10"
         style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
+          paddingTop: "var(--space-section-lg)",
+          paddingBottom: "var(--space-section-lg)",
         }}
       >
         <motion.div
@@ -293,10 +287,11 @@ export default function AboutPage() {
         >
           <motion.div
             variants={revealUp}
-            className="mb-16 text-center"
+            className="mb-20 text-center"
           >
             <div
-              className="editorial-spacing mb-4 text-[var(--color-stone)]"
+              className="editorial-spacing mb-4"
+              style={{ color: "var(--color-cream)" }}
             >
               {valuesContent?.title || "What Guides Us"}
             </div>
@@ -308,7 +303,7 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-16">
             {values.map((value) => (
               <motion.div
                 key={value.number}
@@ -320,8 +315,8 @@ export default function AboutPage() {
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: "var(--text-4xl)",
-                    fontWeight: 300,
-                    color: "var(--color-burgundy-light)",
+                    fontWeight: 200,
+                    color: "var(--color-accent-light)",
                     letterSpacing: "0.05em",
                   }}
                 >
@@ -334,8 +329,8 @@ export default function AboutPage() {
                   {value.title}
                 </h3>
                 <p
-                  className="mx-auto max-w-xs leading-relaxed text-[var(--color-stone)]"
-                  style={{ fontSize: "var(--text-sm)" }}
+                  className="mx-auto max-w-xs leading-relaxed"
+                  style={{ fontSize: "var(--text-sm)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}
                 >
                   {value.description}
                 </p>
@@ -346,8 +341,8 @@ export default function AboutPage() {
           {valuesContent?.body && (
             <motion.p
               variants={revealUp}
-              className="mx-auto mt-12 max-w-xl text-center leading-relaxed text-[var(--color-stone)]"
-              style={{ fontSize: "var(--text-base)" }}
+              className="mx-auto mt-12 max-w-xl text-center leading-relaxed"
+              style={{ fontSize: "var(--text-base)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}
             >
               {valuesContent.body}
             </motion.p>
@@ -355,13 +350,13 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* ═══════════════ TEAM ═══════════════ */}
+      {/* TEAM */}
       <section
         className="px-6 lg:px-10"
         style={{
-          backgroundColor: "var(--color-cream)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
+          backgroundColor: "var(--color-soft-ivory)",
+          paddingTop: "var(--space-section-lg)",
+          paddingBottom: "var(--space-section-lg)",
         }}
       >
         <div className="mx-auto max-w-[var(--max-width)]">
@@ -370,11 +365,12 @@ export default function AboutPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="mb-16 text-center"
+            className="mb-20 text-center"
           >
             <motion.div
               variants={revealUp}
-              className="editorial-spacing mb-4 text-[var(--color-stone-dark)]"
+              className="editorial-spacing mb-4"
+              style={{ color: "var(--color-cream)" }}
             >
               The Team
             </motion.div>
@@ -383,10 +379,10 @@ export default function AboutPage() {
               className="headline-text"
               style={{
                 fontSize: "var(--text-4xl)",
-                color: "var(--color-chocolate)",
+                color: "var(--color-deep-cocoa)",
               }}
             >
-              Meet the <span className="accent-text">Experts</span>
+              Meet the <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Experts</span>
             </motion.h2>
           </motion.div>
 
@@ -403,12 +399,12 @@ export default function AboutPage() {
                 variants={revealUp}
                 className="hover-lift group text-center"
                 style={{
-                  backgroundColor: "var(--color-ivory)",
-                  borderRadius: "var(--border-radius-sm)",
+                  backgroundColor: "var(--color-linen)",
+                  borderRadius: "var(--border-radius-lg)",
                   overflow: "hidden",
+                  boxShadow: "var(--shadow-card)",
                 }}
               >
-                {/* Team Photo */}
                 <div className="image-portrait overflow-hidden">
                   <Image
                     src={demoImages.about.team[teamMembers.indexOf(member)]}
@@ -421,7 +417,6 @@ export default function AboutPage() {
                   />
                 </div>
 
-                {/* Card content */}
                 <div
                   style={{
                     padding:
@@ -432,20 +427,20 @@ export default function AboutPage() {
                     className="headline-text mb-1"
                     style={{
                       fontSize: "var(--text-xl)",
-                      color: "var(--color-chocolate)",
+                      color: "var(--color-deep-cocoa)",
                     }}
                   >
                     {member.name}
                   </h3>
                   <p
-                    className="accent-text mb-3 text-[var(--color-accent-text)]"
-                    style={{ fontSize: "var(--text-sm)" }}
+                    className="accent-text mb-3"
+                    style={{ fontSize: "var(--text-sm)", color: "var(--color-accent-text)" }}
                   >
                     {member.title}
                   </p>
                   <p
-                    className="leading-relaxed text-[var(--color-brown)]"
-                    style={{ fontSize: "var(--text-sm)" }}
+                    className="leading-relaxed"
+                    style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
                   >
                     {member.bio}
                   </p>
@@ -456,11 +451,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ═══════════════ CTA ═══════════════ */}
+      {/* CTA */}
       <section
         className="px-6 text-center lg:px-10"
         style={{
-          backgroundColor: "var(--color-ivory)",
+          backgroundColor: "var(--color-linen)",
           paddingTop: "var(--space-section)",
           paddingBottom: "var(--space-section)",
         }}
@@ -482,25 +477,25 @@ export default function AboutPage() {
             className="headline-text mb-6"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
+              color: "var(--color-deep-cocoa)",
             }}
           >
-            Ready to <span className="accent-text">experience</span> the MADE
+            Ready to <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>experience</span> the MADE
             difference?
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed text-[var(--color-brown)]"
-            style={{ fontSize: "var(--text-lg)" }}
+            className="mx-auto mb-10 max-w-lg leading-relaxed"
+            style={{ fontSize: "var(--text-lg)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
           >
             Your journey to elevated beauty begins with a single conversation.
             Let us craft a personalized plan just for you.
           </motion.p>
 
           <motion.div variants={revealUp}>
-            <Link href="/contact" className="btn btn-primary">
-              Book Now
+            <Link href="/booking" className="btn btn-primary">
+              Book Consultation
             </Link>
           </motion.div>
         </motion.div>

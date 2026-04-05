@@ -2,21 +2,12 @@ import type { Metadata } from "next";
 import {
   Playfair_Display,
   Cormorant_Garamond,
-  Jost,
   Inter,
-  DM_Sans,
-  Lora,
-  Nunito_Sans,
-  Syne,
-  Space_Grotesk,
-  DM_Serif_Display,
-  Outfit,
 } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
-import AccentSwitcher from "@/components/ui/AccentSwitcher";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -34,70 +25,8 @@ const cormorant = Cormorant_Garamond({
   style: ["normal", "italic"],
 });
 
-const jost = Jost({
-  variable: "--font-jost",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600"],
-});
-
-// -- Mood: Modern Minimal --
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-// -- Mood: Soft Luxe --
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
-
-const nunitoSans = Nunito_Sans({
-  variable: "--font-nunito-sans",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-// -- Mood: Dark Luxe --
-const dmSerifDisplay = DM_Serif_Display({
-  variable: "--font-dm-serif-display",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400"],
-});
-
-// -- Mood: Warm Serene --
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-// -- Mood: Bold Statement --
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
@@ -172,14 +101,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${cormorant.variable} ${jost.variable} ${inter.variable} ${dmSans.variable} ${lora.variable} ${nunitoSans.variable} ${syne.variable} ${spaceGrotesk.variable} ${dmSerifDisplay.variable} ${outfit.variable} antialiased`}
+        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} antialiased`}
       >
         <ClerkProvider>
           <ConvexClientProvider>
             <Navigation />
             {children}
             <Footer />
-            <AccentSwitcher />
           </ConvexClientProvider>
         </ClerkProvider>
       </body>

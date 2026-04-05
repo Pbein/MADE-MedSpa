@@ -47,23 +47,36 @@ export default function Footer() {
 
   return (
     <footer
-      className="text-[var(--color-stone)]"
-      style={{ backgroundColor: "var(--color-chocolate)" }}
+      style={{ backgroundColor: "var(--color-deep-cocoa)" }}
     >
+      {/* Thin accent line */}
+      <div
+        style={{
+          height: "1px",
+          background: "linear-gradient(to right, transparent, var(--color-accent), transparent)",
+        }}
+      />
+
       {/* Main Footer Content */}
-      <div className="mx-auto max-w-[var(--max-width)] px-6 py-[var(--space-section)] lg:px-10">
+      <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
+        style={{ paddingTop: "var(--space-section)", paddingBottom: "var(--space-4xl)" }}
+      >
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Brand Column */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="headline-text mb-5 inline-block text-3xl tracking-[0.15em] text-[var(--color-ivory)]"
-              style={{ fontFamily: "var(--font-headline)" }}
+              className="headline-text mb-5 inline-block text-3xl tracking-[0.2em]"
+              style={{
+                fontFamily: "var(--font-headline)",
+                color: "var(--color-soft-ivory)",
+              }}
             >
               MADE
             </Link>
             <p
-              className="accent-text mb-6 max-w-xs text-lg leading-relaxed text-[var(--color-stone)]"
+              className="accent-text mb-6 max-w-xs text-lg leading-relaxed"
+              style={{ color: "var(--color-cream)" }}
             >
               Where science meets artistry. Personalized aesthetic treatments
               crafted for your unique beauty.
@@ -75,8 +88,10 @@ export default function Footer() {
                   key={social}
                   href="#"
                   aria-label={social}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-stone-dark)]/30 text-xs text-[var(--color-stone)] transition-all hover:border-[var(--color-accent-text)] hover:text-[var(--color-ivory)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all"
                   style={{
+                    borderColor: "rgba(157, 138, 124, 0.3)",
+                    color: "var(--color-cream)",
                     transitionDuration: "var(--duration-normal)",
                     transitionTimingFunction: "var(--ease-smooth)",
                   }}
@@ -90,8 +105,8 @@ export default function Footer() {
           {/* Quick Links Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6 text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="editorial-spacing mb-6"
+              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
             >
               Quick Links
             </h4>
@@ -100,9 +115,10 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[var(--color-stone)] transition-colors hover:text-[var(--color-ivory)]"
+                    className="transition-colors hover:text-[var(--color-soft-ivory)]"
                     style={{
                       fontSize: "var(--text-sm)",
+                      color: "var(--color-cream)",
                       transitionDuration: "var(--duration-fast)",
                     }}
                   >
@@ -116,8 +132,8 @@ export default function Footer() {
           {/* Services Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6 text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="editorial-spacing mb-6"
+              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
             >
               Services
             </h4>
@@ -126,9 +142,10 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[var(--color-stone)] transition-colors hover:text-[var(--color-ivory)]"
+                    className="transition-colors hover:text-[var(--color-soft-ivory)]"
                     style={{
                       fontSize: "var(--text-sm)",
+                      color: "var(--color-cream)",
                       transitionDuration: "var(--duration-fast)",
                     }}
                   >
@@ -142,26 +159,26 @@ export default function Footer() {
           {/* Contact & Newsletter Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6 text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="editorial-spacing mb-6"
+              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
             >
               Contact
             </h4>
             <div
-              className="mb-6 flex flex-col gap-2 text-[var(--color-stone)]"
-              style={{ fontSize: "var(--text-sm)" }}
+              className="mb-6 flex flex-col gap-2"
+              style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}
             >
               <p>123 Beauty Lane, Suite 100</p>
               <p>City, State 12345</p>
               <a
                 href="tel:+15551234567"
-                className="transition-colors hover:text-[var(--color-ivory)]"
+                className="transition-colors hover:text-[var(--color-soft-ivory)]"
               >
                 (555) 123-4567
               </a>
               <a
                 href="mailto:hello@mademedpsa.com"
-                className="transition-colors hover:text-[var(--color-ivory)]"
+                className="transition-colors hover:text-[var(--color-soft-ivory)]"
               >
                 hello@mademedpsa.com
               </a>
@@ -169,8 +186,8 @@ export default function Footer() {
 
             {/* Newsletter */}
             <h4
-              className="editorial-spacing mb-3 text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="editorial-spacing mb-3"
+              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
             >
               Newsletter
             </h4>
@@ -182,16 +199,19 @@ export default function Footer() {
                 placeholder="Your email"
                 aria-label="Email for newsletter"
                 disabled={status === "loading"}
-                className="flex-1 border-b border-[var(--color-stone-dark)]/30 bg-transparent px-0 py-2 text-sm text-[var(--color-ivory)] placeholder:text-[var(--color-stone-dark)] outline-none transition-colors focus:border-[var(--color-accent-text)] disabled:opacity-50"
+                className="flex-1 border-b bg-transparent px-0 py-2 text-sm outline-none transition-colors disabled:opacity-50"
                 style={{
+                  borderColor: "rgba(157, 138, 124, 0.3)",
+                  color: "var(--color-soft-ivory)",
                   transitionDuration: "var(--duration-normal)",
                 }}
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="editorial-spacing text-[var(--color-ivory)] transition-colors hover:text-[var(--color-burgundy-light)] disabled:opacity-50"
+                className="editorial-spacing transition-colors disabled:opacity-50"
                 style={{
+                  color: "var(--color-soft-ivory)",
                   fontSize: "var(--text-xs)",
                   transitionDuration: "var(--duration-fast)",
                 }}
@@ -200,12 +220,12 @@ export default function Footer() {
               </button>
             </form>
             {status === "success" && (
-              <p className="mt-2 text-xs text-[var(--color-burgundy-light)]">
+              <p className="mt-2 text-xs" style={{ color: "var(--color-accent-light)" }}>
                 Welcome to the MADE family!
               </p>
             )}
             {status === "error" && (
-              <p className="mt-2 text-xs text-[var(--color-stone-dark)]">
+              <p className="mt-2 text-xs" style={{ color: "var(--color-cream)" }}>
                 Something went wrong. Please try again.
               </p>
             )}
@@ -214,26 +234,25 @@ export default function Footer() {
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-[var(--color-stone-dark)]/15">
+      <div style={{ borderTop: "1px solid rgba(157, 138, 124, 0.15)" }}>
         <div className="mx-auto flex max-w-[var(--max-width)] flex-col items-center justify-between gap-2 px-6 py-6 sm:flex-row lg:px-10">
           <p
-            className="text-[var(--color-stone-dark)]"
-            style={{ fontSize: "var(--text-xs)" }}
+            style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
           >
             &copy; {currentYear} MADE Med Spa. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link
               href="/privacy"
-              className="text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="transition-colors hover:text-[var(--color-soft-ivory)]"
+              style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-[var(--color-stone-dark)] transition-colors hover:text-[var(--color-ivory)]"
-              style={{ fontSize: "var(--text-xs)" }}
+              className="transition-colors hover:text-[var(--color-soft-ivory)]"
+              style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
             >
               Terms of Service
             </Link>

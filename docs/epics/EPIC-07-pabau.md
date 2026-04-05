@@ -1,57 +1,71 @@
-# Epic 7: Hermes Integration & Communication
+# Epic 7: Pabau EMR Integration & Communication
 
 ## Goal
 
-Build a reusable Hermes CRM sync module that tracks all customer touchpoints, and implement transactional email templates via Resend for every communication event in the system.
+Build a reusable Pabau EMR sync module that tracks all customer touchpoints (contacts, bookings, memberships, purchases), and implement transactional email templates via Resend for every communication event in the system. Pabau replaces the originally planned Hermes CRM and serves as the practice's EMR, CRM, and potentially online booking system.
+
+---
+
+## Decision: Pabau as EMR
+
+**Date:** 2026-03-26
+**Context:** The client selected Pabau as their EMR platform. Pabau provides patient records, appointment management, packages/memberships, marketing tools, and built-in online booking. This replaces the originally planned Hermes CRM integration.
+
+**Key consideration:** Pabau has built-in online booking capabilities. A decision is needed on whether to:
+- **Option A:** Use Pabau's online booking widget (replaces Cal.com)
+- **Option B:** Keep Cal.com for website booking, sync to Pabau via API
+- **Option C:** Build custom booking UI powered by Pabau's API
 
 ---
 
 ## User Stories
 
-### 7.1: Hermes Sync Module
+### 7.1: Pabau API Client Module
 - [ ] **Complete**
 
 **As a** developer,
-**I want** a reusable module for Hermes API interactions,
-**So that** all CRM syncing follows a consistent pattern.
+**I want** a reusable module for Pabau API interactions,
+**So that** all EMR syncing follows a consistent pattern.
 
 **Acceptance Criteria:**
-- [ ] Hermes API client module in `lib/hermes.ts` or `convex/lib/hermes.ts`
-- [ ] Functions: `createContact`, `updateContact`, `addEvent`, `addTag`, `removeTag`
+- [ ] Pabau API client module in `lib/pabau.ts` or `convex/lib/pabau.ts`
+- [ ] Functions: `createPatient`, `updatePatient`, `getPatient`, `createAppointment`, `updateAppointment`, `addNote`, `addTag`, `removeTag`
 - [ ] Error handling with retry logic for transient failures
-- [ ] Logging for all Hermes API calls
-- [ ] Type-safe request/response types
-- [ ] Rate limiting awareness (respect Hermes API limits)
-- [ ] Configurable via environment variables
+- [ ] Logging for all Pabau API calls
+- [ ] Type-safe request/response types (Pabau uses GraphQL)
+- [ ] Rate limiting awareness (respect Pabau API limits)
+- [ ] Configurable via environment variables (`PABAU_API_KEY`, `PABAU_API_URL`, `PABAU_COMPANY_ID`)
 
 **Implementation Notes:**
+- Pabau uses a GraphQL API — build typed queries/mutations
 - Use Convex actions (httpAction or action) for external API calls
 - Consider a queue pattern for high-volume sync events
-- Hermes API key stored as environment variable
+- API key stored as Convex environment variable
 
 ---
 
-### 7.2: Contact Sync Touchpoints
+### 7.2: Patient Sync Touchpoints
 - [ ] **Complete**
 
 **As a** business owner,
-**I want** all customer interactions synced to Hermes,
-**So that** I have a complete view of each client's journey.
+**I want** all customer interactions synced to Pabau,
+**So that** I have a complete patient record for each client.
 
 **Acceptance Criteria:**
-- [ ] Contact form submission -> create/update Hermes contact
-- [ ] Newsletter signup -> tag contact as "newsletter-subscriber"
-- [ ] Booking created -> add "booking-created" event, tag with service
-- [ ] Booking completed -> add "visit-completed" event
-- [ ] Membership signup -> add "member-{tier}" tag, "membership-started" event
-- [ ] Membership cancelled -> remove member tag, add "membership-cancelled" event
-- [ ] Product purchase -> add "purchase" event with order details
-- [ ] Each sync stores `hermesContactId` in relevant Convex record
+- [ ] Contact form submission -> create/update Pabau patient record
+- [ ] Newsletter signup -> update marketing consent in Pabau
+- [ ] Booking created -> create appointment in Pabau (if not using Pabau booking)
+- [ ] Booking completed -> update appointment status in Pabau
+- [ ] Membership signup -> add membership/package in Pabau, tag patient
+- [ ] Membership cancelled -> update membership status, remove tag
+- [ ] Product purchase -> log purchase event / add note to patient record
+- [ ] Each sync stores `pabauPatientId` in relevant Convex record
 
 **Implementation Notes:**
-- Trigger Hermes sync from Convex mutations/actions
+- Trigger Pabau sync from Convex mutations/actions
 - Use Convex scheduled functions for non-blocking sync
-- Map internal events to Hermes event names consistently
+- Map internal events to Pabau API calls consistently
+- Pabau patient ID should be stored on the Convex `users` table (replace `hermesContactId` field)
 
 ---
 
@@ -82,6 +96,7 @@ Build a reusable Hermes CRM sync module that tracks all customer touchpoints, an
 - Store templates in `emails/` directory
 - Preview templates at `/api/email-preview/[template]` in development
 - Use Resend's React Email integration for sending
+- Note: Pabau also has built-in email/SMS marketing — these Resend templates are for transactional emails from the website; Pabau handles clinic-side communications
 
 ---
 
@@ -121,8 +136,10 @@ Build a reusable Hermes CRM sync module that tracks all customer touchpoints, an
 - [ ] Failed sends trigger retry (max 3 attempts)
 - [ ] Admin can view communication log (Epic 10, optional)
 - [ ] Resend dashboard serves as primary audit trail
+- [ ] Pabau communication log serves as secondary audit trail for clinic-side messages
 
 **Implementation Notes:**
 - Resend provides delivery tracking in their dashboard
+- Pabau tracks its own communications (SMS, email from within Pabau)
 - Optional: store log in Convex for in-app visibility
 - Use Resend webhooks for delivery status tracking (optional)

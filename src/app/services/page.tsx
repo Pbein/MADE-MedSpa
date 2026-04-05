@@ -15,7 +15,6 @@ export default function ServicesPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Scroll reveal for hero
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -40,14 +39,11 @@ export default function ServicesPage() {
     ) ?? [];
 
   return (
-    <main
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--color-ivory)" }}
-    >
-      {/* Hero Section */}
+    <main className="min-h-screen">
+      {/* Hero */}
       <section
         ref={heroRef}
-        className="flex flex-col items-center justify-center px-6 text-center"
+        className="section-dark flex flex-col items-center justify-center px-6 text-center"
         style={{
           paddingTop: "calc(var(--nav-height) + var(--space-5xl))",
           paddingBottom: "var(--space-4xl)",
@@ -58,7 +54,7 @@ export default function ServicesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: luxuryEase }}
           className="editorial-spacing mb-6"
-          style={{ color: "var(--color-stone-dark)" }}
+          style={{ color: "var(--color-cream)" }}
         >
           Treatments
         </motion.div>
@@ -70,10 +66,10 @@ export default function ServicesPage() {
           className="headline-text mb-6"
           style={{
             fontSize: "var(--text-5xl)",
-            color: "var(--color-chocolate)",
+            color: "var(--color-soft-ivory)",
           }}
         >
-          <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>
+          <span className="accent-text" style={{ color: "var(--color-accent)" }}>
             Discover
           </span>{" "}
           Our Services
@@ -88,7 +84,10 @@ export default function ServicesPage() {
       </section>
 
       {/* Category Filter Pills */}
-      <section className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
+      <section
+        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
+        style={{ paddingTop: "var(--space-3xl)" }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -108,7 +107,7 @@ export default function ServicesPage() {
                   cursor: "pointer",
                   color: isActive
                     ? "var(--color-accent-text)"
-                    : "var(--color-brown)",
+                    : "var(--color-warm-taupe)",
                   fontSize: "var(--text-xs)",
                 }}
               >
@@ -119,7 +118,7 @@ export default function ServicesPage() {
                     className="absolute bottom-0 left-0 right-0"
                     style={{
                       height: "1.5px",
-                      backgroundColor: "var(--color-burgundy)",
+                      backgroundColor: "var(--color-accent)",
                     }}
                     transition={{ duration: 0.3, ease: luxuryEase }}
                   />
@@ -133,42 +132,24 @@ export default function ServicesPage() {
       {/* Services Grid */}
       <section
         ref={gridRef}
-        className="mx-auto max-w-[var(--max-width)] px-6 pb-[var(--space-section)] lg:px-10"
+        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
+        style={{ paddingBottom: "var(--space-section-lg)" }}
       >
         {services === undefined ? (
-          /* Loading state */
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="service-card" style={{ borderRadius: "var(--border-radius-sm)" }}>
+              <div key={i} className="service-card">
                 <div
                   className="image-container"
                   style={{
-                    backgroundColor: "var(--color-cream)",
+                    backgroundColor: "var(--color-linen)",
                     animation: "pulse 2s ease-in-out infinite",
                   }}
                 />
                 <div className="content">
-                  <div
-                    className="mb-3 h-3 w-20"
-                    style={{
-                      backgroundColor: "var(--color-cream)",
-                      borderRadius: "var(--border-radius-sm)",
-                    }}
-                  />
-                  <div
-                    className="mb-2 h-5 w-3/4"
-                    style={{
-                      backgroundColor: "var(--color-cream)",
-                      borderRadius: "var(--border-radius-sm)",
-                    }}
-                  />
-                  <div
-                    className="h-12 w-full"
-                    style={{
-                      backgroundColor: "var(--color-cream)",
-                      borderRadius: "var(--border-radius-sm)",
-                    }}
-                  />
+                  <div className="mb-3 h-3 w-20" style={{ backgroundColor: "var(--color-linen)", borderRadius: "var(--border-radius-sm)" }} />
+                  <div className="mb-2 h-5 w-3/4" style={{ backgroundColor: "var(--color-linen)", borderRadius: "var(--border-radius-sm)" }} />
+                  <div className="h-12 w-full" style={{ backgroundColor: "var(--color-linen)", borderRadius: "var(--border-radius-sm)" }} />
                 </div>
               </div>
             ))}
@@ -179,7 +160,7 @@ export default function ServicesPage() {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "var(--text-lg)",
-                color: "var(--color-brown)",
+                color: "var(--color-warm-taupe)",
               }}
             >
               No services found in this category.

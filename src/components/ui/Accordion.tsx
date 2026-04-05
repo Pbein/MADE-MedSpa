@@ -29,7 +29,7 @@ export default function Accordion({ items }: AccordionProps) {
         return (
           <div
             key={index}
-            style={{ borderBottom: "1px solid var(--color-stone)" }}
+            style={{ borderBottom: "1px solid var(--color-border)" }}
           >
             <button
               onClick={() => toggle(index)}
@@ -41,7 +41,7 @@ export default function Accordion({ items }: AccordionProps) {
                 className="headline-text pr-4"
                 style={{
                   fontSize: "var(--text-lg)",
-                  color: "var(--color-chocolate)",
+                  color: "var(--color-deep-cocoa)",
                   margin: 0,
                   fontWeight: 400,
                 }}
@@ -78,9 +78,10 @@ export default function Accordion({ items }: AccordionProps) {
                     style={{
                       fontFamily: "var(--font-body)",
                       fontSize: "var(--text-base)",
-                      color: "var(--color-brown)",
+                      color: "var(--color-warm-taupe)",
                       lineHeight: 1.7,
                       margin: 0,
+                      fontWeight: 300,
                     }}
                   >
                     {item.answer}

@@ -3,6 +3,7 @@
 import HeroSection from "@/components/sections/HeroSection";
 import FeaturedServices from "@/components/sections/FeaturedServices";
 import AboutTeaser from "@/components/sections/AboutTeaser";
+import EditorialBreak from "@/components/sections/EditorialBreak";
 import TestimonialSection from "@/components/sections/TestimonialSection";
 import MembershipTeaser from "@/components/sections/MembershipTeaser";
 import FeaturedProducts from "@/components/sections/FeaturedProducts";
@@ -11,37 +12,52 @@ import CTABanner from "@/components/sections/CTABanner";
 export default function Home() {
   return (
     <>
-      {/* Hero — full viewport, ivory background */}
+      {/* Hero — full viewport, video background, left-aligned */}
       <HeroSection />
 
-      {/* Featured Services — cream background */}
+      {/* Philosophy — editorial quote break */}
+      <EditorialBreak
+        variant="dark"
+        text={
+          <>
+            We believe beauty is deeply personal —{" "}
+            <span style={{ color: "var(--color-accent)" }}>
+              every treatment
+            </span>{" "}
+            is a collaboration between science, artistry, and you.
+          </>
+        }
+      />
+
+      {/* Featured Services — editorial layout (1 large + 2 small) */}
       <FeaturedServices />
 
-      {/* Why MADE / About teaser — ivory background */}
+      {/* Why MADE / About teaser */}
       <AboutTeaser />
 
-      {/* Testimonials — dark chocolate background */}
+      {/* Testimonials — minimal, centered, large quotes */}
       <TestimonialSection />
 
-      {/* Membership teaser — ivory background */}
+      {/* Membership teaser — dark background */}
       <MembershipTeaser />
 
-      {/* Featured Products — cream background */}
+      {/* Featured Products */}
       <FeaturedProducts />
 
-      {/* Newsletter CTA — dark background */}
+      {/* Final CTA */}
       <CTABanner
         headline={
           <>
-            Stay{" "}
-            <span className="accent-text" style={{ color: "var(--color-stone)" }}>
-              in the Loop
-            </span>
+            Ready to{" "}
+            <span className="accent-text" style={{ color: "var(--color-accent)" }}>
+              Begin
+            </span>{" "}
+            Your Journey?
           </>
         }
-        subtitle="Be the first to know about new treatments, exclusive offers, and seasonal specials crafted for the MADE community."
-        ctaText="Get in Touch"
-        ctaHref="/contact"
+        subtitle="Book a consultation and discover the MADE difference. Your journey to elevated beauty starts here."
+        ctaText="Book Consultation"
+        ctaHref="/booking"
         dark
       />
     </>

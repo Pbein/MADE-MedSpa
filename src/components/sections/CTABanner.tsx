@@ -27,12 +27,10 @@ export default function CTABanner({
   return (
     <section
       ref={ref}
-      className={dark ? "section-dark" : ""}
+      className={dark ? "section-warm" : "section-cream"}
       style={{
-        backgroundColor: dark
-          ? "var(--color-chocolate)"
-          : "var(--color-ivory)",
-        padding: "clamp(4rem, 3rem + 5vw, 8rem) 0",
+        paddingTop: "var(--space-section)",
+        paddingBottom: "var(--space-section)",
       }}
     >
       <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
@@ -46,7 +44,7 @@ export default function CTABanner({
             className="headline-text mb-6"
             style={{
               fontSize: "var(--text-4xl)",
-              color: dark ? "var(--color-cream)" : "var(--color-chocolate)",
+              color: dark ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
             }}
           >
             {headline}
@@ -57,7 +55,8 @@ export default function CTABanner({
               className="mx-auto mb-10 max-w-md leading-relaxed"
               style={{
                 fontSize: "var(--text-base)",
-                color: dark ? "var(--color-stone)" : "var(--color-brown)",
+                color: dark ? "rgba(237, 229, 220, 0.7)" : "var(--color-warm-taupe)",
+                fontWeight: 300,
               }}
             >
               {subtitle}
@@ -66,16 +65,7 @@ export default function CTABanner({
 
           <Link
             href={ctaHref}
-            className={dark ? "btn btn-accent" : "btn btn-primary"}
-            style={
-              dark
-                ? {
-                    backgroundColor: "var(--color-burgundy)",
-                    borderColor: "var(--color-burgundy)",
-                    color: "var(--color-ivory)",
-                  }
-                : undefined
-            }
+            className={dark ? "btn btn-light" : "btn btn-primary"}
           >
             {ctaText}
           </Link>

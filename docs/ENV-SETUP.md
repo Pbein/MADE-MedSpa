@@ -48,13 +48,13 @@ This document lists all environment variables required to run the MADE Med Spa a
 | `CALCOM_API_KEY` | Cal.com API key (for programmatic access, optional) | `cal_...` |
 | `CALCOM_WEBHOOK_SECRET` | Cal.com webhook signing secret | `whsec_...` |
 
-### Hermes (CRM)
+### Pabau (EMR / CRM)
 
 | Variable | Description | Example |
 | --- | --- | --- |
-| `HERMES_API_KEY` | Hermes API authentication key | `herm_...` |
-| `HERMES_API_URL` | Hermes API base URL | `https://api.hermes.com/v1` |
-| `HERMES_WORKSPACE_ID` | Hermes workspace identifier | `ws_...` |
+| `PABAU_API_KEY` | Pabau API authentication key | `pab_...` |
+| `PABAU_API_URL` | Pabau API base URL (GraphQL) | `https://api.pabau.com/graphql` |
+| `PABAU_COMPANY_ID` | Pabau company/practice identifier | `comp_...` |
 
 ### Resend (Email)
 
@@ -91,9 +91,9 @@ Some variables must also be set in the Convex dashboard (for server-side Convex 
 ```bash
 npx convex env set STRIPE_SECRET_KEY sk_test_...
 npx convex env set STRIPE_WEBHOOK_SECRET whsec_...
-npx convex env set HERMES_API_KEY herm_...
-npx convex env set HERMES_API_URL https://api.hermes.com/v1
-npx convex env set HERMES_WORKSPACE_ID ws_...
+npx convex env set PABAU_API_KEY pab_...
+npx convex env set PABAU_API_URL https://api.pabau.com/graphql
+npx convex env set PABAU_COMPANY_ID comp_...
 npx convex env set RESEND_API_KEY re_...
 npx convex env set RESEND_FROM_EMAIL hello@mademedispa.com
 npx convex env set CLERK_WEBHOOK_SECRET whsec_...
