@@ -126,7 +126,7 @@ export default function FAQPage() {
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "var(--text-lg)",
-            color: "rgba(237, 229, 220, 0.7)",
+            color: "rgba(247, 246, 235, 0.7)",
             lineHeight: 1.7,
             fontWeight: 300,
           }}
@@ -319,7 +319,7 @@ export default function FAQPage() {
           </h2>
           <p
             className="mx-auto mb-8 max-w-md"
-            style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(237, 229, 220, 0.6)", lineHeight: 1.7, fontWeight: 300 }}
+            style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(247, 246, 235, 0.6)", lineHeight: 1.7, fontWeight: 300 }}
           >
             Our team is here to help. Reach out and we will get back to you
             promptly.

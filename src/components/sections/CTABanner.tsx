@@ -27,8 +27,9 @@ export default function CTABanner({
   return (
     <section
       ref={ref}
-      className={dark ? "section-warm" : "section-cream"}
       style={{
+        backgroundColor: dark ? "var(--color-blush)" : "var(--color-soft-ivory)",
+        color: dark ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
         paddingTop: "var(--space-section)",
         paddingBottom: "var(--space-section)",
       }}
@@ -55,7 +56,7 @@ export default function CTABanner({
               className="mx-auto mb-10 max-w-md leading-relaxed"
               style={{
                 fontSize: "var(--text-base)",
-                color: dark ? "rgba(237, 229, 220, 0.7)" : "var(--color-warm-taupe)",
+                color: dark ? "rgba(247, 246, 235, 0.7)" : "var(--color-warm-taupe)",
                 fontWeight: 300,
               }}
             >

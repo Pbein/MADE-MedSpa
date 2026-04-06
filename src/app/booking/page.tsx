@@ -104,7 +104,7 @@ export default function BookingPage() {
             className="mx-auto mb-10 max-w-xl leading-relaxed"
             style={{
               fontSize: "var(--text-lg)",
-              color: "rgba(237, 229, 220, 0.7)",
+              color: "rgba(247, 246, 235, 0.7)",
               fontWeight: 300,
             }}
           >
@@ -128,7 +128,7 @@ export default function BookingPage() {
 
         <div
           className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "rgba(157, 138, 124, 0.3)" }}
+          style={{ backgroundColor: "rgba(90, 61, 55, 0.3)" }}
         />
       </section>
 
@@ -197,7 +197,7 @@ export default function BookingPage() {
                   className="mx-auto max-w-xs leading-relaxed"
                   style={{
                     fontSize: "var(--text-sm)",
-                    color: "rgba(237, 229, 220, 0.6)",
+                    color: "rgba(247, 246, 235, 0.6)",
                     fontWeight: 300,
                   }}
                 >

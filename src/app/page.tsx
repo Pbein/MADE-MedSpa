@@ -15,7 +15,7 @@ export default function Home() {
 
       {/* Philosophy — editorial quote break */}
       <EditorialBreak
-        variant="dark"
+        variant="silk"
         text={
           <>
             We believe beauty is deeply personal —{" "}

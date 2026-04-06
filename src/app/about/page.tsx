@@ -116,7 +116,7 @@ export default function AboutPage() {
           <motion.p
             variants={revealUp}
             className="mx-auto max-w-xl leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}
+            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.7)", fontWeight: 300 }}
           >
             A luxury aesthetic studio built on the belief that beauty is
             personal, science is essential, and every detail matters.
@@ -125,7 +125,7 @@ export default function AboutPage() {
 
         <div
           className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "rgba(157, 138, 124, 0.3)" }}
+          style={{ backgroundColor: "rgba(90, 61, 55, 0.3)" }}
         />
       </section>
 
@@ -328,7 +328,7 @@ export default function AboutPage() {
                 </h3>
                 <p
                   className="mx-auto max-w-xs leading-relaxed"
-                  style={{ fontSize: "var(--text-sm)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}
+                  style={{ fontSize: "var(--text-sm)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
                 >
                   {value.description}
                 </p>
@@ -340,7 +340,7 @@ export default function AboutPage() {
             <motion.p
               variants={revealUp}
               className="mx-auto mt-12 max-w-xl text-center leading-relaxed"
-              style={{ fontSize: "var(--text-base)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}
+              style={{ fontSize: "var(--text-base)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
             >
               {valuesContent.body}
             </motion.p>

@@ -88,7 +88,7 @@ export default function FeaturedServices() {
                     style={{ transitionTimingFunction: "var(--ease-luxury)" }}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(45,30,23,0.6)] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(57,30,30,0.6)] via-transparent to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-8">
                     <span
                       className="editorial-spacing mb-3 block"
@@ -109,7 +109,7 @@ export default function FeaturedServices() {
                       className="max-w-sm leading-relaxed"
                       style={{
                         fontSize: "var(--text-sm)",
-                        color: "rgba(237, 229, 220, 0.7)",
+                        color: "rgba(247, 246, 235, 0.7)",
                       }}
                     >
                       {featured[0]?.shortDescription}

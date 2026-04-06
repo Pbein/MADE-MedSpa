@@ -126,7 +126,7 @@ export default function Footer() {
                   aria-label={social.label}
                   className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all"
                   style={{
-                    borderColor: "rgba(157, 138, 124, 0.3)",
+                    borderColor: "rgba(90, 61, 55, 0.3)",
                     color: "var(--color-cream)",
                     transitionDuration: "var(--duration-normal)",
                     transitionTimingFunction: "var(--ease-smooth)",
@@ -237,7 +237,7 @@ export default function Footer() {
                 disabled={status === "loading"}
                 className="flex-1 border-b bg-transparent px-0 py-2 text-sm outline-none transition-colors disabled:opacity-50"
                 style={{
-                  borderColor: "rgba(157, 138, 124, 0.3)",
+                  borderColor: "rgba(90, 61, 55, 0.3)",
                   color: "var(--color-soft-ivory)",
                   transitionDuration: "var(--duration-normal)",
                 }}
@@ -270,7 +270,7 @@ export default function Footer() {
       </div>
 
       {/* Copyright Bar */}
-      <div style={{ borderTop: "1px solid rgba(157, 138, 124, 0.15)" }}>
+      <div style={{ borderTop: "1px solid rgba(90, 61, 55, 0.15)" }}>
         <div className="mx-auto flex max-w-[var(--max-width)] flex-col items-center justify-between gap-2 px-6 py-6 sm:flex-row lg:px-10">
           <p
             style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}

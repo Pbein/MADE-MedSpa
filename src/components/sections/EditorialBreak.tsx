@@ -7,7 +7,7 @@ const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
 interface EditorialBreakProps {
   text: React.ReactNode;
-  variant?: "dark" | "warm" | "stone";
+  variant?: "dark" | "warm" | "stone" | "silk";
 }
 
 export default function EditorialBreak({
@@ -20,9 +20,11 @@ export default function EditorialBreak({
   const sectionClass =
     variant === "dark"
       ? "section-dark"
-      : variant === "warm"
-        ? "section-warm"
-        : "section-stone";
+      : variant === "silk"
+        ? "section-linen"
+        : variant === "warm"
+          ? "section-warm"
+          : "section-stone";
 
   return (
     <section

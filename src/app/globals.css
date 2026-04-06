@@ -6,26 +6,34 @@
    ============================================ */
 
 :root {
-  /* --- Colors: Chocolate-Inspired Warm Palette --- */
-  --color-deep-cocoa: #2D1E17;       /* Primary: dark backgrounds, nav, accents */
-  --color-espresso: #523F31;          /* Secondary: overlays, warm sections */
-  --color-warm-taupe: #796254;        /* Cards, UI surfaces, mid-tone */
-  --color-cream: #9D8A7C;            /* Muted cream, subtle elements */
-  --color-soft-ivory: #EDE5DC;        /* Main page background */
-  --color-linen: #F5F0EB;            /* Lightest — card surfaces, inputs */
+  /* --- Brand Palette: MADE Med Spa --- */
+  --color-deep-cocoa: #391e1e;       /* Espresso — dark bg, footer, hero overlay */
+  --color-espresso: #5a3d37;          /* Mocha — mid-dark surfaces, overlays */
+  --color-warm-taupe: #413e2a;        /* Olive — body text, secondary */
+  --color-cream: #5a3d37;            /* Mocha — labels, muted elements */
+  --color-soft-ivory: #f7f6eb;        /* Glaze — main page background */
+  --color-linen: #efe9df;            /* Silk — card surfaces, alt sections */
 
   /* Accent */
-  --color-accent: #C9A96E;           /* Gold accent */
-  --color-accent-light: #D4B87E;
-  --color-accent-dark: #B8955A;
-  --color-accent-text: #8B7340;       /* Legible gold for text on light bg */
+  --color-accent: #838d60;           /* Matcha — decorative accent */
+  --color-accent-light: #838d60;
+  --color-accent-dark: #6b7a4d;
+  --color-accent-text: #84262c;       /* Blush — links, active states, CTA */
 
-  /* Utility neutrals (warm, never pure) */
-  --color-text-primary: #2D1E17;
-  --color-text-secondary: #523F31;
-  --color-text-muted: #796254;
-  --color-border: rgba(121, 98, 84, 0.2);
-  --color-border-strong: rgba(82, 63, 49, 0.35);
+  /* Named brand colors */
+  --color-blush: #84262c;
+  --color-blush-dark: #6e1f25;
+  --color-matcha: #838d60;
+  --color-ink: #241616;
+  --color-white-soft: #fffdf9;
+  --color-line: #d9d0c5;
+
+  /* Utility neutrals */
+  --color-text-primary: #241616;
+  --color-text-secondary: #391e1e;
+  --color-text-muted: #5a3d37;
+  --color-border: rgba(65, 62, 42, 0.2);
+  --color-border-strong: rgba(65, 62, 42, 0.35);
 
   /* Semantic aliases */
   --background: var(--color-soft-ivory);
@@ -87,11 +95,11 @@
   --border-radius-full: 9999px;
 
   /* --- Shadows (warm-tinted) --- */
-  --shadow-sm: 0 1px 3px rgba(45, 30, 23, 0.04);
-  --shadow-md: 0 4px 16px rgba(45, 30, 23, 0.06);
-  --shadow-lg: 0 8px 30px rgba(45, 30, 23, 0.1);
-  --shadow-xl: 0 20px 60px rgba(45, 30, 23, 0.14);
-  --shadow-card: 0 2px 12px rgba(45, 30, 23, 0.05);
+  --shadow-sm: 0 1px 3px rgba(57, 30, 30, 0.04);
+  --shadow-md: 0 4px 16px rgba(57, 30, 30, 0.06);
+  --shadow-lg: 0 8px 30px rgba(57, 30, 30, 0.1);
+  --shadow-xl: 0 20px 60px rgba(57, 30, 30, 0.14);
+  --shadow-card: 0 2px 12px rgba(57, 30, 30, 0.05);
 }
 
 /* --- Tailwind v4 Theme Integration --- */
@@ -265,16 +273,16 @@ a:hover {
   border-radius: var(--border-radius-full);
 }
 
-/* Primary — deep cocoa bg */
+/* Primary — blush CTA */
 .btn-primary {
-  background-color: var(--color-deep-cocoa);
+  background-color: var(--color-blush);
   color: var(--color-soft-ivory);
-  border: 1px solid var(--color-deep-cocoa);
+  border: 1px solid var(--color-blush);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-espresso);
-  border-color: var(--color-espresso);
+  background-color: var(--color-blush-dark);
+  border-color: var(--color-blush-dark);
   color: var(--color-soft-ivory);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
@@ -288,9 +296,9 @@ a:hover {
 }
 
 .btn-outline:hover {
-  border-color: var(--color-deep-cocoa);
-  background-color: var(--color-deep-cocoa);
-  color: var(--color-soft-ivory);
+  border-color: var(--color-warm-taupe);
+  background-color: var(--color-linen);
+  color: var(--color-deep-cocoa);
 }
 
 /* Secondary — lighter border */
@@ -301,9 +309,9 @@ a:hover {
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-deep-cocoa);
-  color: var(--color-soft-ivory);
-  border-color: var(--color-deep-cocoa);
+  background-color: var(--color-linen);
+  color: var(--color-deep-cocoa);
+  border-color: var(--color-warm-taupe);
 }
 
 /* Accent — gold CTA */
@@ -336,12 +344,12 @@ a:hover {
 .btn-light-outline {
   background-color: transparent;
   color: var(--color-soft-ivory);
-  border: 1px solid rgba(237, 229, 220, 0.35);
+  border: 1px solid rgba(247, 246, 235, 0.35);
 }
 
 .btn-light-outline:hover {
   border-color: var(--color-soft-ivory);
-  background-color: rgba(237, 229, 220, 0.1);
+  background-color: rgba(247, 246, 235, 0.1);
 }
 
 /* Text link CTA — arrow pattern */
@@ -370,7 +378,7 @@ a:hover {
 /* Dark — deepest cocoa (#2D1E17) */
 .section-dark {
   background-color: var(--color-deep-cocoa);
-  color: rgba(237, 229, 220, 0.8);
+  color: rgba(247, 246, 235, 0.8);
 }
 
 .section-dark h1,
@@ -395,7 +403,7 @@ a:hover {
 /* Warm — espresso brown (#523F31) */
 .section-warm {
   background-color: var(--color-espresso);
-  color: rgba(237, 229, 220, 0.8);
+  color: rgba(247, 246, 235, 0.8);
 }
 
 .section-warm h1,
@@ -641,8 +649,8 @@ a:hover {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(45, 30, 23, 0.03),
-    rgba(45, 30, 23, 0.08)
+    rgba(57, 30, 30, 0.03),
+    rgba(57, 30, 30, 0.08)
   );
   pointer-events: none;
 }
@@ -663,7 +671,7 @@ a:hover {
 
 .page-header-dark {
   background-color: var(--color-deep-cocoa);
-  color: rgba(237, 229, 220, 0.8);
+  color: rgba(247, 246, 235, 0.8);
   padding: calc(var(--nav-height) + var(--space-5xl)) 0 var(--space-5xl);
   text-align: center;
 }
@@ -675,7 +683,7 @@ a:hover {
 
 .page-header-warm {
   background-color: var(--color-espresso);
-  color: rgba(237, 229, 220, 0.8);
+  color: rgba(247, 246, 235, 0.8);
   padding: calc(var(--nav-height) + var(--space-5xl)) 0 var(--space-5xl);
   text-align: center;
 }

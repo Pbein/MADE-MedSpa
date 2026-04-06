@@ -54,7 +54,7 @@ export default function HeroSection() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(45,30,23,0.6) 0%, rgba(45,30,23,0.3) 40%, rgba(45,30,23,0.4) 70%, rgba(45,30,23,0.7) 100%)",
+              "linear-gradient(180deg, rgba(57,30,30,0.6) 0%, rgba(57,30,30,0.3) 40%, rgba(57,30,30,0.4) 70%, rgba(57,30,30,0.7) 100%)",
           }}
         />
       </div>
@@ -105,7 +105,7 @@ export default function HeroSection() {
             className="mt-8 max-w-md leading-relaxed"
             style={{
               fontSize: "var(--text-lg)",
-              color: "rgba(237, 229, 220, 0.75)",
+              color: "rgba(247, 246, 235, 0.75)",
               fontWeight: 300,
             }}
           >
@@ -141,14 +141,14 @@ export default function HeroSection() {
           style={{
             fontSize: "0.6rem",
             letterSpacing: "0.25em",
-            color: "rgba(237, 229, 220, 0.5)",
+            color: "rgba(247, 246, 235, 0.5)",
           }}
         >
           Scroll
         </span>
         <div
           className="h-12 w-[1px]"
-          style={{ backgroundColor: "rgba(237, 229, 220, 0.3)" }}
+          style={{ backgroundColor: "rgba(247, 246, 235, 0.3)" }}
         />
       </motion.div>
     </section>

@@ -52,7 +52,7 @@ export default function Navigation() {
           transitionDuration: "var(--duration-medium)",
           transitionTimingFunction: "var(--ease-smooth)",
           backgroundColor: isScrolled
-            ? "rgba(237, 229, 220, 0.92)"
+            ? "rgba(247, 246, 235, 0.92)"
             : "transparent",
           backdropFilter: isScrolled ? "blur(16px)" : undefined,
           boxShadow: isScrolled ? "var(--shadow-sm)" : undefined,
@@ -82,7 +82,7 @@ export default function Navigation() {
                   className="editorial-spacing hover-underline transition-colors duration-[var(--duration-fast)]"
                   style={{
                     color: isHeroOverlay
-                      ? "rgba(237, 229, 220, 0.8)"
+                      ? "rgba(247, 246, 235, 0.8)"
                       : "var(--color-warm-taupe)",
                   }}
                 >
@@ -118,7 +118,7 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-soft-ivory)"
+                    ? "var(--color-deep-cocoa)"
                     : isHeroOverlay
                       ? "var(--color-soft-ivory)"
                       : "var(--color-deep-cocoa)",
@@ -133,7 +133,7 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-soft-ivory)"
+                    ? "var(--color-deep-cocoa)"
                     : isHeroOverlay
                       ? "var(--color-soft-ivory)"
                       : "var(--color-deep-cocoa)",
@@ -147,7 +147,7 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-soft-ivory)"
+                    ? "var(--color-deep-cocoa)"
                     : isHeroOverlay
                       ? "var(--color-soft-ivory)"
                       : "var(--color-deep-cocoa)",
@@ -183,7 +183,7 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col px-8 pt-28 pb-10 shadow-[var(--shadow-xl)] lg:hidden"
-              style={{ backgroundColor: "var(--color-espresso)" }}
+              style={{ backgroundColor: "var(--color-linen)" }}
             >
               <ul className="flex flex-col gap-6">
                 {navLinks.map((link, index) => (
@@ -201,7 +201,7 @@ export default function Navigation() {
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="headline-text block text-2xl transition-colors"
-                      style={{ color: "var(--color-soft-ivory)" }}
+                      style={{ color: "var(--color-deep-cocoa)" }}
                     >
                       {link.label}
                     </Link>
@@ -222,7 +222,7 @@ export default function Navigation() {
                 <Link
                   href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="btn btn-light w-full text-center"
+                  className="btn btn-primary w-full text-center"
                 >
                   Book Consultation
                 </Link>

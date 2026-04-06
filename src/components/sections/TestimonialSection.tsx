@@ -45,7 +45,6 @@ export default function TestimonialSection() {
     );
   }, [testimonials.length]);
 
-  // Reset current index if testimonials shrink
   useEffect(() => {
     if (current >= testimonials.length) {
       setCurrent(0);
@@ -57,7 +56,6 @@ export default function TestimonialSection() {
     return () => clearInterval(interval);
   }, [next]);
 
-  // Guard: if DB explicitly returned empty, don't render
   if (dbTestimonials && dbTestimonials.length === 0) return null;
 
   return (
@@ -65,7 +63,7 @@ export default function TestimonialSection() {
       ref={ref}
       className="relative overflow-hidden"
       style={{
-        backgroundColor: "var(--color-linen)",
+        backgroundColor: "var(--color-deep-cocoa)",
         paddingTop: "var(--space-section-lg)",
         paddingBottom: "var(--space-section-lg)",
       }}
@@ -79,7 +77,7 @@ export default function TestimonialSection() {
         >
           <span
             className="editorial-spacing mb-4 block"
-            style={{ color: "var(--color-cream)" }}
+            style={{ color: "rgba(247, 246, 235, 0.6)" }}
           >
             Testimonials
           </span>
@@ -87,17 +85,16 @@ export default function TestimonialSection() {
             className="headline-text"
             style={{
               fontSize: "var(--text-4xl)",
-              color: "var(--color-deep-cocoa)",
+              color: "var(--color-soft-ivory)",
             }}
           >
             Words from{" "}
-            <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>
+            <span className="accent-text" style={{ color: "var(--color-matcha)" }}>
               Our Clients
             </span>
           </h2>
         </motion.div>
 
-        {/* Quote carousel — minimal, centered, large quotes */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -110,8 +107,8 @@ export default function TestimonialSection() {
             style={{
               fontSize: "clamp(6rem, 4rem + 10vw, 12rem)",
               lineHeight: 1,
-              color: "var(--color-cream)",
-              opacity: 0.15,
+              color: "var(--color-soft-ivory)",
+              opacity: 0.08,
             }}
           >
             &ldquo;
@@ -131,7 +128,7 @@ export default function TestimonialSection() {
                   className="accent-text mb-8 leading-relaxed"
                   style={{
                     fontSize: "var(--text-2xl)",
-                    color: "var(--color-deep-cocoa)",
+                    color: "var(--color-soft-ivory)",
                   }}
                 >
                   &ldquo;{testimonials[current].quote}&rdquo;
@@ -141,7 +138,7 @@ export default function TestimonialSection() {
                     className="editorial-spacing mb-1"
                     style={{
                       fontSize: "var(--text-xs)",
-                      color: "var(--color-espresso)",
+                      color: "var(--color-soft-ivory)",
                       letterSpacing: "0.2em",
                     }}
                   >
@@ -151,7 +148,7 @@ export default function TestimonialSection() {
                     className="accent-text"
                     style={{
                       fontSize: "var(--text-sm)",
-                      color: "var(--color-warm-taupe)",
+                      color: "rgba(247, 246, 235, 0.6)",
                     }}
                   >
                     {testimonials[current].treatment}
@@ -167,8 +164,8 @@ export default function TestimonialSection() {
               onClick={prev}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
               style={{
-                border: "1px solid var(--color-border-strong)",
-                color: "var(--color-espresso)",
+                border: "1px solid rgba(247, 246, 235, 0.25)",
+                color: "var(--color-soft-ivory)",
               }}
               aria-label="Previous testimonial"
             >
@@ -184,8 +181,8 @@ export default function TestimonialSection() {
                   style={{
                     backgroundColor:
                       i === current
-                        ? "var(--color-deep-cocoa)"
-                        : "var(--color-cream)",
+                        ? "var(--color-soft-ivory)"
+                        : "rgba(247, 246, 235, 0.25)",
                     width: i === current ? "2rem" : "0.5rem",
                     borderRadius: "var(--border-radius-full)",
                     transition:
@@ -200,8 +197,8 @@ export default function TestimonialSection() {
               onClick={next}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
               style={{
-                border: "1px solid var(--color-border-strong)",
-                color: "var(--color-espresso)",
+                border: "1px solid rgba(247, 246, 235, 0.25)",
+                color: "var(--color-soft-ivory)",
               }}
               aria-label="Next testimonial"
             >

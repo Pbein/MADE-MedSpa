@@ -104,7 +104,7 @@ export default function ContactPage() {
           <motion.p
             variants={revealUp}
             className="mx-auto max-w-xl leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.7)", fontWeight: 300 }}
+            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.7)", fontWeight: 300 }}
           >
             {heroContent?.body ||
               "We would love to hear from you. Whether you have a question about our services, want to book an appointment, or simply want to say hello."}
@@ -281,7 +281,7 @@ export default function ContactPage() {
           <motion.p
             variants={revealUp}
             className="mx-auto mb-10 max-w-lg leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(237, 229, 220, 0.6)", fontWeight: 300 }}
+            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
           >
             Skip the form and book directly. Our team is ready to welcome you.
           </motion.p>
