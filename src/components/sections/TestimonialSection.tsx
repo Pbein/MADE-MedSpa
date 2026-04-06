@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
-const testimonials = [
+const FALLBACK_TESTIMONIALS = [
   {
     quote:
       "MADE transformed not just my appearance, but my confidence. The team's artistry and attention to detail is unlike anything I've experienced.",
@@ -27,24 +29,36 @@ const testimonials = [
 ];
 
 export default function TestimonialSection() {
+  const dbTestimonials = useQuery(api.testimonials.list);
+  const testimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : FALLBACK_TESTIMONIALS;
   const [current, setCurrent] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % testimonials.length);
-  }, []);
+  }, [testimonials.length]);
 
   const prev = useCallback(() => {
     setCurrent(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
-  }, []);
+  }, [testimonials.length]);
+
+  // Reset current index if testimonials shrink
+  useEffect(() => {
+    if (current >= testimonials.length) {
+      setCurrent(0);
+    }
+  }, [current, testimonials.length]);
 
   useEffect(() => {
     const interval = setInterval(next, 6000);
     return () => clearInterval(interval);
   }, [next]);
+
+  // Guard: if DB explicitly returned empty, don't render
+  if (dbTestimonials && dbTestimonials.length === 0) return null;
 
   return (
     <section

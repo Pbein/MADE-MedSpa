@@ -90,46 +90,6 @@ export function getServiceImage(slug: string, type: "card" | "hero" = "card"): s
     : "/images/optimized/services/facials-hero-lg.webp";
 }
 
-// Product slug -> optimized image path
-const productImageMap: Record<string, string> = {
-  "radiance-renewal-vitamin-c-serum": "/images/optimized/products/vitamin-c-serum-md.webp",
-  "hydra-plump-hyaluronic-acid-serum": "/images/optimized/products/hyaluronic-acid-serum-md.webp",
-  "peptide-recovery-night-cream": "/images/optimized/products/night-cream-md.webp",
-  "barrier-repair-daily-moisturizer": "/images/optimized/products/daily-moisturizer-md.webp",
-  "gentle-enzyme-cleanser": "/images/optimized/products/enzyme-cleanser-md.webp",
-  "clarifying-salicylic-cleanser": "/images/optimized/products/salicylic-cleanser-md.webp",
-  "invisible-shield-spf-50-sunscreen": "/images/optimized/products/sunscreen-spf50-md.webp",
-  "retinol-resurfacing-treatment": "/images/optimized/products/retinol-treatment-md.webp",
-};
-
-const productKeywordMap: Record<string, string> = {
-  "vitamin-c": "vitamin-c-serum",
-  "hyaluronic": "hyaluronic-acid-serum",
-  "night-cream": "night-cream",
-  "peptide": "night-cream",
-  "moisturizer": "daily-moisturizer",
-  "barrier": "daily-moisturizer",
-  "enzyme": "enzyme-cleanser",
-  "salicylic": "salicylic-cleanser",
-  "cleanser": "enzyme-cleanser",
-  "spf": "sunscreen-spf50",
-  "sunscreen": "sunscreen-spf50",
-  "retinol": "retinol-treatment",
-};
-
-export function getProductImage(slug: string): string {
-  const direct = productImageMap[slug];
-  if (direct) return direct;
-
-  for (const [keyword, imageKey] of Object.entries(productKeywordMap)) {
-    if (slug.includes(keyword)) {
-      return `/images/optimized/products/${imageKey}-md.webp`;
-    }
-  }
-
-  return "/images/optimized/products/vitamin-c-serum-md.webp";
-}
-
 export const demoImages = {
   hero: {
     video: "/images/optimized/hero/hero-bg-video.mp4",
@@ -139,7 +99,6 @@ export const demoImages = {
   home: {
     aboutTeaser: "/images/optimized/home/about-teaser-lg.webp",
     testimonialBg: "/images/optimized/home/testimonial-bg-lg.webp",
-    membershipTeaser: "/images/optimized/home/membership-teaser-md.webp",
   },
   about: {
     clinicInterior: "/images/optimized/about/clinic-interior-lg.webp",

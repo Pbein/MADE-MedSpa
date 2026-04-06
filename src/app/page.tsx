@@ -5,8 +5,6 @@ import FeaturedServices from "@/components/sections/FeaturedServices";
 import AboutTeaser from "@/components/sections/AboutTeaser";
 import EditorialBreak from "@/components/sections/EditorialBreak";
 import TestimonialSection from "@/components/sections/TestimonialSection";
-import MembershipTeaser from "@/components/sections/MembershipTeaser";
-import FeaturedProducts from "@/components/sections/FeaturedProducts";
 import CTABanner from "@/components/sections/CTABanner";
 
 export default function Home() {
@@ -37,12 +35,6 @@ export default function Home() {
 
       {/* Testimonials — minimal, centered, large quotes */}
       <TestimonialSection />
-
-      {/* Membership teaser — dark background */}
-      <MembershipTeaser />
-
-      {/* Featured Products */}
-      <FeaturedProducts />
 
       {/* Final CTA */}
       <CTABanner

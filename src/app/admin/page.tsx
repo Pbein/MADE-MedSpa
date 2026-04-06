@@ -6,7 +6,11 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 export default function AdminDashboard() {
-  const products = useQuery(api.products.list);
+  const services = useQuery(api.services.list);
+  const contacts = useQuery(api.contactSubmissions.list);
+  const faqs = useQuery(api.faqs.list);
+  const team = useQuery(api.teamMembers.list);
+
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
@@ -19,37 +23,20 @@ export default function AdminDashboard() {
   }, []);
 
   const stats = [
-    {
-      label: "Total Products",
-      value: products ? products.length : "--",
-      color: "var(--color-accent-text)",
-    },
-    {
-      label: "Total Orders",
-      value: "--",
-      color: "var(--color-chocolate)",
-    },
-    {
-      label: "Active Members",
-      value: "--",
-      color: "var(--color-burgundy-dark)",
-    },
-    {
-      label: "Contact Submissions",
-      value: "--",
-      color: "var(--color-chocolate)",
-    },
+    { label: "Active Services", value: services ? services.length : "--", color: "#6366f1" },
+    { label: "Contact Submissions", value: contacts ? contacts.length : "--", color: "#0891b2" },
+    { label: "Active FAQs", value: faqs ? faqs.length : "--", color: "#059669" },
+    { label: "Team Members", value: team ? team.length : "--", color: "#d97706" },
   ];
 
   const quickActions = [
-    { label: "Manage Products", href: "/admin/products" },
-    { label: "View Orders", href: "/admin/orders" },
+    { label: "Manage Services", href: "/admin/services" },
     { label: "Edit Content", href: "/admin/content" },
+    { label: "View Contacts", href: "/admin/contacts" },
   ];
 
   return (
     <div>
-      {/* Stats Grid */}
       <div
         style={{
           display: "grid",
@@ -59,102 +46,45 @@ export default function AdminDashboard() {
         }}
       >
         {stats.map((stat) => (
-          <div key={stat.label} style={styles.statCard}>
-            <div style={{ ...styles.statValue, color: stat.color }}>
+          <div key={stat.label} style={{
+            backgroundColor: "#fff",
+            borderRadius: 8,
+            padding: "20px 18px",
+            border: "1px solid #e5e7eb",
+          }}>
+            <div style={{ fontSize: 32, fontWeight: 700, lineHeight: 1.1, marginBottom: 4, color: stat.color }}>
               {stat.value}
             </div>
-            <div style={styles.statLabel}>{stat.label}</div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: "#6b7280", letterSpacing: 0.3, textTransform: "uppercase" }}>
+              {stat.label}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Quick Actions</h2>
-        <div style={styles.actionsRow}>
+      <section style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 600, color: "#111827", marginBottom: 14 }}>Quick Actions</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           {quickActions.map((action) => (
             <Link
               key={action.href}
               href={action.href}
-              style={styles.actionBtn}
+              style={{
+                display: "inline-block",
+                padding: "9px 20px",
+                backgroundColor: "#6366f1",
+                color: "#fff",
+                borderRadius: 6,
+                textDecoration: "none",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
             >
               {action.label}
             </Link>
           ))}
         </div>
       </section>
-
-      {/* Recent Activity */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Recent Activity</h2>
-        <div style={styles.activityPlaceholder}>
-          <p style={styles.activityText}>
-            Activity feed will appear here once connected.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  statCard: {
-    backgroundColor: "var(--color-ivory)",
-    borderRadius: 10,
-    padding: "24px 20px",
-    border: "1px solid var(--color-stone)",
-  },
-  statValue: {
-    fontSize: 36,
-    fontWeight: 700,
-    lineHeight: 1.1,
-    marginBottom: 6,
-    fontFamily: "var(--font-jost), sans-serif",
-  },
-  statLabel: {
-    fontSize: 13,
-    fontWeight: 500,
-    color: "var(--color-chocolate)",
-    letterSpacing: 0.5,
-    textTransform: "uppercase" as const,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 600,
-    color: "var(--color-chocolate)",
-    marginBottom: 14,
-    fontFamily: "var(--font-jost), sans-serif",
-  },
-  actionsRow: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 12,
-  },
-  actionBtn: {
-    display: "inline-block",
-    padding: "10px 22px",
-    backgroundColor: "var(--color-burgundy)",
-    color: "#fff",
-    borderRadius: 6,
-    textDecoration: "none",
-    fontSize: 14,
-    fontWeight: 500,
-    fontFamily: "var(--font-jost), sans-serif",
-    letterSpacing: 0.3,
-  },
-  activityPlaceholder: {
-    backgroundColor: "var(--color-ivory)",
-    borderRadius: 10,
-    padding: "32px 24px",
-    border: "1px solid var(--color-stone)",
-    textAlign: "center",
-  },
-  activityText: {
-    color: "var(--color-stone-dark)",
-    fontSize: 14,
-    margin: 0,
-  },
-};

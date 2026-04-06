@@ -10,60 +10,15 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/shop", label: "Shop" },
-  { href: "/membership", label: "Membership" },
   { href: "/faq", label: "FAQ" },
+  { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
 ];
-
-function CartIcon({ count, light }: { count: number; light?: boolean }) {
-  return (
-    <Link
-      href="/shop/cart"
-      className="relative flex h-10 w-10 items-center justify-center transition-colors"
-      aria-label={`Shopping cart${count > 0 ? `, ${count} items` : ""}`}
-      style={{
-        color: light ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
-        transitionDuration: "var(--duration-fast)",
-      }}
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <path d="M16 10a4 4 0 01-8 0" />
-      </svg>
-      {count > 0 && (
-        <span
-          className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full"
-          style={{
-            backgroundColor: "var(--color-accent)",
-            color: "var(--color-deep-cocoa)",
-            fontSize: "0.6rem",
-            fontFamily: "var(--font-body)",
-            fontWeight: 600,
-          }}
-        >
-          {count > 9 ? "9+" : count}
-        </span>
-      )}
-    </Link>
-  );
-}
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
 
   const isHeroOverlay = pathname === "/" && !isScrolled;
 
@@ -73,26 +28,6 @@ export default function Navigation() {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const updateCartCount = () => {
-      try {
-        const cart = JSON.parse(localStorage.getItem("made-cart") || "[]");
-        const count = cart.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0);
-        setCartCount(count);
-      } catch {
-        setCartCount(0);
-      }
-    };
-
-    updateCartCount();
-    window.addEventListener("storage", updateCartCount);
-    window.addEventListener("cart-updated", updateCartCount);
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-      window.removeEventListener("cart-updated", updateCartCount);
-    };
   }, []);
 
   useEffect(() => {
@@ -128,7 +63,7 @@ export default function Navigation() {
           {/* Logo */}
           <Link
             href="/"
-            className="headline-text text-2xl tracking-[0.2em] transition-colors"
+            className="headline-text shrink-0 text-2xl tracking-[0.2em] transition-colors"
             style={{
               fontFamily: "var(--font-headline)",
               color: isHeroOverlay ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
@@ -157,9 +92,8 @@ export default function Navigation() {
             ))}
           </ul>
 
-          {/* Desktop CTA + Cart */}
+          {/* Desktop CTA */}
           <div className="hidden items-center gap-3 lg:flex">
-            <CartIcon count={cartCount} light={isHeroOverlay} />
             <Link
               href="/booking"
               className={cn("btn", isHeroOverlay ? "btn-light" : "btn-primary")}
@@ -169,12 +103,11 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile: Cart + Hamburger */}
+          {/* Mobile: Hamburger */}
           <div className="flex items-center gap-2 lg:hidden">
-            <CartIcon count={cartCount} light={isHeroOverlay} />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5"
+              className="relative flex h-10 w-10 flex-col items-center justify-center gap-1.5"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >

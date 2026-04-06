@@ -2,92 +2,26 @@
 
 ## Overview
 
-This document records significant architectural decisions made during the MADE Med Spa project, including context, options evaluated, and rationale for the chosen approach.
+This document records significant architectural decisions made during the MADE Med Spa project.
 
 ---
 
-## ADR-001: E-Commerce Architecture — Convex + Stripe vs. Third-Party Platforms
+## ADR-001: E-Commerce Architecture -- Convex + Stripe vs. Third-Party Platforms
 
 ### Date
 2026-03-04
 
 ### Status
-**Accepted**
+**Superseded** by ADR-007
 
 ### Context
-
-MADE Med Spa needs an e-commerce capability to sell skincare products alongside their service bookings and memberships. The e-commerce system must handle product catalog management, shopping carts, checkout with payment processing, order management, and inventory tracking.
-
-The project already uses Convex as the primary database and Stripe for membership subscription billing. We needed to decide whether to build e-commerce natively within the existing stack or integrate a third-party e-commerce platform.
-
-### Options Evaluated
-
-#### Option A: Convex + Stripe Checkout (Custom Build)
-- Store products, carts, and orders in Convex tables
-- Use Stripe Checkout Sessions for payment processing
-- Build product management UI in existing admin dashboard
-- Full control over data model and user experience
-
-#### Option B: Shopify (Storefront API + Headless)
-- Use Shopify as a headless commerce backend
-- Shopify Storefront API for product data and checkout
-- Separate data silo from Convex
-- Shopify handles inventory, payments, and order management
-
-#### Option C: Snipcart
-- Drop-in shopping cart overlay
-- Products defined via HTML attributes or API
-- Snipcart handles cart, checkout, and payment
-- Separate dashboard for order management
-
-#### Option D: Stripe Products + Stripe Payment Links
-- Store products as Stripe Products with Prices
-- Use Stripe Payment Links or Checkout for purchasing
-- Minimal custom code
-- Limited customization of shopping experience
+Evaluated options for e-commerce: custom Convex + Stripe build vs. Shopify, Snipcart, or Stripe Payment Links.
 
 ### Decision
+Convex + Stripe Checkout was chosen for unified data, member discount integration, and cost efficiency.
 
-**Option A: Convex + Stripe Checkout** was chosen.
-
-### Rationale
-
-1. **Unified Data Layer**: All business data (services, members, bookings, products, orders) lives in Convex. This enables powerful cross-entity queries, such as showing a member's complete history (bookings + purchases) on a single dashboard, or calculating lifetime customer value across all revenue streams.
-
-2. **Member Discount Integration**: Membership tiers include product discounts (10-25% off). With products in Convex, we can calculate member-specific pricing in real-time using the same authentication and membership data. Third-party platforms would require complex sync of membership status.
-
-3. **Consistent Admin Experience**: Admins manage everything from one dashboard. Adding Shopify or Snipcart means admins must context-switch between multiple systems for daily operations.
-
-4. **Real-Time Capabilities**: Convex provides real-time subscriptions out of the box. Inventory counts, cart updates, and order status changes reflect instantly without polling. This is particularly valuable for low-stock alerts and admin order monitoring.
-
-5. **Cost Efficiency**: No additional monthly platform fees. Shopify charges $39-399/month plus transaction fees. Snipcart charges 2% on top of payment processor fees. Our approach only incurs Stripe's standard processing fees (2.9% + 30 cents).
-
-6. **Stripe Already Integrated**: Stripe is already configured for membership subscriptions with webhook handlers in place. Adding Checkout Sessions for one-time purchases is incremental work, not a new integration.
-
-7. **Full UX Control**: We have complete control over the shopping experience, cart behavior, and checkout flow. No iframe limitations, no third-party styling constraints, no redirect to external checkout pages (Shopify) unless we choose to use Stripe's hosted checkout.
-
-### Trade-offs Acknowledged
-
-- **More Code to Write**: We must build cart management, inventory tracking, and order management ourselves. Shopify provides these out of the box.
-- **No Built-in Shipping Calculator**: We'll need to handle shipping cost calculation manually or via a shipping API if complex shipping rules are needed. For a small skincare catalog, flat-rate or free shipping is likely sufficient.
-- **No Built-in Tax Calculation**: Tax calculation must be handled manually or via Stripe Tax. Shopify handles multi-jurisdiction tax automatically.
-- **Maintenance Burden**: We own the entire e-commerce stack. Bugs and edge cases (inventory race conditions, payment failure handling) are our responsibility.
-
-### Mitigations
-
-- **Stripe Checkout Session** handles PCI compliance, payment form, and card processing — we don't touch sensitive card data
-- **Convex transactions** prevent inventory race conditions (atomic stock decrements)
-- **Stripe webhooks** provide reliable payment confirmation (we don't rely on client-side redirect alone)
-- The product catalog is expected to be small (20-50 SKUs) — this is skincare products for an individual med spa, not a marketplace
-- Flat-rate or free shipping simplifies the shipping calculation requirement
-
-### Consequences
-
-- E-commerce tables (`products`, `cart`, `orders`) added to Convex schema
-- Stripe Checkout Session creation added to API routes
-- Stripe webhook handler extended to process `checkout.session.completed` events
-- Admin dashboard extended with product and order management pages
-- Cart state management implemented (Convex for auth users, session storage for guests)
+### Note
+This decision was reversed in ADR-007. E-commerce was removed from the site scope entirely.
 
 ---
 
@@ -100,22 +34,17 @@ The project already uses Convex as the primary database and Stripe for membershi
 **Accepted**
 
 ### Context
-
-Needed a backend solution that provides database, serverless functions, and real-time capabilities with minimal infrastructure management.
+Needed a backend with database, serverless functions, and real-time capabilities.
 
 ### Decision
-
-Convex was chosen over alternatives (Supabase, Firebase, custom API).
+Convex was chosen over Supabase, Firebase, and custom API.
 
 ### Rationale
-
-- Real-time subscriptions built in (no polling or WebSocket setup)
+- Real-time subscriptions built in
 - Type-safe schema and queries with TypeScript
-- Serverless functions (queries, mutations, actions) co-located with schema
+- Serverless functions co-located with schema
 - File storage included
-- Scheduled functions for delayed tasks (reminders, follow-ups)
 - Excellent Next.js integration
-- No SQL — document-based model fits the data well
 
 ---
 
@@ -128,21 +57,16 @@ Convex was chosen over alternatives (Supabase, Firebase, custom API).
 **Accepted**
 
 ### Context
-
-Need authentication with social login, email/password, and role-based access control for admin features.
+Need authentication with role-based access control for admin features.
 
 ### Decision
-
 Clerk was chosen over NextAuth.js, Auth0, and Supabase Auth.
 
 ### Rationale
-
-- Excellent Convex integration (first-party support)
-- Pre-built UI components (SignIn, SignUp, UserButton)
+- First-party Convex integration
+- Pre-built UI components
 - Middleware-based route protection
-- User metadata for role management (admin flag)
-- Webhook support for user sync events
-- Good developer experience with minimal configuration
+- User metadata for role management
 
 ---
 
@@ -152,24 +76,16 @@ Clerk was chosen over NextAuth.js, Auth0, and Supabase Auth.
 2026-03-04
 
 ### Status
-**Accepted**
+**Superseded** by ADR-007
 
 ### Context
-
-Need a booking/scheduling system that can be embedded in the website and provides webhook events for downstream processing.
+Needed an embeddable booking/scheduling system with webhook events.
 
 ### Decision
+Cal.com was chosen for its embeddable widget and webhook support.
 
-Cal.com was chosen over custom booking system, Calendly, and Acuity.
-
-### Rationale
-
-- Embeddable widget with customizable styling
-- Webhook events for booking lifecycle
-- Open-source option available (self-hosted)
-- Handles scheduling complexity (availability, time zones, buffers)
-- No per-booking fees on self-hosted plan
-- API access for programmatic management
+### Note
+This decision was reversed in ADR-007. Booking is now handled entirely by Pabau via external link.
 
 ---
 
@@ -179,24 +95,16 @@ Cal.com was chosen over custom booking system, Calendly, and Acuity.
 2026-03-04
 
 ### Status
-**Accepted**
+**Superseded** by ADR-007
 
 ### Context
-
-Need a transactional email service for booking confirmations, membership emails, and order notifications.
+Needed transactional email for booking confirmations, membership emails, and order notifications.
 
 ### Decision
+Resend was chosen for its React Email support and developer experience.
 
-Resend was chosen over SendGrid, Mailgun, and AWS SES.
-
-### Rationale
-
-- Native React Email support (JSX email templates)
-- Modern developer experience
-- Simple API with excellent documentation
-- Generous free tier (100 emails/day)
-- Built by the creator of React Email
-- Easy integration with Next.js and Convex actions
+### Note
+This decision was reversed in ADR-007. No transactional email is sent from the site.
 
 ---
 
@@ -206,41 +114,64 @@ Resend was chosen over SendGrid, Mailgun, and AWS SES.
 2026-03-26
 
 ### Status
+**Accepted** (scope reduced in ADR-007)
+
+### Context
+Client selected Pabau as their practice management / EMR platform, replacing the originally planned Hermes CRM integration.
+
+### Decision
+Pabau replaces Hermes as the EMR/CRM system. All business operations (scheduling, patient records, payments, memberships, marketing) run through Pabau.
+
+### Note
+ADR-007 further simplified this: instead of building a Pabau API integration, the site simply links to Pabau's online booking page.
+
+---
+
+## ADR-007: Site Simplification -- Marketing Site Only
+
+### Date
+2026-04-05
+
+### Status
 **Accepted**
 
 ### Context
 
-MADE Med Spa needs an EMR (Electronic Medical Records) system to manage patient records, clinical notes, consent forms, and treatment history. The original plan included Hermes as a lightweight CRM for contact sync and event tracking (Epic 7). However, the client selected Pabau as their practice management / EMR platform, which provides a superset of CRM functionality plus clinical record-keeping.
+The original project scope included a full-featured platform: e-commerce (product catalog, cart, checkout), membership management (Stripe subscriptions, member portal), embedded booking (Cal.com), transactional email (Resend), and EMR API integration (Pabau GraphQL sync).
+
+Client needs changed as the project progressed. Pabau EMR was selected to handle all business operations: scheduling, patient records, payments, memberships, and marketing communications. Building these features into the website became redundant and added unnecessary complexity for a business that is still 3 months from opening.
 
 ### Decision
 
-**Pabau** replaces Hermes as the EMR/CRM integration. All references to Hermes in the codebase and documentation have been updated to Pabau.
+Strip the site down to a marketing website with admin content management. Remove:
+
+- **E-commerce**: No product catalog, cart, checkout, or order management
+- **Memberships**: No Stripe subscriptions, member portal, or tier management
+- **Booking engine**: No Cal.com embed or webhook processing
+- **Payment processing**: No Stripe integration
+- **Transactional email**: No Resend integration
+- **EMR API integration**: No Pabau GraphQL API calls
+
+Keep:
+
+- **Public marketing pages**: Home, About, Services, Service detail, Contact, FAQ, Booking (link to Pabau)
+- **Admin dashboard**: CRUD for services, FAQs, site content blocks, and contact submission viewer
+- **Convex**: Backend for content management (6 tables)
+- **Clerk**: Admin authentication
+- **Tailwind + Framer Motion**: Styling and animations
 
 ### Rationale
 
-1. **Client Requirement**: The client has chosen Pabau as their practice management system. All clinical operations will run through Pabau.
-
-2. **EMR Capabilities**: Pabau provides full EMR functionality (patient records, treatment notes, consent forms, medical history) that a CRM like Hermes cannot offer. This is essential for a medical spa.
-
-3. **Built-in Online Booking**: Pabau includes online booking, which may replace or supplement Cal.com — reducing the number of third-party integrations.
-
-4. **Packages & Memberships**: Pabau has native membership/package management, which can complement the Stripe-based membership system.
-
-5. **Marketing Tools**: Built-in email/SMS marketing reduces dependency on Resend for non-transactional communications.
-
-6. **Single Source of Truth**: Patient data lives in Pabau for clinical/operational use; Convex remains the website's data layer. The sync module bridges both systems.
-
-### Trade-offs Acknowledged
-
-- **GraphQL API**: Pabau uses GraphQL, adding complexity over a simple REST API. Requires typed query/mutation builders.
-- **Booking System Overlap**: Pabau's online booking may overlap with Cal.com. A decision is needed on which to use for website scheduling (see Epic 5/7).
-- **Two Data Stores**: Patient data will exist in both Convex (for website features) and Pabau (for clinical operations). Sync must be reliable and bi-directional where needed.
-- **API Maturity**: Pabau's API may have limitations compared to dedicated CRM APIs. Testing required.
+1. **Pabau handles business ops**: Scheduling, payments, memberships, patient records, and marketing are all managed in Pabau. Duplicating these in the website adds cost and maintenance burden with no benefit.
+2. **Reduced time to launch**: Fewer features means faster delivery. The site can launch with the brand and service information the client needs now.
+3. **Lower maintenance surface**: No webhook handlers, no payment edge cases, no inventory management, no subscription lifecycle to manage.
+4. **Focus on what matters**: The website's job is to showcase the brand, describe services, and drive visitors to book. Everything else is noise.
 
 ### Consequences
 
-- Epic 7 rewritten from "Hermes Integration" to "Pabau EMR Integration"
-- Environment variables changed: `HERMES_*` → `PABAU_*`
-- Schema field `hermesContactId` to be renamed `pabauPatientId`
-- Booking system (Epic 5) needs re-evaluation: Cal.com vs Pabau booking
-- All CRM sync patterns adapted for Pabau's GraphQL API
+- Convex schema reduced from 15 tables to 6
+- Route count reduced from 26+ to 12 (7 public + 5 admin)
+- Environment variables reduced from 25+ to 6
+- Removed dependencies: Stripe, Cal.com, Resend, Pabau API client
+- ADRs 001, 004, and 005 are superseded
+- Epic tracker simplified accordingly

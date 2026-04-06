@@ -5,34 +5,34 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
-interface FaqFormData {
-  question: string;
-  answer: string;
-  category: string;
+interface TestimonialFormData {
+  name: string;
+  quote: string;
+  treatment: string;
   sortOrder: number;
 }
 
-const emptyForm: FaqFormData = {
-  question: "",
-  answer: "",
-  category: "",
+const emptyForm: TestimonialFormData = {
+  name: "",
+  quote: "",
+  treatment: "",
   sortOrder: 0,
 };
 
-function FaqForm({
+function TestimonialForm({
   initial,
   onSave,
   onCancel,
   onDelete,
   saving,
 }: {
-  initial: FaqFormData;
-  onSave: (data: FaqFormData) => void;
+  initial: TestimonialFormData;
+  onSave: (data: TestimonialFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
   saving: boolean;
 }) {
-  const [form, setForm] = useState<FaqFormData>(initial);
+  const [form, setForm] = useState<TestimonialFormData>(initial);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
@@ -44,32 +44,17 @@ function FaqForm({
       }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
+        <div>
           <label
             className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            Question
+            Name
           </label>
-          <textarea
-            value={form.question}
-            onChange={(e) => setForm({ ...form, question: e.target.value })}
-            rows={2}
-            className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
-            style={{ borderColor: "#e5e7eb" }}
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
-            style={{ color: "#111827" }}
-          >
-            Answer
-          </label>
-          <textarea
-            value={form.answer}
-            onChange={(e) => setForm({ ...form, answer: e.target.value })}
-            rows={3}
+          <input
+            type="text"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
           />
@@ -79,13 +64,28 @@ function FaqForm({
             className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            Category
+            Treatment
           </label>
           <input
             type="text"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            placeholder="e.g. General, Membership, Services"
+            value={form.treatment}
+            onChange={(e) => setForm({ ...form, treatment: e.target.value })}
+            placeholder="e.g. HydraFacial, Lip Filler"
+            className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
+            style={{ borderColor: "#e5e7eb" }}
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label
+            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
+            style={{ color: "#111827" }}
+          >
+            Quote
+          </label>
+          <textarea
+            value={form.quote}
+            onChange={(e) => setForm({ ...form, quote: e.target.value })}
+            rows={4}
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
           />
@@ -162,7 +162,7 @@ function FaqForm({
           </button>
           <button
             onClick={() => onSave(form)}
-            disabled={saving || !form.question.trim() || !form.answer.trim()}
+            disabled={saving || !form.name.trim() || !form.quote.trim() || !form.treatment.trim()}
             className="rounded-md px-4 py-1.5 text-[15px] text-white transition-colors disabled:opacity-50"
             style={{ backgroundColor: "#6366f1" }}
           >
@@ -174,90 +174,84 @@ function FaqForm({
   );
 }
 
-export default function AdminFaqsPage() {
-  const faqs = useQuery(api.faqs.listAll);
-  const createFaq = useMutation(api.faqs.create);
-  const updateFaq = useMutation(api.faqs.update);
-  const removeFaq = useMutation(api.faqs.remove);
-  const toggleActive = useMutation(api.faqs.toggleActive);
+export default function AdminTestimonialsPage() {
+  const testimonials = useQuery(api.testimonials.listAll);
+  const createTestimonial = useMutation(api.testimonials.create);
+  const updateTestimonial = useMutation(api.testimonials.update);
+  const removeTestimonial = useMutation(api.testimonials.remove);
+  const toggleActive = useMutation(api.testimonials.toggleActive);
 
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingId, setEditingId] = useState<Id<"faqs"> | null>(null);
+  const [editingId, setEditingId] = useState<Id<"testimonials"> | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const categories = faqs
-    ? ["all", ...new Set(faqs.map((f) => f.category || "General"))]
-    : ["all"];
-
   const filtered =
-    faqs
-      ?.filter((f) => {
+    testimonials
+      ?.filter((t) => {
         const matchesSearch =
           !search ||
-          f.question.toLowerCase().includes(search.toLowerCase()) ||
-          f.answer.toLowerCase().includes(search.toLowerCase());
-        const matchesCategory =
-          categoryFilter === "all" ||
-          (f.category || "General") === categoryFilter;
-        return matchesSearch && matchesCategory;
+          t.name.toLowerCase().includes(search.toLowerCase()) ||
+          t.quote.toLowerCase().includes(search.toLowerCase());
+        return matchesSearch;
       }) ?? [];
 
-  const nextSortOrder = faqs ? Math.max(0, ...faqs.map((f) => f.sortOrder)) + 1 : 0;
+  const nextSortOrder = testimonials
+    ? Math.max(0, ...testimonials.map((t) => t.sortOrder)) + 1
+    : 0;
 
-  async function handleCreate(data: FaqFormData) {
+  async function handleCreate(data: TestimonialFormData) {
     setSaving(true);
     try {
-      await createFaq({
-        question: data.question.trim(),
-        answer: data.answer.trim(),
-        category: data.category.trim() || undefined,
+      await createTestimonial({
+        name: data.name.trim(),
+        quote: data.quote.trim(),
+        treatment: data.treatment.trim(),
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
     } catch (err) {
-      console.error("Failed to create FAQ:", err);
+      console.error("Failed to create testimonial:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleUpdate(id: Id<"faqs">, data: FaqFormData) {
+  async function handleUpdate(id: Id<"testimonials">, data: TestimonialFormData) {
     setSaving(true);
     try {
-      await updateFaq({
+      await updateTestimonial({
         id,
-        question: data.question.trim(),
-        answer: data.answer.trim(),
-        category: data.category.trim() || undefined,
+        name: data.name.trim(),
+        quote: data.quote.trim(),
+        treatment: data.treatment.trim(),
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
     } catch (err) {
-      console.error("Failed to update FAQ:", err);
+      console.error("Failed to update testimonial:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleDelete(id: Id<"faqs">) {
+  async function handleDelete(id: Id<"testimonials">) {
     setSaving(true);
     try {
-      await removeFaq({ id });
+      await removeTestimonial({ id });
       setEditingId(null);
     } catch (err) {
-      console.error("Failed to delete FAQ:", err);
+      console.error("Failed to delete testimonial:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleToggleActive(id: Id<"faqs">) {
+  async function handleToggleActive(id: Id<"testimonials">) {
     try {
       await toggleActive({ id });
     } catch (err) {
-      console.error("Failed to toggle FAQ status:", err);
+      console.error("Failed to toggle testimonial status:", err);
     }
   }
 
@@ -268,7 +262,7 @@ export default function AdminFaqsPage() {
           className="text-2xl font-semibold"
           style={{ color: "#111827" }}
         >
-          FAQs{" "}
+          Testimonials{" "}
           <span
             className="text-base font-normal"
             style={{ color: "#6b7280" }}
@@ -284,7 +278,7 @@ export default function AdminFaqsPage() {
           className="rounded-md px-4 py-2 text-[15px] text-white"
           style={{ backgroundColor: "#6366f1" }}
         >
-          {showCreateForm ? "Cancel" : "Add FAQ"}
+          {showCreateForm ? "Cancel" : "Add Testimonial"}
         </button>
       </div>
 
@@ -294,9 +288,9 @@ export default function AdminFaqsPage() {
             className="mb-3 text-[15px] font-semibold uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            New FAQ
+            New Testimonial
           </h2>
-          <FaqForm
+          <TestimonialForm
             initial={{ ...emptyForm, sortOrder: nextSortOrder }}
             onSave={handleCreate}
             onCancel={() => setShowCreateForm(false)}
@@ -308,7 +302,7 @@ export default function AdminFaqsPage() {
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
-          placeholder="Search FAQs..."
+          placeholder="Search testimonials..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
@@ -318,29 +312,9 @@ export default function AdminFaqsPage() {
             width: "100%",
           }}
         />
-        <div className="flex gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategoryFilter(cat)}
-              className="rounded-full px-3 py-1 text-[13px] capitalize transition-colors"
-              style={{
-                backgroundColor:
-                  categoryFilter === cat
-                    ? "#6366f1"
-                    : "#fff",
-                color:
-                  categoryFilter === cat ? "white" : "#374151",
-                border: `1px solid ${categoryFilter === cat ? "#4f46e5" : "#e5e7eb"}`,
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {!faqs && (
+      {!testimonials && (
         <div
           className="py-12 text-center"
           style={{ color: "#6b7280" }}
@@ -349,12 +323,12 @@ export default function AdminFaqsPage() {
         </div>
       )}
 
-      {faqs && filtered.length === 0 && (
+      {testimonials && filtered.length === 0 && (
         <div
           className="py-12 text-center"
           style={{ color: "#6b7280" }}
         >
-          No FAQs found.
+          No testimonials found.
         </div>
       )}
 
@@ -370,13 +344,19 @@ export default function AdminFaqsPage() {
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
                   style={{ color: "#111827" }}
                 >
-                  Question
+                  Name
                 </th>
                 <th
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
                   style={{ color: "#111827" }}
                 >
-                  Category
+                  Quote
+                </th>
+                <th
+                  className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
+                  style={{ color: "#111827" }}
+                >
+                  Treatment
                 </th>
                 <th
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
@@ -399,8 +379,8 @@ export default function AdminFaqsPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((faq, i) => (
-                <Fragment key={faq._id}>
+              {filtered.map((testimonial, i) => (
+                <Fragment key={testimonial._id}>
                   <tr
                     style={{
                       backgroundColor:
@@ -415,70 +395,74 @@ export default function AdminFaqsPage() {
                         className="text-[15px] font-medium"
                         style={{ color: "#111827" }}
                       >
-                        {faq.question}
+                        {testimonial.name}
                       </p>
+                    </td>
+                    <td className="px-4 py-3">
                       <p
-                        className="mt-1 text-[13px] line-clamp-1"
-                        style={{ color: "#6b7280" }}
+                        className="text-[15px]"
+                        style={{ color: "#374151" }}
                       >
-                        {faq.answer}
+                        {testimonial.quote.length > 60
+                          ? `${testimonial.quote.slice(0, 60)}...`
+                          : testimonial.quote}
                       </p>
                     </td>
                     <td
                       className="px-4 py-3 text-[15px]"
                       style={{ color: "#374151" }}
                     >
-                      {faq.category || "General"}
+                      {testimonial.treatment}
                     </td>
                     <td className="px-4 py-3">
                       <button
-                        onClick={() => handleToggleActive(faq._id)}
+                        onClick={() => handleToggleActive(testimonial._id)}
                         title="Click to toggle active status"
                         className="inline-flex cursor-pointer rounded-full px-2 py-0.5 text-[13px] transition-opacity hover:opacity-80"
                         style={{
-                          backgroundColor: faq.isActive
+                          backgroundColor: testimonial.isActive
                             ? "#dcfce7"
                             : "#f3f4f6",
-                          color: faq.isActive ? "#166534" : "#6b7280",
+                          color: testimonial.isActive ? "#166534" : "#6b7280",
                         }}
                       >
-                        {faq.isActive ? "Active" : "Inactive"}
+                        {testimonial.isActive ? "Active" : "Inactive"}
                       </button>
                     </td>
                     <td
                       className="px-4 py-3 text-[15px]"
                       style={{ color: "#374151" }}
                     >
-                      {faq.sortOrder}
+                      {testimonial.sortOrder}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => {
                           setEditingId(
-                            editingId === faq._id ? null : faq._id
+                            editingId === testimonial._id ? null : testimonial._id
                           );
                           setShowCreateForm(false);
                         }}
                         className="text-[15px] transition-colors hover:underline"
                         style={{ color: "#4f46e5" }}
                       >
-                        {editingId === faq._id ? "Cancel" : "Edit"}
+                        {editingId === testimonial._id ? "Cancel" : "Edit"}
                       </button>
                     </td>
                   </tr>
-                  {editingId === faq._id && (
-                    <tr key={`${faq._id}-edit`}>
-                      <td colSpan={5} className="px-4 py-3">
-                        <FaqForm
+                  {editingId === testimonial._id && (
+                    <tr key={`${testimonial._id}-edit`}>
+                      <td colSpan={6} className="px-4 py-3">
+                        <TestimonialForm
                           initial={{
-                            question: faq.question,
-                            answer: faq.answer,
-                            category: faq.category || "",
-                            sortOrder: faq.sortOrder,
+                            name: testimonial.name,
+                            quote: testimonial.quote,
+                            treatment: testimonial.treatment,
+                            sortOrder: testimonial.sortOrder,
                           }}
-                          onSave={(data) => handleUpdate(faq._id, data)}
+                          onSave={(data) => handleUpdate(testimonial._id, data)}
                           onCancel={() => setEditingId(null)}
-                          onDelete={() => handleDelete(faq._id)}
+                          onDelete={() => handleDelete(testimonial._id)}
                           saving={saving}
                         />
                       </td>

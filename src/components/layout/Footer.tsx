@@ -2,15 +2,49 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+
+interface BusinessInfoSocial {
+  label: string;
+  href: string;
+}
+
+interface BusinessInfo {
+  addressLine1: string;
+  addressLine2: string;
+  phone: string;
+  phoneHref: string;
+  email: string;
+  emailHref: string;
+  hours: { days: string; hours: string }[];
+  socials: BusinessInfoSocial[];
+}
+
+const DEFAULT_BUSINESS_INFO: BusinessInfo = {
+  addressLine1: "123 Beauty Lane, Suite 100",
+  addressLine2: "City, State 12345",
+  phone: "(555) 123-4567",
+  phoneHref: "tel:+15551234567",
+  email: "hello@mademedpsa.com",
+  emailHref: "mailto:hello@mademedpsa.com",
+  hours: [
+    { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
+    { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
+    { days: "Sunday", hours: "Closed" },
+  ],
+  socials: [
+    { label: "Instagram", href: "#" },
+    { label: "Facebook", href: "#" },
+    { label: "TikTok", href: "#" },
+  ],
+};
 
 const quickLinks = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
-  { href: "/shop", label: "Shop" },
-  { href: "/membership", label: "Membership" },
   { href: "/faq", label: "FAQ" },
+  { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -25,6 +59,8 @@ const services = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const businessInfoEntry = useQuery(api.siteContent.getByKey, { key: "business_info" });
+  const info = (businessInfoEntry?.metadata as unknown as BusinessInfo) || DEFAULT_BUSINESS_INFO;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const subscribe = useMutation(api.newsletter.subscribe);
@@ -83,11 +119,11 @@ export default function Footer() {
             </p>
             {/* Social Links */}
             <div className="flex gap-4">
-              {["Instagram", "Facebook", "TikTok"].map((social) => (
+              {info.socials.map((social) => (
                 <a
-                  key={social}
-                  href="#"
-                  aria-label={social}
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
                   className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all"
                   style={{
                     borderColor: "rgba(157, 138, 124, 0.3)",
@@ -96,7 +132,7 @@ export default function Footer() {
                     transitionTimingFunction: "var(--ease-smooth)",
                   }}
                 >
-                  {social[0]}
+                  {social.label[0]}
                 </a>
               ))}
             </div>
@@ -168,19 +204,19 @@ export default function Footer() {
               className="mb-6 flex flex-col gap-2"
               style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}
             >
-              <p>123 Beauty Lane, Suite 100</p>
-              <p>City, State 12345</p>
+              <p>{info.addressLine1}</p>
+              <p>{info.addressLine2}</p>
               <a
-                href="tel:+15551234567"
+                href={info.phoneHref}
                 className="transition-colors hover:text-[var(--color-soft-ivory)]"
               >
-                (555) 123-4567
+                {info.phone}
               </a>
               <a
-                href="mailto:hello@mademedpsa.com"
+                href={info.emailHref}
                 className="transition-colors hover:text-[var(--color-soft-ivory)]"
               >
-                hello@mademedpsa.com
+                {info.email}
               </a>
             </div>
 

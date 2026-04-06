@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo } from "react";
+import { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "convex/react";
@@ -29,21 +29,8 @@ export default function ServiceDetailPage({
   const { slug } = use(params);
   const service = useQuery(api.services.getBySlug, { slug });
   const allServices = useQuery(api.services.list);
-  const tiers = useQuery(api.membershipTiers.list);
 
-  const maxDiscount = useMemo(() => {
-    if (!tiers) return null;
-    let max = 0;
-    for (const tier of tiers) {
-      for (const benefit of tier.benefits) {
-        const match = benefit.match(/(\d+)%\s*off/i);
-        if (match) {
-          max = Math.max(max, parseInt(match[1]));
-        }
-      }
-    }
-    return max > 0 ? max : null;
-  }, [tiers]);
+  const bookingUrl = process.env.NEXT_PUBLIC_PABAU_BOOKING_URL || "/booking";
 
   // Related services: same category, different slug
   const relatedServices =
@@ -315,58 +302,6 @@ export default function ServiceDetailPage({
               </motion.div>
             )}
 
-            {/* Member Savings Callout */}
-            {tiers && tiers.length > 0 && (
-              <>
-                <div
-                  className="hidden h-12 sm:block"
-                  style={{
-                    width: "1px",
-                    backgroundColor: "var(--color-stone)",
-                  }}
-                />
-                <motion.div
-                  custom={0.5}
-                  variants={fadeUp}
-                  initial="hidden"
-                  animate="visible"
-                  className="flex flex-col items-center text-center"
-                >
-                  <span
-                    className="editorial-spacing mb-2"
-                    style={{
-                      color: "var(--color-stone-dark)",
-                      fontSize: "var(--text-xs)",
-                    }}
-                  >
-                    Member Savings
-                  </span>
-                  <span
-                    className="headline-text"
-                    style={{
-                      fontSize: "var(--text-2xl)",
-                      color: "var(--color-accent-text)",
-                    }}
-                  >
-                    {maxDiscount ? `Up to ${maxDiscount}% Off` : "Exclusive Pricing"}
-                  </span>
-                  <Link
-                    href="/membership"
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-accent-text)",
-                      marginTop: "var(--space-xs)",
-                      textDecoration: "underline",
-                      textUnderlineOffset: "3px",
-                    }}
-                    className="transition-opacity hover:opacity-70"
-                  >
-                    Become a Member
-                  </Link>
-                </motion.div>
-              </>
-            )}
           </div>
         </section>
       )}
@@ -444,8 +379,10 @@ export default function ServiceDetailPage({
           >
             Book This Service
           </h2>
-          <Link
-            href={`/booking?service=${slug}`}
+          <a
+            href={bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn btn-primary"
             style={{
               backgroundColor: "var(--color-burgundy)",
@@ -453,7 +390,7 @@ export default function ServiceDetailPage({
             }}
           >
             Book Now
-          </Link>
+          </a>
         </motion.div>
       </section>
 

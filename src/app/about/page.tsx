@@ -29,30 +29,26 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const teamMembers = [
+const FALLBACK_TEAM = [
   {
     name: "Dr. Karlyne",
     title: "Founder & Medical Director",
     bio: "Board-certified physician with over 15 years of experience in aesthetic medicine, dedicated to enhancing natural beauty through precision and artistry.",
-    initials: "DK",
   },
   {
     name: "Sophia Laurent",
     title: "Lead Aesthetic Nurse Practitioner",
     bio: "Specializing in advanced injectables and facial rejuvenation, Sophia brings an artist's eye and a scientist's precision to every treatment.",
-    initials: "SL",
   },
   {
     name: "Mia Chen",
     title: "Licensed Esthetician",
     bio: "With certifications in clinical skincare and holistic wellness, Mia curates personalized treatment plans that nourish skin from within.",
-    initials: "MC",
   },
   {
     name: "Olivia Hart",
     title: "Patient Experience Coordinator",
     bio: "Olivia ensures every visit feels effortless and luxurious, guiding guests through their aesthetic journey with warmth and expertise.",
-    initials: "OH",
   },
 ];
 
@@ -78,6 +74,8 @@ const values = [
 ];
 
 export default function AboutPage() {
+  const dbTeam = useQuery(api.teamMembers.list);
+  const teamMembers = dbTeam && dbTeam.length > 0 ? dbTeam : FALLBACK_TEAM;
   const story = useQuery(api.siteContent.getByKey, { key: "about_story" });
   const mission = useQuery(api.siteContent.getByKey, { key: "about_mission" });
   const valuesContent = useQuery(api.siteContent.getByKey, {
@@ -393,7 +391,7 @@ export default function AboutPage() {
             variants={staggerContainer}
             className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
           >
-            {teamMembers.map((member) => (
+            {teamMembers.map((member, index) => (
               <motion.div
                 key={member.name}
                 variants={revealUp}
@@ -407,7 +405,7 @@ export default function AboutPage() {
               >
                 <div className="image-portrait overflow-hidden">
                   <Image
-                    src={demoImages.about.team[teamMembers.indexOf(member)]}
+                    src={("imageUrl" in member && typeof member.imageUrl === "string" && member.imageUrl) || demoImages.about.team[index] || demoImages.about.team[0]}
                     alt={member.name}
                     width={450}
                     height={600}

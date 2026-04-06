@@ -5,34 +5,36 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
-interface FaqFormData {
-  question: string;
-  answer: string;
-  category: string;
+interface TeamMemberFormData {
+  name: string;
+  title: string;
+  bio: string;
+  imageUrl: string;
   sortOrder: number;
 }
 
-const emptyForm: FaqFormData = {
-  question: "",
-  answer: "",
-  category: "",
+const emptyForm: TeamMemberFormData = {
+  name: "",
+  title: "",
+  bio: "",
+  imageUrl: "",
   sortOrder: 0,
 };
 
-function FaqForm({
+function TeamMemberForm({
   initial,
   onSave,
   onCancel,
   onDelete,
   saving,
 }: {
-  initial: FaqFormData;
-  onSave: (data: FaqFormData) => void;
+  initial: TeamMemberFormData;
+  onSave: (data: TeamMemberFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
   saving: boolean;
 }) {
-  const [form, setForm] = useState<FaqFormData>(initial);
+  const [form, setForm] = useState<TeamMemberFormData>(initial);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
@@ -44,17 +46,33 @@ function FaqForm({
       }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
+        <div>
           <label
             className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            Question
+            Name
           </label>
-          <textarea
-            value={form.question}
-            onChange={(e) => setForm({ ...form, question: e.target.value })}
-            rows={2}
+          <input
+            type="text"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
+            style={{ borderColor: "#e5e7eb" }}
+          />
+        </div>
+        <div>
+          <label
+            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
+            style={{ color: "#111827" }}
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+            placeholder="e.g. Lead Aesthetician, Medical Director"
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
           />
@@ -64,11 +82,11 @@ function FaqForm({
             className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            Answer
+            Bio
           </label>
           <textarea
-            value={form.answer}
-            onChange={(e) => setForm({ ...form, answer: e.target.value })}
+            value={form.bio}
+            onChange={(e) => setForm({ ...form, bio: e.target.value })}
             rows={3}
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
@@ -79,13 +97,13 @@ function FaqForm({
             className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            Category
+            Image URL
           </label>
           <input
             type="text"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            placeholder="e.g. General, Membership, Services"
+            value={form.imageUrl}
+            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+            placeholder="https://..."
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
           />
@@ -162,7 +180,7 @@ function FaqForm({
           </button>
           <button
             onClick={() => onSave(form)}
-            disabled={saving || !form.question.trim() || !form.answer.trim()}
+            disabled={saving || !form.name.trim() || !form.title.trim() || !form.bio.trim()}
             className="rounded-md px-4 py-1.5 text-[15px] text-white transition-colors disabled:opacity-50"
             style={{ backgroundColor: "#6366f1" }}
           >
@@ -174,90 +192,85 @@ function FaqForm({
   );
 }
 
-export default function AdminFaqsPage() {
-  const faqs = useQuery(api.faqs.listAll);
-  const createFaq = useMutation(api.faqs.create);
-  const updateFaq = useMutation(api.faqs.update);
-  const removeFaq = useMutation(api.faqs.remove);
-  const toggleActive = useMutation(api.faqs.toggleActive);
+export default function AdminTeamPage() {
+  const teamMembers = useQuery(api.teamMembers.listAll);
+  const createTeamMember = useMutation(api.teamMembers.create);
+  const updateTeamMember = useMutation(api.teamMembers.update);
+  const removeTeamMember = useMutation(api.teamMembers.remove);
+  const toggleActive = useMutation(api.teamMembers.toggleActive);
 
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingId, setEditingId] = useState<Id<"faqs"> | null>(null);
+  const [editingId, setEditingId] = useState<Id<"teamMembers"> | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const categories = faqs
-    ? ["all", ...new Set(faqs.map((f) => f.category || "General"))]
-    : ["all"];
-
   const filtered =
-    faqs
-      ?.filter((f) => {
+    teamMembers
+      ?.filter((m) => {
         const matchesSearch =
           !search ||
-          f.question.toLowerCase().includes(search.toLowerCase()) ||
-          f.answer.toLowerCase().includes(search.toLowerCase());
-        const matchesCategory =
-          categoryFilter === "all" ||
-          (f.category || "General") === categoryFilter;
-        return matchesSearch && matchesCategory;
+          m.name.toLowerCase().includes(search.toLowerCase());
+        return matchesSearch;
       }) ?? [];
 
-  const nextSortOrder = faqs ? Math.max(0, ...faqs.map((f) => f.sortOrder)) + 1 : 0;
+  const nextSortOrder = teamMembers
+    ? Math.max(0, ...teamMembers.map((m) => m.sortOrder)) + 1
+    : 0;
 
-  async function handleCreate(data: FaqFormData) {
+  async function handleCreate(data: TeamMemberFormData) {
     setSaving(true);
     try {
-      await createFaq({
-        question: data.question.trim(),
-        answer: data.answer.trim(),
-        category: data.category.trim() || undefined,
+      await createTeamMember({
+        name: data.name.trim(),
+        title: data.title.trim(),
+        bio: data.bio.trim(),
+        imageUrl: data.imageUrl.trim() || undefined,
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
     } catch (err) {
-      console.error("Failed to create FAQ:", err);
+      console.error("Failed to create team member:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleUpdate(id: Id<"faqs">, data: FaqFormData) {
+  async function handleUpdate(id: Id<"teamMembers">, data: TeamMemberFormData) {
     setSaving(true);
     try {
-      await updateFaq({
+      await updateTeamMember({
         id,
-        question: data.question.trim(),
-        answer: data.answer.trim(),
-        category: data.category.trim() || undefined,
+        name: data.name.trim(),
+        title: data.title.trim(),
+        bio: data.bio.trim(),
+        imageUrl: data.imageUrl.trim() || undefined,
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
     } catch (err) {
-      console.error("Failed to update FAQ:", err);
+      console.error("Failed to update team member:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleDelete(id: Id<"faqs">) {
+  async function handleDelete(id: Id<"teamMembers">) {
     setSaving(true);
     try {
-      await removeFaq({ id });
+      await removeTeamMember({ id });
       setEditingId(null);
     } catch (err) {
-      console.error("Failed to delete FAQ:", err);
+      console.error("Failed to delete team member:", err);
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleToggleActive(id: Id<"faqs">) {
+  async function handleToggleActive(id: Id<"teamMembers">) {
     try {
       await toggleActive({ id });
     } catch (err) {
-      console.error("Failed to toggle FAQ status:", err);
+      console.error("Failed to toggle team member status:", err);
     }
   }
 
@@ -268,7 +281,7 @@ export default function AdminFaqsPage() {
           className="text-2xl font-semibold"
           style={{ color: "#111827" }}
         >
-          FAQs{" "}
+          Team Members{" "}
           <span
             className="text-base font-normal"
             style={{ color: "#6b7280" }}
@@ -284,7 +297,7 @@ export default function AdminFaqsPage() {
           className="rounded-md px-4 py-2 text-[15px] text-white"
           style={{ backgroundColor: "#6366f1" }}
         >
-          {showCreateForm ? "Cancel" : "Add FAQ"}
+          {showCreateForm ? "Cancel" : "Add Team Member"}
         </button>
       </div>
 
@@ -294,9 +307,9 @@ export default function AdminFaqsPage() {
             className="mb-3 text-[15px] font-semibold uppercase tracking-wider"
             style={{ color: "#111827" }}
           >
-            New FAQ
+            New Team Member
           </h2>
-          <FaqForm
+          <TeamMemberForm
             initial={{ ...emptyForm, sortOrder: nextSortOrder }}
             onSave={handleCreate}
             onCancel={() => setShowCreateForm(false)}
@@ -308,7 +321,7 @@ export default function AdminFaqsPage() {
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
-          placeholder="Search FAQs..."
+          placeholder="Search team members..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
@@ -318,29 +331,9 @@ export default function AdminFaqsPage() {
             width: "100%",
           }}
         />
-        <div className="flex gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategoryFilter(cat)}
-              className="rounded-full px-3 py-1 text-[13px] capitalize transition-colors"
-              style={{
-                backgroundColor:
-                  categoryFilter === cat
-                    ? "#6366f1"
-                    : "#fff",
-                color:
-                  categoryFilter === cat ? "white" : "#374151",
-                border: `1px solid ${categoryFilter === cat ? "#4f46e5" : "#e5e7eb"}`,
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {!faqs && (
+      {!teamMembers && (
         <div
           className="py-12 text-center"
           style={{ color: "#6b7280" }}
@@ -349,12 +342,12 @@ export default function AdminFaqsPage() {
         </div>
       )}
 
-      {faqs && filtered.length === 0 && (
+      {teamMembers && filtered.length === 0 && (
         <div
           className="py-12 text-center"
           style={{ color: "#6b7280" }}
         >
-          No FAQs found.
+          No team members found.
         </div>
       )}
 
@@ -370,13 +363,13 @@ export default function AdminFaqsPage() {
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
                   style={{ color: "#111827" }}
                 >
-                  Question
+                  Name
                 </th>
                 <th
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
                   style={{ color: "#111827" }}
                 >
-                  Category
+                  Title
                 </th>
                 <th
                   className="px-4 py-3 text-left text-[13px] font-medium uppercase tracking-wider"
@@ -399,8 +392,8 @@ export default function AdminFaqsPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((faq, i) => (
-                <Fragment key={faq._id}>
+              {filtered.map((member, i) => (
+                <Fragment key={member._id}>
                   <tr
                     style={{
                       backgroundColor:
@@ -415,70 +408,65 @@ export default function AdminFaqsPage() {
                         className="text-[15px] font-medium"
                         style={{ color: "#111827" }}
                       >
-                        {faq.question}
-                      </p>
-                      <p
-                        className="mt-1 text-[13px] line-clamp-1"
-                        style={{ color: "#6b7280" }}
-                      >
-                        {faq.answer}
+                        {member.name}
                       </p>
                     </td>
                     <td
                       className="px-4 py-3 text-[15px]"
                       style={{ color: "#374151" }}
                     >
-                      {faq.category || "General"}
+                      {member.title}
                     </td>
                     <td className="px-4 py-3">
                       <button
-                        onClick={() => handleToggleActive(faq._id)}
+                        onClick={() => handleToggleActive(member._id)}
                         title="Click to toggle active status"
                         className="inline-flex cursor-pointer rounded-full px-2 py-0.5 text-[13px] transition-opacity hover:opacity-80"
                         style={{
-                          backgroundColor: faq.isActive
+                          backgroundColor: member.isActive
                             ? "#dcfce7"
                             : "#f3f4f6",
-                          color: faq.isActive ? "#166534" : "#6b7280",
+                          color: member.isActive ? "#166534" : "#6b7280",
                         }}
                       >
-                        {faq.isActive ? "Active" : "Inactive"}
+                        {member.isActive ? "Active" : "Inactive"}
                       </button>
                     </td>
                     <td
                       className="px-4 py-3 text-[15px]"
                       style={{ color: "#374151" }}
                     >
-                      {faq.sortOrder}
+                      {member.sortOrder}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => {
                           setEditingId(
-                            editingId === faq._id ? null : faq._id
+                            editingId === member._id ? null : member._id
                           );
                           setShowCreateForm(false);
                         }}
                         className="text-[15px] transition-colors hover:underline"
                         style={{ color: "#4f46e5" }}
                       >
-                        {editingId === faq._id ? "Cancel" : "Edit"}
+                        {editingId === member._id ? "Cancel" : "Edit"}
                       </button>
                     </td>
                   </tr>
-                  {editingId === faq._id && (
-                    <tr key={`${faq._id}-edit`}>
+                  {editingId === member._id && (
+                    <tr key={`${member._id}-edit`}>
                       <td colSpan={5} className="px-4 py-3">
-                        <FaqForm
+                        <TeamMemberForm
                           initial={{
-                            question: faq.question,
-                            answer: faq.answer,
-                            category: faq.category || "",
-                            sortOrder: faq.sortOrder,
+                            name: member.name,
+                            title: member.title,
+                            bio: member.bio,
+                            imageUrl: member.imageUrl || "",
+                            sortOrder: member.sortOrder,
                           }}
-                          onSave={(data) => handleUpdate(faq._id, data)}
+                          onSave={(data) => handleUpdate(member._id, data)}
                           onCancel={() => setEditingId(null)}
-                          onDelete={() => handleDelete(faq._id)}
+                          onDelete={() => handleDelete(member._id)}
                           saving={saving}
                         />
                       </td>

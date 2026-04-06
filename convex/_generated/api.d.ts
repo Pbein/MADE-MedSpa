@@ -8,18 +8,14 @@
  * @module
  */
 
-import type * as bookings from "../bookings.js";
-import type * as cartItems from "../cartItems.js";
 import type * as contactSubmissions from "../contactSubmissions.js";
 import type * as faqs from "../faqs.js";
-import type * as members from "../members.js";
-import type * as membershipTiers from "../membershipTiers.js";
 import type * as newsletter from "../newsletter.js";
-import type * as orders from "../orders.js";
-import type * as products from "../products.js";
 import type * as seed from "../seed.js";
 import type * as services from "../services.js";
 import type * as siteContent from "../siteContent.js";
+import type * as teamMembers from "../teamMembers.js";
+import type * as testimonials from "../testimonials.js";
 import type * as users from "../users.js";
 
 import type {
@@ -29,18 +25,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  bookings: typeof bookings;
-  cartItems: typeof cartItems;
   contactSubmissions: typeof contactSubmissions;
   faqs: typeof faqs;
-  members: typeof members;
-  membershipTiers: typeof membershipTiers;
   newsletter: typeof newsletter;
-  orders: typeof orders;
-  products: typeof products;
   seed: typeof seed;
   services: typeof services;
   siteContent: typeof siteContent;
+  teamMembers: typeof teamMembers;
+  testimonials: typeof testimonials;
   users: typeof users;
 }>;
 

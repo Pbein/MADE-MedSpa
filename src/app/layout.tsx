@@ -6,8 +6,7 @@ import {
 } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
-import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
+import PublicShell from "@/components/layout/PublicShell";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -105,9 +104,7 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <ConvexClientProvider>
-            <Navigation />
-            {children}
-            <Footer />
+            <PublicShell>{children}</PublicShell>
           </ConvexClientProvider>
         </ClerkProvider>
       </body>

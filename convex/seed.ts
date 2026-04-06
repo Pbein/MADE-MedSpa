@@ -147,96 +147,6 @@ export const insertSeedData = internalMutation({
     }
 
     // ────────────────────────────────────────────────────────────────────────
-    // MEMBERSHIP TIERS (4)
-    // ────────────────────────────────────────────────────────────────────────
-    const membershipTiers = [
-      {
-        name: "Glow",
-        slug: "glow",
-        monthlyPrice: 9900,
-        description:
-          "The perfect introduction to membership benefits. Enjoy monthly treatments and exclusive member pricing on all services.",
-        benefits: [
-          "One HydraFacial Signature per month",
-          "10% off all injectable treatments",
-          "15% off retail skincare products",
-          "Priority booking access",
-          "Complimentary birthday treatment upgrade",
-        ],
-        stripePriceId: "price_glow_placeholder",
-        isActive: true,
-        sortOrder: 1,
-      },
-      {
-        name: "Radiance",
-        slug: "radiance",
-        monthlyPrice: 19900,
-        description:
-          "Elevate your routine with enhanced treatment options and deeper savings across our full menu of services.",
-        benefits: [
-          "One HydraFacial or Chemical Peel per month",
-          "15% off all injectable treatments",
-          "20% off retail skincare products",
-          "$50 monthly service credit (stackable up to 3 months)",
-          "Priority booking access",
-          "Complimentary birthday treatment upgrade",
-          "Exclusive member events and previews",
-        ],
-        stripePriceId: "price_radiance_placeholder",
-        isActive: true,
-        sortOrder: 2,
-      },
-      {
-        name: "Luxe",
-        slug: "luxe",
-        monthlyPrice: 34900,
-        description:
-          "Our most popular tier for the dedicated self-care enthusiast. Generous treatment allowances and VIP perks.",
-        benefits: [
-          "Choice of one premium facial treatment per month",
-          "One area of Botox (up to 20 units) per quarter",
-          "20% off all additional treatments",
-          "25% off retail skincare products",
-          "$100 monthly service credit (stackable up to 3 months)",
-          "Complimentary add-ons (LED therapy, lip mask, etc.)",
-          "VIP booking with extended hours",
-          "Annual skin analysis and personalized treatment plan",
-          "Complimentary birthday treatment of choice",
-        ],
-        stripePriceId: "price_luxe_placeholder",
-        isActive: true,
-        sortOrder: 3,
-      },
-      {
-        name: "Elite",
-        slug: "elite",
-        monthlyPrice: 49900,
-        description:
-          "The ultimate luxury membership. Unlimited access to select treatments, concierge scheduling, and the highest level of personalized care.",
-        benefits: [
-          "Two premium facial treatments per month",
-          "One syringe of filler or Botox session per quarter",
-          "25% off all additional treatments and body contouring",
-          "30% off retail skincare products",
-          "$200 monthly service credit (stackable up to 6 months)",
-          "Complimentary IV Vitamin Therapy session monthly",
-          "Dedicated membership concierge",
-          "After-hours and weekend VIP appointments",
-          "Quarterly comprehensive skin health assessment",
-          "Exclusive access to new treatments and product launches",
-          "Complimentary birthday luxury treatment package",
-        ],
-        stripePriceId: "price_elite_placeholder",
-        isActive: true,
-        sortOrder: 4,
-      },
-    ];
-
-    for (const tier of membershipTiers) {
-      await ctx.db.insert("membershipTiers", tier);
-    }
-
-    // ────────────────────────────────────────────────────────────────────────
     // FAQS (15+)
     // ────────────────────────────────────────────────────────────────────────
     const faqs = [
@@ -410,12 +320,6 @@ export const insertSeedData = internalMutation({
         updatedAt: now,
       },
       {
-        key: "membership_intro",
-        title: "The MADE Membership",
-        body: "Join our exclusive membership program and enjoy monthly treatments, VIP perks, and significant savings on the services you love. Because self-care should never feel like a splurge -- it should be part of your routine.",
-        updatedAt: now,
-      },
-      {
         key: "contact_intro",
         title: "Get In Touch",
         body: "We would love to hear from you. Whether you have questions about a treatment, want to learn more about membership, or are ready to book your first appointment, our team is here to help.",
@@ -428,159 +332,117 @@ export const insertSeedData = internalMutation({
     }
 
     // ────────────────────────────────────────────────────────────────────────
-    // PRODUCTS (8 skincare items)
+    // BUSINESS INFO (siteContent with metadata)
     // ────────────────────────────────────────────────────────────────────────
-    const products = [
+    await ctx.db.insert("siteContent", {
+      key: "business_info",
+      updatedAt: now,
+      metadata: {
+        addressLine1: "123 Beauty Lane, Suite 100",
+        addressLine2: "City, State 12345",
+        phone: "(555) 123-4567",
+        phoneHref: "tel:+15551234567",
+        email: "hello@mademedpsa.com",
+        emailHref: "mailto:hello@mademedpsa.com",
+        hours: [
+          { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
+          { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
+          { days: "Sunday", hours: "Closed" },
+        ],
+        socials: [
+          { label: "Instagram", href: "#" },
+          { label: "Facebook", href: "#" },
+          { label: "TikTok", href: "#" },
+        ],
+      },
+    });
+
+    // ────────────────────────────────────────────────────────────────────────
+    // PRIVACY POLICY & TERMS (siteContent)
+    // ────────────────────────────────────────────────────────────────────────
+    await ctx.db.insert("siteContent", {
+      key: "privacy_policy",
+      title: "Privacy Policy",
+      body: "This privacy policy explains how MADE Med Spa Aesthetics and Wellness collects, uses, and protects your personal information. Please check back for our full privacy policy before our grand opening.",
+      updatedAt: now,
+    });
+
+    await ctx.db.insert("siteContent", {
+      key: "terms_of_service",
+      title: "Terms of Service",
+      body: "These terms of service govern your use of the MADE Med Spa website. Please check back for our full terms of service before our grand opening.",
+      updatedAt: now,
+    });
+
+    // ────────────────────────────────────────────────────────────────────────
+    // TEAM MEMBERS (4)
+    // ────────────────────────────────────────────────────────────────────────
+    const teamMembers = [
       {
-        name: "Radiance Renewal Vitamin C Serum",
-        slug: "radiance-renewal-vitamin-c-serum",
-        shortDescription:
-          "Brightening antioxidant serum with 20% L-ascorbic acid and ferulic acid.",
-        fullDescription:
-          "This potent yet lightweight serum combines 20% stabilized L-ascorbic acid with ferulic acid and vitamin E for unparalleled antioxidant protection and brightening. Formulated to fade dark spots, even skin tone, and boost collagen production while shielding against environmental damage. Apply 4-5 drops to clean skin each morning before moisturizer and SPF for a luminous, youthful complexion.",
-        category: "Serums",
-        price: 8900,
-        compareAtPrice: 11000,
-        sku: "MADE-SER-VC20",
-        inventory: 50,
-        isActive: true,
-        isFeatured: true,
-        tags: ["brightening", "anti-aging", "vitamin-c", "bestseller"],
+        name: "Dr. Karlyne",
+        title: "Founder & Medical Director",
+        bio: "Board-certified physician with over 15 years of experience in aesthetic medicine, dedicated to enhancing natural beauty through precision and artistry.",
         sortOrder: 1,
-        createdAt: now,
-        updatedAt: now,
+        isActive: true,
       },
       {
-        name: "Hydra-Plump Hyaluronic Acid Serum",
-        slug: "hydra-plump-hyaluronic-acid-serum",
-        shortDescription:
-          "Multi-weight hyaluronic acid serum for deep, lasting hydration.",
-        fullDescription:
-          "This advanced hydration serum features three molecular weights of hyaluronic acid to deliver moisture at every level of the skin. Low-weight molecules penetrate deeply for plumping from within, while high-weight molecules form a protective moisture barrier on the surface. Enriched with panthenol and ceramides to strengthen the skin barrier. Suitable for all skin types, including sensitive and acne-prone skin.",
-        category: "Serums",
-        price: 6500,
-        sku: "MADE-SER-HA3",
-        inventory: 75,
-        isActive: true,
-        isFeatured: true,
-        tags: ["hydrating", "plumping", "hyaluronic-acid", "all-skin-types"],
+        name: "Sophia Laurent",
+        title: "Lead Aesthetic Nurse Practitioner",
+        bio: "Specializing in advanced injectables and facial rejuvenation, Sophia brings an artist's eye and a scientist's precision to every treatment.",
         sortOrder: 2,
-        createdAt: now,
-        updatedAt: now,
+        isActive: true,
       },
       {
-        name: "Peptide Recovery Night Cream",
-        slug: "peptide-recovery-night-cream",
-        shortDescription:
-          "Rich overnight moisturizer with peptides, retinal, and squalane.",
-        fullDescription:
-          "Wake up to visibly firmer, smoother skin with our luxurious Peptide Recovery Night Cream. This rich yet non-greasy formula features a proprietary blend of signal peptides and encapsulated retinal (vitamin A) that work overnight to stimulate collagen synthesis and accelerate cellular renewal. Squalane, shea butter, and ceramide complex deeply nourish while you sleep, restoring suppleness and resilience. Ideal for mature, dry, and combination skin types.",
-        category: "Moisturizers",
-        price: 9500,
-        sku: "MADE-MOI-PEP",
-        inventory: 40,
-        isActive: true,
-        isFeatured: true,
-        tags: ["anti-aging", "night-cream", "peptides", "retinal"],
+        name: "Mia Chen",
+        title: "Licensed Esthetician",
+        bio: "With certifications in clinical skincare and holistic wellness, Mia curates personalized treatment plans that nourish skin from within.",
         sortOrder: 3,
-        createdAt: now,
-        updatedAt: now,
+        isActive: true,
       },
       {
-        name: "Barrier Repair Daily Moisturizer",
-        slug: "barrier-repair-daily-moisturizer",
-        shortDescription:
-          "Lightweight daily moisturizer with ceramides and niacinamide.",
-        fullDescription:
-          "Strengthen and protect your skin barrier with this silky-smooth daily moisturizer. Formulated with a biomimetic ceramide complex, 5% niacinamide, and centella asiatica extract, it calms inflammation, reduces redness, and locks in hydration without clogging pores. The weightless texture layers beautifully under makeup and sunscreen. Dermatologist-tested and suitable for sensitive, acne-prone, and post-procedure skin.",
-        category: "Moisturizers",
-        price: 5800,
-        sku: "MADE-MOI-BAR",
-        inventory: 60,
-        isActive: true,
-        isFeatured: false,
-        tags: ["barrier-repair", "niacinamide", "sensitive-skin", "daily"],
+        name: "Olivia Hart",
+        title: "Patient Experience Coordinator",
+        bio: "Olivia ensures every visit feels effortless and luxurious, guiding guests through their aesthetic journey with warmth and expertise.",
         sortOrder: 4,
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        name: "Gentle Enzyme Cleanser",
-        slug: "gentle-enzyme-cleanser",
-        shortDescription:
-          "Sulfate-free gel cleanser with papaya enzymes and aloe vera.",
-        fullDescription:
-          "This cloud-soft gel cleanser removes makeup, excess oil, and impurities without stripping the skin's natural moisture barrier. Natural papaya and pineapple enzymes provide gentle exfoliation, while aloe vera and chamomile extract soothe and calm. The pH-balanced, sulfate-free formula rinses clean without residue, leaving skin feeling refreshed, soft, and perfectly prepped for the rest of your routine. Suitable for all skin types.",
-        category: "Cleansers",
-        price: 3800,
-        sku: "MADE-CLN-ENZ",
-        inventory: 80,
         isActive: true,
-        isFeatured: false,
-        tags: ["cleanser", "gentle", "enzyme", "sulfate-free"],
-        sortOrder: 5,
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        name: "Clarifying Salicylic Cleanser",
-        slug: "clarifying-salicylic-cleanser",
-        shortDescription:
-          "Deep-cleansing formula with 2% salicylic acid for acne-prone skin.",
-        fullDescription:
-          "Take control of breakouts with our Clarifying Salicylic Cleanser. Featuring 2% salicylic acid (BHA), this foaming cleanser penetrates pores to dissolve oil, debris, and dead skin cells that lead to congestion and breakouts. Tea tree oil provides natural antibacterial benefits, while glycerin and allantoin prevent over-drying. Use morning and evening for clearer, more balanced skin. Ideal for oily and acne-prone skin types.",
-        category: "Cleansers",
-        price: 3400,
-        sku: "MADE-CLN-SAL",
-        inventory: 65,
-        isActive: true,
-        isFeatured: false,
-        tags: ["cleanser", "acne", "salicylic-acid", "oily-skin"],
-        sortOrder: 6,
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        name: "Invisible Shield SPF 50 Sunscreen",
-        slug: "invisible-shield-spf-50-sunscreen",
-        shortDescription:
-          "Weightless, invisible broad-spectrum SPF 50 with antioxidant protection.",
-        fullDescription:
-          "The ultimate daily sunscreen for those who hate wearing sunscreen. This revolutionary formula applies invisibly with zero white cast, greasiness, or pilling -- even under makeup. Broad-spectrum SPF 50 shields against UVA/UVB rays, while a proprietary antioxidant blend of vitamin E, green tea, and astaxanthin neutralizes free radical damage. Water-resistant for 80 minutes. Suitable for all skin tones and types. The single most important product in any skincare routine.",
-        category: "Sunscreen",
-        price: 4400,
-        sku: "MADE-SPF-50",
-        inventory: 100,
-        isActive: true,
-        isFeatured: true,
-        tags: ["sunscreen", "spf-50", "invisible", "daily-essential", "bestseller"],
-        sortOrder: 7,
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        name: "Retinol Resurfacing Treatment",
-        slug: "retinol-resurfacing-treatment",
-        shortDescription:
-          "Encapsulated retinol treatment for smoother, firmer, more even skin.",
-        fullDescription:
-          "Transform your skin with our advanced Retinol Resurfacing Treatment. Featuring 0.5% encapsulated retinol for time-released delivery, this potent serum minimizes irritation while maximizing results. Bakuchiol provides additional retinol-like benefits, while squalane and vitamin E keep skin nourished and comfortable. Targets fine lines, uneven texture, hyperpigmentation, and enlarged pores. Begin using 2-3 nights per week, gradually increasing to nightly use. Always pair with SPF during the day.",
-        category: "Serums",
-        price: 7600,
-        sku: "MADE-SER-RET",
-        inventory: 45,
-        isActive: true,
-        isFeatured: false,
-        tags: ["retinol", "anti-aging", "resurfacing", "night-treatment"],
-        sortOrder: 8,
-        createdAt: now,
-        updatedAt: now,
       },
     ];
 
-    for (const product of products) {
-      await ctx.db.insert("products", product);
+    for (const member of teamMembers) {
+      await ctx.db.insert("teamMembers", member);
     }
+
+    // ────────────────────────────────────────────────────────────────────────
+    // TESTIMONIALS (3)
+    // ────────────────────────────────────────────────────────────────────────
+    const testimonials = [
+      {
+        name: "Victoria R.",
+        quote: "MADE transformed not just my appearance, but my confidence. The team's artistry and attention to detail is unlike anything I've experienced.",
+        treatment: "Dermal Fillers & Skin Rejuvenation",
+        sortOrder: 1,
+        isActive: true,
+      },
+      {
+        name: "Sophia M.",
+        quote: "From the moment I walked in, I felt seen and cared for. The results are beautifully natural — exactly what I wanted.",
+        treatment: "Botox & Facial Contouring",
+        sortOrder: 2,
+        isActive: true,
+      },
+      {
+        name: "Alessandra K.",
+        quote: "I've been a member for over a year now and the consistent quality and personalized care keeps me coming back. This is self-care elevated.",
+        treatment: "MADE Membership",
+        sortOrder: 3,
+        isActive: true,
+      },
+    ];
+
+    for (const testimonial of testimonials) {
+      await ctx.db.insert("testimonials", testimonial);
+    }
+
   },
 });
 
@@ -601,9 +463,7 @@ export const deduplicate = internalMutation({
   handler: async (ctx) => {
     const tables = [
       "services",
-      "membershipTiers",
       "faqs",
-      "products",
     ] as const;
     let totalRemoved = 0;
 

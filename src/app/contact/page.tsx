@@ -28,33 +28,47 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const contactInfo = {
-  address: {
-    line1: "123 Beauty Lane, Suite 100",
-    line2: "City, State 12345",
-  },
+interface BusinessInfoSocial {
+  label: string;
+  href: string;
+}
+
+interface BusinessInfo {
+  addressLine1: string;
+  addressLine2: string;
+  phone: string;
+  phoneHref: string;
+  email: string;
+  emailHref: string;
+  hours: { days: string; hours: string }[];
+  socials: BusinessInfoSocial[];
+}
+
+const DEFAULT_BUSINESS_INFO: BusinessInfo = {
+  addressLine1: "123 Beauty Lane, Suite 100",
+  addressLine2: "City, State 12345",
   phone: "(555) 123-4567",
   phoneHref: "tel:+15551234567",
   email: "hello@mademedpsa.com",
   emailHref: "mailto:hello@mademedpsa.com",
+  hours: [
+    { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
+    { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
+    { days: "Sunday", hours: "Closed" },
+  ],
+  socials: [
+    { label: "Instagram", href: "#" },
+    { label: "Facebook", href: "#" },
+    { label: "TikTok", href: "#" },
+  ],
 };
-
-const businessHours = [
-  { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
-  { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
-  { days: "Sunday", hours: "Closed" },
-];
-
-const socials = [
-  { label: "Instagram", initial: "I", href: "#" },
-  { label: "Facebook", initial: "F", href: "#" },
-  { label: "TikTok", initial: "T", href: "#" },
-];
 
 export default function ContactPage() {
   const heroContent = useQuery(api.siteContent.getByKey, {
     key: "contact_hero",
   });
+  const businessInfoEntry = useQuery(api.siteContent.getByKey, { key: "business_info" });
+  const info = (businessInfoEntry?.metadata as unknown as BusinessInfo) || DEFAULT_BUSINESS_INFO;
 
   return (
     <>
@@ -141,9 +155,9 @@ export default function ContactPage() {
                 Visit Us
               </h3>
               <p className="leading-relaxed" style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
-                {contactInfo.address.line1}
+                {info.addressLine1}
                 <br />
-                {contactInfo.address.line2}
+                {info.addressLine2}
               </p>
             </motion.div>
 
@@ -155,24 +169,24 @@ export default function ContactPage() {
               </h3>
               <div className="flex flex-col gap-3">
                 <a
-                  href={contactInfo.phoneHref}
+                  href={info.phoneHref}
                   className="inline-flex items-center gap-3 transition-colors hover:text-[var(--color-accent-text)]"
                   style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", transitionDuration: "var(--duration-fast)" }}
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border text-xs" style={{ borderColor: "var(--color-border)" }}>
                     P
                   </span>
-                  {contactInfo.phone}
+                  {info.phone}
                 </a>
                 <a
-                  href={contactInfo.emailHref}
+                  href={info.emailHref}
                   className="inline-flex items-center gap-3 transition-colors hover:text-[var(--color-accent-text)]"
                   style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", transitionDuration: "var(--duration-fast)" }}
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border text-xs" style={{ borderColor: "var(--color-border)" }}>
                     E
                   </span>
-                  {contactInfo.email}
+                  {info.email}
                 </a>
               </div>
             </motion.div>
@@ -184,7 +198,7 @@ export default function ContactPage() {
                 Hours
               </h3>
               <ul className="flex flex-col gap-2">
-                {businessHours.map((schedule) => (
+                {info.hours.map((schedule) => (
                   <li
                     key={schedule.days}
                     className="flex items-center justify-between"
@@ -212,7 +226,7 @@ export default function ContactPage() {
                 Follow Us
               </h3>
               <div className="flex gap-4">
-                {socials.map((social) => (
+                {info.socials.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
@@ -225,7 +239,7 @@ export default function ContactPage() {
                       transitionTimingFunction: "var(--ease-smooth)",
                     }}
                   >
-                    {social.initial}
+                    {social.label[0]}
                   </a>
                 ))}
               </div>

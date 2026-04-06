@@ -7,14 +7,12 @@ import { useUser, useClerk } from "@clerk/nextjs";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: "D" },
-  { label: "Products", href: "/admin/products", icon: "P" },
-  { label: "Orders", href: "/admin/orders", icon: "O" },
   { label: "Services", href: "/admin/services", icon: "S" },
-  { label: "Bookings", href: "/admin/bookings", icon: "B" },
-  { label: "Members", href: "/admin/members", icon: "M" },
-  { label: "Contacts", href: "/admin/contacts", icon: "C" },
   { label: "FAQs", href: "/admin/faqs", icon: "F" },
+  { label: "Team", href: "/admin/team", icon: "T" },
+  { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
   { label: "Content", href: "/admin/content", icon: "W" },
+  { label: "Contacts", href: "/admin/contacts", icon: "C" },
 ];
 
 function getPageTitle(pathname: string): string {
@@ -51,11 +49,11 @@ export default function AdminLayout({
   const showSidebar = isDesktop || sidebarOpen;
 
   return (
-    <div style={styles.wrapper}>
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#f8f9fa", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: 15, lineHeight: 1.6, color: "#1f2937", WebkitFontSmoothing: "antialiased" }}>
       {/* Mobile overlay */}
       {sidebarOpen && !isDesktop && (
         <div
-          style={styles.overlay}
+          style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", zIndex: 40 }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -63,18 +61,28 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside
         style={{
-          ...styles.sidebar,
-          ...(showSidebar ? styles.sidebarVisible : {}),
-          ...(isDesktop ? { position: "fixed" as const } : {}),
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: 240,
+          backgroundColor: "#1a1a2e",
+          color: "#e0e0e0",
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 50,
+          transform: showSidebar ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.2s ease",
         }}
       >
-        <div style={styles.sidebarHeader}>
-          <span className="headline-text" style={styles.logo}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 16px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: "#fff", letterSpacing: 1 }}>
             MADE Admin
           </span>
           {!isDesktop && (
             <button
-              style={styles.closeMobile}
+              style={{ background: "none", border: "none", color: "#999", fontSize: 24, cursor: "pointer", padding: 0, lineHeight: 1 }}
               onClick={() => setSidebarOpen(false)}
               aria-label="Close sidebar"
             >
@@ -83,7 +91,8 @@ export default function AdminLayout({
           )}
         </div>
 
-        <nav style={styles.nav}>
+        {/* Nav */}
+        <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
           {navItems.map((item) => {
             const isActive =
               item.href === "/admin"
@@ -95,71 +104,130 @@ export default function AdminLayout({
                 key={item.href}
                 href={item.href}
                 style={{
-                  ...styles.navLink,
-                  ...(isActive ? styles.navLinkActive : {}),
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "9px 16px",
+                  margin: "2px 8px",
+                  borderRadius: 6,
+                  color: isActive ? "#fff" : "#a0a0b0",
+                  backgroundColor: isActive ? "rgba(99,102,241,0.15)" : "transparent",
+                  textDecoration: "none",
+                  fontSize: 15,
+                  fontWeight: isActive ? 500 : 400,
+                  transition: "all 0.15s ease",
                 }}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span style={styles.navIcon}>{item.icon}</span>
+                <span style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 5,
+                  backgroundColor: isActive ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.06)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: isActive ? "#818cf8" : "#888",
+                  flexShrink: 0,
+                }}>
+                  {item.icon}
+                </span>
                 <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div style={styles.sidebarFooter}>
+        {/* Footer */}
+        <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           {user && (
-            <div style={styles.userInfo}>
-              <div style={styles.userAvatar}>
-                {user.firstName?.[0] ||
-                  user.emailAddresses?.[0]?.emailAddress?.[0] ||
-                  "U"}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+              <div style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                backgroundColor: "#6366f1",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 600,
+                flexShrink: 0,
+              }}>
+                {user.firstName?.[0] || user.emailAddresses?.[0]?.emailAddress?.[0] || "U"}
               </div>
-              <div style={styles.userName}>
-                {user.fullName ||
-                  user.emailAddresses?.[0]?.emailAddress ||
-                  "Admin"}
+              <div style={{ fontSize: 13, color: "#ccc", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {user.fullName || user.emailAddresses?.[0]?.emailAddress || "Admin"}
               </div>
             </div>
           )}
-          <button onClick={() => signOut()} style={styles.signOutBtn}>
+          <button
+            onClick={() => signOut()}
+            style={{
+              background: "none",
+              border: "1px solid rgba(255,255,255,0.12)",
+              color: "#999",
+              fontSize: 12,
+              padding: "6px 12px",
+              borderRadius: 5,
+              cursor: "pointer",
+              width: "100%",
+              transition: "all 0.15s ease",
+            }}
+          >
             Sign Out
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <div
-        style={{
-          ...styles.main,
-          ...(isDesktop ? { marginLeft: 260 } : {}),
-        }}
-      >
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: "100vh", ...(isDesktop ? { marginLeft: 240 } : {}) }}>
         {/* Top bar */}
-        <header style={styles.topBar}>
-          <div style={styles.topBarLeft}>
+        <header style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 24px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #e5e7eb",
+          position: "sticky",
+          top: 0,
+          zIndex: 30,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {!isDesktop && (
               <button
-                style={styles.hamburger}
+                style={{ display: "flex", flexDirection: "column", gap: 4, background: "none", border: "none", cursor: "pointer", padding: 4 }}
                 onClick={() => setSidebarOpen(true)}
                 aria-label="Open sidebar"
               >
-                <span style={styles.hamburgerLine} />
-                <span style={styles.hamburgerLine} />
-                <span style={styles.hamburgerLine} />
+                <span style={{ width: 20, height: 2, backgroundColor: "#374151", borderRadius: 1, display: "block" }} />
+                <span style={{ width: 20, height: 2, backgroundColor: "#374151", borderRadius: 1, display: "block" }} />
+                <span style={{ width: 20, height: 2, backgroundColor: "#374151", borderRadius: 1, display: "block" }} />
               </button>
             )}
-            <h1 style={styles.pageTitle}>{pageTitle}</h1>
+            <h1 style={{ fontSize: 18, fontWeight: 600, color: "#111827", margin: 0 }}>{pageTitle}</h1>
           </div>
-          <div style={styles.topBarRight}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {user && (
-              <div style={styles.topAvatar}>
+              <div style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                backgroundColor: "#6366f1",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 600,
+                overflow: "hidden",
+              }}>
                 {user.imageUrl ? (
-                  <img
-                    src={user.imageUrl}
-                    alt="User avatar"
-                    style={styles.topAvatarImg}
-                  />
+                  <img src={user.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : (
                   <span>{user.firstName?.[0] || "U"}</span>
                 )}
@@ -169,206 +237,8 @@ export default function AdminLayout({
         </header>
 
         {/* Page content */}
-        <div style={styles.content}>{children}</div>
+        <div className="admin-content" style={{ flex: 1, padding: 24 }}>{children}</div>
       </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  wrapper: {
-    display: "flex",
-    minHeight: "100vh",
-    backgroundColor: "var(--color-cream)",
-  },
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    zIndex: 40,
-  },
-  sidebar: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: 260,
-    backgroundColor: "var(--color-chocolate)",
-    color: "var(--color-stone)",
-    display: "flex",
-    flexDirection: "column",
-    zIndex: 50,
-    transform: "translateX(-100%)",
-    transition: "transform 0.2s ease",
-  },
-  sidebarVisible: {
-    transform: "translateX(0)",
-  },
-  sidebarHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "24px 20px 16px",
-    borderBottom: "1px solid rgba(210,200,190,0.15)",
-  },
-  logo: {
-    fontSize: 20,
-    letterSpacing: 2,
-    color: "var(--color-stone)",
-  },
-  closeMobile: {
-    background: "none",
-    border: "none",
-    color: "var(--color-stone)",
-    fontSize: 28,
-    cursor: "pointer",
-    lineHeight: 1,
-    padding: 0,
-  },
-  nav: {
-    flex: 1,
-    overflowY: "auto",
-    padding: "12px 0",
-  },
-  navLink: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    padding: "10px 20px",
-    color: "var(--color-stone)",
-    textDecoration: "none",
-    fontSize: 14,
-    fontWeight: 400,
-    letterSpacing: 0.5,
-    transition: "background-color 0.15s ease",
-  },
-  navLinkActive: {
-    backgroundColor: "var(--color-burgundy)",
-    color: "#fff",
-    fontWeight: 500,
-  },
-  navIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 6,
-    backgroundColor: "rgba(210,200,190,0.12)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 12,
-    fontWeight: 600,
-    flexShrink: 0,
-  },
-  sidebarFooter: {
-    padding: "16px 20px",
-    borderTop: "1px solid rgba(210,200,190,0.15)",
-  },
-  userInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    marginBottom: 12,
-  },
-  userAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: "50%",
-    backgroundColor: "var(--color-burgundy)",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 13,
-    fontWeight: 600,
-    flexShrink: 0,
-  },
-  userName: {
-    fontSize: 13,
-    color: "var(--color-stone)",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  signOutBtn: {
-    background: "none",
-    border: "1px solid rgba(210,200,190,0.3)",
-    color: "var(--color-stone)",
-    fontSize: 12,
-    padding: "6px 14px",
-    borderRadius: 4,
-    cursor: "pointer",
-    width: "100%",
-  },
-  main: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-  },
-  topBar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "16px 24px",
-    backgroundColor: "#fff",
-    borderBottom: "1px solid var(--color-stone)",
-    position: "sticky",
-    top: 0,
-    zIndex: 30,
-  },
-  topBarLeft: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-  },
-  hamburger: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: 4,
-  },
-  hamburgerLine: {
-    width: 22,
-    height: 2,
-    backgroundColor: "var(--color-chocolate)",
-    borderRadius: 1,
-    display: "block",
-  },
-  pageTitle: {
-    fontSize: 20,
-    fontWeight: 600,
-    color: "var(--color-chocolate)",
-    margin: 0,
-    fontFamily: "var(--font-jost), sans-serif",
-  },
-  topBarRight: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-  },
-  topAvatar: {
-    width: 36,
-    height: 36,
-    borderRadius: "50%",
-    backgroundColor: "var(--color-burgundy)",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 14,
-    fontWeight: 600,
-    overflow: "hidden",
-  },
-  topAvatarImg: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-  },
-  content: {
-    flex: 1,
-    padding: 24,
-  },
-};

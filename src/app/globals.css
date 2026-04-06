@@ -595,23 +595,6 @@ a:hover {
   padding: var(--space-lg) var(--space-lg) var(--space-xl);
 }
 
-/* Membership tier card */
-.tier-card {
-  background: var(--color-linen);
-  border: 1px solid var(--color-border);
-  padding: var(--space-2xl) var(--space-xl);
-  text-align: center;
-  border-radius: var(--border-radius-lg);
-  transition: all var(--duration-medium) var(--ease-luxury);
-}
-
-.tier-card.featured {
-  background: var(--color-deep-cocoa);
-  color: var(--color-soft-ivory);
-  border-color: var(--color-deep-cocoa);
-  transform: scale(1.03);
-}
-
 /* Dividers — thin, elegant */
 .divider {
   height: 1px;
@@ -700,4 +683,23 @@ a:hover {
 .page-header-warm h1,
 .page-header-warm h2 {
   color: var(--color-soft-ivory);
+}
+
+/* ── Admin Dashboard Override ────────────────────────────────────────────── */
+/* Forces system UI font on all admin elements, overriding brand serif fonts */
+.admin-content,
+.admin-content * {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.admin-content p,
+.admin-content span,
+.admin-content td,
+.admin-content label,
+.admin-content input,
+.admin-content textarea,
+.admin-content select {
+  font-weight: 450;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
