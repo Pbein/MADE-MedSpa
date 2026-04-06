@@ -27,14 +27,9 @@ export default function CTABanner({
   return (
     <section
       ref={ref}
-      style={{
-        backgroundColor: dark ? "var(--color-blush)" : "var(--color-soft-ivory)",
-        color: dark ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
-        paddingTop: "var(--space-section)",
-        paddingBottom: "var(--space-section)",
-      }}
+      className={dark ? "section-blush" : "section-light"}
     >
-      <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
+      <div className="container-page">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -42,10 +37,9 @@ export default function CTABanner({
           className="mx-auto max-w-2xl text-center"
         >
           <h2
-            className="headline-text mb-6"
+            className="headline-section mb-6"
             style={{
-              fontSize: "var(--text-4xl)",
-              color: dark ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
+              color: dark ? "var(--color-glaze)" : "var(--color-ink)",
             }}
           >
             {headline}
@@ -53,11 +47,11 @@ export default function CTABanner({
 
           {subtitle && (
             <p
-              className="mx-auto mb-10 max-w-md leading-relaxed"
+              className="body-lg mx-auto mb-10 max-w-md"
               style={{
-                fontSize: "var(--text-base)",
-                color: dark ? "rgba(247, 246, 235, 0.7)" : "var(--color-warm-taupe)",
-                fontWeight: 300,
+                color: dark
+                  ? "rgba(247, 246, 235, 0.7)"
+                  : "var(--color-olive)",
               }}
             >
               {subtitle}
@@ -66,7 +60,7 @@ export default function CTABanner({
 
           <Link
             href={ctaHref}
-            className={dark ? "btn btn-light" : "btn btn-primary"}
+            className={dark ? "btn-light" : "btn-primary"}
           >
             {ctaText}
           </Link>

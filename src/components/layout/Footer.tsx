@@ -82,37 +82,43 @@ export default function Footer() {
   };
 
   return (
-    <footer
-      style={{ backgroundColor: "var(--color-deep-cocoa)" }}
-    >
-      {/* Thin accent line */}
+    <footer style={{ backgroundColor: "var(--color-espresso)" }}>
+      {/* Top accent line */}
       <div
         style={{
           height: "1px",
-          background: "linear-gradient(to right, transparent, var(--color-accent), transparent)",
+          background:
+            "linear-gradient(to right, transparent, var(--color-matcha), transparent)",
         }}
       />
 
       {/* Main Footer Content */}
-      <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-        style={{ paddingTop: "var(--space-section)", paddingBottom: "var(--space-4xl)" }}
+      <div
+        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
+        style={{
+          paddingTop: "var(--space-section)",
+          paddingBottom: "var(--space-4xl)",
+        }}
       >
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Brand Column */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="headline-text mb-5 inline-block text-3xl tracking-[0.2em]"
+              className="mb-5 inline-block text-3xl tracking-[0.2em]"
               style={{
                 fontFamily: "var(--font-headline)",
-                color: "var(--color-soft-ivory)",
+                color: "var(--color-glaze)",
               }}
             >
               MADE
             </Link>
             <p
-              className="accent-text mb-6 max-w-xs text-lg leading-relaxed"
-              style={{ color: "var(--color-cream)" }}
+              className="mb-6 max-w-xs text-lg leading-relaxed"
+              style={{
+                fontFamily: "var(--font-accent)",
+                color: "rgba(247, 246, 235, 0.7)",
+              }}
             >
               Where science meets artistry. Personalized aesthetic treatments
               crafted for your unique beauty.
@@ -126,10 +132,18 @@ export default function Footer() {
                   aria-label={social.label}
                   className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all"
                   style={{
-                    borderColor: "rgba(90, 61, 55, 0.3)",
-                    color: "var(--color-cream)",
+                    borderColor: "rgba(247, 246, 235, 0.15)",
+                    color: "rgba(247, 246, 235, 0.6)",
                     transitionDuration: "var(--duration-normal)",
                     transitionTimingFunction: "var(--ease-smooth)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(247, 246, 235, 0.4)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(247, 246, 235, 0.15)";
+                    (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
                   }}
                 >
                   {social.label[0]}
@@ -141,8 +155,8 @@ export default function Footer() {
           {/* Quick Links Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6"
-              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
+              className="eyebrow mb-6"
+              style={{ color: "var(--color-glaze)" }}
             >
               Quick Links
             </h4>
@@ -151,11 +165,16 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="transition-colors hover:text-[var(--color-soft-ivory)]"
+                    className="text-sm transition-colors"
                     style={{
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-cream)",
+                      color: "rgba(247, 246, 235, 0.6)",
                       transitionDuration: "var(--duration-fast)",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
                     }}
                   >
                     {link.label}
@@ -168,8 +187,8 @@ export default function Footer() {
           {/* Services Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6"
-              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
+              className="eyebrow mb-6"
+              style={{ color: "var(--color-glaze)" }}
             >
               Services
             </h4>
@@ -178,11 +197,16 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="transition-colors hover:text-[var(--color-soft-ivory)]"
+                    className="text-sm transition-colors"
                     style={{
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-cream)",
+                      color: "rgba(247, 246, 235, 0.6)",
                       transitionDuration: "var(--duration-fast)",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
                     }}
                   >
                     {link.label}
@@ -195,26 +219,40 @@ export default function Footer() {
           {/* Contact & Newsletter Column */}
           <div>
             <h4
-              className="editorial-spacing mb-6"
-              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
+              className="eyebrow mb-6"
+              style={{ color: "var(--color-glaze)" }}
             >
               Contact
             </h4>
             <div
-              className="mb-6 flex flex-col gap-2"
-              style={{ fontSize: "var(--text-sm)", color: "var(--color-cream)" }}
+              className="mb-6 flex flex-col gap-2 text-sm"
+              style={{ color: "rgba(247, 246, 235, 0.6)" }}
             >
               <p>{info.addressLine1}</p>
               <p>{info.addressLine2}</p>
               <a
                 href={info.phoneHref}
-                className="transition-colors hover:text-[var(--color-soft-ivory)]"
+                className="transition-colors"
+                style={{ transitionDuration: "var(--duration-fast)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
+                }}
               >
                 {info.phone}
               </a>
               <a
                 href={info.emailHref}
-                className="transition-colors hover:text-[var(--color-soft-ivory)]"
+                className="transition-colors"
+                style={{ transitionDuration: "var(--duration-fast)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
+                }}
               >
                 {info.email}
               </a>
@@ -222,8 +260,8 @@ export default function Footer() {
 
             {/* Newsletter */}
             <h4
-              className="editorial-spacing mb-3"
-              style={{ color: "var(--color-soft-ivory)", fontSize: "var(--text-xs)" }}
+              className="eyebrow mb-3"
+              style={{ color: "var(--color-glaze)" }}
             >
               Newsletter
             </h4>
@@ -235,33 +273,42 @@ export default function Footer() {
                 placeholder="Your email"
                 aria-label="Email for newsletter"
                 disabled={status === "loading"}
-                className="flex-1 border-b bg-transparent px-0 py-2 text-sm outline-none transition-colors disabled:opacity-50"
+                className="flex-1 border-b bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-[rgba(247,246,235,0.35)] disabled:opacity-50"
                 style={{
-                  borderColor: "rgba(90, 61, 55, 0.3)",
-                  color: "var(--color-soft-ivory)",
+                  borderColor: "rgba(247, 246, 235, 0.2)",
+                  color: "var(--color-glaze)",
                   transitionDuration: "var(--duration-normal)",
                 }}
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="editorial-spacing transition-colors disabled:opacity-50"
+                className="eyebrow transition-colors disabled:opacity-50"
                 style={{
-                  color: "var(--color-soft-ivory)",
-                  fontSize: "var(--text-xs)",
+                  color: "var(--color-glaze)",
                   transitionDuration: "var(--duration-fast)",
                 }}
               >
-                {status === "loading" ? "..." : status === "success" ? "Joined!" : "Join"}
+                {status === "loading"
+                  ? "..."
+                  : status === "success"
+                    ? "Joined!"
+                    : "Join"}
               </button>
             </form>
             {status === "success" && (
-              <p className="mt-2 text-xs" style={{ color: "var(--color-accent-light)" }}>
+              <p
+                className="mt-2 text-xs"
+                style={{ color: "var(--color-matcha)" }}
+              >
                 Welcome to the MADE family!
               </p>
             )}
             {status === "error" && (
-              <p className="mt-2 text-xs" style={{ color: "var(--color-cream)" }}>
+              <p
+                className="mt-2 text-xs"
+                style={{ color: "rgba(247, 246, 235, 0.6)" }}
+              >
                 Something went wrong. Please try again.
               </p>
             )}
@@ -270,25 +317,44 @@ export default function Footer() {
       </div>
 
       {/* Copyright Bar */}
-      <div style={{ borderTop: "1px solid rgba(90, 61, 55, 0.15)" }}>
+      <div style={{ borderTop: "1px solid rgba(247, 246, 235, 0.08)" }}>
         <div className="mx-auto flex max-w-[var(--max-width)] flex-col items-center justify-between gap-2 px-6 py-6 sm:flex-row lg:px-10">
           <p
-            style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
+            className="text-xs"
+            style={{ color: "rgba(247, 246, 235, 0.5)" }}
           >
             &copy; {currentYear} MADE Med Spa. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link
               href="/privacy"
-              className="transition-colors hover:text-[var(--color-soft-ivory)]"
-              style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
+              className="text-xs transition-colors"
+              style={{
+                color: "rgba(247, 246, 235, 0.5)",
+                transitionDuration: "var(--duration-fast)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.7)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.5)";
+              }}
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="transition-colors hover:text-[var(--color-soft-ivory)]"
-              style={{ fontSize: "var(--text-xs)", color: "var(--color-cream)" }}
+              className="text-xs transition-colors"
+              style={{
+                color: "rgba(247, 246, 235, 0.5)",
+                transitionDuration: "var(--duration-fast)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.7)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.5)";
+              }}
             >
               Terms of Service
             </Link>

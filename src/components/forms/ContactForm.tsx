@@ -84,22 +84,34 @@ export default function ContactForm() {
         className="flex flex-col items-center justify-center py-16 text-center"
         style={{ minHeight: 400 }}
       >
+        {/* Green checkmark */}
         <div
-          className="accent-line mx-auto mb-6"
-          style={{ backgroundColor: "var(--color-accent)" }}
-        />
+          className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
+          style={{ backgroundColor: "rgba(111, 130, 91, 0.1)" }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--color-matcha)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+
         <h3
-          className="headline-text mb-4"
-          style={{
-            fontSize: "var(--text-3xl)",
-            color: "var(--color-deep-cocoa)",
-          }}
+          className="headline-section mb-4"
+          style={{ color: "var(--color-matcha)" }}
         >
           Thank You
         </h3>
         <p
-          className="mb-8 max-w-sm leading-relaxed"
-          style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
+          className="body-md mb-8 max-w-sm"
+          style={{ color: "var(--color-olive)" }}
         >
           Your message has been received. We will be in touch within 24 hours to
           assist you.
@@ -107,7 +119,7 @@ export default function ContactForm() {
         <button
           type="button"
           onClick={() => setIsSuccess(false)}
-          className="btn btn-outline"
+          className="btn-secondary"
         >
           Send Another Message
         </button>
@@ -115,15 +127,21 @@ export default function ContactForm() {
     );
   }
 
+  const labelClasses = "mb-3 block";
+  const labelStyle = {
+    color: "var(--color-mocha)",
+    fontSize: "0.75rem",
+    fontWeight: 600 as const,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase" as const,
+  };
+
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-8">
+      {/* Name fields - 2 column grid */}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <div>
-          <label
-            htmlFor="firstName"
-            className="editorial-spacing mb-3 block"
-            style={{ color: "var(--color-cream)" }}
-          >
+          <label htmlFor="firstName" className={labelClasses} style={labelStyle}>
             First Name *
           </label>
           <input
@@ -131,29 +149,18 @@ export default function ContactForm() {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full border-b bg-transparent px-0 py-3 outline-none transition-colors"
-            style={{
-              borderColor: errors.firstName ? "var(--color-accent)" : "var(--color-border)",
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-base)",
-              color: "var(--color-deep-cocoa)",
-              transitionDuration: "var(--duration-normal)",
-            }}
+            className="input-luxury w-full"
             placeholder="Jane"
           />
           {errors.firstName && (
-            <p className="mt-2" style={{ fontSize: "var(--text-xs)", color: "var(--color-accent-text)" }}>
+            <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
               {errors.firstName}
             </p>
           )}
         </div>
 
         <div>
-          <label
-            htmlFor="lastName"
-            className="editorial-spacing mb-3 block"
-            style={{ color: "var(--color-cream)" }}
-          >
+          <label htmlFor="lastName" className={labelClasses} style={labelStyle}>
             Last Name *
           </label>
           <input
@@ -161,30 +168,20 @@ export default function ContactForm() {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full border-b bg-transparent px-0 py-3 outline-none transition-colors"
-            style={{
-              borderColor: errors.lastName ? "var(--color-accent)" : "var(--color-border)",
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-base)",
-              color: "var(--color-deep-cocoa)",
-              transitionDuration: "var(--duration-normal)",
-            }}
+            className="input-luxury w-full"
             placeholder="Doe"
           />
           {errors.lastName && (
-            <p className="mt-2" style={{ fontSize: "var(--text-xs)", color: "var(--color-accent-text)" }}>
+            <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
               {errors.lastName}
             </p>
           )}
         </div>
       </div>
 
+      {/* Email - full width */}
       <div>
-        <label
-          htmlFor="email"
-          className="editorial-spacing mb-3 block"
-          style={{ color: "var(--color-cream)" }}
-        >
+        <label htmlFor="email" className={labelClasses} style={labelStyle}>
           Email Address *
         </label>
         <input
@@ -192,54 +189,37 @@ export default function ContactForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border-b bg-transparent px-0 py-3 outline-none transition-colors"
-          style={{
-            borderColor: errors.email ? "var(--color-accent)" : "var(--color-border)",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-base)",
-            color: "var(--color-deep-cocoa)",
-            transitionDuration: "var(--duration-normal)",
-          }}
+          className="input-luxury w-full"
           placeholder="jane@example.com"
         />
         {errors.email && (
-          <p className="mt-2" style={{ fontSize: "var(--text-xs)", color: "var(--color-accent-text)" }}>
+          <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
             {errors.email}
           </p>
         )}
       </div>
 
+      {/* Phone - full width */}
       <div>
-        <label
-          htmlFor="phone"
-          className="editorial-spacing mb-3 block"
-          style={{ color: "var(--color-cream)" }}
-        >
-          Phone <span className="normal-case tracking-normal">(optional)</span>
+        <label htmlFor="phone" className={labelClasses} style={labelStyle}>
+          Phone{" "}
+          <span style={{ textTransform: "none", letterSpacing: "normal", fontWeight: 400 }}>
+            (optional)
+          </span>
         </label>
         <input
           id="phone"
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full border-b bg-transparent px-0 py-3 outline-none transition-colors"
-          style={{
-            borderColor: "var(--color-border)",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-base)",
-            color: "var(--color-deep-cocoa)",
-            transitionDuration: "var(--duration-normal)",
-          }}
+          className="input-luxury w-full"
           placeholder="(555) 123-4567"
         />
       </div>
 
+      {/* Message - full width */}
       <div>
-        <label
-          htmlFor="message"
-          className="editorial-spacing mb-3 block"
-          style={{ color: "var(--color-cream)" }}
-        >
+        <label htmlFor="message" className={labelClasses} style={labelStyle}>
           Message *
         </label>
         <textarea
@@ -247,18 +227,11 @@ export default function ContactForm() {
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full resize-none border-b bg-transparent px-0 py-3 outline-none transition-colors"
-          style={{
-            borderColor: errors.message ? "var(--color-accent)" : "var(--color-border)",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-base)",
-            color: "var(--color-deep-cocoa)",
-            transitionDuration: "var(--duration-normal)",
-          }}
+          className="input-luxury w-full resize-none"
           placeholder="Tell us how we can help you..."
         />
         {errors.message && (
-          <p className="mt-2" style={{ fontSize: "var(--text-xs)", color: "var(--color-accent-text)" }}>
+          <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
             {errors.message}
           </p>
         )}
@@ -266,14 +239,13 @@ export default function ContactForm() {
 
       {submitError && (
         <div
-          className="px-4 py-3"
+          className="rounded-md px-4 py-3"
           style={{
-            borderRadius: "var(--border-radius-md)",
-            border: "1px solid var(--color-accent-text)",
-            backgroundColor: "rgba(139, 115, 64, 0.05)",
+            border: "1px solid var(--color-blush)",
+            backgroundColor: "rgba(180, 120, 100, 0.05)",
           }}
         >
-          <p style={{ fontSize: "var(--text-sm)", color: "var(--color-accent-text)" }}>
+          <p style={{ fontSize: "0.875rem", color: "var(--color-blush)" }}>
             {submitError}
           </p>
         </div>
@@ -282,7 +254,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn btn-primary w-full sm:w-auto"
+        className="btn-primary w-full sm:w-auto"
         style={{
           opacity: isSubmitting ? 0.7 : 1,
           cursor: isSubmitting ? "not-allowed" : "pointer",

@@ -83,38 +83,34 @@ export default function FAQPage() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero */}
+      {/* Hero — Espresso */}
       <section
         className="section-dark flex flex-col items-center justify-center px-6 text-center"
         style={{
+          backgroundColor: "var(--color-espresso)",
           paddingTop: "calc(var(--nav-height) + var(--space-5xl))",
           paddingBottom: "var(--space-3xl)",
         }}
       >
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: luxuryEase }}
-          className="editorial-spacing mb-6"
-          style={{ color: "var(--color-cream)" }}
+          className="eyebrow mb-6"
+          style={{ color: "rgba(247,246,235,0.5)" }}
         >
           Support
-        </motion.div>
+        </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: luxuryEase, delay: 0.15 }}
-          className="headline-text mb-4"
-          style={{
-            fontSize: "var(--text-5xl)",
-            color: "var(--color-soft-ivory)",
-          }}
+          className="headline-display mb-4"
+          style={{ color: "var(--color-glaze)" }}
         >
           Frequently{" "}
-          <span className="accent-text" style={{ color: "var(--color-accent)" }}>
-            Asked
-          </span>{" "}
+          <span style={{ color: "var(--color-matcha)" }}>Asked</span>{" "}
           Questions
         </motion.h1>
 
@@ -122,14 +118,8 @@ export default function FAQPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: luxuryEase, delay: 0.3 }}
-          className="mx-auto mb-10 max-w-lg"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-lg)",
-            color: "rgba(247, 246, 235, 0.7)",
-            lineHeight: 1.7,
-            fontWeight: 300,
-          }}
+          className="body-lg mx-auto mb-10 max-w-lg"
+          style={{ color: "rgba(247,246,235,0.65)" }}
         >
           Find answers to common questions about our treatments, membership
           programs, and booking process.
@@ -142,22 +132,14 @@ export default function FAQPage() {
           transition={{ duration: 0.6, ease: luxuryEase, delay: 0.45 }}
           className="mx-auto w-full max-w-xl"
         >
-          <div
-            className="relative"
-            style={{
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--border-radius-full)",
-              backgroundColor: "var(--color-linen)",
-              transition: "border-color var(--duration-fast) var(--ease-smooth)",
-            }}
-          >
+          <div className="relative">
             <svg
               className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2"
               width="18"
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="var(--color-cream)"
+              stroke="rgba(247,246,235,0.5)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -170,24 +152,27 @@ export default function FAQPage() {
               placeholder="Search questions..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full border-none bg-transparent py-4 pl-14 pr-6 outline-none"
+              className="input-luxury w-full py-4 pl-14 pr-6"
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-base)",
-                color: "var(--color-deep-cocoa)",
+                backgroundColor: "transparent",
+                color: "var(--color-glaze)",
+                borderColor: "rgba(247,246,235,0.2)",
               }}
             />
           </div>
         </motion.div>
       </section>
 
-      {/* Category Pills */}
-      <section className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10" style={{ paddingTop: "var(--space-3xl)" }}>
+      {/* Category Pills — Glaze */}
+      <section
+        className="section-light px-6 lg:px-10"
+        style={{ paddingTop: "var(--space-3xl)", paddingBottom: 0 }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: luxuryEase, delay: 0.55 }}
-          className="mb-12 flex flex-wrap items-center justify-center gap-2 sm:gap-4"
+          className="mx-auto mb-12 flex max-w-[var(--max-width)] flex-wrap items-center justify-center gap-2 sm:gap-3"
         >
           {faqCategories.map((cat) => {
             const isActive = activeCategory === cat;
@@ -195,44 +180,44 @@ export default function FAQPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className="editorial-spacing relative px-4 py-2 transition-colors"
+                className="rounded-full px-5 py-2 text-sm font-medium tracking-wide transition-colors"
                 style={{
-                  background: "none",
+                  backgroundColor: isActive
+                    ? "var(--color-blush)"
+                    : "var(--color-white-soft)",
+                  color: isActive ? "#fff" : "var(--color-olive)",
                   border: "none",
                   cursor: "pointer",
-                  color: isActive ? "var(--color-accent-text)" : "var(--color-warm-taupe)",
-                  fontSize: "var(--text-xs)",
                 }}
               >
                 {cat}
-                {isActive && (
-                  <motion.div
-                    layoutId="faqCategoryUnderline"
-                    className="absolute bottom-0 left-0 right-0"
-                    style={{
-                      height: "1.5px",
-                      backgroundColor: "var(--color-accent)",
-                    }}
-                    transition={{ duration: 0.3, ease: luxuryEase }}
-                  />
-                )}
               </button>
             );
           })}
         </motion.div>
       </section>
 
-      {/* FAQ Content */}
+      {/* FAQ Accordion — Glaze */}
       <section
-        className="mx-auto max-w-3xl px-6 lg:px-10"
+        className="section-light mx-auto max-w-3xl px-6 lg:px-10"
         style={{ paddingBottom: "var(--space-4xl)" }}
       >
         {faqs === undefined ? (
           <div className="space-y-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="py-6" style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <div className="mb-3 h-5 w-3/4" style={{ backgroundColor: "var(--color-linen)", borderRadius: "var(--border-radius-sm)", animation: "pulse 2s ease-in-out infinite" }} />
-                <div className="h-3 w-1/2" style={{ backgroundColor: "var(--color-linen)", borderRadius: "var(--border-radius-sm)", animation: "pulse 2s ease-in-out infinite" }} />
+              <div
+                key={i}
+                className="py-6"
+                style={{ borderBottom: "1px solid var(--color-line)" }}
+              >
+                <div
+                  className="mb-3 h-5 w-3/4 animate-pulse rounded"
+                  style={{ backgroundColor: "var(--color-silk)" }}
+                />
+                <div
+                  className="h-3 w-1/2 animate-pulse rounded"
+                  style={{ backgroundColor: "var(--color-silk)" }}
+                />
               </div>
             ))}
           </div>
@@ -243,13 +228,19 @@ export default function FAQPage() {
             transition={{ duration: 0.5, ease: luxuryEase }}
             className="py-20 text-center"
           >
-            <h3 className="headline-text mb-4" style={{ fontSize: "var(--text-2xl)", color: "var(--color-deep-cocoa)" }}>
+            <h3
+              className="headline-section mb-4"
+              style={{ color: "var(--color-ink)" }}
+            >
               No matching questions found
             </h3>
-            <p className="mb-8" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "var(--color-warm-taupe)" }}>
+            <p
+              className="body-md mb-8"
+              style={{ color: "var(--color-olive)" }}
+            >
               Try adjusting your search or browse a different category.
             </p>
-            <Link href="/contact" className="btn btn-primary">
+            <Link href="/contact" className="btn-primary">
               Contact Us
             </Link>
           </motion.div>
@@ -274,12 +265,11 @@ export default function FAQPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-30px" }}
                 transition={{ duration: 0.5, ease: luxuryEase }}
-                className="headline-text mb-6"
+                className="headline-section mb-6"
                 style={{
-                  fontSize: "var(--text-2xl)",
-                  color: "var(--color-deep-cocoa)",
+                  color: "var(--color-ink)",
                   paddingBottom: "var(--space-sm)",
-                  borderBottom: "1px solid var(--color-border)",
+                  borderBottom: "1px solid var(--color-line)",
                 }}
               >
                 {cat}
@@ -295,10 +285,11 @@ export default function FAQPage() {
         )}
       </section>
 
-      {/* Still Have Questions CTA */}
+      {/* CTA — Espresso */}
       <section
         className="section-dark text-center"
         style={{
+          backgroundColor: "var(--color-espresso)",
           padding: "var(--space-section) var(--space-xl)",
         }}
       >
@@ -308,23 +299,26 @@ export default function FAQPage() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, ease: luxuryEase }}
         >
-          <span className="editorial-spacing mb-4 block" style={{ color: "var(--color-cream)" }}>
+          <p
+            className="eyebrow mb-4"
+            style={{ color: "rgba(247,246,235,0.5)" }}
+          >
             Need More Help?
-          </span>
+          </p>
           <h2
-            className="headline-text mx-auto mb-4 max-w-md"
-            style={{ fontSize: "var(--text-3xl)", color: "var(--color-soft-ivory)" }}
+            className="headline-section mx-auto mb-4 max-w-md"
+            style={{ color: "var(--color-glaze)" }}
           >
             Still Have Questions?
           </h2>
           <p
-            className="mx-auto mb-8 max-w-md"
-            style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-base)", color: "rgba(247, 246, 235, 0.6)", lineHeight: 1.7, fontWeight: 300 }}
+            className="body-lg mx-auto mb-8 max-w-md"
+            style={{ color: "rgba(247,246,235,0.65)" }}
           >
             Our team is here to help. Reach out and we will get back to you
             promptly.
           </p>
-          <Link href="/contact" className="btn btn-light">
+          <Link href="/contact" className="btn-primary">
             Contact Us
           </Link>
         </motion.div>

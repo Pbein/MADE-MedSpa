@@ -32,10 +32,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     >
       <Link
         href={`/services/${service.slug}`}
-        className="service-card group block"
+        className="card-luxury group block"
       >
         {/* Image */}
-        <div className="image-container hover-zoom relative">
+        <div
+          className="hover-zoom relative overflow-hidden"
+          style={{ aspectRatio: "3 / 4" }}
+        >
           <Image
             src={service.imageUrl || getServiceImage(service.slug, "card")}
             alt={service.name}
@@ -48,36 +51,28 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </div>
 
         {/* Content */}
-        <div className="content">
-          <span
-            className="editorial-spacing mb-3 inline-block"
-            style={{
-              fontSize: "var(--text-xs)",
-              color: "var(--color-accent-text)",
-            }}
-          >
+        <div className="p-5">
+          <span className="eyebrow mb-3 inline-block" style={{ color: "var(--color-blush)" }}>
             {service.category}
           </span>
 
           <h3
-            className="headline-text mb-2"
+            className="mb-2"
             style={{
-              fontSize: "var(--text-xl)",
-              color: "var(--color-deep-cocoa)",
+              fontFamily: "var(--font-display, 'Playfair Display', serif)",
+              fontSize: "1.25rem",
+              color: "var(--color-ink)",
               lineHeight: 1.3,
+              fontWeight: 500,
             }}
           >
             {service.name}
           </h3>
 
           <p
-            className="mb-4"
+            className="body-md mb-4"
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-sm)",
-              color: "var(--color-warm-taupe)",
-              lineHeight: 1.6,
-              fontWeight: 300,
+              color: "var(--color-olive)",
               display: "-webkit-box",
               WebkitLineClamp: 3,
               WebkitBoxOrient: "vertical",
@@ -91,33 +86,17 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             <p
               className="mb-4"
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-sm)",
-                color: "var(--color-cream)",
-                fontWeight: 400,
+                fontSize: "0.875rem",
+                color: "var(--color-mocha)",
+                fontWeight: 500,
               }}
             >
               {service.priceRange}
             </p>
           )}
 
-          <span
-            className="btn-text"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-sm)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase" as const,
-              color: "var(--color-deep-cocoa)",
-            }}
-          >
-            Learn More{" "}
-            <span
-              className="arrow inline-block transition-transform duration-300"
-              style={{ marginLeft: "0.25rem" }}
-            >
-              &rarr;
-            </span>
+          <span className="link-accent">
+            Learn More &rarr;
           </span>
         </div>
       </Link>

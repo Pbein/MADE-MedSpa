@@ -69,44 +69,38 @@ const cancellationPolicy = {
 export default function BookingPage() {
   return (
     <>
-      {/* HERO */}
-      <section className="section-warm relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center">
+      {/* HERO — Espresso */}
+      <section
+        className="section-dark relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center"
+        style={{ backgroundColor: "var(--color-espresso)" }}
+      >
         <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
           className="pt-[var(--nav-height)]"
         >
-          <motion.div
+          <motion.p
             variants={revealUp}
-            className="editorial-spacing mb-6"
-            style={{ color: "var(--color-cream)" }}
+            className="eyebrow mb-6"
+            style={{ color: "rgba(247,246,235,0.5)" }}
           >
             Book Online
-          </motion.div>
+          </motion.p>
 
           <motion.h1
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-5xl)",
-              color: "var(--color-soft-ivory)",
-            }}
+            className="headline-display mb-6"
+            style={{ color: "var(--color-glaze)" }}
           >
             Schedule Your{" "}
-            <span className="accent-text" style={{ color: "var(--color-accent)" }}>
-              Visit
-            </span>
+            <span style={{ color: "var(--color-blush)" }}>Visit</span>
           </motion.h1>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-xl leading-relaxed"
-            style={{
-              fontSize: "var(--text-lg)",
-              color: "rgba(247, 246, 235, 0.7)",
-              fontWeight: 300,
-            }}
+            className="body-lg mx-auto mb-10 max-w-xl"
+            style={{ color: "rgba(247,246,235,0.65)" }}
           >
             Your journey to elevated beauty is just a click away. Book your
             appointment through our scheduling system and we will take care of
@@ -118,53 +112,29 @@ export default function BookingPage() {
               href={bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-light"
-              style={{ padding: "1rem 3rem", fontSize: "var(--text-lg)" }}
+              className="btn-primary"
+              style={{ padding: "1rem 3rem", fontSize: "1.125rem" }}
             >
               Book Your Appointment
             </a>
           </motion.div>
         </motion.div>
-
-        <div
-          className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "rgba(90, 61, 55, 0.3)" }}
-        />
       </section>
 
-      {/* WHAT TO EXPECT */}
-      <section
-        className="section-dark px-6 lg:px-10"
-        style={{
-          paddingTop: "var(--space-section-lg)",
-          paddingBottom: "var(--space-section-lg)",
-        }}
-      >
+      {/* WHAT TO EXPECT — Glaze */}
+      <section className="section-light px-6 lg:px-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="mx-auto max-w-[var(--max-width)]"
+          className="container-page"
         >
           <motion.div variants={revealUp} className="mb-20 text-center">
-            <div
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
-            >
-              Your Visit
-            </div>
-            <h2
-              className="headline-text"
-              style={{ fontSize: "var(--text-4xl)" }}
-            >
+            <p className="eyebrow-muted mb-4">Your Visit</p>
+            <h2 className="headline-section" style={{ color: "var(--color-ink)" }}>
               What to{" "}
-              <span
-                className="accent-text"
-                style={{ color: "var(--color-accent)" }}
-              >
-                Expect
-              </span>
+              <span style={{ color: "var(--color-matcha)" }}>Expect</span>
             </h2>
           </motion.div>
 
@@ -179,28 +149,21 @@ export default function BookingPage() {
                   className="mx-auto mb-6"
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "var(--text-4xl)",
+                    fontSize: "clamp(2rem, 4vw, 3rem)",
                     fontWeight: 200,
-                    color: "var(--color-accent-light)",
+                    color: "var(--color-matcha)",
                     letterSpacing: "0.05em",
                   }}
                 >
                   {step.number}
                 </div>
                 <h3
-                  className="headline-text mb-4"
-                  style={{ fontSize: "var(--text-2xl)" }}
+                  className="headline-section mb-4"
+                  style={{ color: "var(--color-ink)" }}
                 >
                   {step.title}
                 </h3>
-                <p
-                  className="mx-auto max-w-xs leading-relaxed"
-                  style={{
-                    fontSize: "var(--text-sm)",
-                    color: "rgba(247, 246, 235, 0.6)",
-                    fontWeight: 300,
-                  }}
-                >
+                <p className="body-md mx-auto max-w-xs" style={{ color: "var(--color-olive)" }}>
                   {step.description}
                 </p>
               </motion.div>
@@ -209,145 +172,108 @@ export default function BookingPage() {
         </motion.div>
       </section>
 
-      {/* PREPARATION + CANCELLATION */}
+      {/* PREPARATION TIPS — Silk */}
       <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-soft-ivory)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
+        className="section-alt px-6 lg:px-10"
+        style={{ backgroundColor: "var(--color-silk)" }}
       >
-        <div className="mx-auto grid max-w-[var(--max-width)] items-start gap-16 lg:grid-cols-2 lg:gap-24">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="container-page max-w-3xl"
+        >
+          <motion.p variants={revealLeft} className="eyebrow-muted mb-4">
+            Before Your Visit
+          </motion.p>
+          <motion.h2
+            variants={revealLeft}
+            className="headline-section mb-10"
+            style={{ color: "var(--color-ink)" }}
           >
-            <motion.div
-              variants={revealLeft}
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
-            >
-              Before Your Visit
-            </motion.div>
-            <motion.h2
-              variants={revealLeft}
-              className="headline-text mb-8"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-deep-cocoa)",
-              }}
-            >
-              Preparation{" "}
-              <span
-                className="accent-text"
-                style={{ color: "var(--color-accent-text)" }}
-              >
-                Tips
-              </span>
-            </motion.h2>
+            Preparation{" "}
+            <span style={{ color: "var(--color-matcha)" }}>Tips</span>
+          </motion.h2>
 
-            <ul className="flex flex-col gap-4">
-              {preparationTips.map((tip, i) => (
-                <motion.li
-                  key={i}
-                  variants={revealLeft}
-                  className="flex items-start gap-4"
+          <ul className="flex flex-col gap-5">
+            {preparationTips.map((tip, i) => (
+              <motion.li
+                key={i}
+                variants={revealLeft}
+                className="flex items-start gap-4"
+              >
+                <span
+                  className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
                   style={{
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-warm-taupe)",
-                    fontWeight: 300,
+                    backgroundColor: "var(--color-blush)",
+                    color: "#fff",
                   }}
                 >
+                  {i + 1}
+                </span>
+                <span className="body-md" style={{ color: "var(--color-olive)" }}>
+                  {tip}
+                </span>
+              </motion.li>
+            ))}
+          </ul>
+        </motion.div>
+      </section>
+
+      {/* CANCELLATION POLICY — Glaze */}
+      <section className="section-light px-6 lg:px-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="container-page max-w-3xl"
+        >
+          <motion.p variants={revealUp} className="eyebrow-muted mb-4">
+            Good to Know
+          </motion.p>
+          <motion.h2
+            variants={revealUp}
+            className="headline-section mb-8"
+            style={{ color: "var(--color-ink)" }}
+          >
+            Cancellation{" "}
+            <span style={{ color: "var(--color-matcha)" }}>Policy</span>
+          </motion.h2>
+
+          <motion.div
+            variants={revealUp}
+            className="rounded-xl p-8"
+            style={{
+              backgroundColor: "var(--color-white-soft)",
+              border: "1px solid var(--color-line)",
+            }}
+          >
+            <ul className="flex flex-col gap-4">
+              {cancellationPolicy.items.map((item, i) => (
+                <motion.li
+                  key={i}
+                  variants={revealUp}
+                  className="flex items-start gap-3"
+                >
                   <span
-                    className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full"
-                    style={{
-                      backgroundColor: "var(--color-accent)",
-                      color: "var(--color-deep-cocoa)",
-                      fontSize: "10px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {i + 1}
+                    className="mt-2 h-[6px] w-[6px] flex-shrink-0 rounded-full"
+                    style={{ backgroundColor: "var(--color-mocha)" }}
+                  />
+                  <span className="body-md" style={{ color: "var(--color-olive)" }}>
+                    {item}
                   </span>
-                  <span className="leading-relaxed">{tip}</span>
                 </motion.li>
               ))}
             </ul>
           </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-          >
-            <motion.div
-              variants={revealRight}
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
-            >
-              Good to Know
-            </motion.div>
-            <motion.h2
-              variants={revealRight}
-              className="headline-text mb-8"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-deep-cocoa)",
-              }}
-            >
-              Cancellation{" "}
-              <span
-                className="accent-text"
-                style={{ color: "var(--color-accent-text)" }}
-              >
-                Policy
-              </span>
-            </motion.h2>
-
-            <div
-              style={{
-                backgroundColor: "var(--color-linen)",
-                borderRadius: "var(--border-radius-lg)",
-                padding: "var(--space-xl)",
-              }}
-            >
-              <ul className="flex flex-col gap-4">
-                {cancellationPolicy.items.map((item, i) => (
-                  <motion.li
-                    key={i}
-                    variants={revealRight}
-                    className="flex items-start gap-3"
-                    style={{
-                      fontSize: "var(--text-sm)",
-                      color: "var(--color-warm-taupe)",
-                      fontWeight: 300,
-                    }}
-                  >
-                    <span
-                      className="mt-[2px] h-[6px] w-[6px] flex-shrink-0 rounded-full"
-                      style={{ backgroundColor: "var(--color-cream)" }}
-                    />
-                    <span className="leading-relaxed">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — Blush */}
       <section
-        className="px-6 text-center lg:px-10"
-        style={{
-          backgroundColor: "var(--color-linen)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
+        className="section-blush px-6 text-center lg:px-10"
       >
         <motion.div
           initial="hidden"
@@ -360,30 +286,16 @@ export default function BookingPage() {
 
           <motion.h2
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-deep-cocoa)",
-            }}
+            className="headline-section mb-6"
+            style={{ color: "var(--color-glaze)" }}
           >
-            Have{" "}
-            <span
-              className="accent-text"
-              style={{ color: "var(--color-accent-text)" }}
-            >
-              questions
-            </span>{" "}
-            before booking?
+            Have questions before booking?
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed"
-            style={{
-              fontSize: "var(--text-lg)",
-              color: "var(--color-warm-taupe)",
-              fontWeight: 300,
-            }}
+            className="body-lg mx-auto mb-10 max-w-lg"
+            style={{ color: "rgba(247,246,235,0.75)" }}
           >
             Our team is here to help you choose the perfect treatment and answer
             any questions you may have.
@@ -393,10 +305,10 @@ export default function BookingPage() {
             variants={revealUp}
             className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
           >
-            <Link href="/contact" className="btn btn-primary">
+            <Link href="/contact" className="btn-light">
               Contact Us
             </Link>
-            <Link href="/services" className="btn btn-outline">
+            <Link href="/services" className="btn-light" style={{ backgroundColor: "transparent", border: "1px solid var(--color-glaze)", color: "var(--color-glaze)" }}>
               Browse Services
             </Link>
           </motion.div>

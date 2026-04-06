@@ -84,39 +84,35 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* HERO */}
+      {/* HERO — Glaze */}
       <section
-        className="section-dark relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center"
+        className="section-light relative flex min-h-[70vh] flex-col items-center justify-center text-center"
       >
         <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
-          className="pt-[var(--nav-height)]"
+          className="container-page pt-[var(--nav-height)]"
         >
-          <motion.div
+          <motion.span
             variants={revealUp}
-            className="editorial-spacing mb-6"
-            style={{ color: "var(--color-cream)" }}
+            className="eyebrow mb-6 block"
           >
             About MADE
-          </motion.div>
+          </motion.span>
 
           <motion.h1
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-5xl)",
-              color: "var(--color-soft-ivory)",
-            }}
+            className="headline-display mb-6"
           >
-            Our <span className="accent-text" style={{ color: "var(--color-accent)" }}>Story</span>
+            Our{" "}
+            <span style={{ color: "var(--color-blush)" }}>Story</span>
           </motion.h1>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto max-w-xl leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.7)", fontWeight: 300 }}
+            className="body-lg mx-auto max-w-xl"
+            style={{ color: "var(--color-mocha)" }}
           >
             A luxury aesthetic studio built on the belief that beauty is
             personal, science is essential, and every detail matters.
@@ -125,28 +121,21 @@ export default function AboutPage() {
 
         <div
           className="absolute bottom-8 left-1/2 h-12 w-[1px] -translate-x-1/2"
-          style={{ backgroundColor: "rgba(90, 61, 55, 0.3)" }}
+          style={{ backgroundColor: "var(--color-line)" }}
         />
       </section>
 
-      {/* STORY */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-soft-ivory)",
-          paddingTop: "var(--space-section-lg)",
-          paddingBottom: "var(--space-section-lg)",
-        }}
-      >
-        <div className="mx-auto grid max-w-[var(--max-width)] items-center gap-12 lg:grid-cols-2 lg:gap-24">
+      {/* STORY — Silk */}
+      <section className="section-alt">
+        <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={revealLeft}
-            className="image-editorial image-warm overflow-hidden"
+            className="image-warm overflow-hidden"
             style={{
-              borderRadius: "var(--border-radius-lg)",
+              borderRadius: "var(--radius-lg, 1rem)",
               aspectRatio: "4/5",
             }}
           >
@@ -167,29 +156,24 @@ export default function AboutPage() {
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
-            <motion.div
+            <motion.span
               variants={revealRight}
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
+              className="eyebrow-muted mb-4 block"
             >
               Our Beginning
-            </motion.div>
+            </motion.span>
 
             <motion.h2
               variants={revealRight}
-              className="headline-text mb-6"
-              style={{
-                fontSize: "var(--text-4xl)",
-                color: "var(--color-deep-cocoa)",
-              }}
+              className="headline-section mb-6"
             >
               {story?.title || "Founded on Passion"}
             </motion.h2>
 
             <motion.div
               variants={revealRight}
-              className="space-y-4 leading-relaxed"
-              style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
+              className="body-lg space-y-4"
+              style={{ color: "var(--color-mocha)" }}
             >
               {story?.body ? (
                 story.body.split("\n\n").map((paragraph, i) => (
@@ -217,50 +201,38 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* MISSION */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-linen)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
+      {/* MISSION — Glaze */}
+      <section className="section-light">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="mx-auto max-w-2xl text-center"
+          className="container-page mx-auto max-w-2xl text-center"
         >
           <motion.div
             variants={revealUp}
             className="accent-line mx-auto mb-8"
           />
 
-          <motion.div
+          <motion.span
             variants={revealUp}
-            className="editorial-spacing mb-4"
-            style={{ color: "var(--color-cream)" }}
+            className="eyebrow mb-4 block"
           >
             Our Mission
-          </motion.div>
+          </motion.span>
 
           <motion.h2
             variants={revealUp}
-            className="headline-text mb-8"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-deep-cocoa)",
-            }}
+            className="headline-section mb-8"
           >
             {mission?.title || "Elevating Natural Beauty"}
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="accent-text leading-relaxed"
-            style={{ fontSize: "var(--text-2xl)", color: "var(--color-warm-taupe)" }}
+            className="body-lg"
+            style={{ color: "var(--color-mocha)" }}
           >
             {mission?.body ||
               "To empower every guest with confidence through personalized, science-backed aesthetic treatments delivered in an atmosphere of warmth, luxury, and unwavering care."}
@@ -268,36 +240,24 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* VALUES */}
-      <section
-        className="section-dark px-6 lg:px-10"
-        style={{
-          paddingTop: "var(--space-section-lg)",
-          paddingBottom: "var(--space-section-lg)",
-        }}
-      >
+      {/* VALUES — Silk */}
+      <section className="section-alt">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="mx-auto max-w-[var(--max-width)]"
+          className="container-page"
         >
           <motion.div
             variants={revealUp}
             className="mb-20 text-center"
           >
-            <div
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
-            >
+            <span className="eyebrow mb-4 block">
               {valuesContent?.title || "What Guides Us"}
-            </div>
-            <h2
-              className="headline-text"
-              style={{ fontSize: "var(--text-4xl)" }}
-            >
-              Our <span className="accent-text">Values</span>
+            </span>
+            <h2 className="headline-section">
+              Our Values
             </h2>
           </motion.div>
 
@@ -312,23 +272,23 @@ export default function AboutPage() {
                   className="mx-auto mb-6"
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "var(--text-4xl)",
+                    fontSize: "clamp(2rem, 1.5rem + 2vw, 3rem)",
                     fontWeight: 200,
-                    color: "var(--color-accent-light)",
+                    color: "var(--color-matcha)",
                     letterSpacing: "0.05em",
                   }}
                 >
                   {value.number}
                 </div>
                 <h3
-                  className="headline-text mb-4"
-                  style={{ fontSize: "var(--text-2xl)" }}
+                  className="headline-section mb-4"
+                  style={{ fontSize: "clamp(1.25rem, 1rem + 0.5vw, 1.5rem)" }}
                 >
                   {value.title}
                 </h3>
                 <p
-                  className="mx-auto max-w-xs leading-relaxed"
-                  style={{ fontSize: "var(--text-sm)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
+                  className="body-md mx-auto max-w-xs"
+                  style={{ color: "var(--color-mocha)" }}
                 >
                   {value.description}
                 </p>
@@ -339,8 +299,8 @@ export default function AboutPage() {
           {valuesContent?.body && (
             <motion.p
               variants={revealUp}
-              className="mx-auto mt-12 max-w-xl text-center leading-relaxed"
-              style={{ fontSize: "var(--text-base)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
+              className="body-md mx-auto mt-12 max-w-xl text-center"
+              style={{ color: "var(--color-mocha)" }}
             >
               {valuesContent.body}
             </motion.p>
@@ -348,16 +308,9 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* TEAM */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-soft-ivory)",
-          paddingTop: "var(--space-section-lg)",
-          paddingBottom: "var(--space-section-lg)",
-        }}
-      >
-        <div className="mx-auto max-w-[var(--max-width)]">
+      {/* TEAM — Glaze */}
+      <section className="section-light">
+        <div className="container-page">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -365,22 +318,18 @@ export default function AboutPage() {
             variants={staggerContainer}
             className="mb-20 text-center"
           >
-            <motion.div
+            <motion.span
               variants={revealUp}
-              className="editorial-spacing mb-4"
-              style={{ color: "var(--color-cream)" }}
+              className="eyebrow mb-4 block"
             >
               The Team
-            </motion.div>
+            </motion.span>
             <motion.h2
               variants={revealUp}
-              className="headline-text"
-              style={{
-                fontSize: "var(--text-4xl)",
-                color: "var(--color-deep-cocoa)",
-              }}
+              className="headline-section"
             >
-              Meet the <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>Experts</span>
+              Meet the{" "}
+              <span style={{ color: "var(--color-blush)" }}>Experts</span>
             </motion.h2>
           </motion.div>
 
@@ -395,50 +344,45 @@ export default function AboutPage() {
               <motion.div
                 key={member.name}
                 variants={revealUp}
-                className="hover-lift group text-center"
-                style={{
-                  backgroundColor: "var(--color-linen)",
-                  borderRadius: "var(--border-radius-lg)",
-                  overflow: "hidden",
-                  boxShadow: "var(--shadow-card)",
-                }}
+                className="card-luxury hover-lift group text-center"
               >
-                <div className="image-portrait overflow-hidden">
-                  <Image
-                    src={("imageUrl" in member && typeof member.imageUrl === "string" && member.imageUrl) || demoImages.about.team[index] || demoImages.about.team[0]}
-                    alt={member.name}
-                    width={450}
-                    height={600}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-
+                {/* Initials circle */}
                 <div
+                  className="mx-auto mb-6 flex items-center justify-center rounded-full"
                   style={{
-                    padding:
-                      "var(--space-lg) var(--space-lg) var(--space-xl)",
+                    width: "5rem",
+                    height: "5rem",
+                    backgroundColor: "var(--color-blush)",
+                    color: "var(--color-white-soft)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.5rem",
+                    fontWeight: 500,
+                    letterSpacing: "0.05em",
+                    marginTop: "2rem",
                   }}
                 >
+                  {member.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </div>
+
+                <div style={{ padding: "0 1.5rem 2rem" }}>
                   <h3
-                    className="headline-text mb-1"
-                    style={{
-                      fontSize: "var(--text-xl)",
-                      color: "var(--color-deep-cocoa)",
-                    }}
+                    className="headline-section mb-1"
+                    style={{ fontSize: "1.25rem" }}
                   >
                     {member.name}
                   </h3>
                   <p
-                    className="accent-text mb-3"
-                    style={{ fontSize: "var(--text-sm)", color: "var(--color-accent-text)" }}
+                    className="eyebrow-muted mb-3"
+                    style={{ fontSize: "0.75rem" }}
                   >
                     {member.title}
                   </p>
                   <p
-                    className="leading-relaxed"
-                    style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
+                    className="body-md"
+                    style={{ color: "var(--color-mocha)" }}
                   >
                     {member.bio}
                   </p>
@@ -449,21 +393,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section
-        className="px-6 text-center lg:px-10"
-        style={{
-          backgroundColor: "var(--color-linen)",
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
-      >
+      {/* CTA — Espresso */}
+      <section className="section-dark text-center">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="mx-auto max-w-2xl"
+          className="container-page mx-auto max-w-2xl"
         >
           <motion.div
             variants={revealUp}
@@ -472,27 +409,25 @@ export default function AboutPage() {
 
           <motion.h2
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-deep-cocoa)",
-            }}
+            className="headline-section mb-6"
+            style={{ color: "var(--color-glaze)" }}
           >
-            Ready to <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>experience</span> the MADE
-            difference?
+            Ready to{" "}
+            <span style={{ color: "var(--color-blush)" }}>experience</span>{" "}
+            the MADE difference?
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "var(--color-warm-taupe)", fontWeight: 300 }}
+            className="body-lg mx-auto mb-10 max-w-lg"
+            style={{ color: "var(--color-mocha)" }}
           >
             Your journey to elevated beauty begins with a single conversation.
             Let us craft a personalized plan just for you.
           </motion.p>
 
           <motion.div variants={revealUp}>
-            <Link href="/booking" className="btn btn-primary">
+            <Link href="/booking" className="btn-primary">
               Book Consultation
             </Link>
           </motion.div>

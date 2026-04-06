@@ -41,20 +41,17 @@ export default function ServiceDetailPage({
   // Loading state
   if (service === undefined) {
     return (
-      <main
-        className="min-h-screen"
-        style={{ backgroundColor: "var(--color-ivory)" }}
-      >
+      <main className="min-h-screen" style={{ backgroundColor: "var(--color-glaze)" }}>
         <div
           className="flex min-h-screen items-center justify-center"
           style={{ paddingTop: "var(--nav-height)" }}
         >
-          <div
-            className="editorial-spacing"
-            style={{ color: "var(--color-stone-dark)" }}
+          <span
+            className="eyebrow"
+            style={{ color: "var(--color-mocha)" }}
           >
             Loading...
-          </div>
+          </span>
         </div>
       </main>
     );
@@ -63,33 +60,21 @@ export default function ServiceDetailPage({
   // Not found state
   if (service === null) {
     return (
-      <main
-        className="min-h-screen"
-        style={{ backgroundColor: "var(--color-ivory)" }}
-      >
+      <main className="min-h-screen" style={{ backgroundColor: "var(--color-glaze)" }}>
         <div
           className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center"
           style={{ paddingTop: "var(--nav-height)" }}
         >
-          <h1
-            className="headline-text"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-chocolate)",
-            }}
-          >
+          <h1 className="headline-display">
             Service Not Found
           </h1>
           <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--text-lg)",
-              color: "var(--color-brown)",
-            }}
+            className="body-lg"
+            style={{ color: "var(--color-mocha)" }}
           >
             The service you are looking for does not exist or has been removed.
           </p>
-          <Link href="/services" className="btn btn-primary">
+          <Link href="/services" className="btn-primary">
             View All Services
           </Link>
         </div>
@@ -98,142 +83,138 @@ export default function ServiceDetailPage({
   }
 
   return (
-    <main
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--color-ivory)" }}
-    >
-      {/* Breadcrumb */}
+    <main className="min-h-screen" style={{ backgroundColor: "var(--color-glaze)" }}>
+      {/* Breadcrumb — Glaze */}
       <section
-        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-        style={{ paddingTop: "calc(var(--nav-height) + var(--space-xl))" }}
+        className="section-light"
+        style={{
+          paddingTop: "calc(var(--nav-height) + clamp(1rem, 0.5rem + 2vw, 2rem))",
+          paddingBottom: "0",
+        }}
       >
-        <motion.nav
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: luxuryEase }}
-          className="mb-8 flex flex-wrap items-center gap-2"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-sm)",
-            color: "var(--color-stone-dark)",
-          }}
-        >
-          <Link
-            href="/"
-            className="transition-colors hover:text-[var(--color-accent-text)]"
-          >
-            Home
-          </Link>
-          <span style={{ color: "var(--color-stone)" }}>/</span>
-          <Link
-            href="/services"
-            className="transition-colors hover:text-[var(--color-accent-text)]"
-          >
-            Services
-          </Link>
-          <span style={{ color: "var(--color-stone)" }}>/</span>
-          <span style={{ color: "var(--color-chocolate)" }}>
-            {service.name}
-          </span>
-        </motion.nav>
-      </section>
-
-      {/* Hero */}
-      <section className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
-        <motion.div
-          custom={0}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="editorial-spacing mb-4"
-          style={{ color: "var(--color-accent-text)" }}
-        >
-          {service.category}
-        </motion.div>
-
-        <motion.h1
-          custom={0.1}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="headline-text mb-6"
-          style={{
-            fontSize: "var(--text-5xl)",
-            color: "var(--color-chocolate)",
-            maxWidth: "800px",
-          }}
-        >
-          {service.name}
-        </motion.h1>
-
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, ease: luxuryEase, delay: 0.3 }}
-          style={{ transformOrigin: "left" }}
-          className="accent-line mb-12"
-        />
-      </section>
-
-      {/* Editorial Split: Description + Image */}
-      <section
-        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-        style={{ paddingBottom: "var(--space-4xl)" }}
-      >
-        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
-          {/* Description */}
-          <motion.div
-            custom={0.2}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-          >
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-lg)",
-                color: "var(--color-brown)",
-                lineHeight: 1.8,
-                whiteSpace: "pre-line",
-              }}
-            >
-              {service.fullDescription}
-            </p>
-          </motion.div>
-
-          {/* Service Image */}
-          <motion.div
-            custom={0.35}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            className="image-portrait image-warm overflow-hidden"
+        <div className="container-page">
+          <motion.nav
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: luxuryEase }}
+            className="mb-8 flex flex-wrap items-center gap-2"
             style={{
-              borderRadius: "var(--border-radius-sm)",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.875rem",
+              color: "var(--color-mocha)",
             }}
           >
-            <Image
-              src={service.imageUrl || getServiceImage(slug, "hero")}
-              alt={service.name}
-              width={1280}
-              height={1707}
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="h-full w-full object-cover"
-              priority
-            />
-          </motion.div>
+            <Link
+              href="/"
+              className="transition-colors"
+              style={{ color: "var(--color-mocha)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-blush)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-mocha)")}
+            >
+              Home
+            </Link>
+            <span style={{ color: "var(--color-line)" }}>/</span>
+            <Link
+              href="/services"
+              className="transition-colors"
+              style={{ color: "var(--color-mocha)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-blush)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-mocha)")}
+            >
+              Services
+            </Link>
+            <span style={{ color: "var(--color-line)" }}>/</span>
+            <span style={{ color: "var(--color-ink)" }}>
+              {service.name}
+            </span>
+          </motion.nav>
         </div>
       </section>
 
-      {/* Info Bar: Duration & Price */}
+      {/* Hero + Content — Glaze */}
+      <section className="section-light" style={{ paddingTop: "0" }}>
+        <div className="container-page">
+          {/* Category eyebrow */}
+          <motion.span
+            custom={0}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="eyebrow mb-4 block"
+          >
+            {service.category}
+          </motion.span>
+
+          {/* Service name */}
+          <motion.h1
+            custom={0.1}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="headline-display mb-6"
+            style={{ maxWidth: "800px" }}
+          >
+            {service.name}
+          </motion.h1>
+
+          {/* Accent line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, ease: luxuryEase, delay: 0.3 }}
+            style={{ transformOrigin: "left" }}
+            className="accent-line mb-12"
+          />
+
+          {/* Two-column: description + image */}
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+            <motion.div
+              custom={0.2}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+            >
+              <p
+                className="body-lg"
+                style={{
+                  color: "var(--color-mocha)",
+                  lineHeight: 1.8,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {service.fullDescription}
+              </p>
+            </motion.div>
+
+            <motion.div
+              custom={0.35}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="image-warm overflow-hidden"
+              style={{
+                borderRadius: "var(--radius-lg, 1rem)",
+                aspectRatio: "3/4",
+              }}
+            >
+              <Image
+                src={service.imageUrl || getServiceImage(slug, "hero")}
+                alt={service.name}
+                width={960}
+                height={1280}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="h-full w-full object-cover"
+                priority
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Info Bar — Silk */}
       {(service.duration || service.priceRange) && (
-        <section
-          style={{
-            backgroundColor: "var(--color-cream)",
-            padding: "var(--space-2xl) 0",
-          }}
-        >
-          <div className="mx-auto flex max-w-[var(--max-width)] flex-wrap items-center justify-center gap-12 px-6 lg:px-10">
+        <section className="section-alt">
+          <div className="container-page flex flex-wrap items-center justify-center gap-12">
             {service.duration && (
               <motion.div
                 custom={0.3}
@@ -243,20 +224,14 @@ export default function ServiceDetailPage({
                 className="flex flex-col items-center text-center"
               >
                 <span
-                  className="editorial-spacing mb-2"
-                  style={{
-                    color: "var(--color-stone-dark)",
-                    fontSize: "var(--text-xs)",
-                  }}
+                  className="eyebrow-muted mb-2 block"
+                  style={{ fontSize: "0.7rem" }}
                 >
                   Duration
                 </span>
                 <span
-                  className="headline-text"
-                  style={{
-                    fontSize: "var(--text-2xl)",
-                    color: "var(--color-chocolate)",
-                  }}
+                  className="headline-section"
+                  style={{ color: "var(--color-ink)" }}
                 >
                   {service.duration}
                 </span>
@@ -268,7 +243,7 @@ export default function ServiceDetailPage({
                 className="hidden h-12 sm:block"
                 style={{
                   width: "1px",
-                  backgroundColor: "var(--color-stone)",
+                  backgroundColor: "var(--color-line)",
                 }}
               />
             )}
@@ -282,37 +257,27 @@ export default function ServiceDetailPage({
                 className="flex flex-col items-center text-center"
               >
                 <span
-                  className="editorial-spacing mb-2"
-                  style={{
-                    color: "var(--color-stone-dark)",
-                    fontSize: "var(--text-xs)",
-                  }}
+                  className="eyebrow-muted mb-2 block"
+                  style={{ fontSize: "0.7rem" }}
                 >
                   Price Range
                 </span>
                 <span
-                  className="headline-text"
-                  style={{
-                    fontSize: "var(--text-2xl)",
-                    color: "var(--color-chocolate)",
-                  }}
+                  className="headline-section"
+                  style={{ color: "var(--color-ink)" }}
                 >
                   {service.priceRange}
                 </span>
               </motion.div>
             )}
-
           </div>
         </section>
       )}
 
-      {/* Service-Specific FAQs */}
+      {/* FAQs — Glaze */}
       {service.faqs && service.faqs.length > 0 && (
-        <section
-          className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-          style={{ padding: "var(--space-section) 0" }}
-        >
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+        <section className="section-light">
+          <div className="container-page mx-auto max-w-3xl">
             <motion.div
               custom={0}
               variants={fadeUp}
@@ -321,19 +286,10 @@ export default function ServiceDetailPage({
               viewport={{ once: true, margin: "-50px" }}
               className="mb-10 text-center"
             >
-              <span
-                className="editorial-spacing mb-4 block"
-                style={{ color: "var(--color-stone-dark)" }}
-              >
+              <span className="eyebrow mb-4 block">
                 Common Questions
               </span>
-              <h2
-                className="headline-text"
-                style={{
-                  fontSize: "var(--text-3xl)",
-                  color: "var(--color-chocolate)",
-                }}
-              >
+              <h2 className="headline-section">
                 Frequently Asked
               </h2>
             </motion.div>
@@ -350,32 +306,24 @@ export default function ServiceDetailPage({
         </section>
       )}
 
-      {/* Book CTA */}
-      <section
-        className="text-center"
-        style={{
-          backgroundColor: "var(--color-chocolate)",
-          padding: "var(--space-4xl) var(--space-xl)",
-        }}
-      >
+      {/* Book CTA — Espresso */}
+      <section className="section-dark text-center">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, ease: luxuryEase }}
+          className="container-page"
         >
           <span
-            className="editorial-spacing mb-4 block"
-            style={{ color: "var(--color-stone)" }}
+            className="eyebrow mb-4 block"
+            style={{ color: "var(--color-mocha)" }}
           >
             Ready to Begin?
           </span>
           <h2
-            className="headline-text mx-auto mb-8 max-w-lg"
-            style={{
-              fontSize: "var(--text-3xl)",
-              color: "var(--color-white)",
-            }}
+            className="headline-section mx-auto mb-8 max-w-lg"
+            style={{ color: "var(--color-glaze)" }}
           >
             Book This Service
           </h2>
@@ -383,24 +331,17 @@ export default function ServiceDetailPage({
             href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary"
-            style={{
-              backgroundColor: "var(--color-burgundy)",
-              color: "var(--color-ivory)",
-            }}
+            className="btn-primary"
           >
             Book Now
           </a>
         </motion.div>
       </section>
 
-      {/* Related Services */}
+      {/* Related Services — Silk */}
       {relatedServices.length > 0 && (
-        <section
-          className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-          style={{ padding: "var(--space-section) 0" }}
-        >
-          <div className="mx-auto px-6 lg:px-10">
+        <section className="section-alt">
+          <div className="container-page">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -408,19 +349,10 @@ export default function ServiceDetailPage({
               transition={{ duration: 0.6, ease: luxuryEase }}
               className="mb-12 text-center"
             >
-              <span
-                className="editorial-spacing mb-4 block"
-                style={{ color: "var(--color-stone-dark)" }}
-              >
+              <span className="eyebrow mb-4 block">
                 Explore More
               </span>
-              <h2
-                className="headline-text"
-                style={{
-                  fontSize: "var(--text-3xl)",
-                  color: "var(--color-chocolate)",
-                }}
-              >
+              <h2 className="headline-section">
                 Related Services
               </h2>
             </motion.div>

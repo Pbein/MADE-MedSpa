@@ -72,9 +72,10 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* HERO */}
+      {/* HERO — Espresso */}
       <section
         className="section-dark relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center"
+        style={{ backgroundColor: "var(--color-espresso)" }}
       >
         <motion.div
           initial="hidden"
@@ -82,29 +83,27 @@ export default function ContactPage() {
           variants={staggerContainer}
           className="pt-[var(--nav-height)]"
         >
-          <motion.div
+          <motion.p
             variants={revealUp}
-            className="editorial-spacing mb-6"
-            style={{ color: "var(--color-cream)" }}
+            className="eyebrow mb-6"
+            style={{ color: "rgba(247,246,235,0.5)" }}
           >
             Contact
-          </motion.div>
+          </motion.p>
 
           <motion.h1
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{
-              fontSize: "var(--text-5xl)",
-              color: "var(--color-soft-ivory)",
-            }}
+            className="headline-display mb-6"
+            style={{ color: "var(--color-glaze)" }}
           >
-            Get <span className="accent-text" style={{ color: "var(--color-accent)" }}>In Touch</span>
+            Get{" "}
+            <span style={{ color: "var(--color-matcha)" }}>In Touch</span>
           </motion.h1>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto max-w-xl leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.7)", fontWeight: 300 }}
+            className="body-lg mx-auto max-w-xl"
+            style={{ color: "rgba(247,246,235,0.65)" }}
           >
             {heroContent?.body ||
               "We would love to hear from you. Whether you have a question about our services, want to book an appointment, or simply want to say hello."}
@@ -112,78 +111,87 @@ export default function ContactPage() {
         </motion.div>
       </section>
 
-      {/* FORM + INFO */}
-      <section
-        className="px-6 lg:px-10"
-        style={{
-          backgroundColor: "var(--color-soft-ivory)",
-          paddingTop: "var(--space-section-lg)",
-          paddingBottom: "var(--space-section-lg)",
-        }}
-      >
-        <div className="mx-auto grid max-w-[var(--max-width)] gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-24">
+      {/* FORM + SIDEBAR — Glaze */}
+      <section className="section-light px-6 lg:px-10">
+        <div className="container-page grid gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-24">
+          {/* Form column */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={revealLeft}
           >
-            <div className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
-              Send a Message
-            </div>
-            <h2
-              className="headline-text mb-10"
-              style={{
-                fontSize: "var(--text-3xl)",
-                color: "var(--color-deep-cocoa)",
-              }}
-            >
-              We are here to <span className="accent-text" style={{ color: "var(--color-accent-text)" }}>help</span>
+            <p className="eyebrow-muted mb-4">Send a Message</p>
+            <h2 className="headline-section mb-10" style={{ color: "var(--color-ink)" }}>
+              We are here to{" "}
+              <span style={{ color: "var(--color-matcha)" }}>help</span>
             </h2>
 
             <ContactForm />
           </motion.div>
 
+          {/* Sidebar */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
+            className="rounded-2xl p-8 lg:p-10"
+            style={{
+              backgroundColor: "var(--color-silk)",
+              border: "1px solid var(--color-line)",
+            }}
           >
-            <motion.div variants={revealRight} className="mb-10">
-              <h3 className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
+            {/* Visit Us */}
+            <motion.div variants={revealRight} className="mb-8">
+              <h3
+                className="eyebrow mb-4"
+                style={{ color: "var(--color-ink)" }}
+              >
                 Visit Us
               </h3>
-              <p className="leading-relaxed" style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", fontWeight: 300 }}>
+              <p className="body-md" style={{ color: "var(--color-olive)" }}>
                 {info.addressLine1}
                 <br />
                 {info.addressLine2}
               </p>
             </motion.div>
 
-            <motion.div variants={revealRight} className="mb-10 h-[1px] w-full" style={{ backgroundColor: "var(--color-border)" }} />
+            <motion.div
+              variants={revealRight}
+              className="mb-8 h-[1px] w-full"
+              style={{ backgroundColor: "var(--color-line)" }}
+            />
 
-            <motion.div variants={revealRight} className="mb-10">
-              <h3 className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
+            {/* Reach Out */}
+            <motion.div variants={revealRight} className="mb-8">
+              <h3
+                className="eyebrow mb-4"
+                style={{ color: "var(--color-ink)" }}
+              >
                 Reach Out
               </h3>
               <div className="flex flex-col gap-3">
                 <a
                   href={info.phoneHref}
-                  className="inline-flex items-center gap-3 transition-colors hover:text-[var(--color-accent-text)]"
-                  style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", transitionDuration: "var(--duration-fast)" }}
+                  className="link-accent inline-flex items-center gap-3"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full border text-xs" style={{ borderColor: "var(--color-border)" }}>
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-full border text-xs"
+                    style={{ borderColor: "var(--color-line)" }}
+                  >
                     P
                   </span>
                   {info.phone}
                 </a>
                 <a
                   href={info.emailHref}
-                  className="inline-flex items-center gap-3 transition-colors hover:text-[var(--color-accent-text)]"
-                  style={{ fontSize: "var(--text-base)", color: "var(--color-warm-taupe)", transitionDuration: "var(--duration-fast)" }}
+                  className="link-accent inline-flex items-center gap-3"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full border text-xs" style={{ borderColor: "var(--color-border)" }}>
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-full border text-xs"
+                    style={{ borderColor: "var(--color-line)" }}
+                  >
                     E
                   </span>
                   {info.email}
@@ -191,25 +199,36 @@ export default function ContactPage() {
               </div>
             </motion.div>
 
-            <motion.div variants={revealRight} className="mb-10 h-[1px] w-full" style={{ backgroundColor: "var(--color-border)" }} />
+            <motion.div
+              variants={revealRight}
+              className="mb-8 h-[1px] w-full"
+              style={{ backgroundColor: "var(--color-line)" }}
+            />
 
-            <motion.div variants={revealRight} className="mb-10">
-              <h3 className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
+            {/* Hours */}
+            <motion.div variants={revealRight} className="mb-8">
+              <h3
+                className="eyebrow mb-4"
+                style={{ color: "var(--color-ink)" }}
+              >
                 Hours
               </h3>
               <ul className="flex flex-col gap-2">
                 {info.hours.map((schedule) => (
                   <li
                     key={schedule.days}
-                    className="flex items-center justify-between"
-                    style={{ fontSize: "var(--text-sm)", color: "var(--color-warm-taupe)" }}
+                    className="body-md flex items-center justify-between"
+                    style={{ color: "var(--color-olive)" }}
                   >
                     <span>{schedule.days}</span>
                     <span
-                      className="accent-text"
                       style={{
-                        fontStyle: schedule.hours === "Closed" ? "italic" : "normal",
-                        color: schedule.hours === "Closed" ? "var(--color-cream)" : "var(--color-warm-taupe)",
+                        fontStyle:
+                          schedule.hours === "Closed" ? "italic" : "normal",
+                        color:
+                          schedule.hours === "Closed"
+                            ? "var(--color-mocha)"
+                            : "var(--color-olive)",
                       }}
                     >
                       {schedule.hours}
@@ -219,10 +238,18 @@ export default function ContactPage() {
               </ul>
             </motion.div>
 
-            <motion.div variants={revealRight} className="mb-10 h-[1px] w-full" style={{ backgroundColor: "var(--color-border)" }} />
+            <motion.div
+              variants={revealRight}
+              className="mb-8 h-[1px] w-full"
+              style={{ backgroundColor: "var(--color-line)" }}
+            />
 
+            {/* Follow Us */}
             <motion.div variants={revealRight}>
-              <h3 className="editorial-spacing mb-4" style={{ color: "var(--color-cream)" }}>
+              <h3
+                className="eyebrow mb-4"
+                style={{ color: "var(--color-ink)" }}
+              >
                 Follow Us
               </h3>
               <div className="flex gap-4">
@@ -231,12 +258,10 @@ export default function ContactPage() {
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all hover:border-[var(--color-accent-text)] hover:text-[var(--color-accent-text)]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all hover:border-[var(--color-blush)] hover:text-[var(--color-blush)]"
                     style={{
-                      borderColor: "var(--color-border)",
-                      color: "var(--color-warm-taupe)",
-                      transitionDuration: "var(--duration-normal)",
-                      transitionTimingFunction: "var(--ease-smooth)",
+                      borderColor: "var(--color-line)",
+                      color: "var(--color-olive)",
                     }}
                   >
                     {social.label[0]}
@@ -248,13 +273,10 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — Espresso */}
       <section
         className="section-dark px-6 text-center lg:px-10"
-        style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-section)",
-        }}
+        style={{ backgroundColor: "var(--color-espresso)" }}
       >
         <motion.div
           initial="hidden"
@@ -266,22 +288,21 @@ export default function ContactPage() {
           <motion.div
             variants={revealUp}
             className="accent-line mx-auto mb-8"
-            style={{ backgroundColor: "var(--color-accent-light)" }}
           />
 
           <motion.h2
             variants={revealUp}
-            className="headline-text mb-6"
-            style={{ fontSize: "var(--text-4xl)" }}
+            className="headline-section mb-6"
+            style={{ color: "var(--color-glaze)" }}
           >
             Ready to begin your{" "}
-            <span className="accent-text" style={{ color: "var(--color-accent)" }}>journey</span>?
+            <span style={{ color: "var(--color-matcha)" }}>journey</span>?
           </motion.h2>
 
           <motion.p
             variants={revealUp}
-            className="mx-auto mb-10 max-w-lg leading-relaxed"
-            style={{ fontSize: "var(--text-lg)", color: "rgba(247, 246, 235, 0.6)", fontWeight: 300 }}
+            className="body-lg mx-auto mb-10 max-w-lg"
+            style={{ color: "rgba(247,246,235,0.65)" }}
           >
             Skip the form and book directly. Our team is ready to welcome you.
           </motion.p>
@@ -290,10 +311,10 @@ export default function ContactPage() {
             variants={revealUp}
             className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
           >
-            <Link href="/booking" className="btn btn-light">
+            <Link href="/booking" className="btn-primary">
               Book an Appointment
             </Link>
-            <Link href="/services" className="btn btn-light-outline">
+            <Link href="/services" className="btn-secondary">
               Explore Services
             </Link>
           </motion.div>

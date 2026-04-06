@@ -30,7 +30,10 @@ const FALLBACK_TESTIMONIALS = [
 
 export default function TestimonialSection() {
   const dbTestimonials = useQuery(api.testimonials.list);
-  const testimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : FALLBACK_TESTIMONIALS;
+  const testimonials =
+    dbTestimonials && dbTestimonials.length > 0
+      ? dbTestimonials
+      : FALLBACK_TESTIMONIALS;
   const [current, setCurrent] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -61,14 +64,12 @@ export default function TestimonialSection() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden"
+      className="section-dark relative overflow-hidden"
       style={{
-        backgroundColor: "var(--color-deep-cocoa)",
-        paddingTop: "var(--space-section-lg)",
-        paddingBottom: "var(--space-section-lg)",
+        backgroundColor: "var(--color-espresso)",
       }}
     >
-      <div className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10">
+      <div className="container-page">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -76,22 +77,17 @@ export default function TestimonialSection() {
           className="mb-16 text-center"
         >
           <span
-            className="editorial-spacing mb-4 block"
-            style={{ color: "rgba(247, 246, 235, 0.6)" }}
+            className="eyebrow mb-4 block"
+            style={{ color: "rgba(247,246,235,0.5)" }}
           >
             Testimonials
           </span>
           <h2
-            className="headline-text"
-            style={{
-              fontSize: "var(--text-4xl)",
-              color: "var(--color-soft-ivory)",
-            }}
+            className="headline-section"
+            style={{ color: "var(--color-glaze)" }}
           >
             Words from{" "}
-            <span className="accent-text" style={{ color: "var(--color-matcha)" }}>
-              Our Clients
-            </span>
+            <span style={{ color: "var(--color-matcha)" }}>Our Clients</span>
           </h2>
         </motion.div>
 
@@ -103,12 +99,13 @@ export default function TestimonialSection() {
         >
           {/* Decorative large quote mark */}
           <div
-            className="accent-text pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none"
+            className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none"
             style={{
+              fontFamily: "var(--font-headline)",
               fontSize: "clamp(6rem, 4rem + 10vw, 12rem)",
               lineHeight: 1,
-              color: "var(--color-soft-ivory)",
-              opacity: 0.08,
+              color: "var(--color-glaze)",
+              opacity: 0.06,
             }}
           >
             &ldquo;
@@ -125,30 +122,25 @@ export default function TestimonialSection() {
                 className="absolute inset-0 flex flex-col items-center justify-center"
               >
                 <blockquote
-                  className="accent-text mb-8 leading-relaxed"
-                  style={{
-                    fontSize: "var(--text-2xl)",
-                    color: "var(--color-soft-ivory)",
-                  }}
+                  className="text-editorial mb-8"
+                  style={{ color: "var(--color-glaze)" }}
                 >
                   &ldquo;{testimonials[current].quote}&rdquo;
                 </blockquote>
                 <div>
                   <p
-                    className="editorial-spacing mb-1"
+                    className="eyebrow mb-1"
                     style={{
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-soft-ivory)",
-                      letterSpacing: "0.2em",
+                      color: "var(--color-glaze)",
                     }}
                   >
                     {testimonials[current].name}
                   </p>
                   <p
-                    className="accent-text"
                     style={{
-                      fontSize: "var(--text-sm)",
-                      color: "rgba(247, 246, 235, 0.6)",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.875rem",
+                      color: "rgba(247,246,235,0.5)",
                     }}
                   >
                     {testimonials[current].treatment}
@@ -164,8 +156,8 @@ export default function TestimonialSection() {
               onClick={prev}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
               style={{
-                border: "1px solid rgba(247, 246, 235, 0.25)",
-                color: "var(--color-soft-ivory)",
+                border: "1px solid rgba(247,246,235,0.2)",
+                color: "var(--color-glaze)",
               }}
               aria-label="Previous testimonial"
             >
@@ -177,16 +169,16 @@ export default function TestimonialSection() {
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
-                  className="group relative h-2 w-2 rounded-full transition-all"
+                  className="rounded-full transition-all"
                   style={{
+                    height: "0.5rem",
                     backgroundColor:
                       i === current
-                        ? "var(--color-soft-ivory)"
-                        : "rgba(247, 246, 235, 0.25)",
+                        ? "var(--color-glaze)"
+                        : "rgba(247,246,235,0.2)",
                     width: i === current ? "2rem" : "0.5rem",
-                    borderRadius: "var(--border-radius-full)",
-                    transition:
-                      "all var(--duration-normal) var(--ease-smooth)",
+                    borderRadius: "9999px",
+                    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                   aria-label={`Go to testimonial ${i + 1}`}
                 />
@@ -197,8 +189,8 @@ export default function TestimonialSection() {
               onClick={next}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
               style={{
-                border: "1px solid rgba(247, 246, 235, 0.25)",
-                color: "var(--color-soft-ivory)",
+                border: "1px solid rgba(247,246,235,0.2)",
+                color: "var(--color-glaze)",
               }}
               aria-label="Next testimonial"
             >

@@ -49,79 +49,65 @@ export default function HeroSection() {
           <source src={demoImages.hero.videoWebm} type="video/webm" />
           <source src={demoImages.hero.video} type="video/mp4" />
         </video>
-        {/* Warm layered gradient overlay */}
+        {/* 4-stop gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(57,30,30,0.6) 0%, rgba(57,30,30,0.3) 40%, rgba(57,30,30,0.4) 70%, rgba(57,30,30,0.7) 100%)",
+              "linear-gradient(180deg, rgba(57,30,30,0.55) 0%, rgba(57,30,30,0.25) 40%, rgba(57,30,30,0.35) 70%, rgba(57,30,30,0.7) 100%)",
           }}
         />
       </div>
 
       {/* Content — left-aligned on desktop, centered on mobile */}
-      <div className="relative z-10 mx-auto w-full max-w-[var(--max-width)] px-6 lg:px-10">
+      <div className="container-page relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex max-w-2xl flex-col items-start text-left"
+          className="flex max-w-2xl flex-col items-center text-center lg:items-start lg:text-left"
         >
-          {/* Overline label */}
-          <motion.div
+          {/* Eyebrow label */}
+          <motion.span
             variants={fadeUpVariants}
-            className="editorial-spacing mb-6"
-            style={{ color: "var(--color-accent-light)" }}
+            className="eyebrow mb-6"
+            style={{ color: "rgba(247,246,235,0.6)" }}
           >
             Luxury Aesthetic Studio
-          </motion.div>
+          </motion.span>
 
-          {/* Headline — large, editorial */}
+          {/* Headline */}
           <motion.h1
             variants={fadeUpVariants}
-            style={{
-              fontFamily: "var(--font-headline)",
-              fontSize: "var(--text-hero)",
-              color: "var(--color-soft-ivory)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.02,
-              fontWeight: 400,
-            }}
+            className="headline-display"
+            style={{ color: "var(--color-glaze)" }}
           >
             Elevated Beauty,
             <br />
-            <span
-              className="accent-text"
-              style={{ color: "var(--color-cream)" }}
-            >
-              Thoughtfully
-            </span>{" "}
-            Designed
+            Thoughtfully Designed
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             variants={fadeUpVariants}
-            className="mt-8 max-w-md leading-relaxed"
+            className="body-lg mt-8 max-w-md"
             style={{
-              fontSize: "var(--text-lg)",
-              color: "rgba(247, 246, 235, 0.75)",
-              fontWeight: 300,
+              color: "rgba(247,246,235,0.65)",
             }}
           >
             Personalized aesthetic treatments crafted with precision,
             artistry, and an unwavering commitment to your unique radiance.
           </motion.p>
 
-          {/* CTA */}
+          {/* CTA buttons */}
           <motion.div
             variants={fadeUpVariants}
             className="mt-10 flex flex-col gap-4 sm:flex-row"
           >
-            <Link href="/booking" className="btn btn-light">
+            <Link href="/booking" className="btn-primary">
               Book Consultation
             </Link>
-            <Link href="/services" className="btn btn-light-outline">
+            <Link href="/services" className="btn-light-outline">
               Explore Services
             </Link>
           </motion.div>
@@ -137,18 +123,17 @@ export default function HeroSection() {
         style={{ transformOrigin: "top" }}
       >
         <span
-          className="editorial-spacing"
+          className="eyebrow"
           style={{
             fontSize: "0.6rem",
-            letterSpacing: "0.25em",
-            color: "rgba(247, 246, 235, 0.5)",
+            color: "rgba(247,246,235,0.4)",
           }}
         >
           Scroll
         </span>
         <div
           className="h-12 w-[1px]"
-          style={{ backgroundColor: "rgba(247, 246, 235, 0.3)" }}
+          style={{ backgroundColor: "rgba(247,246,235,0.4)" }}
         />
       </motion.div>
     </section>

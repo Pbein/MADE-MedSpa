@@ -29,33 +29,39 @@ export default function Accordion({ items }: AccordionProps) {
         return (
           <div
             key={index}
-            style={{ borderBottom: "1px solid var(--color-border)" }}
+            style={{ borderBottom: "1px solid var(--color-line)" }}
           >
             <button
               onClick={() => toggle(index)}
-              className="flex w-full items-center justify-between py-6 text-left"
-              style={{ cursor: "pointer", background: "none", border: "none" }}
+              className="flex w-full items-center justify-between text-left"
+              style={{
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+                padding: "1.5rem 0",
+              }}
               aria-expanded={isOpen}
             >
-              <h6
-                className="headline-text pr-4"
+              <span
+                className="pr-4"
                 style={{
-                  fontSize: "var(--text-lg)",
-                  color: "var(--color-deep-cocoa)",
-                  margin: 0,
-                  fontWeight: 400,
+                  fontFamily: "var(--font-display, 'Playfair Display', serif)",
+                  fontSize: "1.125rem",
+                  color: "var(--color-ink)",
+                  fontWeight: 500,
+                  lineHeight: 1.4,
                 }}
               >
                 {item.question}
-              </h6>
+              </span>
 
               <motion.span
                 animate={{ rotate: isOpen ? 45 : 0 }}
                 transition={{ duration: 0.3, ease: luxuryEase }}
                 className="flex-shrink-0"
                 style={{
-                  fontSize: "var(--text-2xl)",
-                  color: "var(--color-accent-text)",
+                  fontSize: "1.5rem",
+                  color: "var(--color-blush)",
                   lineHeight: 1,
                   fontWeight: 300,
                 }}
@@ -74,14 +80,11 @@ export default function Accordion({ items }: AccordionProps) {
                   style={{ overflow: "hidden" }}
                 >
                   <p
-                    className="pb-6"
+                    className="body-md"
                     style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "var(--text-base)",
-                      color: "var(--color-warm-taupe)",
-                      lineHeight: 1.7,
+                      color: "var(--color-olive)",
                       margin: 0,
-                      fontWeight: 300,
+                      paddingBottom: "1.5rem",
                     }}
                   >
                     {item.answer}

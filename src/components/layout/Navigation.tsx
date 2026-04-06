@@ -56,17 +56,18 @@ export default function Navigation() {
             : "transparent",
           backdropFilter: isScrolled ? "blur(16px)" : undefined,
           boxShadow: isScrolled ? "var(--shadow-sm)" : undefined,
-          color: isHeroOverlay ? "var(--color-soft-ivory)" : undefined,
         }}
       >
         <div className="mx-auto flex h-full max-w-[var(--max-width)] items-center justify-between px-6 lg:px-10">
           {/* Logo */}
           <Link
             href="/"
-            className="headline-text shrink-0 text-2xl tracking-[0.2em] transition-colors"
+            className="shrink-0 text-2xl tracking-[0.2em] transition-colors"
             style={{
               fontFamily: "var(--font-headline)",
-              color: isHeroOverlay ? "var(--color-soft-ivory)" : "var(--color-deep-cocoa)",
+              color: isHeroOverlay
+                ? "var(--color-glaze)"
+                : "var(--color-espresso)",
               transitionDuration: "var(--duration-normal)",
             }}
           >
@@ -79,11 +80,11 @@ export default function Navigation() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="editorial-spacing hover-underline transition-colors duration-[var(--duration-fast)]"
+                  className="eyebrow hover-underline transition-colors duration-[var(--duration-fast)]"
                   style={{
                     color: isHeroOverlay
                       ? "rgba(247, 246, 235, 0.8)"
-                      : "var(--color-warm-taupe)",
+                      : "var(--color-olive)",
                   }}
                 >
                   {link.label}
@@ -96,7 +97,7 @@ export default function Navigation() {
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/booking"
-              className={cn("btn", isHeroOverlay ? "btn-light" : "btn-primary")}
+              className={cn(isHeroOverlay ? "btn-light" : "btn-primary")}
               style={{ padding: "0.625rem 1.75rem" }}
             >
               Book Now
@@ -118,10 +119,10 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-deep-cocoa)"
+                    ? "var(--color-espresso)"
                     : isHeroOverlay
-                      ? "var(--color-soft-ivory)"
-                      : "var(--color-deep-cocoa)",
+                      ? "var(--color-glaze)"
+                      : "var(--color-espresso)",
                   transitionDuration: "var(--duration-normal)",
                   transitionTimingFunction: "var(--ease-smooth)",
                 }}
@@ -133,10 +134,10 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-deep-cocoa)"
+                    ? "var(--color-espresso)"
                     : isHeroOverlay
-                      ? "var(--color-soft-ivory)"
-                      : "var(--color-deep-cocoa)",
+                      ? "var(--color-glaze)"
+                      : "var(--color-espresso)",
                   transitionDuration: "var(--duration-fast)",
                 }}
               />
@@ -147,10 +148,10 @@ export default function Navigation() {
                 )}
                 style={{
                   backgroundColor: isMobileMenuOpen
-                    ? "var(--color-deep-cocoa)"
+                    ? "var(--color-espresso)"
                     : isHeroOverlay
-                      ? "var(--color-soft-ivory)"
-                      : "var(--color-deep-cocoa)",
+                      ? "var(--color-glaze)"
+                      : "var(--color-espresso)",
                   transitionDuration: "var(--duration-normal)",
                   transitionTimingFunction: "var(--ease-smooth)",
                 }}
@@ -169,7 +170,8 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 bg-[var(--color-deep-cocoa)]/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 backdrop-blur-sm lg:hidden"
+              style={{ backgroundColor: "rgba(57, 30, 30, 0.5)" }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -180,10 +182,13 @@ export default function Navigation() {
               transition={{
                 type: "tween",
                 duration: 0.5,
-                ease: [0.16, 1, 0.3, 1],
+                ease: [0.16, 1, 0.3, 1] as const,
               }}
-              className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col px-8 pt-28 pb-10 shadow-[var(--shadow-xl)] lg:hidden"
-              style={{ backgroundColor: "var(--color-linen)" }}
+              className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col px-8 pt-28 pb-10 lg:hidden"
+              style={{
+                backgroundColor: "var(--color-silk)",
+                boxShadow: "var(--shadow-xl)",
+              }}
             >
               <ul className="flex flex-col gap-6">
                 {navLinks.map((link, index) => (
@@ -194,14 +199,17 @@ export default function Navigation() {
                     transition={{
                       delay: 0.1 + index * 0.05,
                       duration: 0.4,
-                      ease: [0.16, 1, 0.3, 1],
+                      ease: [0.16, 1, 0.3, 1] as const,
                     }}
                   >
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="headline-text block text-2xl transition-colors"
-                      style={{ color: "var(--color-deep-cocoa)" }}
+                      className="block text-2xl transition-colors"
+                      style={{
+                        fontFamily: "var(--font-headline)",
+                        color: "var(--color-espresso)",
+                      }}
                     >
                       {link.label}
                     </Link>
@@ -215,14 +223,14 @@ export default function Navigation() {
                 transition={{
                   delay: 0.5,
                   duration: 0.4,
-                  ease: [0.16, 1, 0.3, 1],
+                  ease: [0.16, 1, 0.3, 1] as const,
                 }}
                 className="mt-auto"
               >
                 <Link
                   href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="btn btn-primary w-full text-center"
+                  className="btn-primary w-full text-center"
                 >
                   Book Consultation
                 </Link>
