@@ -25,18 +25,54 @@ export default function CTABanner({
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
-    <section ref={ref}>
-      <div>
+    <section
+      ref={ref}
+      className={`py-60 text-center ${
+        dark
+          ? "bg-[var(--color-primary)] text-[var(--color-surface)]"
+          : "bg-[var(--color-surface)] text-[var(--color-primary)]"
+      }`}
+    >
+      <div className="max-w-2xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: luxuryEase }}
+          className="flex flex-col items-center"
         >
-          <h2>{headline}</h2>
+          <h2 className="headline-section text-5xl italic mb-12">
+            {headline}
+          </h2>
 
-          {subtitle && <p>{subtitle}</p>}
+          {subtitle && (
+            <p
+              className={`body-editorial mb-16 ${
+                dark
+                  ? "text-[var(--color-surface-variant)]/70"
+                  : "text-[var(--color-on-surface-variant)]"
+              }`}
+            >
+              {subtitle}
+            </p>
+          )}
 
-          <Link href={ctaHref}>{ctaText}</Link>
+          <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+            <Link
+              href={ctaHref}
+              className={dark ? "btn-light" : "btn-primary"}
+            >
+              {ctaText}
+            </Link>
+
+            <Link
+              href="/services"
+              className={`link-ghost ${
+                dark ? "text-[var(--color-surface)]" : "text-[var(--color-primary)]"
+              }`}
+            >
+              Our Full Menu
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -83,21 +83,37 @@ export default function AboutPage() {
   return (
     <>
       {/* HERO */}
-      <section>
+      <section
+        className="pt-48 pb-40 px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
         <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
+          className="max-w-4xl mx-auto text-center"
         >
-          <motion.span variants={revealUp}>
+          <motion.span
+            variants={revealUp}
+            className="label-micro block mb-6"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
             About MADE
           </motion.span>
 
-          <motion.h1 variants={revealUp}>
-            Our Story
+          <motion.h1
+            variants={revealUp}
+            className="headline-editorial text-5xl md:text-8xl mb-8"
+            style={{ color: "var(--color-primary)" }}
+          >
+            The Art of Intentional Beauty
           </motion.h1>
 
-          <motion.p variants={revealUp}>
+          <motion.p
+            variants={revealUp}
+            className="body-editorial max-w-2xl mx-auto"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
             A luxury aesthetic studio built on the belief that beauty is
             personal, science is essential, and every detail matters.
           </motion.p>
@@ -105,15 +121,31 @@ export default function AboutPage() {
       </section>
 
       {/* STORY */}
-      <section>
-        <div>
+      <section
+        className="py-32 px-6"
+        style={{ backgroundColor: "var(--color-surface-low)" }}
+      >
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={revealLeft}
+            className="md:col-span-5"
           >
-            <img src="/placeholder.svg" alt="MADE Med Spa studio interior" />
+            <div
+              className="image-editorial aspect-[4/5] w-full"
+              style={{
+                backgroundColor: "var(--color-surface-highest)",
+                boxShadow: "12px 12px 40px rgba(32,10,10,0.06)",
+              }}
+            >
+              <img
+                src="/placeholder.svg"
+                alt="MADE Med Spa studio interior"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </motion.div>
 
           <motion.div
@@ -121,30 +153,54 @@ export default function AboutPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
+            className="md:col-span-7"
           >
-            <motion.span variants={revealRight}>
+            <motion.span
+              variants={revealRight}
+              className="label-micro block mb-4"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
               Our Beginning
             </motion.span>
 
-            <motion.h2 variants={revealRight}>
+            <motion.h2
+              variants={revealRight}
+              className="headline-section text-3xl md:text-5xl mb-8"
+              style={{ color: "var(--color-primary)" }}
+            >
               {story?.title || "Founded on Passion"}
             </motion.h2>
 
-            <motion.div variants={revealRight}>
+            <motion.div
+              variants={revealRight}
+              className="space-y-6"
+            >
               {story?.body ? (
                 story.body.split("\n\n").map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
+                  <p
+                    key={i}
+                    className="body-editorial"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
+                    {paragraph}
+                  </p>
                 ))
               ) : (
                 <>
-                  <p>
+                  <p
+                    className="body-editorial"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
                     MADE was born from a vision to create a space where aesthetic
                     medicine meets genuine artistry. Our founder believed that
                     true beauty enhancement requires more than technical
                     skill&mdash;it demands an understanding of each
                     individual&rsquo;s unique features, aspirations, and story.
                   </p>
-                  <p>
+                  <p
+                    className="body-editorial"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
                     Every treatment at MADE is thoughtfully designed, never
                     rushed. We take the time to listen, to understand, and to
                     craft results that feel authentically you. Because at MADE,
@@ -158,24 +214,38 @@ export default function AboutPage() {
       </section>
 
       {/* MISSION */}
-      <section>
+      <section
+        className="py-32 px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
+          className="max-w-3xl mx-auto text-center"
         >
-          <motion.div variants={revealUp} />
-
-          <motion.span variants={revealUp}>
+          <motion.span
+            variants={revealUp}
+            className="label-micro block mb-4"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
             Our Mission
           </motion.span>
 
-          <motion.h2 variants={revealUp}>
+          <motion.h2
+            variants={revealUp}
+            className="headline-section text-3xl md:text-5xl mb-8"
+            style={{ color: "var(--color-primary)" }}
+          >
             {mission?.title || "Elevating Natural Beauty"}
           </motion.h2>
 
-          <motion.p variants={revealUp}>
+          <motion.p
+            variants={revealUp}
+            className="body-editorial"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
             {mission?.body ||
               "To empower every guest with confidence through personalized, science-backed aesthetic treatments delivered in an atmosphere of warmth, luxury, and unwavering care."}
           </motion.p>
@@ -183,30 +253,63 @@ export default function AboutPage() {
       </section>
 
       {/* VALUES */}
-      <section>
+      <section
+        className="py-32 px-6"
+        style={{ backgroundColor: "var(--color-surface-highest)" }}
+      >
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
+          className="max-w-7xl mx-auto"
         >
-          <motion.div variants={revealUp}>
-            <span>{valuesContent?.title || "What Guides Us"}</span>
-            <h2>Our Values</h2>
+          <motion.div variants={revealUp} className="text-center mb-20">
+            <span
+              className="label-micro block mb-4"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
+              {valuesContent?.title || "What Guides Us"}
+            </span>
+            <h2
+              className="headline-section text-3xl md:text-5xl"
+              style={{ color: "var(--color-primary)" }}
+            >
+              Our Values
+            </h2>
           </motion.div>
 
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {values.map((value) => (
               <motion.div key={value.number} variants={revealUp}>
-                <div>{value.number}</div>
-                <h3>{value.title}</h3>
-                <p>{value.description}</p>
+                <div
+                  className="label-micro text-2xl mb-4"
+                  style={{ color: "var(--color-secondary)" }}
+                >
+                  {value.number}
+                </div>
+                <h3
+                  className="font-headline italic text-2xl mb-4"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  {value.title}
+                </h3>
+                <p
+                  className="body-editorial"
+                  style={{ color: "var(--color-on-surface-variant)" }}
+                >
+                  {value.description}
+                </p>
               </motion.div>
             ))}
           </div>
 
           {valuesContent?.body && (
-            <motion.p variants={revealUp}>
+            <motion.p
+              variants={revealUp}
+              className="body-editorial text-center mt-16 max-w-2xl mx-auto"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
               {valuesContent.body}
             </motion.p>
           )}
@@ -214,18 +317,30 @@ export default function AboutPage() {
       </section>
 
       {/* TEAM */}
-      <section>
-        <div>
+      <section
+        className="py-32 px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
+            className="text-center mb-20"
           >
-            <motion.span variants={revealUp}>
+            <motion.span
+              variants={revealUp}
+              className="label-micro block mb-4"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
               The Team
             </motion.span>
-            <motion.h2 variants={revealUp}>
+            <motion.h2
+              variants={revealUp}
+              className="headline-section text-3xl md:text-5xl"
+              style={{ color: "var(--color-primary)" }}
+            >
               Meet the Experts
             </motion.h2>
           </motion.div>
@@ -235,21 +350,48 @@ export default function AboutPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"
           >
-            {teamMembers.map((member, index) => (
+            {teamMembers.map((member) => (
               <motion.div key={member.name} variants={revealUp}>
-                {/* Initials circle */}
-                <div>
-                  {member.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                {/* Portrait placeholder */}
+                <div
+                  className="image-editorial aspect-[3/4] w-full mb-6 flex items-center justify-center"
+                  style={{
+                    backgroundColor: "var(--color-surface-low)",
+                    boxShadow: "8px 8px 30px rgba(32,10,10,0.06)",
+                  }}
+                >
+                  <span
+                    className="font-headline italic text-4xl"
+                    style={{ color: "var(--color-outline-variant)" }}
+                  >
+                    {member.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </span>
                 </div>
 
                 <div>
-                  <h3>{member.name}</h3>
-                  <p>{member.title}</p>
-                  <p>{member.bio}</p>
+                  <h3
+                    className="label-micro text-sm mb-1"
+                    style={{ color: "var(--color-primary)" }}
+                  >
+                    {member.name}
+                  </h3>
+                  <p
+                    className="text-sm mb-3"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
+                    {member.title}
+                  </p>
+                  <p
+                    className="body-editorial text-sm"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
+                    {member.bio}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -258,26 +400,39 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section>
+      <section
+        className="py-32 px-6"
+        style={{ backgroundColor: "var(--color-primary)" }}
+      >
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
+          className="max-w-3xl mx-auto text-center"
         >
-          <motion.div variants={revealUp} />
-
-          <motion.h2 variants={revealUp}>
+          <motion.h2
+            variants={revealUp}
+            className="headline-section text-3xl md:text-5xl mb-8"
+            style={{ color: "var(--color-surface)" }}
+          >
             Ready to experience the MADE difference?
           </motion.h2>
 
-          <motion.p variants={revealUp}>
+          <motion.p
+            variants={revealUp}
+            className="body-editorial mb-12"
+            style={{ color: "var(--color-outline-variant)" }}
+          >
             Your journey to elevated beauty begins with a single conversation.
             Let us craft a personalized plan just for you.
           </motion.p>
 
           <motion.div variants={revealUp}>
-            <Link href="/booking">
+            <Link
+              href="/booking"
+              className="btn-light inline-block"
+            >
               Book Consultation
             </Link>
           </motion.div>

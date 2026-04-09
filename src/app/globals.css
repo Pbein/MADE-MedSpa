@@ -1,29 +1,311 @@
 @import "tailwindcss";
 
 /* ============================================
-   MADE Med Spa — Bare Skeleton
-   All design tokens and visual styles removed.
-   This file should only contain structural resets
-   and the admin dashboard override.
+   MADE Med Spa — Editorial Design System
+   Derived from Google Stitch "Refined Med Spa"
+   Sharp corners · No-line rule · Massive whitespace
    ============================================ */
 
-*, *::before, *::after {
-  box-sizing: border-box;
+:root {
+  /* --- Core Palette --- */
+  --color-primary: #200a0a;
+  --color-primary-container: #391e1e;
+  --color-secondary: #a23c40;
+  --color-tertiary: #838d60;
+
+  /* --- Surfaces --- */
+  --color-surface: #fbfaef;
+  --color-surface-low: #f5f4e9;
+  --color-surface-high: #e9e9de;
+  --color-surface-highest: #e4e3d8;
+  --color-surface-lowest: #ffffff;
+  --color-surface-variant: #e4e3d8;
+
+  /* --- Text --- */
+  --color-on-surface: #1b1c16;
+  --color-on-surface-variant: #504443;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #ab8382;
+
+  /* --- Accents & Borders --- */
+  --color-outline: #827473;
+  --color-outline-variant: #d4c3c2;
+  --color-tertiary-fixed: #dde8b4;
+  --color-tertiary-fixed-dim: #c1cc9a;
+  --color-secondary-fixed: #ffdad9;
+
+  /* --- Typography --- */
+  --font-headline: var(--font-playfair), "Playfair Display", "Newsreader", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
+  --font-label: var(--font-inter), "Inter", "Manrope", sans-serif;
+
+  /* --- Spacing (luxury = breathing room) --- */
+  --space-section: clamp(8rem, 6rem + 8vw, 12rem);
+  --space-section-lg: clamp(10rem, 8rem + 10vw, 15rem);
+  --nav-height: 96px;
+  --max-width: 1400px;
+
+  /* --- Animation: "The Slow Reveal" --- */
+  --ease-editorial: cubic-bezier(0.2, 0, 0, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-slow: 800ms;
+  --duration-medium: 500ms;
+  --duration-fast: 300ms;
+  --duration-hover: 500ms;
+
+  /* --- Shadows (warm-tinted, atmospheric) --- */
+  --shadow-ambient: 0 20px 60px rgba(32, 10, 10, 0.06);
+  --shadow-card: 0 10px 40px rgba(32, 10, 10, 0.05);
+  --shadow-elevated: 0 30px 80px rgba(32, 10, 10, 0.08);
+  --shadow-nav: 0 1px 0 rgba(212, 195, 194, 0.15);
 }
+
+/* --- Tailwind v4 Theme --- */
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-container: var(--color-primary-container);
+  --color-secondary: var(--color-secondary);
+  --color-surface: var(--color-surface);
+  --color-surface-low: var(--color-surface-low);
+  --color-surface-high: var(--color-surface-high);
+  --color-surface-highest: var(--color-surface-highest);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-tertiary-fixed: var(--color-tertiary-fixed);
+  --font-sans: var(--font-body);
+  --font-headline: var(--font-headline);
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* Subtle paper grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* --- Headings: Editorial serif --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headline);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-hover) var(--ease-editorial);
+}
+
+::selection {
+  background-color: var(--color-secondary-fixed);
+  color: var(--color-primary);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-outline-variant); }
+
+/* ============================================
+   Editorial Typography Utilities
+   ============================================ */
+
+/* Micro label — tags, categories, eyebrows */
+.label-micro {
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  line-height: 1;
+}
+
+/* Headline display — hero-scale */
+.headline-editorial {
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Section headline */
+.headline-section {
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+/* Body text */
+.body-editorial {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================
+   Buttons — Editorial, Sharp
+   ============================================ */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background-color var(--duration-hover) var(--ease-editorial);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-container);
+}
+
+.btn-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 4rem;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border: none;
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background-color var(--duration-hover) var(--ease-editorial);
+}
+
+.btn-light:hover {
+  background-color: var(--color-surface-high);
+}
+
+/* Underline link — editorial secondary action */
+.link-editorial {
+  display: inline-block;
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-secondary);
+  padding-bottom: 0.5rem;
+  transition: color var(--duration-hover) var(--ease-editorial);
+}
+
+.link-editorial:hover {
+  color: var(--color-secondary);
+}
+
+/* Ghost link — subtle uppercase */
+.link-ghost {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  opacity: 0.6;
+  transition: opacity var(--duration-hover) var(--ease-editorial);
+}
+
+.link-ghost:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   Form Inputs — Minimalist bottom-border
+   ============================================ */
+
+.input-editorial {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-outline-variant);
+  padding: 0.75rem 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-primary);
+  width: 100%;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-editorial);
+}
+
+.input-editorial:focus {
+  border-color: var(--color-primary);
+}
+
+.input-editorial::placeholder {
+  color: var(--color-on-surface-variant);
+  opacity: 0.6;
+}
+
+/* ============================================
+   Image Treatments — Warm, Desaturated
+   ============================================ */
+
+.image-editorial {
+  filter: grayscale(20%) sepia(10%) brightness(0.9);
+}
+
+.image-editorial-strong {
+  filter: grayscale(30%);
+}
+
+.image-editorial-light {
+  filter: grayscale(10%);
+}
+
+/* ============================================
+   Utility: Frosted Glass
+   ============================================ */
+
+.frosted {
+  background-color: rgba(251, 250, 239, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
 /* ============================================
    Admin Dashboard Override
-   (Do not remove — admin uses separate palette)
+   (Completely separate — do not touch)
    ============================================ */
 
 .admin-content,

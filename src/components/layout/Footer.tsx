@@ -40,21 +40,14 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
   ],
 };
 
-const quickLinks = [
-  { href: "/about", label: "About Us" },
+const footerLinks = [
+  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/faq", label: "FAQ" },
   { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
-];
-
-const services = [
-  { href: "/services#injectables", label: "Injectables" },
-  { href: "/services#facials", label: "Facials" },
-  { href: "/services#body", label: "Body Treatments" },
-  { href: "/services#skin", label: "Skin Rejuvenation" },
-  { href: "/services#laser", label: "Laser Treatments" },
-  { href: "/services#wellness", label: "Wellness" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
 ];
 
 export default function Footer() {
@@ -82,126 +75,109 @@ export default function Footer() {
   };
 
   return (
-    <footer>
-      {/* Top accent line */}
-      <div />
+    <footer
+      className="w-full flex flex-col items-center gap-12 px-6 md:px-12 py-16 md:py-24"
+      style={{
+        backgroundColor: "var(--color-surface-low)",
+        borderTop: "1px solid rgba(212, 195, 194, 0.15)",
+      }}
+    >
+      {/* Brand */}
+      <Link
+        href="/"
+        className="font-headline italic text-lg transition-colors duration-500"
+        style={{ color: "var(--color-primary)" }}
+      >
+        MADE
+      </Link>
 
-      {/* Main Footer Content */}
-      <div>
-        <div>
-          {/* Brand Column */}
-          <div>
-            <Link href="/">
-              MADE
-            </Link>
-            <p>
-              Where science meets artistry. Personalized aesthetic treatments
-              crafted for your unique beauty.
-            </p>
-            {/* Social Links */}
-            <div>
-              {info.socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                >
-                  {social.label[0]}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Links Column */}
-          <div>
-            <h4>Quick Links</h4>
-            <ul>
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services Column */}
-          <div>
-            <h4>Services</h4>
-            <ul>
-              {services.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact & Newsletter Column */}
-          <div>
-            <h4>Contact</h4>
-            <div>
-              <p>{info.addressLine1}</p>
-              <p>{info.addressLine2}</p>
-              <a href={info.phoneHref}>
-                {info.phone}
-              </a>
-              <a href={info.emailHref}>
-                {info.email}
-              </a>
-            </div>
-
-            {/* Newsletter */}
-            <h4>Newsletter</h4>
-            <form onSubmit={handleNewsletterSubmit}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email"
-                aria-label="Email for newsletter"
-                disabled={status === "loading"}
-              />
-              <button
-                type="submit"
-                disabled={status === "loading"}
-              >
-                {status === "loading"
-                  ? "..."
-                  : status === "success"
-                    ? "Joined!"
-                    : "Join"}
-              </button>
-            </form>
-            {status === "success" && (
-              <p>Welcome to the MADE family!</p>
-            )}
-            {status === "error" && (
-              <p>Something went wrong. Please try again.</p>
-            )}
-          </div>
-        </div>
+      {/* Navigation Links */}
+      <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 md:gap-12">
+        {footerLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="link-ghost"
+            style={{ color: "var(--color-primary)" }}
+          >
+            {link.label}
+          </Link>
+        ))}
+        {info.socials.map((social) => (
+          <a
+            key={social.label}
+            href={social.href}
+            className="link-ghost"
+            style={{ color: "var(--color-primary)" }}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.label}
+          >
+            {social.label}
+          </a>
+        ))}
       </div>
 
-      {/* Copyright Bar */}
-      <div>
-        <div>
-          <p>
-            &copy; {currentYear} MADE Med Spa. All rights reserved.
-          </p>
-          <div>
-            <Link href="/privacy">
-              Privacy Policy
-            </Link>
-            <Link href="/terms">
-              Terms of Service
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Newsletter */}
+      <form
+        onSubmit={handleNewsletterSubmit}
+        className="flex items-end gap-4 w-full max-w-sm"
+      >
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your email for updates"
+          aria-label="Email for newsletter"
+          disabled={status === "loading"}
+          className="input-editorial flex-1"
+        />
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="link-ghost shrink-0 pb-3 cursor-pointer"
+          style={{ color: "var(--color-primary)" }}
+        >
+          {status === "loading"
+            ? "..."
+            : status === "success"
+              ? "Joined!"
+              : "Subscribe"}
+        </button>
+      </form>
+      {status === "success" && (
+        <p
+          className="label-micro"
+          style={{ color: "var(--color-tertiary)", marginTop: "-2rem" }}
+        >
+          Welcome to the MADE family!
+        </p>
+      )}
+      {status === "error" && (
+        <p
+          className="label-micro"
+          style={{ color: "var(--color-secondary)", marginTop: "-2rem" }}
+        >
+          Something went wrong. Please try again.
+        </p>
+      )}
+
+      {/* Address */}
+      <p
+        className="label-micro text-center"
+        style={{ color: "var(--color-primary)", opacity: 0.4 }}
+      >
+        {info.addressLine1} &middot; {info.addressLine2} &middot;{" "}
+        <a href={info.phoneHref}>{info.phone}</a>
+      </p>
+
+      {/* Copyright */}
+      <p
+        className="label-micro"
+        style={{ color: "var(--color-primary)", opacity: 0.4 }}
+      >
+        &copy; {currentYear} MADE Med Spa. All rights reserved.
+      </p>
     </footer>
   );
 }

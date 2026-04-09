@@ -22,21 +22,34 @@ export default function Accordion({ items }: AccordionProps) {
   };
 
   return (
-    <div>
+    <div className="w-full">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
 
         return (
-          <div key={index}>
+          <div
+            key={index}
+            className="border-b"
+            style={{ borderColor: "rgba(212, 195, 194, 0.2)" }}
+          >
             <button
               onClick={() => toggle(index)}
               aria-expanded={isOpen}
+              className="w-full flex items-center justify-between py-6 text-left cursor-pointer group"
+              style={{ transition: "color 400ms ease" }}
             >
-              <span>{item.question}</span>
+              <span
+                className="font-headline italic text-xl"
+                style={{ color: "var(--color-primary)" }}
+              >
+                {item.question}
+              </span>
 
               <motion.span
                 animate={{ rotate: isOpen ? 45 : 0 }}
-                transition={{ duration: 0.3, ease: luxuryEase }}
+                transition={{ duration: 0.4, ease: luxuryEase }}
+                className="flex-shrink-0 ml-6 text-2xl font-light select-none"
+                style={{ color: "var(--color-secondary)" }}
               >
                 +
               </motion.span>
@@ -49,8 +62,14 @@ export default function Accordion({ items }: AccordionProps) {
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.4, ease: luxuryEase }}
+                  className="overflow-hidden"
                 >
-                  <p>{item.answer}</p>
+                  <p
+                    className="body-editorial pb-6"
+                    style={{ color: "var(--color-on-surface-variant)" }}
+                  >
+                    {item.answer}
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>

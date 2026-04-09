@@ -6,9 +6,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
@@ -42,41 +41,122 @@ export default function Navigation() {
 
   return (
     <>
-      <nav>
-        <div>
+      <nav
+        className="fixed top-0 w-full z-50 transition-all duration-500"
+        style={{
+          backgroundColor: isHeroOverlay
+            ? "transparent"
+            : "rgba(251, 250, 239, 0.85)",
+          backdropFilter: isHeroOverlay ? "none" : "blur(20px)",
+          WebkitBackdropFilter: isHeroOverlay ? "none" : "blur(20px)",
+          boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
+        }}
+      >
+        <div className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8">
           {/* Logo */}
-          <Link href="/">
+          <Link
+            href="/"
+            className="font-headline italic text-2xl tracking-tight transition-colors duration-500"
+            style={{
+              color: isHeroOverlay
+                ? "var(--color-on-primary)"
+                : "var(--color-primary)",
+            }}
+          >
             MADE
           </Link>
 
           {/* Desktop Nav Links */}
-          <ul>
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href}>
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+          <ul className="hidden md:flex gap-12 items-center">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="font-headline italic tracking-wide text-base transition-all duration-500"
+                    style={{
+                      color: isHeroOverlay
+                        ? "var(--color-on-primary)"
+                        : "var(--color-primary)",
+                      opacity: isActive ? 1 : 0.6,
+                      borderBottom: isActive
+                        ? isHeroOverlay
+                          ? "1px solid var(--color-on-primary)"
+                          : "1px solid var(--color-primary)"
+                        : "1px solid transparent",
+                      paddingBottom: "0.25rem",
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Desktop CTA */}
-          <div>
-            <Link href="/booking">
-              Book Now
+          <div className="hidden md:block">
+            <Link
+              href="/booking"
+              className="btn-primary"
+              style={{
+                padding: "0.75rem 2rem",
+                fontSize: "0.95rem",
+              }}
+            >
+              Book Appointment
             </Link>
           </div>
 
           {/* Mobile: Hamburger */}
-          <div>
+          <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
+              className="relative w-8 h-6 flex flex-col justify-between"
             >
-              <span />
-              <span />
-              <span />
+              <span
+                className="block w-full h-[1.5px] transition-all duration-500 origin-center"
+                style={{
+                  backgroundColor:
+                    isMobileMenuOpen
+                      ? "var(--color-primary)"
+                      : isHeroOverlay
+                        ? "var(--color-on-primary)"
+                        : "var(--color-primary)",
+                  transform: isMobileMenuOpen
+                    ? "translateY(10px) rotate(45deg)"
+                    : "none",
+                }}
+              />
+              <span
+                className="block w-full h-[1.5px] transition-all duration-500"
+                style={{
+                  backgroundColor:
+                    isMobileMenuOpen
+                      ? "var(--color-primary)"
+                      : isHeroOverlay
+                        ? "var(--color-on-primary)"
+                        : "var(--color-primary)",
+                  opacity: isMobileMenuOpen ? 0 : 1,
+                }}
+              />
+              <span
+                className="block w-full h-[1.5px] transition-all duration-500 origin-center"
+                style={{
+                  backgroundColor:
+                    isMobileMenuOpen
+                      ? "var(--color-primary)"
+                      : isHeroOverlay
+                        ? "var(--color-on-primary)"
+                        : "var(--color-primary)",
+                  transform: isMobileMenuOpen
+                    ? "translateY(-12px) rotate(-45deg)"
+                    : "none",
+                }}
+              />
             </button>
           </div>
         </div>
@@ -87,6 +167,7 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <>
             <motion.div
+              className="fixed inset-0 z-40 bg-black/20"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -95,6 +176,8 @@ export default function Navigation() {
             />
 
             <motion.div
+              className="fixed top-0 right-0 z-40 h-full w-full max-w-sm flex flex-col justify-center px-12"
+              style={{ backgroundColor: "var(--color-surface)" }}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -104,29 +187,38 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
-              <ul>
-                {navLinks.map((link, index) => (
-                  <motion.li
-                    key={link.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: 0.1 + index * 0.05,
-                      duration: 0.4,
-                      ease: [0.16, 1, 0.3, 1] as const,
-                    }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
+              <ul className="flex flex-col gap-8">
+                {navLinks.map((link, index) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <motion.li
+                      key={link.href}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        delay: 0.1 + index * 0.05,
+                        duration: 0.4,
+                        ease: [0.16, 1, 0.3, 1] as const,
+                      }}
                     >
-                      {link.label}
-                    </Link>
-                  </motion.li>
-                ))}
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="font-headline italic text-3xl tracking-tight transition-opacity duration-500"
+                        style={{
+                          color: "var(--color-primary)",
+                          opacity: isActive ? 1 : 0.5,
+                        }}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
+                  );
+                })}
               </ul>
 
               <motion.div
+                className="mt-12"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -138,6 +230,7 @@ export default function Navigation() {
                 <Link
                   href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
+                  className="btn-primary w-full text-center"
                 >
                   Book Consultation
                 </Link>

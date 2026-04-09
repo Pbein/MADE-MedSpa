@@ -16,7 +16,7 @@ const faqCategories = [
   "Aftercare",
 ];
 
-const luxuryEase = [0.16, 1, 0.3, 1] as const;
+const editorialEase = [0.2, 0, 0, 1] as const;
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -84,157 +84,183 @@ export default function FAQPage() {
   return (
     <main>
       {/* Hero */}
-      <section>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: luxuryEase }}
-        >
-          Support
-        </motion.p>
+      <section className="bg-[var(--color-primary)] py-48">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+          <motion.p
+            className="label-micro text-[var(--color-surface)] opacity-60 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: editorialEase }}
+          >
+            Support
+          </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: luxuryEase, delay: 0.15 }}
-        >
-          Frequently Asked Questions
-        </motion.h1>
+          <motion.h1
+            className="headline-editorial text-[var(--color-surface)]"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: editorialEase, delay: 0.15 }}
+          >
+            Frequently Asked Questions
+          </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: luxuryEase, delay: 0.3 }}
-        >
-          Find answers to common questions about our treatments, membership
-          programs, and booking process.
-        </motion.p>
+          <motion.p
+            className="body-editorial mt-6 max-w-2xl mx-auto text-[var(--color-surface)] opacity-60"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: editorialEase, delay: 0.3 }}
+          >
+            Find answers to common questions about our treatments, membership
+            programs, and booking process.
+          </motion.p>
 
-        {/* Search Input */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: luxuryEase, delay: 0.45 }}
-        >
-          <div>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search questions..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-          </div>
-        </motion.div>
+          {/* Search Input */}
+          <motion.div
+            className="mt-12 max-w-md mx-auto"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: editorialEase, delay: 0.45 }}
+          >
+            <div className="relative">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-surface)] opacity-40"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search questions..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full bg-transparent border border-[var(--color-surface)] border-opacity-20 text-[var(--color-surface)] placeholder:text-[var(--color-surface)] placeholder:opacity-40 pl-12 pr-4 py-3 label-micro tracking-wider focus:outline-none focus:border-opacity-60 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]"
+              />
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Category Pills */}
-      <section>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: luxuryEase, delay: 0.55 }}
-        >
-          {faqCategories.map((cat) => {
-            const isActive = activeCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </motion.div>
+      <section className="bg-[var(--color-surface)] py-8">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div
+            className="flex flex-wrap justify-center gap-2"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: editorialEase, delay: 0.55 }}
+          >
+            {faqCategories.map((cat) => {
+              const isActive = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`label-micro px-5 py-2.5 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] border-b-2 ${
+                    isActive
+                      ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
+                      : "bg-transparent text-[var(--color-on-surface-variant)] border-transparent hover:border-[var(--color-on-surface-variant)]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </motion.div>
+        </div>
       </section>
 
       {/* FAQ Accordion */}
-      <section>
-        {faqs === undefined ? (
-          <div>
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i}>
-                <div />
-                <div />
-              </div>
-            ))}
-          </div>
-        ) : filteredFaqs.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: luxuryEase }}
-          >
-            <h3>No matching questions found</h3>
-            <p>
-              Try adjusting your search or browse a different category.
-            </p>
-            <Link href="/contact">
-              Contact Us
-            </Link>
-          </motion.div>
-        ) : activeCategory !== "All" ? (
-          <Accordion
-            items={filteredFaqs.map((faq) => ({
-              question: faq.question,
-              answer: faq.answer,
-            }))}
-          />
-        ) : (
-          categoryKeys.map((cat) => (
-            <div
-              key={cat}
-              ref={(el) => {
-                if (el) sectionRefs.current.set(cat, el);
-              }}
-            >
-              <motion.h3
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.5, ease: luxuryEase }}
-              >
-                {cat}
-              </motion.h3>
-              <Accordion
-                items={groupedFaqs[cat].map((faq) => ({
-                  question: faq.question,
-                  answer: faq.answer,
-                }))}
-              />
+      <section className="bg-[var(--color-surface)] py-40">
+        <div className="mx-auto max-w-3xl px-6">
+          {faqs === undefined ? (
+            <div className="space-y-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="animate-pulse space-y-3">
+                  <div className="h-4 w-3/4 bg-[var(--color-surface-high)]" />
+                  <div className="h-3 w-1/2 bg-[var(--color-surface-high)]" />
+                </div>
+              ))}
             </div>
-          ))
-        )}
+          ) : filteredFaqs.length === 0 ? (
+            <motion.div
+              className="text-center py-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: editorialEase }}
+            >
+              <h3 className="headline-section mb-4">No matching questions found</h3>
+              <p className="body-editorial text-[var(--color-on-surface-variant)] mb-10">
+                Try adjusting your search or browse a different category.
+              </p>
+              <Link href="/contact" className="btn-primary">
+                Contact Us
+              </Link>
+            </motion.div>
+          ) : activeCategory !== "All" ? (
+            <Accordion
+              items={filteredFaqs.map((faq) => ({
+                question: faq.question,
+                answer: faq.answer,
+              }))}
+            />
+          ) : (
+            categoryKeys.map((cat) => (
+              <div
+                key={cat}
+                ref={(el) => {
+                  if (el) sectionRefs.current.set(cat, el);
+                }}
+                className="mb-16"
+              >
+                <motion.h3
+                  className="headline-section mb-8"
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-30px" }}
+                  transition={{ duration: 0.5, ease: editorialEase }}
+                >
+                  {cat}
+                </motion.h3>
+                <Accordion
+                  items={groupedFaqs[cat].map((faq) => ({
+                    question: faq.question,
+                    answer: faq.answer,
+                  }))}
+                />
+              </div>
+            ))
+          )}
+        </div>
       </section>
 
       {/* CTA */}
-      <section>
+      <section className="bg-[var(--color-primary)] py-40">
         <motion.div
+          className="mx-auto max-w-7xl px-6 text-center"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, ease: luxuryEase }}
+          transition={{ duration: 0.7, ease: editorialEase }}
         >
-          <p>Need More Help?</p>
-          <h2>Still Have Questions?</h2>
-          <p>
+          <p className="label-micro text-[var(--color-on-primary)] opacity-60 mb-6">
+            Need More Help?
+          </p>
+          <h2 className="headline-editorial text-[var(--color-on-primary)]">
+            Still Have Questions?
+          </h2>
+          <p className="body-editorial mt-6 max-w-xl mx-auto text-[var(--color-on-primary)] opacity-60">
             Our team is here to help. Reach out and we will get back to you
             promptly.
           </p>
-          <Link href="/contact">
+          <Link href="/contact" className="btn-light inline-block mt-10">
             Contact Us
           </Link>
         </motion.div>

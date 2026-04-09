@@ -80,9 +80,11 @@ export default function ContactForm() {
 
   if (isSuccess) {
     return (
-      <div>
-        {/* Green checkmark */}
-        <div>
+      <div className="text-center py-20 px-6">
+        <div
+          className="inline-flex items-center justify-center w-16 h-16 mb-8"
+          style={{ color: "var(--color-secondary)" }}
+        >
           <svg
             width="32"
             height="32"
@@ -97,14 +99,24 @@ export default function ContactForm() {
           </svg>
         </div>
 
-        <h3>Thank You</h3>
-        <p>
+        <h3
+          className="font-headline italic text-3xl md:text-4xl mb-4"
+          style={{ color: "var(--color-primary)" }}
+        >
+          Thank You
+        </h3>
+        <p
+          className="body-editorial max-w-md mx-auto mb-10"
+          style={{ color: "var(--color-on-surface-variant)" }}
+        >
           Your message has been received. We will be in touch within 24 hours to
           assist you.
         </p>
         <button
           type="button"
           onClick={() => setIsSuccess(false)}
+          className="link-editorial"
+          style={{ color: "var(--color-secondary)" }}
         >
           Send Another Message
         </button>
@@ -113,51 +125,100 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      {/* Name fields */}
-      <div>
-        <div>
-          <label htmlFor="firstName">First Name *</label>
+    <form onSubmit={handleSubmit} noValidate className="space-y-8">
+      {/* Name fields — 2-column grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="relative">
+          <label
+            htmlFor="firstName"
+            className="label-micro block mb-3"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
+            First Name *
+          </label>
           <input
             id="firstName"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="Jane"
+            className="input-editorial w-full"
           />
-          {errors.firstName && <p>{errors.firstName}</p>}
+          {errors.firstName && (
+            <p
+              className="text-xs mt-2"
+              style={{ color: "var(--color-secondary)" }}
+            >
+              {errors.firstName}
+            </p>
+          )}
         </div>
 
-        <div>
-          <label htmlFor="lastName">Last Name *</label>
+        <div className="relative">
+          <label
+            htmlFor="lastName"
+            className="label-micro block mb-3"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
+            Last Name *
+          </label>
           <input
             id="lastName"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Doe"
+            className="input-editorial w-full"
           />
-          {errors.lastName && <p>{errors.lastName}</p>}
+          {errors.lastName && (
+            <p
+              className="text-xs mt-2"
+              style={{ color: "var(--color-secondary)" }}
+            >
+              {errors.lastName}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Email */}
+      {/* Email — full width */}
       <div>
-        <label htmlFor="email">Email Address *</label>
+        <label
+          htmlFor="email"
+          className="label-micro block mb-3"
+          style={{ color: "var(--color-on-surface-variant)" }}
+        >
+          Email Address *
+        </label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="jane@example.com"
+          className="input-editorial w-full"
         />
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && (
+          <p
+            className="text-xs mt-2"
+            style={{ color: "var(--color-secondary)" }}
+          >
+            {errors.email}
+          </p>
+        )}
       </div>
 
-      {/* Phone */}
+      {/* Phone — full width */}
       <div>
-        <label htmlFor="phone">
-          Phone <span>(optional)</span>
+        <label
+          htmlFor="phone"
+          className="label-micro block mb-3"
+          style={{ color: "var(--color-on-surface-variant)" }}
+        >
+          Phone{" "}
+          <span className="normal-case tracking-normal opacity-50">
+            (optional)
+          </span>
         </label>
         <input
           id="phone"
@@ -165,31 +226,51 @@ export default function ContactForm() {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="(555) 123-4567"
+          className="input-editorial w-full"
         />
       </div>
 
-      {/* Message */}
+      {/* Message — full width textarea */}
       <div>
-        <label htmlFor="message">Message *</label>
+        <label
+          htmlFor="message"
+          className="label-micro block mb-3"
+          style={{ color: "var(--color-on-surface-variant)" }}
+        >
+          Message *
+        </label>
         <textarea
           id="message"
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Tell us how we can help you..."
+          className="input-editorial w-full"
+          style={{ minHeight: "140px" }}
         />
-        {errors.message && <p>{errors.message}</p>}
+        {errors.message && (
+          <p
+            className="text-xs mt-2"
+            style={{ color: "var(--color-secondary)" }}
+          >
+            {errors.message}
+          </p>
+        )}
       </div>
 
       {submitError && (
         <div>
-          <p>{submitError}</p>
+          <p className="text-sm" style={{ color: "var(--color-secondary)" }}>
+            {submitError}
+          </p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={isSubmitting}
+        className="btn-primary w-full"
+        style={{ transition: "all 500ms ease" }}
       >
         {isSubmitting ? "Sending..." : "Send Message"}
       </button>

@@ -10,7 +10,7 @@ import CTABanner from "@/components/sections/CTABanner";
 export default function Home() {
   return (
     <>
-      {/* Hero — full viewport, video background, left-aligned */}
+      {/* Hero */}
       <HeroSection />
 
       {/* Philosophy — editorial quote break */}
@@ -19,34 +19,29 @@ export default function Home() {
         text={
           <>
             We believe beauty is deeply personal —{" "}
-            <span>every treatment</span>{" "}
+            <span style={{ color: "var(--color-secondary)" }}>
+              every treatment
+            </span>{" "}
             is a collaboration between science, artistry, and you.
           </>
         }
       />
 
-      {/* Featured Services — editorial layout (1 large + 2 small) */}
+      {/* Featured Services */}
       <FeaturedServices />
 
       {/* Why MADE / About teaser */}
       <AboutTeaser />
 
-      {/* Testimonials — minimal, centered, large quotes */}
+      {/* Testimonials */}
       <TestimonialSection />
 
       {/* Final CTA */}
       <CTABanner
-        headline={
-          <>
-            Ready to{" "}
-            <span>Begin</span>{" "}
-            Your Journey?
-          </>
-        }
-        subtitle="Book a consultation and discover the MADE difference. Your journey to elevated beauty starts here."
-        ctaText="Book Consultation"
-        ctaHref="/booking"
         dark
+        headline="Begin Your Journey to Refined Radiance."
+        ctaText="Book Your Consult"
+        ctaHref="/booking"
       />
     </>
   );

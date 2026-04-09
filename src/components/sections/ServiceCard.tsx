@@ -27,26 +27,47 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20, transition: { duration: 0.2 } }}
       transition={{ duration: 0.6, ease: luxuryEase }}
+      className="group bg-[var(--color-surface)] hover:bg-[#fcfbf4] transition-colors duration-700"
+      style={{ boxShadow: "var(--shadow-card)" }}
     >
-      <Link href={`/services/${service.slug}`}>
+      <Link href={`/services/${service.slug}`} className="block">
         {/* Image */}
-        <div>
-          <img src="/placeholder.svg" alt={service.name} />
+        <div className="overflow-hidden">
+          <img
+            src={service.imageUrl || "/placeholder.svg"}
+            alt={service.name}
+            className="w-full aspect-[4/3] object-cover image-editorial-light group-hover:scale-105 transition-transform duration-1000"
+          />
         </div>
 
         {/* Content */}
-        <div>
-          <span>{service.category}</span>
+        <div className="p-8 md:p-10">
+          {/* Category label */}
+          <span className="label-micro text-[var(--color-secondary)] block mb-4">
+            {service.category}
+          </span>
 
-          <h3>{service.name}</h3>
+          {/* Title */}
+          <h3 className="font-headline text-2xl italic mb-4 text-[var(--color-primary)]">
+            {service.name}
+          </h3>
 
-          <p>{service.shortDescription}</p>
+          {/* Description */}
+          <p className="font-body text-sm leading-loose text-[var(--color-on-surface-variant)] opacity-80 mb-6">
+            {service.shortDescription}
+          </p>
 
+          {/* Price range */}
           {service.priceRange && (
-            <p>{service.priceRange}</p>
+            <p className="label-micro text-[var(--color-on-surface-variant)] mb-6">
+              {service.priceRange}
+            </p>
           )}
 
-          <span>Learn More &rarr;</span>
+          {/* Arrow CTA */}
+          <span className="inline-block text-[var(--color-outline)] text-2xl group-hover:translate-x-4 transition-transform duration-700">
+            &rarr;
+          </span>
         </div>
       </Link>
     </motion.div>
