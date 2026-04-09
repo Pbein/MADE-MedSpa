@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -43,50 +42,18 @@ export default function Navigation() {
 
   return (
     <>
-      <nav
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all"
-        )}
-        style={{
-          height: "var(--nav-height)",
-          transitionDuration: "var(--duration-medium)",
-          transitionTimingFunction: "var(--ease-smooth)",
-          backgroundColor: isScrolled
-            ? "rgba(247, 246, 235, 0.92)"
-            : "transparent",
-          backdropFilter: isScrolled ? "blur(16px)" : undefined,
-          boxShadow: isScrolled ? "var(--shadow-sm)" : undefined,
-        }}
-      >
-        <div className="mx-auto flex h-full max-w-[var(--max-width)] items-center justify-between px-6 lg:px-10">
+      <nav>
+        <div>
           {/* Logo */}
-          <Link
-            href="/"
-            className="shrink-0 text-2xl tracking-[0.2em] transition-colors"
-            style={{
-              fontFamily: "var(--font-headline)",
-              color: isHeroOverlay
-                ? "var(--color-glaze)"
-                : "var(--color-espresso)",
-              transitionDuration: "var(--duration-normal)",
-            }}
-          >
+          <Link href="/">
             MADE
           </Link>
 
           {/* Desktop Nav Links */}
-          <ul className="hidden items-center gap-8 lg:flex">
+          <ul>
             {navLinks.map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="eyebrow hover-underline transition-colors duration-[var(--duration-fast)]"
-                  style={{
-                    color: isHeroOverlay
-                      ? "rgba(247, 246, 235, 0.8)"
-                      : "var(--color-olive)",
-                  }}
-                >
+                <Link href={link.href}>
                   {link.label}
                 </Link>
               </li>
@@ -94,68 +61,22 @@ export default function Navigation() {
           </ul>
 
           {/* Desktop CTA */}
-          <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href="/booking"
-              className={cn(isHeroOverlay ? "btn-light" : "btn-primary")}
-              style={{ padding: "0.625rem 1.75rem" }}
-            >
+          <div>
+            <Link href="/booking">
               Book Now
             </Link>
           </div>
 
           {/* Mobile: Hamburger */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="relative flex h-10 w-10 flex-col items-center justify-center gap-1.5"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >
-              <span
-                className={cn(
-                  "block h-[1.5px] w-6 transition-all",
-                  isMobileMenuOpen && "translate-y-[4.5px] rotate-45"
-                )}
-                style={{
-                  backgroundColor: isMobileMenuOpen
-                    ? "var(--color-espresso)"
-                    : isHeroOverlay
-                      ? "var(--color-glaze)"
-                      : "var(--color-espresso)",
-                  transitionDuration: "var(--duration-normal)",
-                  transitionTimingFunction: "var(--ease-smooth)",
-                }}
-              />
-              <span
-                className={cn(
-                  "block h-[1.5px] w-6 transition-all",
-                  isMobileMenuOpen && "opacity-0"
-                )}
-                style={{
-                  backgroundColor: isMobileMenuOpen
-                    ? "var(--color-espresso)"
-                    : isHeroOverlay
-                      ? "var(--color-glaze)"
-                      : "var(--color-espresso)",
-                  transitionDuration: "var(--duration-fast)",
-                }}
-              />
-              <span
-                className={cn(
-                  "block h-[1.5px] w-6 transition-all",
-                  isMobileMenuOpen && "-translate-y-[4.5px] -rotate-45"
-                )}
-                style={{
-                  backgroundColor: isMobileMenuOpen
-                    ? "var(--color-espresso)"
-                    : isHeroOverlay
-                      ? "var(--color-glaze)"
-                      : "var(--color-espresso)",
-                  transitionDuration: "var(--duration-normal)",
-                  transitionTimingFunction: "var(--ease-smooth)",
-                }}
-              />
+              <span />
+              <span />
+              <span />
             </button>
           </div>
         </div>
@@ -170,8 +91,6 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 backdrop-blur-sm lg:hidden"
-              style={{ backgroundColor: "rgba(57, 30, 30, 0.5)" }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -184,13 +103,8 @@ export default function Navigation() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
-              className="fixed top-0 right-0 z-40 flex h-full w-[85%] max-w-sm flex-col px-8 pt-28 pb-10 lg:hidden"
-              style={{
-                backgroundColor: "var(--color-silk)",
-                boxShadow: "var(--shadow-xl)",
-              }}
             >
-              <ul className="flex flex-col gap-6">
+              <ul>
                 {navLinks.map((link, index) => (
                   <motion.li
                     key={link.href}
@@ -205,11 +119,6 @@ export default function Navigation() {
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-2xl transition-colors"
-                      style={{
-                        fontFamily: "var(--font-headline)",
-                        color: "var(--color-espresso)",
-                      }}
                     >
                       {link.label}
                     </Link>
@@ -225,12 +134,10 @@ export default function Navigation() {
                   duration: 0.4,
                   ease: [0.16, 1, 0.3, 1] as const,
                 }}
-                className="mt-auto"
               >
                 <Link
                   href="/booking"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="btn-primary w-full text-center"
                 >
                   Book Consultation
                 </Link>

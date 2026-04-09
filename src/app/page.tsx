@@ -19,9 +19,7 @@ export default function Home() {
         text={
           <>
             We believe beauty is deeply personal —{" "}
-            <span style={{ color: "var(--color-blush)" }}>
-              every treatment
-            </span>{" "}
+            <span>every treatment</span>{" "}
             is a collaboration between science, artistry, and you.
           </>
         }
@@ -41,9 +39,7 @@ export default function Home() {
         headline={
           <>
             Ready to{" "}
-            <span style={{ color: "var(--color-blush)" }}>
-              Begin
-            </span>{" "}
+            <span>Begin</span>{" "}
             Your Journey?
           </>
         }

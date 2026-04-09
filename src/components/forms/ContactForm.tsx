@@ -80,21 +80,15 @@ export default function ContactForm() {
 
   if (isSuccess) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-16 text-center"
-        style={{ minHeight: 400 }}
-      >
+      <div>
         {/* Green checkmark */}
-        <div
-          className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
-          style={{ backgroundColor: "rgba(111, 130, 91, 0.1)" }}
-        >
+        <div>
           <svg
             width="32"
             height="32"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="var(--color-matcha)"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -103,23 +97,14 @@ export default function ContactForm() {
           </svg>
         </div>
 
-        <h3
-          className="headline-section mb-4"
-          style={{ color: "var(--color-matcha)" }}
-        >
-          Thank You
-        </h3>
-        <p
-          className="body-md mb-8 max-w-sm"
-          style={{ color: "var(--color-olive)" }}
-        >
+        <h3>Thank You</h3>
+        <p>
           Your message has been received. We will be in touch within 24 hours to
           assist you.
         </p>
         <button
           type="button"
           onClick={() => setIsSuccess(false)}
-          className="btn-secondary"
         >
           Send Another Message
         </button>
@@ -127,138 +112,84 @@ export default function ContactForm() {
     );
   }
 
-  const labelClasses = "mb-3 block";
-  const labelStyle = {
-    color: "var(--color-mocha)",
-    fontSize: "0.75rem",
-    fontWeight: 600 as const,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-  };
-
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-8">
-      {/* Name fields - 2 column grid */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} noValidate>
+      {/* Name fields */}
+      <div>
         <div>
-          <label htmlFor="firstName" className={labelClasses} style={labelStyle}>
-            First Name *
-          </label>
+          <label htmlFor="firstName">First Name *</label>
           <input
             id="firstName"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="input-luxury w-full"
             placeholder="Jane"
           />
-          {errors.firstName && (
-            <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
-              {errors.firstName}
-            </p>
-          )}
+          {errors.firstName && <p>{errors.firstName}</p>}
         </div>
 
         <div>
-          <label htmlFor="lastName" className={labelClasses} style={labelStyle}>
-            Last Name *
-          </label>
+          <label htmlFor="lastName">Last Name *</label>
           <input
             id="lastName"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="input-luxury w-full"
             placeholder="Doe"
           />
-          {errors.lastName && (
-            <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
-              {errors.lastName}
-            </p>
-          )}
+          {errors.lastName && <p>{errors.lastName}</p>}
         </div>
       </div>
 
-      {/* Email - full width */}
+      {/* Email */}
       <div>
-        <label htmlFor="email" className={labelClasses} style={labelStyle}>
-          Email Address *
-        </label>
+        <label htmlFor="email">Email Address *</label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="input-luxury w-full"
           placeholder="jane@example.com"
         />
-        {errors.email && (
-          <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
-            {errors.email}
-          </p>
-        )}
+        {errors.email && <p>{errors.email}</p>}
       </div>
 
-      {/* Phone - full width */}
+      {/* Phone */}
       <div>
-        <label htmlFor="phone" className={labelClasses} style={labelStyle}>
-          Phone{" "}
-          <span style={{ textTransform: "none", letterSpacing: "normal", fontWeight: 400 }}>
-            (optional)
-          </span>
+        <label htmlFor="phone">
+          Phone <span>(optional)</span>
         </label>
         <input
           id="phone"
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="input-luxury w-full"
           placeholder="(555) 123-4567"
         />
       </div>
 
-      {/* Message - full width */}
+      {/* Message */}
       <div>
-        <label htmlFor="message" className={labelClasses} style={labelStyle}>
-          Message *
-        </label>
+        <label htmlFor="message">Message *</label>
         <textarea
           id="message"
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="input-luxury w-full resize-none"
           placeholder="Tell us how we can help you..."
         />
-        {errors.message && (
-          <p className="mt-2" style={{ fontSize: "0.75rem", color: "var(--color-blush)" }}>
-            {errors.message}
-          </p>
-        )}
+        {errors.message && <p>{errors.message}</p>}
       </div>
 
       {submitError && (
-        <div
-          className="rounded-md px-4 py-3"
-          style={{
-            border: "1px solid var(--color-blush)",
-            backgroundColor: "rgba(180, 120, 100, 0.05)",
-          }}
-        >
-          <p style={{ fontSize: "0.875rem", color: "var(--color-blush)" }}>
-            {submitError}
-          </p>
+        <div>
+          <p>{submitError}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn-primary w-full sm:w-auto"
-        style={{
-          opacity: isSubmitting ? 0.7 : 1,
-          cursor: isSubmitting ? "not-allowed" : "pointer",
-        }}
       >
         {isSubmitting ? "Sending..." : "Send Message"}
       </button>

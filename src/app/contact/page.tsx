@@ -72,48 +72,31 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* HERO — Espresso */}
-      <section
-        className="section-dark relative flex min-h-[50vh] flex-col items-center justify-center px-6 text-center"
-        style={{ backgroundColor: "var(--color-espresso)" }}
-      >
+      {/* HERO */}
+      <section>
         <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
-          className="pt-[var(--nav-height)]"
         >
-          <motion.p
-            variants={revealUp}
-            className="eyebrow mb-6"
-            style={{ color: "rgba(247,246,235,0.5)" }}
-          >
+          <motion.p variants={revealUp}>
             Contact
           </motion.p>
 
-          <motion.h1
-            variants={revealUp}
-            className="headline-display mb-6"
-            style={{ color: "var(--color-glaze)" }}
-          >
-            Get{" "}
-            <span style={{ color: "var(--color-matcha)" }}>In Touch</span>
+          <motion.h1 variants={revealUp}>
+            Get In Touch
           </motion.h1>
 
-          <motion.p
-            variants={revealUp}
-            className="body-lg mx-auto max-w-xl"
-            style={{ color: "rgba(247,246,235,0.65)" }}
-          >
+          <motion.p variants={revealUp}>
             {heroContent?.body ||
               "We would love to hear from you. Whether you have a question about our services, want to book an appointment, or simply want to say hello."}
           </motion.p>
         </motion.div>
       </section>
 
-      {/* FORM + SIDEBAR — Glaze */}
-      <section className="section-light px-6 lg:px-10">
-        <div className="container-page grid gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-24">
+      {/* FORM + SIDEBAR */}
+      <section>
+        <div>
           {/* Form column */}
           <motion.div
             initial="hidden"
@@ -121,10 +104,9 @@ export default function ContactPage() {
             viewport={{ once: true, margin: "-100px" }}
             variants={revealLeft}
           >
-            <p className="eyebrow-muted mb-4">Send a Message</p>
-            <h2 className="headline-section mb-10" style={{ color: "var(--color-ink)" }}>
-              We are here to{" "}
-              <span style={{ color: "var(--color-matcha)" }}>help</span>
+            <p>Send a Message</p>
+            <h2>
+              We are here to help
             </h2>
 
             <ContactForm />
@@ -136,133 +118,60 @@ export default function ContactPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="rounded-2xl p-8 lg:p-10"
-            style={{
-              backgroundColor: "var(--color-silk)",
-              border: "1px solid var(--color-line)",
-            }}
           >
             {/* Visit Us */}
-            <motion.div variants={revealRight} className="mb-8">
-              <h3
-                className="eyebrow mb-4"
-                style={{ color: "var(--color-ink)" }}
-              >
-                Visit Us
-              </h3>
-              <p className="body-md" style={{ color: "var(--color-olive)" }}>
+            <motion.div variants={revealRight}>
+              <h3>Visit Us</h3>
+              <p>
                 {info.addressLine1}
                 <br />
                 {info.addressLine2}
               </p>
             </motion.div>
 
-            <motion.div
-              variants={revealRight}
-              className="mb-8 h-[1px] w-full"
-              style={{ backgroundColor: "var(--color-line)" }}
-            />
+            <motion.div variants={revealRight} />
 
             {/* Reach Out */}
-            <motion.div variants={revealRight} className="mb-8">
-              <h3
-                className="eyebrow mb-4"
-                style={{ color: "var(--color-ink)" }}
-              >
-                Reach Out
-              </h3>
-              <div className="flex flex-col gap-3">
-                <a
-                  href={info.phoneHref}
-                  className="link-accent inline-flex items-center gap-3"
-                >
-                  <span
-                    className="flex h-8 w-8 items-center justify-center rounded-full border text-xs"
-                    style={{ borderColor: "var(--color-line)" }}
-                  >
-                    P
-                  </span>
+            <motion.div variants={revealRight}>
+              <h3>Reach Out</h3>
+              <div>
+                <a href={info.phoneHref}>
+                  <span>P</span>
                   {info.phone}
                 </a>
-                <a
-                  href={info.emailHref}
-                  className="link-accent inline-flex items-center gap-3"
-                >
-                  <span
-                    className="flex h-8 w-8 items-center justify-center rounded-full border text-xs"
-                    style={{ borderColor: "var(--color-line)" }}
-                  >
-                    E
-                  </span>
+                <a href={info.emailHref}>
+                  <span>E</span>
                   {info.email}
                 </a>
               </div>
             </motion.div>
 
-            <motion.div
-              variants={revealRight}
-              className="mb-8 h-[1px] w-full"
-              style={{ backgroundColor: "var(--color-line)" }}
-            />
+            <motion.div variants={revealRight} />
 
             {/* Hours */}
-            <motion.div variants={revealRight} className="mb-8">
-              <h3
-                className="eyebrow mb-4"
-                style={{ color: "var(--color-ink)" }}
-              >
-                Hours
-              </h3>
-              <ul className="flex flex-col gap-2">
+            <motion.div variants={revealRight}>
+              <h3>Hours</h3>
+              <ul>
                 {info.hours.map((schedule) => (
-                  <li
-                    key={schedule.days}
-                    className="body-md flex items-center justify-between"
-                    style={{ color: "var(--color-olive)" }}
-                  >
+                  <li key={schedule.days}>
                     <span>{schedule.days}</span>
-                    <span
-                      style={{
-                        fontStyle:
-                          schedule.hours === "Closed" ? "italic" : "normal",
-                        color:
-                          schedule.hours === "Closed"
-                            ? "var(--color-mocha)"
-                            : "var(--color-olive)",
-                      }}
-                    >
-                      {schedule.hours}
-                    </span>
+                    <span>{schedule.hours}</span>
                   </li>
                 ))}
               </ul>
             </motion.div>
 
-            <motion.div
-              variants={revealRight}
-              className="mb-8 h-[1px] w-full"
-              style={{ backgroundColor: "var(--color-line)" }}
-            />
+            <motion.div variants={revealRight} />
 
             {/* Follow Us */}
             <motion.div variants={revealRight}>
-              <h3
-                className="eyebrow mb-4"
-                style={{ color: "var(--color-ink)" }}
-              >
-                Follow Us
-              </h3>
-              <div className="flex gap-4">
+              <h3>Follow Us</h3>
+              <div>
                 {info.socials.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all hover:border-[var(--color-blush)] hover:text-[var(--color-blush)]"
-                    style={{
-                      borderColor: "var(--color-line)",
-                      color: "var(--color-olive)",
-                    }}
                   >
                     {social.label[0]}
                   </a>
@@ -273,48 +182,29 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* CTA — Espresso */}
-      <section
-        className="section-dark px-6 text-center lg:px-10"
-        style={{ backgroundColor: "var(--color-espresso)" }}
-      >
+      {/* CTA */}
+      <section>
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="mx-auto max-w-2xl"
         >
-          <motion.div
-            variants={revealUp}
-            className="accent-line mx-auto mb-8"
-          />
+          <motion.div variants={revealUp} />
 
-          <motion.h2
-            variants={revealUp}
-            className="headline-section mb-6"
-            style={{ color: "var(--color-glaze)" }}
-          >
-            Ready to begin your{" "}
-            <span style={{ color: "var(--color-matcha)" }}>journey</span>?
+          <motion.h2 variants={revealUp}>
+            Ready to begin your journey?
           </motion.h2>
 
-          <motion.p
-            variants={revealUp}
-            className="body-lg mx-auto mb-10 max-w-lg"
-            style={{ color: "rgba(247,246,235,0.65)" }}
-          >
+          <motion.p variants={revealUp}>
             Skip the form and book directly. Our team is ready to welcome you.
           </motion.p>
 
-          <motion.div
-            variants={revealUp}
-            className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
-          >
-            <Link href="/booking" className="btn-primary">
+          <motion.div variants={revealUp}>
+            <Link href="/booking">
               Book an Appointment
             </Link>
-            <Link href="/services" className="btn-secondary">
+            <Link href="/services">
               Explore Services
             </Link>
           </motion.div>

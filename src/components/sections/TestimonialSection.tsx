@@ -62,32 +62,16 @@ export default function TestimonialSection() {
   if (dbTestimonials && dbTestimonials.length === 0) return null;
 
   return (
-    <section
-      ref={ref}
-      className="section-dark relative overflow-hidden"
-      style={{
-        backgroundColor: "var(--color-espresso)",
-      }}
-    >
-      <div className="container-page">
+    <section ref={ref}>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: luxuryEase }}
-          className="mb-16 text-center"
         >
-          <span
-            className="eyebrow mb-4 block"
-            style={{ color: "rgba(247,246,235,0.5)" }}
-          >
-            Testimonials
-          </span>
-          <h2
-            className="headline-section"
-            style={{ color: "var(--color-glaze)" }}
-          >
-            Words from{" "}
-            <span style={{ color: "var(--color-matcha)" }}>Our Clients</span>
+          <span>Testimonials</span>
+          <h2>
+            Words from <span>Our Clients</span>
           </h2>
         </motion.div>
 
@@ -95,23 +79,11 @@ export default function TestimonialSection() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3, ease: luxuryEase }}
-          className="relative mx-auto max-w-3xl text-center"
         >
           {/* Decorative large quote mark */}
-          <div
-            className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 select-none"
-            style={{
-              fontFamily: "var(--font-headline)",
-              fontSize: "clamp(6rem, 4rem + 10vw, 12rem)",
-              lineHeight: 1,
-              color: "var(--color-glaze)",
-              opacity: 0.06,
-            }}
-          >
-            &ldquo;
-          </div>
+          <div>&ldquo;</div>
 
-          <div className="relative min-h-[280px] sm:min-h-[220px]">
+          <div>
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
@@ -119,67 +91,32 @@ export default function TestimonialSection() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.6, ease: luxuryEase }}
-                className="absolute inset-0 flex flex-col items-center justify-center"
               >
-                <blockquote
-                  className="text-editorial mb-8"
-                  style={{ color: "var(--color-glaze)" }}
-                >
+                <blockquote>
                   &ldquo;{testimonials[current].quote}&rdquo;
                 </blockquote>
                 <div>
-                  <p
-                    className="eyebrow mb-1"
-                    style={{
-                      color: "var(--color-glaze)",
-                    }}
-                  >
-                    {testimonials[current].name}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "0.875rem",
-                      color: "rgba(247,246,235,0.5)",
-                    }}
-                  >
-                    {testimonials[current].treatment}
-                  </p>
+                  <p>{testimonials[current].name}</p>
+                  <p>{testimonials[current].treatment}</p>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
           {/* Navigation dots & arrows */}
-          <div className="mt-10 flex items-center justify-center gap-6">
+          <div>
             <button
               onClick={prev}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-              style={{
-                border: "1px solid rgba(247,246,235,0.2)",
-                color: "var(--color-glaze)",
-              }}
               aria-label="Previous testimonial"
             >
               &larr;
             </button>
 
-            <div className="flex items-center gap-3">
+            <div>
               {testimonials.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
-                  className="rounded-full transition-all"
-                  style={{
-                    height: "0.5rem",
-                    backgroundColor:
-                      i === current
-                        ? "var(--color-glaze)"
-                        : "rgba(247,246,235,0.2)",
-                    width: i === current ? "2rem" : "0.5rem",
-                    borderRadius: "9999px",
-                    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
                   aria-label={`Go to testimonial ${i + 1}`}
                 />
               ))}
@@ -187,11 +124,6 @@ export default function TestimonialSection() {
 
             <button
               onClick={next}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-              style={{
-                border: "1px solid rgba(247,246,235,0.2)",
-                color: "var(--color-glaze)",
-              }}
               aria-label="Next testimonial"
             >
               &rarr;

@@ -82,69 +82,29 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ backgroundColor: "var(--color-espresso)" }}>
+    <footer>
       {/* Top accent line */}
-      <div
-        style={{
-          height: "1px",
-          background:
-            "linear-gradient(to right, transparent, var(--color-matcha), transparent)",
-        }}
-      />
+      <div />
 
       {/* Main Footer Content */}
-      <div
-        className="mx-auto max-w-[var(--max-width)] px-6 lg:px-10"
-        style={{
-          paddingTop: "var(--space-section)",
-          paddingBottom: "var(--space-4xl)",
-        }}
-      >
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      <div>
+        <div>
           {/* Brand Column */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link
-              href="/"
-              className="mb-5 inline-block text-3xl tracking-[0.2em]"
-              style={{
-                fontFamily: "var(--font-headline)",
-                color: "var(--color-glaze)",
-              }}
-            >
+          <div>
+            <Link href="/">
               MADE
             </Link>
-            <p
-              className="mb-6 max-w-xs text-lg leading-relaxed"
-              style={{
-                fontFamily: "var(--font-accent)",
-                color: "rgba(247, 246, 235, 0.7)",
-              }}
-            >
+            <p>
               Where science meets artistry. Personalized aesthetic treatments
               crafted for your unique beauty.
             </p>
             {/* Social Links */}
-            <div className="flex gap-4">
+            <div>
               {info.socials.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border text-xs transition-all"
-                  style={{
-                    borderColor: "rgba(247, 246, 235, 0.15)",
-                    color: "rgba(247, 246, 235, 0.6)",
-                    transitionDuration: "var(--duration-normal)",
-                    transitionTimingFunction: "var(--ease-smooth)",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(247, 246, 235, 0.4)";
-                    (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(247, 246, 235, 0.15)";
-                    (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
-                  }}
                 >
                   {social.label[0]}
                 </a>
@@ -154,29 +114,11 @@ export default function Footer() {
 
           {/* Quick Links Column */}
           <div>
-            <h4
-              className="eyebrow mb-6"
-              style={{ color: "var(--color-glaze)" }}
-            >
-              Quick Links
-            </h4>
-            <ul className="flex flex-col gap-3">
+            <h4>Quick Links</h4>
+            <ul>
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm transition-colors"
-                    style={{
-                      color: "rgba(247, 246, 235, 0.6)",
-                      transitionDuration: "var(--duration-fast)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
-                    }}
-                  >
+                  <Link href={link.href}>
                     {link.label}
                   </Link>
                 </li>
@@ -186,29 +128,11 @@ export default function Footer() {
 
           {/* Services Column */}
           <div>
-            <h4
-              className="eyebrow mb-6"
-              style={{ color: "var(--color-glaze)" }}
-            >
-              Services
-            </h4>
-            <ul className="flex flex-col gap-3">
+            <h4>Services</h4>
+            <ul>
               {services.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm transition-colors"
-                    style={{
-                      color: "rgba(247, 246, 235, 0.6)",
-                      transitionDuration: "var(--duration-fast)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
-                    }}
-                  >
+                  <Link href={link.href}>
                     {link.label}
                   </Link>
                 </li>
@@ -218,54 +142,21 @@ export default function Footer() {
 
           {/* Contact & Newsletter Column */}
           <div>
-            <h4
-              className="eyebrow mb-6"
-              style={{ color: "var(--color-glaze)" }}
-            >
-              Contact
-            </h4>
-            <div
-              className="mb-6 flex flex-col gap-2 text-sm"
-              style={{ color: "rgba(247, 246, 235, 0.6)" }}
-            >
+            <h4>Contact</h4>
+            <div>
               <p>{info.addressLine1}</p>
               <p>{info.addressLine2}</p>
-              <a
-                href={info.phoneHref}
-                className="transition-colors"
-                style={{ transitionDuration: "var(--duration-fast)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
-                }}
-              >
+              <a href={info.phoneHref}>
                 {info.phone}
               </a>
-              <a
-                href={info.emailHref}
-                className="transition-colors"
-                style={{ transitionDuration: "var(--duration-fast)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--color-glaze)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.6)";
-                }}
-              >
+              <a href={info.emailHref}>
                 {info.email}
               </a>
             </div>
 
             {/* Newsletter */}
-            <h4
-              className="eyebrow mb-3"
-              style={{ color: "var(--color-glaze)" }}
-            >
-              Newsletter
-            </h4>
-            <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
+            <h4>Newsletter</h4>
+            <form onSubmit={handleNewsletterSubmit}>
               <input
                 type="email"
                 value={email}
@@ -273,21 +164,10 @@ export default function Footer() {
                 placeholder="Your email"
                 aria-label="Email for newsletter"
                 disabled={status === "loading"}
-                className="flex-1 border-b bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-[rgba(247,246,235,0.35)] disabled:opacity-50"
-                style={{
-                  borderColor: "rgba(247, 246, 235, 0.2)",
-                  color: "var(--color-glaze)",
-                  transitionDuration: "var(--duration-normal)",
-                }}
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="eyebrow transition-colors disabled:opacity-50"
-                style={{
-                  color: "var(--color-glaze)",
-                  transitionDuration: "var(--duration-fast)",
-                }}
               >
                 {status === "loading"
                   ? "..."
@@ -297,65 +177,26 @@ export default function Footer() {
               </button>
             </form>
             {status === "success" && (
-              <p
-                className="mt-2 text-xs"
-                style={{ color: "var(--color-matcha)" }}
-              >
-                Welcome to the MADE family!
-              </p>
+              <p>Welcome to the MADE family!</p>
             )}
             {status === "error" && (
-              <p
-                className="mt-2 text-xs"
-                style={{ color: "rgba(247, 246, 235, 0.6)" }}
-              >
-                Something went wrong. Please try again.
-              </p>
+              <p>Something went wrong. Please try again.</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Copyright Bar */}
-      <div style={{ borderTop: "1px solid rgba(247, 246, 235, 0.08)" }}>
-        <div className="mx-auto flex max-w-[var(--max-width)] flex-col items-center justify-between gap-2 px-6 py-6 sm:flex-row lg:px-10">
-          <p
-            className="text-xs"
-            style={{ color: "rgba(247, 246, 235, 0.5)" }}
-          >
+      <div>
+        <div>
+          <p>
             &copy; {currentYear} MADE Med Spa. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            <Link
-              href="/privacy"
-              className="text-xs transition-colors"
-              style={{
-                color: "rgba(247, 246, 235, 0.5)",
-                transitionDuration: "var(--duration-fast)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.7)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.5)";
-              }}
-            >
+          <div>
+            <Link href="/privacy">
               Privacy Policy
             </Link>
-            <Link
-              href="/terms"
-              className="text-xs transition-colors"
-              style={{
-                color: "rgba(247, 246, 235, 0.5)",
-                transitionDuration: "var(--duration-fast)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.7)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "rgba(247, 246, 235, 0.5)";
-              }}
-            >
+            <Link href="/terms">
               Terms of Service
             </Link>
           </div>

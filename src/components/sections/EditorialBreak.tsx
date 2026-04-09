@@ -17,47 +17,17 @@ export default function EditorialBreak({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const sectionClass =
-    variant === "dark"
-      ? "section-dark"
-      : variant === "silk"
-        ? "section-alt"
-        : "section-dark";
-
-  const textColor =
-    variant === "silk"
-      ? "var(--color-olive)"
-      : "var(--color-glaze)";
-
   return (
-    <section
-      ref={ref}
-      className={sectionClass}
-      style={{
-        padding: "clamp(4rem, 3rem + 5vw, 7rem) 0",
-        ...(variant === "warm"
-          ? { backgroundColor: "rgba(57,30,30,0.85)" }
-          : {}),
-      }}
-    >
-      <div className="container-page">
+    <section ref={ref}>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: luxuryEase }}
-          className="mx-auto max-w-3xl text-center"
         >
-          <div
-            className="accent-line mx-auto mb-8"
-            style={{ backgroundColor: "var(--color-matcha)" }}
-          />
-          <p className="text-editorial" style={{ color: textColor }}>
-            {text}
-          </p>
-          <div
-            className="accent-line mx-auto mt-8"
-            style={{ backgroundColor: "var(--color-matcha)" }}
-          />
+          <div />
+          <p>{text}</p>
+          <div />
         </motion.div>
       </div>
     </section>
