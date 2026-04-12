@@ -54,23 +54,14 @@ export default function Navigation() {
 
   useEffect(() => {
     if (isMobileMenuOpen) {
-      scrollYRef.current = window.scrollY;
       isNavigatingRef.current = false;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollYRef.current}px`;
-      document.body.style.left = "0";
-      document.body.style.right = "0";
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
       return () => {
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.left = "";
-        document.body.style.right = "";
+        document.documentElement.style.overflow = "";
         document.body.style.overflow = "";
         if (isNavigatingRef.current) {
           window.scrollTo(0, 0);
-        } else {
-          window.scrollTo(0, scrollYRef.current);
         }
       };
     }
