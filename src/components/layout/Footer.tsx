@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
 
           {/* ── Middle: 4-column grid ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20 md:mb-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8 mb-16 md:mb-24">
 
             {/* Col 1: Navigation */}
             <div>

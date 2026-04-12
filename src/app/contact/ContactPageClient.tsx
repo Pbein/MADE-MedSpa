@@ -145,7 +145,7 @@ export default function ContactPageClient() {
         style={{ backgroundColor: SILK }}
       >
         <motion.div
-          className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-24"
+          className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-24"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}

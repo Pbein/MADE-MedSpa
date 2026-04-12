@@ -85,7 +85,7 @@ export default function ServicesPageClient({
               placeholder="Search services..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="input-editorial w-64"
+              className="input-editorial w-full sm:w-64"
             />
           </motion.div>
         </div>

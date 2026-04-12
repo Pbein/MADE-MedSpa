@@ -198,7 +198,7 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed top-0 right-0 z-40 h-full w-full max-w-sm flex flex-col justify-center px-12"
+              className="fixed inset-0 z-40 flex flex-col justify-center px-8 sm:px-12"
               style={{ backgroundColor: "var(--color-surface)" }}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}

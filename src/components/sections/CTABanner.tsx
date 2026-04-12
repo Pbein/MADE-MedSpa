@@ -77,7 +77,7 @@ export default function CTABanner({
             </p>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center">
             {ctaExternal ? (
               <a
                 href={ctaHref}

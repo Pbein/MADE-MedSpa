@@ -53,7 +53,7 @@ export default function AboutTeaser() {
           className="md:col-span-6"
         >
           <div
-            className="bg-[var(--color-surface-low)] p-10 md:p-16 lg:p-20"
+            className="bg-[var(--color-surface-low)] p-6 sm:p-10 md:p-16 lg:p-20"
             style={{ boxShadow: "0 4px 30px rgba(57,30,30,0.05)" }}
           >
             <span className="label-micro text-[var(--color-secondary)] block mb-6">

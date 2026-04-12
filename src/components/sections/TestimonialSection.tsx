@@ -122,7 +122,7 @@ export default function TestimonialSection() {
             {/* Large decorative quote mark */}
             <div className="text-center mb-8">
               <span
-                className="inline-block font-headline text-[8rem] md:text-[10rem] leading-none select-none"
+                className="inline-block font-headline text-6xl sm:text-[8rem] md:text-[10rem] leading-none select-none"
                 style={{ color: "rgba(215,207,197,0.2)" }}
               >
                 &ldquo;

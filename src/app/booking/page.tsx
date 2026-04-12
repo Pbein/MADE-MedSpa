@@ -70,7 +70,7 @@ export default function BookingPage() {
   return (
     <>
       {/* HERO — video background with mocha overlay */}
-      <section className="relative pt-48 pb-24 px-6 overflow-hidden">
+      <section className="relative pt-32 md:pt-48 pb-24 px-6 overflow-hidden">
         <div
           className="absolute inset-0 z-0"
           style={{ backgroundColor: "#391e1e" }}
@@ -241,7 +241,7 @@ export default function BookingPage() {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
             {whatToExpect.map((step) => (
               <motion.div key={step.number} variants={revealUp}>
                 <div className="label-micro text-[var(--color-secondary)] mb-4">

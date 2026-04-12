@@ -131,19 +131,19 @@ export default function HeroSection() {
             }}
           >
             <span
-              className="block italic font-light text-5xl md:text-7xl lg:text-[6.5rem] leading-none"
+              className="block italic font-light text-3xl sm:text-4xl md:text-7xl lg:text-[6.5rem] leading-none"
               style={{ color: "#f7f6eb", opacity: 0.9 }}
             >
               Beauty,
             </span>
             <span
-              className="block italic font-medium text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
+              className="block italic font-medium text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
               style={{ color: "#f7f6eb", letterSpacing: "-0.035em" }}
             >
               Deeply Personal.
             </span>
             <span
-              className="block italic font-light text-4xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
+              className="block italic font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
               style={{ color: "rgba(247,246,235,0.6)", letterSpacing: "0.01em" }}
             >
               Thoughtfully Designed.
@@ -155,7 +155,7 @@ export default function HeroSection() {
           {/* CTA buttons */}
           <motion.div
             variants={fadeUpVariants}
-            className="flex flex-col sm:flex-row items-center gap-8"
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
           >
             <Link href="/booking" className="btn-primary">
               Book Consultation
