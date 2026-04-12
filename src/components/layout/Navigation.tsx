@@ -168,7 +168,7 @@ export default function Navigation() {
           </div>
 
           {/* Mobile: Hamburger */}
-          <div className="md:hidden">
+          <div className="md:hidden relative z-[90]">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
