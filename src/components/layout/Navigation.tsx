@@ -66,11 +66,15 @@ export default function Navigation() {
     <>
       {/* iOS safe area cover — always solid, sits above everything */}
       <div
-        className="fixed top-0 left-0 right-0 z-[60]"
+        className="fixed top-0 left-0 right-0 z-[80]"
         aria-hidden
         style={{
           height: "env(safe-area-inset-top, 0px)",
-          backgroundColor: isHeroOverlay ? "#391e1e" : "#fbfaef",
+          backgroundColor: isMobileMenuOpen
+            ? "#fbfaef"
+            : isHeroOverlay
+              ? "#391e1e"
+              : "#fbfaef",
           transition: transitionsEnabled ? "background-color 500ms" : "none",
         }}
       />
@@ -200,7 +204,7 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-40 bg-black/20"
+              className="fixed inset-0 z-[65] bg-black/20"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -209,8 +213,12 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed inset-0 z-40 flex flex-col justify-center px-8 sm:px-12"
-              style={{ backgroundColor: "var(--color-surface)" }}
+              className="fixed inset-0 z-[70] flex flex-col justify-center px-8 sm:px-12"
+              style={{
+                backgroundColor: "var(--color-surface)",
+                paddingTop: "env(safe-area-inset-top, 0px)",
+                paddingBottom: "env(safe-area-inset-bottom, 0px)",
+              }}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
