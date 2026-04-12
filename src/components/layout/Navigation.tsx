@@ -239,26 +239,19 @@ export default function Navigation() {
             transition={{ duration: 0.3 }}
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
-            className="md:hidden fixed top-5 right-6 z-50 w-10 h-10 flex flex-col justify-center items-center gap-[5px] rounded-full transition-colors duration-300"
-            style={{
-              backgroundColor: isOverDark
-                ? "rgba(247,246,235,0.9)"
-                : "rgba(57,30,30,0.85)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-            }}
+            className="md:hidden fixed top-5 right-6 z-50 w-8 h-5 flex flex-col justify-between"
           >
             <span
-              className="block w-4 h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+              className="block w-full h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
             />
             <span
-              className="block w-4 h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+              className="block w-full h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
             />
             <span
-              className="block w-4 h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+              className="block w-full h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
             />
           </motion.button>
         )}
