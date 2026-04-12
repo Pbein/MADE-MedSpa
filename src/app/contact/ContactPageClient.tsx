@@ -80,17 +80,25 @@ export default function ContactPageClient() {
           ────────────────────────────────────────────── */}
       <section
         className="relative pt-44 pb-28 md:pt-52 md:pb-32 px-6 overflow-hidden"
-        style={{
-          background: [
-            "radial-gradient(ellipse 90% 70% at 15% 85%, rgba(198,168,125,0.14) 0%, transparent 55%)",
-            "radial-gradient(ellipse 70% 55% at 85% 15%, rgba(162,60,64,0.09) 0%, transparent 50%)",
-            "radial-gradient(ellipse 50% 60% at 50% 0%, rgba(57,30,30,0.6) 0%, transparent 60%)",
-            "linear-gradient(165deg, #3d2222 0%, #391e1e 35%, #2d1515 70%, #200a0a 100%)",
-          ].join(", "),
-        }}
+        style={{ backgroundColor: ESPRESSO }}
       >
+        {/* Mocha texture background */}
+        <img
+          src="/images/contact-hero-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text legibility */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(57,30,30,0.35) 0%, rgba(57,30,30,0.2) 50%, rgba(57,30,30,0.4) 100%)",
+          }}
+        />
         <motion.div
-          className="relative max-w-3xl mx-auto text-center"
+          className="relative z-10 max-w-3xl mx-auto text-center"
           initial={skipAnimation ? "visible" : "hidden"}
           animate="visible"
           variants={staggerContainer}
