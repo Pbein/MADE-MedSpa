@@ -53,13 +53,21 @@ export default function Navigation() {
 
   useEffect(() => {
     if (isMobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.overflow = "";
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [isMobileMenuOpen]);
 
   return (
@@ -218,6 +226,8 @@ export default function Navigation() {
                 backgroundColor: "var(--color-surface)",
                 paddingTop: "env(safe-area-inset-top, 0px)",
                 paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                touchAction: "none",
+                overscrollBehavior: "none",
               }}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
