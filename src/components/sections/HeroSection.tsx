@@ -54,6 +54,13 @@ export default function HeroSection() {
         className="absolute inset-0 z-0"
         style={{ backgroundColor: "#391e1e" }}
       >
+        {/* Poster image — always present, sits behind the video */}
+        <img
+          src={posterSrc}
+          alt="MADE Med Spa"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
         {!videoFailed ? (
           <video
             autoPlay
@@ -66,17 +73,13 @@ export default function HeroSection() {
             height={1080}
             onCanPlay={() => setVideoReady(true)}
             onError={() => setVideoFailed(true)}
-            className="w-full h-full object-cover transition-opacity duration-1000"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
             style={{ opacity: videoReady ? 1 : 0 }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
         ) : (
-          <img
-            src={posterSrc}
-            alt="MADE Med Spa"
-            className="w-full h-full object-cover"
-          />
+          null
         )}
 
         {/* Warm overlay — darkened toward bottom for cream text legibility */}
