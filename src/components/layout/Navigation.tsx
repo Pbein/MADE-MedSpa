@@ -242,16 +242,11 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed z-[70] flex flex-col justify-center px-8 sm:px-12"
+              className="fixed top-0 left-0 w-full z-[70]"
               style={{
-                top: 0,
-                left: 0,
-                right: 0,
                 height: "100dvh",
                 minHeight: "-webkit-fill-available",
                 backgroundColor: "#fbfaef",
-                paddingTop: "env(safe-area-inset-top, 0px)",
-                paddingBottom: "env(safe-area-inset-bottom, 0px)",
                 touchAction: "none",
                 overscrollBehavior: "none",
               }}
@@ -264,6 +259,14 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
+              {/* Inner content — safe area padded */}
+              <div
+                className="flex flex-col justify-center h-full px-8 sm:px-12"
+                style={{
+                  paddingTop: "env(safe-area-inset-top, 0px)",
+                  paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                }}
+              >
 
               <ul className="flex flex-col gap-8">
                 <motion.li
@@ -334,6 +337,7 @@ export default function Navigation() {
                   Book Consultation
                 </Link>
               </motion.div>
+              </div>
             </motion.div>
           </>
         )}
