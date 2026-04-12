@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import CTABanner from "@/components/sections/CTABanner";
@@ -64,24 +65,39 @@ const cancellationPolicy = {
 };
 
 export default function BookingPage() {
+  const [videoReady, setVideoReady] = useState(false);
+
   return (
     <>
       {/* HERO — video background with mocha overlay */}
       <section className="relative pt-48 pb-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <div
+          className="absolute inset-0 z-0"
+          style={{ backgroundColor: "#391e1e" }}
+        >
+          {/* Poster — shows immediately while video loads */}
+          <img
+            src="/images/booking-hero-poster.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Video — fades in once ready */}
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="metadata"
-            title="MADE Med Spa booking background"
-            width={1920}
-            height={1080}
-            className="w-full h-full object-cover"
+            onCanPlay={() => setVideoReady(true)}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+            style={{ opacity: videoReady ? 1 : 0 }}
           >
             <source src="/videos/faq-hero.mp4" type="video/mp4" />
           </video>
+
+          {/* Gradient overlay */}
           <div
             className="absolute inset-0"
             style={{
