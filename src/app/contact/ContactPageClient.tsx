@@ -66,9 +66,6 @@ export default function ContactPageClient() {
   const heroContent = useQuery(api.siteContent.getByKey, {
     key: "contact_hero",
   });
-  const contactHeroBg = useQuery(api.siteContent.getByKey, {
-    key: "contact_hero_bg",
-  });
   const businessInfoEntry = useQuery(api.siteContent.getByKey, {
     key: "business_info",
   });
@@ -83,37 +80,15 @@ export default function ContactPageClient() {
           ────────────────────────────────────────────── */}
       <section
         className="relative pt-44 pb-28 md:pt-52 md:pb-32 px-6 overflow-hidden"
-        style={{ backgroundColor: "#391e1e" }}
+        style={{
+          background: [
+            "radial-gradient(ellipse 90% 70% at 15% 85%, rgba(198,168,125,0.14) 0%, transparent 55%)",
+            "radial-gradient(ellipse 70% 55% at 85% 15%, rgba(162,60,64,0.09) 0%, transparent 50%)",
+            "radial-gradient(ellipse 50% 60% at 50% 0%, rgba(57,30,30,0.6) 0%, transparent 60%)",
+            "linear-gradient(165deg, #3d2222 0%, #391e1e 35%, #2d1515 70%, #200a0a 100%)",
+          ].join(", "),
+        }}
       >
-        {/* Silk texture background */}
-        <img
-          src={contactHeroBg?.imageUrl || "/images/contact-hero-bg.png"}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
-        {/* Film grain */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden
-          style={{
-            opacity: 0.05,
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")",
-            backgroundSize: "200px 200px",
-          }}
-        />
-
-        {/* Vignette */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 0%, rgba(30,12,12,0.35) 100%)",
-          }}
-        />
         <motion.div
           className="relative max-w-3xl mx-auto text-center"
           initial={skipAnimation ? "visible" : "hidden"}
