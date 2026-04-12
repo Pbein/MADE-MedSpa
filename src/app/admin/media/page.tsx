@@ -13,58 +13,21 @@ interface MediaSlot {
   label: string;
   description: string;
   type: "image" | "video";
-  aspect?: string; // CSS aspect-ratio for preview
+  aspect?: string;
   defaultUrl: string;
+  category: "content" | "hero" | "background";
 }
 
 const MEDIA_SLOTS: MediaSlot[] = [
-  {
-    key: "hero_video",
-    label: "Hero Background Video",
-    description: "Looping background video on the homepage hero. MP4, ideally under 5 MB.",
-    type: "video",
-    aspect: "16/9",
-    defaultUrl: "/videos/hero.mp4",
-  },
-  {
-    key: "hero_poster",
-    label: "Hero Poster / Fallback Image",
-    description: "Still image shown while the hero video loads or on mobile.",
-    type: "image",
-    aspect: "16/9",
-    defaultUrl: "https://placehold.co/1920x1080/391e1e/c6a87d?text=MADE+Med+Spa",
-  },
+  // ── CONTENT IMAGES — Primary visual content shown to visitors ──
   {
     key: "about_philosophy_image",
     label: "Homepage — Philosophy Image",
-    description: "Large editorial image in the Where Science Meets Artistry section.",
+    description: "Large editorial image in the 'Where Science Meets Artistry' section on the homepage.",
     type: "image",
     aspect: "4/5",
     defaultUrl: "https://placehold.co/800x1000/4a2c17/f5f0e8?text=Our+Philosophy",
-  },
-  {
-    key: "services_hero_bg",
-    label: "Services Page — Hero Background",
-    description: "Full-bleed background image behind the Services page hero headline.",
-    type: "image",
-    aspect: "21/9",
-    defaultUrl: "https://placehold.co/2100x900/4a2c17/f5f0e8?text=Services+Hero",
-  },
-  {
-    key: "about_hero_bg",
-    label: "About Page — Hero Background",
-    description: "Full-bleed background image behind the About page hero headline.",
-    type: "image",
-    aspect: "21/9",
-    defaultUrl: "https://placehold.co/2100x900/4a2c17/f5f0e8?text=About+Hero",
-  },
-  {
-    key: "contact_hero_bg",
-    label: "Contact Page — Hero Background",
-    description: "Full-bleed background image behind the Contact page hero headline.",
-    type: "image",
-    aspect: "21/9",
-    defaultUrl: "https://placehold.co/2100x900/391e1e/c6a87d?text=Contact+Hero",
+    category: "content",
   },
   {
     key: "about_story_image",
@@ -73,46 +36,92 @@ const MEDIA_SLOTS: MediaSlot[] = [
     type: "image",
     aspect: "4/5",
     defaultUrl: "https://placehold.co/800x1000/4a2c17/f5f0e8?text=Our+Story",
-  },
-  {
-    key: "testimonial_portrait",
-    label: "Testimonials — Portrait Image",
-    description: "Portrait displayed alongside client testimonials on the homepage.",
-    type: "image",
-    aspect: "3/4",
-    defaultUrl: "https://placehold.co/600x800/5c3a1e/f5f0e8?text=Client+Portrait",
+    category: "content",
   },
   {
     key: "featured_service_image_1",
-    label: "Featured Service 1 — Image",
-    description: "Fallback image for the first featured service card on the homepage.",
+    label: "Featured Service 1 — Fallback Image",
+    description: "Shown on the first homepage service card when the service has no image set.",
     type: "image",
-    aspect: "1/1",
-    defaultUrl: "https://placehold.co/600x600/3c2415/f5f0e8?text=Service+1",
+    aspect: "4/5",
+    defaultUrl: "https://placehold.co/600x750/3c2415/f5f0e8?text=Service+1",
+    category: "content",
   },
   {
     key: "featured_service_image_2",
-    label: "Featured Service 2 — Image",
-    description: "Fallback image for the second featured service card on the homepage.",
+    label: "Featured Service 2 — Fallback Image",
+    description: "Shown on the second homepage service card when the service has no image set.",
     type: "image",
-    aspect: "1/1",
-    defaultUrl: "https://placehold.co/600x600/5c3a1e/f5f0e8?text=Service+2",
+    aspect: "4/5",
+    defaultUrl: "https://placehold.co/600x750/5c3a1e/f5f0e8?text=Service+2",
+    category: "content",
   },
   {
     key: "featured_service_image_3",
-    label: "Featured Service 3 — Image",
-    description: "Fallback image for the third featured service card on the homepage.",
+    label: "Featured Service 3 — Fallback Image",
+    description: "Shown on the third homepage service card when the service has no image set.",
     type: "image",
-    aspect: "1/1",
-    defaultUrl: "https://placehold.co/600x600/4a2c17/f5f0e8?text=Service+3",
+    aspect: "4/5",
+    defaultUrl: "https://placehold.co/600x750/4a2c17/f5f0e8?text=Service+3",
+    category: "content",
   },
+
+  // ── HERO SECTIONS — Full-bleed hero backgrounds and video ──
+  {
+    key: "hero_video",
+    label: "Homepage — Hero Video",
+    description: "Looping background video on the homepage hero. MP4, ideally under 5 MB.",
+    type: "video",
+    aspect: "16/9",
+    defaultUrl: "/videos/hero.mp4",
+    category: "hero",
+  },
+  {
+    key: "hero_poster",
+    label: "Homepage — Hero Poster",
+    description: "Still image shown while the hero video loads or if video fails.",
+    type: "image",
+    aspect: "16/9",
+    defaultUrl: "https://placehold.co/1920x1080/391e1e/c6a87d?text=MADE+Med+Spa",
+    category: "hero",
+  },
+  {
+    key: "services_hero_bg",
+    label: "Services Page — Hero Background",
+    description: "Background image behind the Services page headline.",
+    type: "image",
+    aspect: "21/9",
+    defaultUrl: "https://placehold.co/2100x900/4a2c17/f5f0e8?text=Services+Hero",
+    category: "hero",
+  },
+  {
+    key: "about_hero_bg",
+    label: "About Page — Hero Background",
+    description: "Background image behind the About page headline.",
+    type: "image",
+    aspect: "21/9",
+    defaultUrl: "https://placehold.co/2100x900/4a2c17/f5f0e8?text=About+Hero",
+    category: "hero",
+  },
+  {
+    key: "contact_hero_bg",
+    label: "Contact Page — Hero Background",
+    description: "Silk texture behind the Contact page hero. Dark espresso/mocha tones.",
+    type: "image",
+    aspect: "21/9",
+    defaultUrl: "/images/contact-hero-bg.png",
+    category: "hero",
+  },
+
+  // ── BACKGROUND TEXTURES — Subtle decorative textures ──
   {
     key: "testimonial_bg",
     label: "Testimonials — Background Texture",
-    description: "Soft texture image behind the client testimonials section on the homepage.",
+    description: "Soft texture behind the client testimonials section on the homepage.",
     type: "image",
     aspect: "21/9",
     defaultUrl: "https://placehold.co/2100x900/f5f0e8/e0d0be?text=Testimonial+BG",
+    category: "background",
   },
 ];
 
@@ -429,6 +438,64 @@ function MediaSlotCard({
   );
 }
 
+// ── Section group with header ────────────────────────────────────────────────
+
+function SectionGroup({
+  title,
+  description,
+  slots,
+  mediaMap,
+  onSave,
+}: {
+  title: string;
+  description: string;
+  slots: MediaSlot[];
+  mediaMap: Map<string, string>;
+  onSave: (key: string, url: string) => Promise<void>;
+}) {
+  return (
+    <div style={{ marginBottom: "2rem" }}>
+      <div
+        style={{
+          marginBottom: "1rem",
+          paddingBottom: "0.75rem",
+          borderBottom: "1px solid #e5e7eb",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.2rem",
+            fontWeight: 600,
+            color: "#111827",
+            margin: "0 0 0.25rem 0",
+          }}
+        >
+          {title}
+        </h2>
+        <p
+          style={{
+            fontSize: "0.875rem",
+            color: "#6b7280",
+            margin: 0,
+          }}
+        >
+          {description}
+        </p>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {slots.map((slot) => (
+          <MediaSlotCard
+            key={slot.key}
+            slot={slot}
+            currentUrl={mediaMap.get(slot.key) || ""}
+            onSave={onSave}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ───────────────────────────────────────────────────────────────
 
 export default function AdminMediaPage() {
@@ -505,19 +572,32 @@ export default function AdminMediaPage() {
         </p>
       </div>
 
-      {/* Media slots */}
-      <div
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
-        {MEDIA_SLOTS.map((slot) => (
-          <MediaSlotCard
-            key={slot.key}
-            slot={slot}
-            currentUrl={mediaMap.get(slot.key) || ""}
-            onSave={handleSave}
-          />
-        ))}
-      </div>
+      {/* Content Images */}
+      <SectionGroup
+        title="Content Images"
+        description="Primary visual content — these are the most visible images on the site."
+        slots={MEDIA_SLOTS.filter((s) => s.category === "content")}
+        mediaMap={mediaMap}
+        onSave={handleSave}
+      />
+
+      {/* Hero Sections */}
+      <SectionGroup
+        title="Hero Sections"
+        description="Full-bleed backgrounds and video behind page headlines."
+        slots={MEDIA_SLOTS.filter((s) => s.category === "hero")}
+        mediaMap={mediaMap}
+        onSave={handleSave}
+      />
+
+      {/* Background Textures */}
+      <SectionGroup
+        title="Background Textures"
+        description="Subtle decorative textures. These are less prominent and rarely need changing."
+        slots={MEDIA_SLOTS.filter((s) => s.category === "background")}
+        mediaMap={mediaMap}
+        onSave={handleSave}
+      />
     </div>
   );
 }

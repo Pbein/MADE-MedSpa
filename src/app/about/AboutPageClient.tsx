@@ -38,7 +38,7 @@ const TEAM_IMAGES = [
   "https://placehold.co/450x600/6b4226/f5f0e8?text=Olivia+H.",
 ];
 
-const FALLBACK_TEAM = [
+const FALLBACK_TEAM: { name: string; title: string; bio: string; imageUrl?: string }[] = [
   {
     name: "Dr. Karlyne",
     title: "Founder & Medical Director",
@@ -438,7 +438,7 @@ export default function AboutPageClient({
               <motion.div key={member.name} variants={revealUp}>
                 <div className="overflow-hidden mb-6">
                   <img
-                    src={TEAM_IMAGES[i] || `https://placehold.co/450x600/3c2415/f5f0e8?text=${encodeURIComponent(member.name)}`}
+                    src={member.imageUrl || TEAM_IMAGES[i] || `https://placehold.co/450x600/3c2415/f5f0e8?text=${encodeURIComponent(member.name)}`}
                     alt={member.name}
                     className="image-editorial aspect-[3/4] w-full object-cover"
                     style={{

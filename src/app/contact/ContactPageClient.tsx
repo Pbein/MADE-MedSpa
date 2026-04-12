@@ -66,6 +66,9 @@ export default function ContactPageClient() {
   const heroContent = useQuery(api.siteContent.getByKey, {
     key: "contact_hero",
   });
+  const contactHeroBg = useQuery(api.siteContent.getByKey, {
+    key: "contact_hero_bg",
+  });
   const businessInfoEntry = useQuery(api.siteContent.getByKey, {
     key: "business_info",
   });
@@ -84,7 +87,7 @@ export default function ContactPageClient() {
       >
         {/* Silk texture background */}
         <img
-          src="/images/contact-hero-bg.png"
+          src={contactHeroBg?.imageUrl || "/images/contact-hero-bg.png"}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
