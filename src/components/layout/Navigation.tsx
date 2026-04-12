@@ -55,13 +55,26 @@ export default function Navigation() {
   useEffect(() => {
     if (isMobileMenuOpen) {
       isNavigatingRef.current = false;
+      scrollYRef.current = window.scrollY;
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
       return () => {
         document.documentElement.style.overflow = "";
         document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.width = "";
         if (isNavigatingRef.current) {
           window.scrollTo(0, 0);
+        } else {
+          window.scrollTo(0, scrollYRef.current);
         }
       };
     }
@@ -219,7 +232,8 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[65] bg-black/20"
+              className="fixed inset-0 z-[65]"
+              style={{ backgroundColor: "rgba(0,0,0,0.2)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -228,9 +242,16 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed inset-0 z-[70] flex flex-col justify-center px-8 sm:px-12"
+              className="fixed z-[70] flex flex-col justify-center px-8 sm:px-12"
               style={{
-                backgroundColor: "var(--color-surface)",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "100dvh",
+                minHeight: "-webkit-fill-available",
+                backgroundColor: "#fbfaef",
+                paddingTop: "env(safe-area-inset-top, 0px)",
+                paddingBottom: "env(safe-area-inset-bottom, 0px)",
                 touchAction: "none",
                 overscrollBehavior: "none",
               }}
