@@ -91,6 +91,7 @@ export default function AboutPageClient({
   const teamMembers = dbTeam && dbTeam.length > 0 ? dbTeam : FALLBACK_TEAM;
   const story = useQuery(api.siteContent.getByKey, { key: "about_story" });
   const storyImageContent = useQuery(api.siteContent.getByKey, { key: "about_story_image" });
+  const storyImageLoading = storyImageContent === undefined;
   const storyImage = storyImageContent?.imageUrl || DEFAULT_STORY_IMAGE;
   const mission = useQuery(api.siteContent.getByKey, { key: "about_mission" });
   const valuesContent = useQuery(api.siteContent.getByKey, {
@@ -126,13 +127,15 @@ export default function AboutPageClient({
             variants={revealLeft}
             className="md:col-span-5"
           >
-            <div className="overflow-hidden">
-              <img
-                src={storyImage}
-                alt="MADE Med Spa studio"
-                className="w-full aspect-[4/5] object-cover image-editorial"
-                style={{ boxShadow: "12px 12px 40px rgba(32,10,10,0.06)" }}
-              />
+            <div className="overflow-hidden aspect-[4/5]" style={{ backgroundColor: "var(--color-surface-high)" }}>
+              {!storyImageLoading && (
+                <img
+                  src={storyImage}
+                  alt="MADE Med Spa studio"
+                  className="w-full h-full object-cover image-editorial"
+                  style={{ boxShadow: "12px 12px 40px rgba(32,10,10,0.06)" }}
+                />
+              )}
             </div>
           </motion.div>
 
