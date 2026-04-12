@@ -251,6 +251,23 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
+              {/* Close button — top right */}
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close menu"
+                className="absolute right-6 w-8 h-8 flex items-center justify-center"
+                style={{ top: "calc(env(safe-area-inset-top, 0px) + 1.5rem)" }}
+              >
+                <span
+                  className="absolute block w-6 h-[1.5px] rotate-45"
+                  style={{ backgroundColor: "var(--color-primary)" }}
+                />
+                <span
+                  className="absolute block w-6 h-[1.5px] -rotate-45"
+                  style={{ backgroundColor: "var(--color-primary)" }}
+                />
+              </button>
+
               <ul className="flex flex-col gap-8">
                 <motion.li
                   initial={{ opacity: 0, x: 20 }}
