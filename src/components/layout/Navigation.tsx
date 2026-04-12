@@ -252,6 +252,27 @@ export default function Navigation() {
               }}
             >
               <ul className="flex flex-col gap-8">
+                <motion.li
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 0.1,
+                    duration: 0.4,
+                    ease: [0.16, 1, 0.3, 1] as const,
+                  }}
+                >
+                  <Link
+                    href="/"
+                    onClick={handleMobileNavClick}
+                    className="font-headline italic text-3xl tracking-tight transition-opacity duration-500"
+                    style={{
+                      color: "var(--color-primary)",
+                      opacity: pathname === "/" ? 1 : 0.5,
+                    }}
+                  >
+                    Home
+                  </Link>
+                </motion.li>
                 {navLinks.map((link, index) => {
                   const isActive = pathname === link.href;
                   return (
@@ -260,7 +281,7 @@ export default function Navigation() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{
-                        delay: 0.1 + index * 0.05,
+                        delay: 0.15 + index * 0.05,
                         duration: 0.4,
                         ease: [0.16, 1, 0.3, 1] as const,
                       }}
