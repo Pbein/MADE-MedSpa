@@ -26,7 +26,6 @@ export default function Navigation() {
   const isHeroOverlay = isOverlayRoute && !isScrolled;
   const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;
 
-  // Detect route change during render — disable transitions immediately
   if (prevPathnameRef.current !== pathname) {
     prevPathnameRef.current = pathname;
     if (transitionsEnabled) {
@@ -34,7 +33,6 @@ export default function Navigation() {
     }
   }
 
-  // Re-enable transitions after route change paint
   useEffect(() => {
     setIsScrolled(window.scrollY > 20);
     const raf = requestAnimationFrame(() => {
@@ -83,19 +81,25 @@ export default function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
+  const hamburgerColor = isMobileMenuOpen
+    ? "var(--color-primary)"
+    : useLightNavText
+      ? "var(--color-on-primary)"
+      : "var(--color-primary)";
+
   return (
     <>
+      {/* ═══════════════════════════════════════════
+          DESKTOP NAV — fixed, full bar (hidden on mobile)
+          ═══════════════════════════════════════════ */}
       <nav
-        className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
+        className={`hidden md:block fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
-          backgroundColor: isHeroOverlay
-            ? "transparent"
-            : "#fbfaef",
+          backgroundColor: isHeroOverlay ? "transparent" : "#fbfaef",
           boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
         }}
       >
-        <div className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8">
-          {/* Logo */}
+        <div className="flex justify-between items-center px-12 py-8">
           <Link
             href="/"
             className="font-headline italic text-2xl tracking-tight transition-colors duration-500"
@@ -108,8 +112,7 @@ export default function Navigation() {
             MADE
           </Link>
 
-          {/* Desktop Nav Links */}
-          <ul className="hidden md:flex gap-12 items-center">
+          <ul className="flex gap-12 items-center">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -137,74 +140,82 @@ export default function Navigation() {
             })}
           </ul>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:block">
-            <Link
-              href="/booking"
-              className="btn-primary"
-              style={{
-                padding: "0.75rem 2rem",
-                fontSize: "0.95rem",
-              }}
-            >
-              Book Appointment
-            </Link>
-          </div>
-
-          {/* Mobile: Hamburger */}
-          <div className="md:hidden relative z-[90]">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-              className="relative w-8 h-6 flex flex-col justify-between"
-            >
-              <span
-                className="block w-full h-[1.5px] transition-all duration-500 origin-center"
-                style={{
-                  backgroundColor:
-                    isMobileMenuOpen
-                      ? "var(--color-primary)"
-                      : useLightNavText
-                        ? "var(--color-on-primary)"
-                        : "var(--color-primary)",
-                  transform: isMobileMenuOpen
-                    ? "translateY(10px) rotate(45deg)"
-                    : "none",
-                }}
-              />
-              <span
-                className="block w-full h-[1.5px] transition-all duration-500"
-                style={{
-                  backgroundColor:
-                    isMobileMenuOpen
-                      ? "var(--color-primary)"
-                      : useLightNavText
-                        ? "var(--color-on-primary)"
-                        : "var(--color-primary)",
-                  opacity: isMobileMenuOpen ? 0 : 1,
-                }}
-              />
-              <span
-                className="block w-full h-[1.5px] transition-all duration-500 origin-center"
-                style={{
-                  backgroundColor:
-                    isMobileMenuOpen
-                      ? "var(--color-primary)"
-                      : useLightNavText
-                        ? "var(--color-on-primary)"
-                        : "var(--color-primary)",
-                  transform: isMobileMenuOpen
-                    ? "translateY(-12px) rotate(-45deg)"
-                    : "none",
-                }}
-              />
-            </button>
-          </div>
+          <Link
+            href="/booking"
+            className="btn-primary"
+            style={{ padding: "0.75rem 2rem", fontSize: "0.95rem" }}
+          >
+            Book Appointment
+          </Link>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* ═══════════════════════════════════════════
+          MOBILE — Static header (scrolls with page, overlays hero)
+          ═══════════════════════════════════════════ */}
+      <div className="md:hidden absolute top-0 left-0 right-0 flex justify-between items-center px-6 py-5 z-10">
+        <Link
+          href="/"
+          className="font-headline italic text-2xl tracking-tight"
+          style={{
+            color: useLightNavText && !isScrolled
+              ? "var(--color-on-primary)"
+              : "var(--color-primary)",
+          }}
+        >
+          MADE
+        </Link>
+
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open menu"
+          className="relative w-8 h-5 flex flex-col justify-between"
+        >
+          <span
+            className="block w-full h-[1.5px]"
+            style={{ backgroundColor: hamburgerColor }}
+          />
+          <span
+            className="block w-full h-[1.5px]"
+            style={{ backgroundColor: hamburgerColor }}
+          />
+          <span
+            className="block w-full h-[1.5px]"
+            style={{ backgroundColor: hamburgerColor }}
+          />
+        </button>
+      </div>
+
+      {/* ═══════════════════════════════════════════
+          MOBILE — Floating hamburger (fixed, visible when scrolled)
+          ═══════════════════════════════════════════ */}
+      <AnimatePresence>
+        {isScrolled && !isMobileMenuOpen && (
+          <motion.button
+            key="floating-hamburger"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open menu"
+            className="md:hidden fixed top-5 right-6 z-50 w-10 h-10 flex flex-col justify-center items-center gap-[5px] rounded-full"
+            style={{
+              backgroundColor: "rgba(57,30,30,0.85)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          >
+            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
+            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
+            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* ═══════════════════════════════════════════
+          MOBILE MENU OVERLAY
+          ═══════════════════════════════════════════ */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -235,12 +246,12 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
-              {/* Close button — top right */}
+              {/* Close button */}
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 aria-label="Close menu"
-                className="absolute right-6 w-8 h-8 flex items-center justify-center"
-                style={{ top: "calc(env(safe-area-inset-top, 0px) + 1.5rem)" }}
+                className="absolute right-6 w-10 h-10 flex items-center justify-center"
+                style={{ top: "calc(env(safe-area-inset-top, 0px) + 1.25rem)" }}
               >
                 <span
                   className="absolute block w-6 h-[1.5px] rotate-45"
