@@ -17,46 +17,119 @@ export default function EditorialBreak({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const bgClass =
-    variant === "dark"
-      ? "bg-[var(--color-primary)]"
-      : variant === "silk"
-        ? "bg-[var(--color-surface-low)]"
-        : "bg-[var(--color-surface)]";
-
-  const textClass =
-    variant === "dark"
-      ? "text-[var(--color-surface)]"
-      : "text-[var(--color-primary)]";
-
-  const dividerClass =
-    variant === "dark"
-      ? "bg-[var(--color-outline-variant)]/30"
-      : "bg-[var(--color-outline-variant)]";
+  const isDark = variant === "dark";
+  const isSilk = variant === "silk";
 
   return (
-    <section ref={ref} className={`py-40 px-12 md:px-24 ${bgClass}`}>
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: luxuryEase }}
-          className="flex flex-col items-center gap-10"
-        >
-          {/* Top accent divider */}
-          <div className={`w-24 h-px ${dividerClass}`} />
+    <section
+      ref={ref}
+      className="relative overflow-hidden"
+      style={{
+        backgroundColor: isDark
+          ? "var(--color-primary)"
+          : "var(--color-surface-low)",
+      }}
+    >
+      {/* Background texture for silk variant */}
+      {isSilk && (
+        <img
+          src="/images/editorial-break-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
 
-          {/* Quote text */}
-          <p
-            className={`headline-section text-3xl md:text-5xl leading-tight ${textClass}`}
-            style={{ textWrap: "balance" } as React.CSSProperties}
+      {/* Subtle warmth for non-silk, non-dark */}
+      {!isDark && !isSilk && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: [
+              "radial-gradient(ellipse 60% 80% at 30% 50%, rgba(198,168,125,0.07) 0%, transparent 70%),",
+              "radial-gradient(ellipse 60% 80% at 70% 50%, rgba(132,38,44,0.03) 0%, transparent 70%)",
+            ].join(" "),
+          }}
+        />
+      )}
+
+      <div className="relative py-36 md:py-48 px-8 md:px-16">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1.2, ease: luxuryEase }}
+            className="flex flex-col items-center"
           >
-            {text}
-          </p>
+            {/* Top ornament */}
+            <div className="flex items-center gap-5 mb-14">
+              <div
+                className="w-16 h-px"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(247,246,235,0.15)"
+                    : "rgba(198,168,125,0.35)",
+                }}
+              />
+              <div
+                className="w-1.5 h-1.5 rotate-45 border"
+                style={{
+                  borderColor: isDark
+                    ? "rgba(247,246,235,0.2)"
+                    : "rgba(198,168,125,0.4)",
+                }}
+              />
+              <div
+                className="w-16 h-px"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(247,246,235,0.15)"
+                    : "rgba(198,168,125,0.35)",
+                }}
+              />
+            </div>
 
-          {/* Bottom accent divider */}
-          <div className={`w-24 h-px ${dividerClass}`} />
-        </motion.div>
+            {/* Quote */}
+            <p
+              className="font-headline italic font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-snug md:leading-[1.3]"
+              style={{
+                color: isDark ? "#f7f6eb" : "var(--color-primary)",
+                textWrap: "balance",
+                maxWidth: "44rem",
+              } as React.CSSProperties}
+            >
+              {text}
+            </p>
+
+            {/* Bottom ornament */}
+            <div className="flex items-center gap-5 mt-14">
+              <div
+                className="w-16 h-px"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(247,246,235,0.15)"
+                    : "rgba(198,168,125,0.35)",
+                }}
+              />
+              <div
+                className="w-1.5 h-1.5 rotate-45 border"
+                style={{
+                  borderColor: isDark
+                    ? "rgba(247,246,235,0.2)"
+                    : "rgba(198,168,125,0.4)",
+                }}
+              />
+              <div
+                className="w-16 h-px"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(247,246,235,0.15)"
+                    : "rgba(198,168,125,0.35)",
+                }}
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

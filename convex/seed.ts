@@ -14,9 +14,9 @@ export const insertSeedData = internalMutation({
         name: "Botox Cosmetic",
         slug: "botox-cosmetic",
         shortDescription:
-          "Smooth fine lines and wrinkles with precision-placed neuromodulator injections.",
+          "Natural-looking neuromodulator treatment that softens lines while keeping your face moving the way it should.",
         fullDescription:
-          "Our signature Botox Cosmetic treatment targets dynamic wrinkles caused by repetitive facial movements. Using advanced micro-dosing techniques, our board-certified injectors deliver natural-looking results that soften crow's feet, forehead lines, and frown lines while preserving your expressive beauty. Results typically appear within 3-5 days and last 3-4 months.",
+          "Botox here isn't about freezing your face — it is about softening the lines you don't want while preserving the movement that makes you look like you. Before any needle touches your skin, we spend time looking at how your face actually moves, talking through what you want to address, and — just as importantly — what you don't. Most clients come to us after seeing overdone results elsewhere, and our approach is deliberately restrained: micro-dosed, precisely placed, and planned around the way your expressions already work. Results appear within 3-5 days and typically last 3-4 months.",
         category: "Injectables",
         duration: "30 minutes",
         priceRange: "$250 - $600",
@@ -27,9 +27,9 @@ export const insertSeedData = internalMutation({
         name: "Dermal Fillers",
         slug: "dermal-fillers",
         shortDescription:
-          "Restore youthful volume and contour with premium hyaluronic acid fillers.",
+          "Subtle, thoughtful volume restoration using premium hyaluronic acid — without the overfilled look.",
         fullDescription:
-          "Our dermal filler treatments use top-tier hyaluronic acid formulations to restore lost volume, sculpt facial contours, and enhance natural beauty. Whether you desire plumper lips, defined cheekbones, or a smoother jawline, our expert injectors create bespoke treatment plans tailored to your unique facial anatomy. Results are immediate and can last 6-18 months depending on the treatment area.",
+          "Dermal filler done well shouldn't look like filler at all. Using premium hyaluronic acid products and a deliberately conservative approach, we restore volume in the places age has quietly taken it — cheeks, temples, under-eyes, jawline — while respecting the proportions of your face. We'd rather undertreat and bring you back than overcorrect, and we will tell you honestly when filler isn't the right answer. Expect a detailed consultation that covers what we are going to do, what we are not, and why. Results are immediate and typically last 6-18 months depending on the product and area.",
         category: "Injectables",
         duration: "45 minutes",
         priceRange: "$550 - $1,200",
@@ -40,14 +40,66 @@ export const insertSeedData = internalMutation({
         name: "Lip Enhancement",
         slug: "lip-enhancement",
         shortDescription:
-          "Achieve beautifully balanced, naturally fuller lips with expert artistry.",
+          "Naturally balanced lip filler that looks like better lips — not obviously filled ones.",
         fullDescription:
-          "Our lip enhancement service goes beyond simple volume. Using a combination of premium fillers and advanced injection techniques, we sculpt lips that complement your facial proportions perfectly. From subtle definition to a more dramatic pout, every treatment is customized. We prioritize symmetry, natural movement, and a soft, touchable result that looks effortlessly beautiful.",
+          "The goal of lip enhancement here isn't bigger lips — it is balanced, natural-looking lips that complement your face. Whether you want subtle hydration and definition or a fuller shape, we build every treatment around your proportions, your resting lip shape, and how your lips move when you smile and talk. Soft, natural movement is non-negotiable, and we will always talk through what's realistic for your anatomy and what isn't. Results are immediate and typically last 6-12 months.",
         category: "Injectables",
         duration: "30 minutes",
         priceRange: "$450 - $850",
         isActive: true,
         sortOrder: 3,
+      },
+      {
+        name: "Sculptra",
+        slug: "sculptra",
+        shortDescription:
+          "Collagen-stimulating biostimulator for gradual, long-lasting volume restoration that looks like it was always yours.",
+        fullDescription:
+          "Sculptra is a poly-L-lactic acid biostimulator, which is a technical way of saying it signals your skin to rebuild its own collagen rather than just sitting in the tissue like traditional filler. Results develop gradually over 3-6 months — people notice you look better without being able to pinpoint what changed. It is the right answer for clients who want structural improvement in the cheeks, temples, and mid-face without the 'done' look that can come from aggressive filling. Because the treatment requires a real understanding of timelines and anatomy, every plan begins with a thorough consultation covering the science, what to realistically expect, and real before-and-after examples. A full course is typically 2-3 sessions spaced 4-6 weeks apart, with final results visible at 4-6 months and lasting up to two years.",
+        category: "Injectables",
+        duration: "60 minutes",
+        priceRange: "$850 - $1,400 per vial",
+        isActive: true,
+        sortOrder: 3.1,
+      },
+      {
+        name: "Hyperdilute Radiesse",
+        slug: "hyperdilute-radiesse",
+        shortDescription:
+          "Collagen-stimulating treatment for skin laxity and luminosity — especially the neck, jawline, and décolletage.",
+        fullDescription:
+          "Hyperdilute Radiesse takes calcium hydroxylapatite — a powerful collagen and elastin stimulator — and dilutes it so it spreads evenly through the skin to rebuild firmness where standard filler can't help. It is the answer for the areas most practices either wave off or overcorrect with filler: the neck, jawline, décolletage, and backs of the hands. Results build gradually over 6-12 weeks as your body produces new collagen, leaving treated areas tighter, smoother, and more luminous. A typical plan involves 2-3 sessions. This is a nuanced treatment that only works in experienced hands, and every consultation includes a clear explanation of the science, expected timelines, and what results are realistic for your skin.",
+        category: "Injectables",
+        duration: "60 minutes",
+        priceRange: "$650 - $1,200",
+        isActive: true,
+        sortOrder: 3.2,
+      },
+      {
+        name: "PRF Facial Rejuvenation",
+        slug: "prf-facial-rejuvenation",
+        shortDescription:
+          "Next-generation platelet-rich fibrin using your own growth factors to improve tone, texture, and overall skin quality.",
+        fullDescription:
+          "PRF — platelet-rich fibrin — is the next generation of PRP. Using a small sample of your own blood, we isolate a concentrate rich in platelets, fibrin, and growth factors, then return it to your skin through targeted injections or microneedling. Because it is derived entirely from your own body, there is no risk of rejection or allergic reaction. Over 6-12 weeks, PRF stimulates collagen, evens out tone, and improves texture in a way that topical products simply can't match. The process feels approachable because it is — we walk you through every step, check in during the treatment, and follow up the next day to make sure you are recovering comfortably. A typical plan involves 2-3 sessions.",
+        category: "Injectables",
+        duration: "75 minutes",
+        priceRange: "$600 - $1,100",
+        isActive: true,
+        sortOrder: 3.3,
+      },
+      {
+        name: "PRP Under-Eye Treatment",
+        slug: "prp-under-eye",
+        shortDescription:
+          "Targeted platelet-rich plasma injections to brighten the under-eye area without the puffiness filler can cause.",
+        fullDescription:
+          "The under-eye area is notoriously hard to treat well. Filler can look puffy or bluish, creams only go so far, and the skin here is thinner and more delicate than anywhere else on the face. PRP (platelet-rich plasma) offers a natural alternative: using growth factors drawn from your own blood, we gently rejuvenate the under-eye skin to improve tone, reduce the appearance of darkness, and restore a more rested look. Results develop over 8-12 weeks and a typical plan involves 2-3 sessions. This is the right treatment for clients who want real improvement without the 'done' appearance that can come from aggressive filler correction.",
+        category: "Injectables",
+        duration: "60 minutes",
+        priceRange: "$500 - $900",
+        isActive: true,
+        sortOrder: 3.4,
       },
       {
         name: "HydraFacial Signature",
@@ -291,32 +343,32 @@ export const insertSeedData = internalMutation({
     const siteContent = [
       {
         key: "home_hero",
-        title: "Elevate Your Natural Beauty",
-        body: "At MADE Med Spa, we blend clinical expertise with luxurious self-care to help you look and feel your absolute best. Discover treatments tailored to your unique beauty.",
+        title: "Natural Results, On Purpose",
+        body: "Thoughtful aesthetic care from a nurse injector who takes the time to look at how your face actually moves before touching a needle. Unhurried consultations, honest recommendations, and results so natural that people notice something is different — without being able to tell what.",
         updatedAt: now,
       },
       {
         key: "about_story",
         title: "Our Story",
-        body: "MADE Med Spa was founded on the belief that everyone deserves access to exceptional aesthetic care in a warm, welcoming environment. Our team of board-certified providers combines advanced medical training with an artist's eye for beauty, delivering results that enhance your natural features rather than masking them. Every treatment at MADE is thoughtfully customized because we know that true beauty is never one-size-fits-all.",
+        body: "MADE Med Spa was founded on a simple idea: the best aesthetic work is the work no one can point to. Too many clients arrive having seen overdone results elsewhere — the frozen forehead, the puffed lips, the face that no longer moves the way it used to. We do things differently. Every treatment starts with an honest consultation, a careful look at how your face actually moves, and a plan built around restraint. The goal is never transformation. It is you, looking like yourself on a good day.",
         updatedAt: now,
       },
       {
         key: "about_mission",
         title: "Our Mission",
-        body: "To empower our clients with confidence through personalized, results-driven aesthetic treatments delivered with the highest standards of safety, artistry, and care.",
+        body: "To deliver aesthetic results that look like the best version of you — never frozen, never overdone. We believe the best treatment starts with a real conversation: what you want, what you don't, and what actually fits your face. No pressure, no upselling, and follow-up care that lasts beyond the appointment.",
         updatedAt: now,
       },
       {
         key: "about_values",
         title: "Our Values",
-        body: "Integrity in every recommendation. Artistry in every treatment. Warmth in every interaction. We are committed to honest consultations, evidence-based treatments, and building lasting relationships with every guest who walks through our doors.",
+        body: "Restraint over excess. Education over pressure. Honest recommendations — including the ones that don't involve a needle. Every client leaves knowing exactly what was done, why, and what to expect next. And we follow up to make sure you are happy with the results.",
         updatedAt: now,
       },
       {
         key: "home_tagline",
-        title: "Luxury Meets Results",
-        body: "Where science meets artistry. Experience the MADE difference with treatments designed to reveal the most radiant version of you.",
+        title: "The Difference Is In What We Don't Do",
+        body: "No rushed appointments. No one-size-fits-all recommendations. No 'while you're here' add-ons. Just careful, educated aesthetic care from a nurse injector who takes the time to get it right — and follows up afterward to make sure you are happy.",
         updatedAt: now,
       },
       {
@@ -379,9 +431,9 @@ export const insertSeedData = internalMutation({
     // ────────────────────────────────────────────────────────────────────────
     const teamMembers = [
       {
-        name: "Dr. Karlyne",
-        title: "Founder & Medical Director",
-        bio: "Board-certified physician with over 15 years of experience in aesthetic medicine, dedicated to enhancing natural beauty through precision and artistry.",
+        name: "Nurse Karlyne",
+        title: "Founder & Lead Aesthetic Nurse Injector",
+        bio: "Aesthetic nurse injector and founder of MADE Med Spa, known for unhurried consultations, restrained results, and a refusal to upsell. Her approach starts with a real conversation — what you want, what you don't, and what actually fits your face — before any needle is touched. Clients consistently cite her patience, transparency, and post-appointment follow-up.",
         sortOrder: 1,
         isActive: true,
       },
@@ -417,24 +469,108 @@ export const insertSeedData = internalMutation({
     // ────────────────────────────────────────────────────────────────────────
     const testimonials = [
       {
-        name: "Victoria R.",
-        quote: "MADE transformed not just my appearance, but my confidence. The team's artistry and attention to detail is unlike anything I've experienced.",
-        treatment: "Dermal Fillers & Skin Rejuvenation",
+        name: "Verified Client",
+        quote: "I've been getting toxins for years at other places and always left looking a little frozen or 'done.' My first appointment at MADE was completely different. The consultation alone was 20 minutes and she actually looked at how my face moves before touching a needle. The results are the most natural I've ever had. I look like myself, just more rested.",
+        treatment: "Botox",
         sortOrder: 1,
         isActive: true,
       },
       {
-        name: "Sophia M.",
-        quote: "From the moment I walked in, I felt seen and cared for. The results are beautifully natural — exactly what I wanted.",
-        treatment: "Botox & Facial Contouring",
+        name: "Verified Client",
+        quote: "I was nervous about filler. I'd seen too many overdone faces and didn't want that. She spent more time explaining what she wasn't going to do than what she was, which somehow made me trust her completely. The end result is so subtle my husband noticed I looked 'refreshed' but couldn't figure out why. That's exactly what I wanted.",
+        treatment: "Dermal Filler",
         sortOrder: 2,
         isActive: true,
       },
       {
-        name: "Alessandra K.",
-        quote: "I've been a member for over a year now and the consistent quality and personalized care keeps me coming back. This is self-care elevated.",
-        treatment: "MADE Membership",
+        name: "Verified Client",
+        quote: "I'd been curious about Sculptra for two years but couldn't find a provider I trusted enough to actually do it. The education I received before committing — anatomy, realistic timelines, real before-and-afters — was unlike anything I've experienced. Four months in and my cheekbones look like they did in my early thirties.",
+        treatment: "Sculptra",
         sortOrder: 3,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I came in asking about skin laxity on my neck and jawline, something most places either wave off or just throw filler at. She recommended hyperdilute Radiesse and explained the collagen science in a way that actually made sense to me. Six weeks later my skin looks tighter and more luminous. I didn't expect results like this.",
+        treatment: "Hyperdilute Radiesse",
+        sortOrder: 4,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "PRF was something I kept reading about but felt intimidated by. The warmth in this practice made it feel so approachable — she talked me through every step, checked in throughout, and followed up the next day. My skin tone has evened out beautifully over the past two months. I feel like I look like the best version of myself.",
+        treatment: "PRF",
+        sortOrder: 5,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "From the moment I sat down, I felt completely at ease. Karlyne's knowledge is on another level — she walked me through everything in detail, answered every question I had, and made sure I fully understood what she was doing and why. I've never felt so comfortable and safe trusting someone with my face. Her professionalism is the real thing.",
+        treatment: "Consultation & Care",
+        sortOrder: 6,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "What sets Karlyne apart isn't just her skill — it's how she makes you feel throughout the entire experience. She checked in after my visit to see how I was doing, and during my consultation she was completely transparent about what I needed and what I didn't. No upselling, no pressure. Just honest, thoughtful care. I finally found my injector.",
+        treatment: "Patient Experience",
+        sortOrder: 7,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "Karlyne followed up with me after my appointment just to check in, I wasn't expecting that at all. It's such a small thing but it meant everything. And throughout the whole process she never once pushed me toward anything I wasn't ready for. She genuinely listens, meets you where you are, and lets the results speak for themselves.",
+        treatment: "Patient Experience",
+        sortOrder: 8,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I came in nervous and left feeling like I was in the best hands. Karlyne is incredibly knowledgeable — she explained everything clearly and never made me feel rushed or pressured into anything. She followed up after my appointment to make sure I was happy with my results. That kind of care is rare, and it's exactly why I won't go anywhere else.",
+        treatment: "First Visit",
+        sortOrder: 9,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "Karlyne was my nurse for my Botox and fillers and I could not be happier with her services. She is so knowledgeable, honest, and makes you feel so comfortable. She takes her time and is patient with her work. I highly recommend seeing her!!!",
+        treatment: "Botox & Fillers",
+        sortOrder: 10,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "Nurse Karlyne did an amazing job with my Botox. As a male I was very nervous to get Botox done because I wanted my results to be very natural. She explained everything in detail to me and gave me all of the best recommendations. I will be returning to see her at the end of the month for PRP injections under my eyes.",
+        treatment: "Botox",
+        sortOrder: 11,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I got lip filler for the first time with Nurse Karlyne and it was a great experience! She made my visit very comfortable and relaxed and took the time to explain everything. I am so happy with the results and would recommend Nurse Karlyne for your services!",
+        treatment: "Lip Filler",
+        sortOrder: 12,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I've been getting my Botox injections done by Karlyne for the past 6 months now, she is so nice to work with. Very professional, personable, and communicated with me throughout the appointment. My results always turn out amazing.",
+        treatment: "Botox",
+        sortOrder: 13,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I had the pleasure of getting my Botox done with Karlyne. She addressed all of my questions and concerns and did a great job. Results have been amazing.",
+        treatment: "Botox",
+        sortOrder: 14,
+        isActive: true,
+      },
+      {
+        name: "Verified Client",
+        quote: "I received a warm greeting when I walked in. My service was provided by Nurse Karlyne. She was so pleasant! She explained everything, answered all my questions, and made me feel comfortable. Thank you!",
+        treatment: "First Visit",
+        sortOrder: 15,
         isActive: true,
       },
     ];

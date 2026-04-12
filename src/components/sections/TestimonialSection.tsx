@@ -1,33 +1,31 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
-
-const PORTRAIT_IMAGE =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBFJRK1EG6vFffTtqI2GPwrePYkfUmQNgKrD5nMMExcQ2kVA1Xj7NO52d_SdOxghRFJUZ9YA5nLj-h_GfoVakhjPb7E6D8hKLffMiDm8xsfFYvNeZNZXLXnAp7g1DIYN6oVdKTENGYH_wYMn7iK-vaXAaZc2YncITM2u9ZlsPCdh6PJGsi7_3qSLw-eb1YWbjwgL_pGlRDjM1KOumZGIIYDrTx5lOxFa_7HUKaienWwGnW0TXs31mHd_RcuihQ3chT3aqZC0RzT3_rK";
+const viewportOnce = { once: true, margin: "-80px" } as const;
 
 const FALLBACK_TESTIMONIALS = [
   {
     quote:
-      "MADE transformed not just my appearance, but my confidence. The team's artistry and attention to detail is unlike anything I've experienced.",
-    name: "Victoria R.",
-    treatment: "Dermal Fillers & Skin Rejuvenation",
+      "I've been getting toxins for years at other places and always left looking a little frozen or 'done.' My first appointment at MADE was completely different. The consultation alone was 20 minutes and she actually looked at how my face moves before touching a needle. The results are the most natural I've ever had. I look like myself, just more rested.",
+    name: "Verified Client",
+    treatment: "Botox",
   },
   {
     quote:
-      "From the moment I walked in, I felt seen and cared for. The results are beautifully natural — exactly what I wanted.",
-    name: "Sophia M.",
-    treatment: "Botox & Facial Contouring",
+      "I was nervous about filler. I'd seen too many overdone faces and didn't want that. She spent more time explaining what she wasn't going to do than what she was, which somehow made me trust her completely. The end result is so subtle my husband noticed I looked 'refreshed' but couldn't figure out why. That's exactly what I wanted.",
+    name: "Verified Client",
+    treatment: "Dermal Filler",
   },
   {
     quote:
-      "I've been a member for over a year now and the consistent quality and personalized care keeps me coming back. This is self-care elevated.",
-    name: "Alessandra K.",
-    treatment: "MADE Membership",
+      "What sets Karlyne apart isn't just her skill, it's how she makes you feel throughout the entire experience. She checked in after my visit to see how I was doing, and during my consultation she was completely transparent about what I needed and what I didn't. No upselling, no pressure. Just honest, thoughtful care. I finally found my injector.",
+    name: "Verified Client",
+    treatment: "Patient Experience",
   },
 ];
 
@@ -37,9 +35,8 @@ export default function TestimonialSection() {
     dbTestimonials && dbTestimonials.length > 0
       ? dbTestimonials
       : FALLBACK_TESTIMONIALS;
+  const testimonialBg = useQuery(api.siteContent.getByKey, { key: "testimonial_bg" });
   const [current, setCurrent] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % testimonials.length);
@@ -52,111 +49,180 @@ export default function TestimonialSection() {
   }, [testimonials.length]);
 
   useEffect(() => {
-    if (current >= testimonials.length) {
-      setCurrent(0);
-    }
+    if (current >= testimonials.length) setCurrent(0);
   }, [current, testimonials.length]);
 
   useEffect(() => {
-    const interval = setInterval(next, 6000);
+    const interval = setInterval(next, 8000);
     return () => clearInterval(interval);
   }, [next]);
 
   if (dbTestimonials && dbTestimonials.length === 0) return null;
 
   return (
-    <section ref={ref} className="py-60 px-12 bg-[var(--color-surface)] overflow-hidden">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-24">
-        {/* Left: Quote */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: luxuryEase }}
-          className="md:w-1/2"
-        >
-          {/* Decorative quote mark */}
-          <span className="block text-8xl font-extralight text-[var(--color-outline-variant)]/30 leading-none select-none mb-4">
-            &ldquo;
-          </span>
+    <section className="relative overflow-hidden">
+      {/* ── Background texture image ── */}
+      {testimonialBg?.imageUrl && (
+        <img
+          src={testimonialBg.imageUrl}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
 
-          <div className="relative min-h-[280px]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={current}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6, ease: luxuryEase }}
-              >
-                <blockquote
-                  className="font-headline text-3xl md:text-5xl italic leading-tight text-[var(--color-primary)]"
-                  style={{ textWrap: "balance" } as React.CSSProperties}
-                >
-                  &ldquo;{testimonials[current].quote}&rdquo;
-                </blockquote>
+      {/* ── Fallback base color (shown while image loads) ── */}
+      {!testimonialBg?.imageUrl && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ backgroundColor: "var(--color-surface)" }}
+        />
+      )}
 
-                <cite className="not-italic block mt-12">
-                  <span className="label-micro text-[var(--color-secondary)] block">
-                    &mdash; {testimonials[current].name.toUpperCase()}
-                  </span>
-                  <span className="block font-body text-xs text-[var(--color-on-surface-variant)] mt-2 uppercase tracking-wider">
-                    {testimonials[current].treatment}
-                  </span>
-                </cite>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation arrows & dots */}
-          <div className="flex items-center gap-6 mt-12">
-            <button
-              onClick={prev}
-              aria-label="Previous testimonial"
-              className="text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors duration-500 text-2xl"
+      {/* ── Content ── */}
+      <div className="relative py-32 md:py-44 lg:py-52 px-8 md:px-16">
+        <div className="max-w-4xl mx-auto">
+          {/* Section label */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewportOnce}
+            transition={{ duration: 0.8, ease: luxuryEase }}
+            className="text-center mb-16"
+          >
+            <span
+              className="label-micro block mb-4"
+              style={{ color: "var(--color-on-surface-variant)" }}
             >
-              &larr;
-            </button>
+              What Our Clients Say
+            </span>
+            <div className="flex items-center justify-center gap-4">
+              <div
+                className="w-16 h-px"
+                style={{ backgroundColor: "rgba(198,168,125,0.4)" }}
+              />
+              <div
+                className="w-1.5 h-1.5 rotate-45 border"
+                style={{ borderColor: "rgba(198,168,125,0.5)" }}
+              />
+              <div
+                className="w-16 h-px"
+                style={{ backgroundColor: "rgba(198,168,125,0.4)" }}
+              />
+            </div>
+          </motion.div>
 
-            <div className="flex gap-2">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  aria-label={`Go to testimonial ${i + 1}`}
-                  className={`w-2 h-2 transition-all duration-500 ${
-                    i === current
-                      ? "bg-[var(--color-secondary)] w-6"
-                      : "bg-[var(--color-outline-variant)]"
-                  }`}
-                />
-              ))}
+          {/* Quote carousel */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewportOnce}
+            transition={{ duration: 1, ease: luxuryEase }}
+          >
+            {/* Large decorative quote mark */}
+            <div className="text-center mb-8">
+              <span
+                className="inline-block font-headline text-[8rem] md:text-[10rem] leading-none select-none"
+                style={{ color: "rgba(198,168,125,0.2)" }}
+              >
+                &ldquo;
+              </span>
             </div>
 
-            <button
-              onClick={next}
-              aria-label="Next testimonial"
-              className="text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition-colors duration-500 text-2xl"
-            >
-              &rarr;
-            </button>
-          </div>
-        </motion.div>
+            {/* Quote text */}
+            <div className="relative min-h-[240px] md:min-h-[200px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.6, ease: luxuryEase }}
+                  className="text-center"
+                >
+                  <blockquote
+                    className="font-headline italic font-light text-2xl sm:text-3xl md:text-4xl leading-relaxed md:leading-relaxed"
+                    style={{
+                      color: "var(--color-primary)",
+                      textWrap: "balance",
+                      maxWidth: "52rem",
+                      margin: "0 auto",
+                    } as React.CSSProperties}
+                  >
+                    {testimonials[current].quote}
+                  </blockquote>
 
-        {/* Right: Portrait image with decorative offset border */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.9, delay: 0.3, ease: luxuryEase }}
-          className="md:w-1/2 relative"
-        >
-          <img
-            src={PORTRAIT_IMAGE}
-            alt="Spa experience"
-            className="w-full grayscale brightness-110 relative z-10"
-          />
-          {/* Decorative offset border */}
-          <div className="absolute -top-12 -left-12 w-full h-full border border-[var(--color-outline-variant)]/20 -z-0 translate-x-4 translate-y-4" />
-        </motion.div>
+                  {/* Attribution */}
+                  <div className="mt-10 flex flex-col items-center gap-3">
+                    <div
+                      className="w-8 h-px"
+                      style={{ backgroundColor: "var(--color-secondary)" }}
+                    />
+                    <span
+                      className="label-micro"
+                      style={{ color: "var(--color-secondary)" }}
+                    >
+                      {testimonials[current].name.toUpperCase()}
+                    </span>
+                    <span
+                      className="font-body text-xs uppercase tracking-wider"
+                      style={{
+                        color: "var(--color-on-surface-variant)",
+                        opacity: 0.6,
+                      }}
+                    >
+                      {testimonials[current].treatment}
+                    </span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-center gap-8 mt-14">
+              <button
+                onClick={prev}
+                aria-label="Previous testimonial"
+                className="transition-colors duration-500 hover:text-[var(--color-secondary)]"
+                style={{ color: "var(--color-outline)" }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <div className="flex gap-2.5">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                    className="transition-all duration-500"
+                    style={{
+                      width: i === current ? 24 : 8,
+                      height: 3,
+                      backgroundColor:
+                        i === current
+                          ? "var(--color-secondary)"
+                          : "var(--color-outline-variant)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={next}
+                aria-label="Next testimonial"
+                className="transition-colors duration-500 hover:text-[var(--color-secondary)]"
+                style={{ color: "var(--color-outline)" }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

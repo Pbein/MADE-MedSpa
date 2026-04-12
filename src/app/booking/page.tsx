@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import CTABanner from "@/components/sections/CTABanner";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
+const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
 const revealUp = {
   hidden: { opacity: 0, y: 30 },
@@ -64,38 +66,75 @@ const cancellationPolicy = {
 export default function BookingPage() {
   return (
     <>
-      {/* HERO */}
-      <section className="bg-[var(--color-primary)] py-48">
+      {/* HERO — video background with mocha overlay */}
+      <section className="relative pt-48 pb-24 px-6 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            title="MADE Med Spa booking background"
+            width={1920}
+            height={1080}
+            className="w-full h-full object-cover"
+          >
+            <source src="/videos/faq-hero.mp4" type="video/mp4" />
+          </video>
+          <div
+            className="absolute inset-0"
+            style={{
+              background: [
+                "linear-gradient(to bottom,",
+                "rgba(57,30,30,0.75) 0%,",
+                "rgba(57,30,30,0.65) 40%,",
+                "rgba(57,30,30,0.75) 70%,",
+                "rgba(57,30,30,0.85) 100%)",
+              ].join(" "),
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(198,168,125,0.08) 0%, transparent 60%)",
+            }}
+          />
+        </div>
+
         <motion.div
-          className="mx-auto max-w-7xl px-6 text-center"
+          className="relative z-10 max-w-4xl mx-auto text-center"
           initial="hidden"
           animate="visible"
-          variants={staggerContainer}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } }}
         >
-          <motion.p
-            className="label-micro text-[var(--color-surface)] opacity-60 mb-6"
+          <motion.span
             variants={revealUp}
+            className="label-micro block mb-6"
+            style={{ color: "var(--color-surface)", opacity: 0.75 }}
           >
             Book Online
-          </motion.p>
+          </motion.span>
 
           <motion.h1
-            className="headline-editorial text-[var(--color-surface)]"
             variants={revealUp}
+            className="headline-editorial text-5xl md:text-8xl"
+            style={{ color: "var(--color-surface)" }}
           >
             Schedule Your Visit
           </motion.h1>
 
           <motion.p
-            className="body-editorial mt-6 max-w-2xl mx-auto text-[var(--color-surface)] opacity-60"
             variants={revealUp}
+            className="body-editorial mt-8 max-w-2xl mx-auto"
+            style={{ color: "var(--color-surface)", opacity: 0.85 }}
           >
             Your journey to elevated beauty is just a click away. Book your
-            appointment through our scheduling system and we will take care of
-            the rest.
+            appointment and we will take care of the rest.
           </motion.p>
 
-          <motion.div className="mt-10" variants={revealUp}>
+          <motion.div variants={revealUp} className="mt-10">
             <a
               href={bookingUrl}
               target="_blank"
@@ -108,10 +147,72 @@ export default function BookingPage() {
         </motion.div>
       </section>
 
-      {/* WHAT TO EXPECT — Timeline */}
-      <section className="bg-[var(--color-surface)] py-40">
+      {/* WHAT TO EXPECT */}
+      <section
+        className="relative py-32 md:py-40 overflow-hidden"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
+        {/* Silk fabric texture — warm fold shadows on cream */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden>
+          {/* Primary diagonal folds — warm tan shadows */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(140deg, transparent 0%, rgba(198,168,125,0.12) 12%, transparent 22%, rgba(212,195,194,0.18) 32%, transparent 42%, rgba(198,168,125,0.1) 52%, transparent 62%, rgba(212,195,194,0.15) 72%, transparent 82%, rgba(198,168,125,0.08) 92%, transparent 100%)",
+            }}
+          />
+          {/* Cross-folds — opposing angle */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(30deg, rgba(198,168,125,0.08) 0%, transparent 15%, rgba(212,195,194,0.12) 30%, transparent 45%, rgba(198,168,125,0.1) 60%, transparent 75%, rgba(212,195,194,0.08) 90%, transparent 100%)",
+            }}
+          />
+          {/* Soft depth pools where folds gather */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: [
+                "radial-gradient(ellipse 70% 40% at 20% 30%, rgba(198,168,125,0.1) 0%, transparent 60%)",
+                "radial-gradient(ellipse 60% 35% at 80% 60%, rgba(212,195,194,0.12) 0%, transparent 55%)",
+                "radial-gradient(ellipse 50% 30% at 45% 80%, rgba(198,168,125,0.08) 0%, transparent 50%)",
+              ].join(", "),
+            }}
+          />
+          {/* Fine satin weave texture */}
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4h8M4 0v8' stroke='%23c6a87d' stroke-width='0.4' fill='none'/%3E%3C/svg%3E")`,
+              backgroundSize: "8px 8px",
+            }}
+          />
+        </div>
+        {/* Gradient: espresso top → cream bottom */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: [
+              "linear-gradient(180deg,",
+              "rgba(57,30,30,0.07) 0%,",
+              "rgba(57,30,30,0.03) 20%,",
+              "rgba(198,168,125,0.04) 50%,",
+              "transparent 100%)",
+            ].join(" "),
+          }}
+        />
+        {/* Soft mocha radial wash */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(198,168,125,0.06) 0%, transparent 70%)",
+          }}
+        />
         <motion.div
-          className="mx-auto max-w-7xl px-6"
+          className="relative mx-auto max-w-7xl px-6"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -119,7 +220,7 @@ export default function BookingPage() {
         >
           <motion.div className="text-center mb-20" variants={revealUp}>
             <p className="label-micro mb-4">Your Visit</p>
-            <h2 className="headline-section">
+            <h2 className="headline-section text-3xl md:text-5xl">
               What to Expect
             </h2>
           </motion.div>
@@ -143,7 +244,20 @@ export default function BookingPage() {
       </section>
 
       {/* PREPARATION TIPS */}
-      <section className="bg-[var(--color-surface-low)] py-40">
+      <section className="bg-[var(--color-surface-low)] py-32 md:py-40 relative overflow-hidden">
+        {/* Background image — desaturated, slightly more visible than about/values */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden>
+          <img
+            src="/images/values-bg.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              filter: "grayscale(70%) brightness(1.1) contrast(0.9)",
+              opacity: 0.12,
+              mixBlendMode: "multiply",
+            }}
+          />
+        </div>
         <motion.div
           className="mx-auto max-w-3xl px-6"
           initial="hidden"
@@ -154,7 +268,7 @@ export default function BookingPage() {
           <motion.p className="label-micro mb-4" variants={revealLeft}>
             Before Your Visit
           </motion.p>
-          <motion.h2 className="headline-section mb-12" variants={revealLeft}>
+          <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealLeft}>
             Preparation Tips
           </motion.h2>
 
@@ -178,7 +292,7 @@ export default function BookingPage() {
       </section>
 
       {/* CANCELLATION POLICY */}
-      <section className="bg-[var(--color-surface)] py-40">
+      <section className="bg-[var(--color-surface)] py-32 md:py-40">
         <motion.div
           className="mx-auto max-w-3xl px-6"
           initial="hidden"
@@ -189,7 +303,7 @@ export default function BookingPage() {
           <motion.p className="label-micro mb-4" variants={revealUp}>
             Good to Know
           </motion.p>
-          <motion.h2 className="headline-section mb-12" variants={revealUp}>
+          <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealUp}>
             Cancellation Policy
           </motion.h2>
 
@@ -216,50 +330,15 @@ export default function BookingPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[var(--color-secondary)] py-40">
-        <motion.div
-          className="mx-auto max-w-7xl px-6 text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-        >
-          <motion.div
-            className="mx-auto mb-8 h-px w-16 bg-[var(--color-on-primary)] opacity-30"
-            variants={revealUp}
-          />
-
-          <motion.h2
-            className="headline-editorial text-[var(--color-on-primary)]"
-            variants={revealUp}
-          >
-            Have questions before booking?
-          </motion.h2>
-
-          <motion.p
-            className="body-editorial mt-6 max-w-xl mx-auto text-[var(--color-on-primary)] opacity-70"
-            variants={revealUp}
-          >
-            Our team is here to help you choose the perfect treatment and answer
-            any questions you may have.
-          </motion.p>
-
-          <motion.div
-            className="mt-10 flex items-center justify-center gap-6"
-            variants={revealUp}
-          >
-            <Link href="/contact" className="btn-primary">
-              Contact Us
-            </Link>
-            <Link
-              href="/services"
-              className="link-ghost text-[var(--color-on-primary)] opacity-70"
-            >
-              Browse Services
-            </Link>
-          </motion.div>
-        </motion.div>
-      </section>
+      <CTABanner
+        dark
+        headline="Have questions before booking?"
+        subtitle="Our team is here to help you choose the perfect treatment and answer any questions you may have."
+        ctaText="Contact Us"
+        ctaHref="/contact"
+        secondaryText="Browse Services"
+        secondaryHref="/services"
+      />
     </>
   );
 }

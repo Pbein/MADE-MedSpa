@@ -46,6 +46,9 @@ export const metadata: Metadata = {
     "injectables",
     "Botox",
     "dermal fillers",
+    "Sculptra",
+    "PRF",
+    "PRP",
     "facials",
     "HydraFacial",
     "chemical peels",
@@ -54,8 +57,13 @@ export const metadata: Metadata = {
     "wellness",
     "beauty treatments",
     "MADE Med Spa",
+    "nurse injector",
+    "aesthetic nurse",
   ],
   authors: [{ name: "MADE Med Spa Aesthetics & Wellness" }],
+  alternates: {
+    canonical: "https://mademedspaaesthetics.com",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -99,6 +107,46 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MedicalBusiness",
+              name: "MADE Med Spa",
+              url: "https://mademedspaaesthetics.com",
+              description:
+                "Luxury aesthetic med spa offering Botox, dermal fillers, Sculptra, PRF, and advanced skin treatments with unhurried consultations and honest care.",
+              image: "https://mademedspaaesthetics.com/og-image.jpg",
+              priceRange: "$$",
+              medicalSpecialty: "Dermatology",
+              availableService: [
+                {
+                  "@type": "MedicalProcedure",
+                  name: "Botox Cosmetic",
+                  procedureType: "https://health-lifesci.schema.org/CosmeticProcedure",
+                },
+                {
+                  "@type": "MedicalProcedure",
+                  name: "Dermal Fillers",
+                  procedureType: "https://health-lifesci.schema.org/CosmeticProcedure",
+                },
+                {
+                  "@type": "MedicalProcedure",
+                  name: "Sculptra",
+                  procedureType: "https://health-lifesci.schema.org/CosmeticProcedure",
+                },
+                {
+                  "@type": "MedicalProcedure",
+                  name: "PRF Facial Rejuvenation",
+                  procedureType: "https://health-lifesci.schema.org/CosmeticProcedure",
+                },
+              ],
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${playfair.variable} ${cormorant.variable} ${inter.variable} antialiased`}
       >

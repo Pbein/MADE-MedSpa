@@ -6,17 +6,30 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion } from "framer-motion";
 import Accordion from "@/components/ui/Accordion";
+import PageHero from "@/components/sections/PageHero";
+import CTABanner from "@/components/sections/CTABanner";
 
 const faqCategories = [
-  "All",
   "General",
   "Services",
-  "Membership",
   "Booking",
   "Aftercare",
+  "Membership",
+  "All",
 ];
 
 const editorialEase = [0.2, 0, 0, 1] as const;
+const luxuryEase = [0.16, 1, 0.3, 1] as const;
+
+const staggerHero = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
+};
+
+const revealUp = {
+  hidden: { opacity: 0, y: 25 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: luxuryEase } },
+};
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -29,30 +42,10 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export default function FAQPage() {
   const faqs = useQuery(api.faqs.list);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("General");
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 250);
   const sectionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const revealElements = document.querySelectorAll(
-      ".reveal-up, .reveal-fade"
-    );
-    revealElements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [faqs, activeCategory, debouncedSearch]);
 
   const filteredFaqs = useMemo(() => {
     if (!faqs) return [];
@@ -84,69 +77,39 @@ export default function FAQPage() {
   return (
     <main>
       {/* Hero */}
-      <section className="bg-[var(--color-primary)] py-48">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <motion.p
-            className="label-micro text-[var(--color-surface)] opacity-60 mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: editorialEase }}
-          >
-            Support
-          </motion.p>
-
-          <motion.h1
-            className="headline-editorial text-[var(--color-surface)]"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: editorialEase, delay: 0.15 }}
-          >
-            Frequently Asked Questions
-          </motion.h1>
-
-          <motion.p
-            className="body-editorial mt-6 max-w-2xl mx-auto text-[var(--color-surface)] opacity-60"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: editorialEase, delay: 0.3 }}
-          >
-            Find answers to common questions about our treatments, membership
-            programs, and booking process.
-          </motion.p>
-
-          {/* Search Input */}
-          <motion.div
-            className="mt-12 max-w-md mx-auto"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: editorialEase, delay: 0.45 }}
-          >
-            <div className="relative">
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-surface)] opacity-40"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search questions..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full bg-transparent border border-[var(--color-surface)] border-opacity-20 text-[var(--color-surface)] placeholder:text-[var(--color-surface)] placeholder:opacity-40 pl-12 pr-4 py-3 label-micro tracking-wider focus:outline-none focus:border-opacity-60 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]"
-              />
-            </div>
-          </motion.div>
+      <PageHero
+        dark
+        eyebrow="Support"
+        headline="Frequently Asked Questions"
+        subtitle="Find answers to common questions about our treatments, membership programs, and booking process."
+      >
+        {/* Search Input */}
+        <div className="max-w-md mx-auto">
+          <div className="relative">
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-surface)] opacity-40"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search questions..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="w-full bg-transparent border border-[var(--color-surface)] border-opacity-20 text-[var(--color-surface)] placeholder:text-[var(--color-surface)] placeholder:opacity-40 pl-12 pr-4 py-3 label-micro tracking-wider focus:outline-none focus:border-opacity-60 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]"
+            />
+          </div>
         </div>
-      </section>
+      </PageHero>
 
       {/* Category Pills */}
       <section className="bg-[var(--color-surface)] py-8">
@@ -178,7 +141,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Accordion */}
-      <section className="bg-[var(--color-surface)] py-40">
+      <section className="bg-[var(--color-surface)] py-32 md:py-40">
         <div className="mx-auto max-w-3xl px-6">
           {faqs === undefined ? (
             <div className="space-y-6">
@@ -242,29 +205,15 @@ export default function FAQPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[var(--color-primary)] py-40">
-        <motion.div
-          className="mx-auto max-w-7xl px-6 text-center"
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.7, ease: editorialEase }}
-        >
-          <p className="label-micro text-[var(--color-on-primary)] opacity-60 mb-6">
-            Need More Help?
-          </p>
-          <h2 className="headline-editorial text-[var(--color-on-primary)]">
-            Still Have Questions?
-          </h2>
-          <p className="body-editorial mt-6 max-w-xl mx-auto text-[var(--color-on-primary)] opacity-60">
-            Our team is here to help. Reach out and we will get back to you
-            promptly.
-          </p>
-          <Link href="/contact" className="btn-light inline-block mt-10">
-            Contact Us
-          </Link>
-        </motion.div>
-      </section>
+      <CTABanner
+        dark
+        headline="Still Have Questions?"
+        subtitle="Our team is here to help. Reach out and we will get back to you promptly."
+        ctaText="Contact Us"
+        ctaHref="/contact"
+        secondaryText="Browse Services"
+        secondaryHref="/services"
+      />
     </main>
   );
 }

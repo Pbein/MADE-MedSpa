@@ -29,8 +29,8 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
   email: "hello@mademedpsa.com",
   emailHref: "mailto:hello@mademedpsa.com",
   hours: [
-    { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
-    { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
+    { days: "Monday — Friday", hours: "9:00 AM – 7:00 PM" },
+    { days: "Saturday", hours: "10:00 AM – 5:00 PM" },
     { days: "Sunday", hours: "Closed" },
   ],
   socials: [
@@ -40,15 +40,22 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
   ],
 };
 
-const footerLinks = [
-  { href: "/about", label: "About" },
+const navLinks = [
   { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
+];
+
+const legalLinks = [
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
 ];
+
+const ESPRESSO = "#391e1e";
+const SILK = "#f7f6eb";
+const GLAZE = "#c6a87d";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -76,108 +83,224 @@ export default function Footer() {
 
   return (
     <footer
-      className="w-full flex flex-col items-center gap-12 px-6 md:px-12 py-16 md:py-24"
+      className="relative w-full overflow-hidden"
       style={{
-        backgroundColor: "var(--color-surface-low)",
-        borderTop: "1px solid rgba(212, 195, 194, 0.15)",
+        background: [
+          "radial-gradient(ellipse 80% 60% at 15% 90%, rgba(198,168,125,0.08) 0%, transparent 55%)",
+          "radial-gradient(ellipse 60% 50% at 85% 10%, rgba(162,60,64,0.04) 0%, transparent 50%)",
+          `linear-gradient(170deg, ${ESPRESSO} 0%, #2d1515 50%, #200a0a 100%)`,
+        ].join(", "),
       }}
     >
-      {/* Brand */}
-      <Link
-        href="/"
-        className="font-headline italic text-lg transition-colors duration-500"
-        style={{ color: "var(--color-primary)" }}
-      >
-        MADE
-      </Link>
+      {/* Top accent line — glaze */}
+      <div className="w-full h-px" style={{ backgroundColor: GLAZE, opacity: 0.25 }} />
 
-      {/* Navigation Links */}
-      <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 md:gap-12">
-        {footerLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="link-ghost"
-            style={{ color: "var(--color-primary)" }}
+      <div className="px-6 md:px-12 pt-20 md:pt-28 pb-12 md:pb-16">
+        <div className="max-w-7xl mx-auto">
+
+          {/* ── Top: Brand wordmark + tagline ── */}
+          <div className="mb-20 md:mb-24">
+            <Link
+              href="/"
+              className="font-headline italic text-4xl md:text-5xl tracking-tight transition-opacity duration-500 hover:opacity-80"
+              style={{ color: SILK }}
+            >
+              MADE
+            </Link>
+            <p
+              className="body-editorial mt-4 max-w-sm"
+              style={{ color: SILK, opacity: 0.45 }}
+            >
+              Thoughtful aesthetic care. Natural results, on purpose.
+            </p>
+          </div>
+
+          {/* ── Middle: 4-column grid ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20 md:mb-24">
+
+            {/* Col 1: Navigation */}
+            <div>
+              <p
+                className="label-micro mb-6"
+                style={{ color: GLAZE }}
+              >
+                Navigate
+              </p>
+              <ul className="space-y-3">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="font-headline italic text-lg transition-opacity duration-500 hover:opacity-100"
+                      style={{ color: SILK, opacity: 0.7 }}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 2: Contact */}
+            <div>
+              <p
+                className="label-micro mb-6"
+                style={{ color: GLAZE }}
+              >
+                Contact
+              </p>
+              <div className="space-y-4">
+                <a
+                  href={info.phoneHref}
+                  className="font-headline italic text-lg block transition-opacity duration-500 hover:opacity-100"
+                  style={{ color: SILK, opacity: 0.7 }}
+                >
+                  {info.phone}
+                </a>
+                <a
+                  href={info.emailHref}
+                  className="body-editorial text-sm block transition-opacity duration-500 hover:opacity-100 break-all"
+                  style={{ color: SILK, opacity: 0.5 }}
+                >
+                  {info.email}
+                </a>
+                <p
+                  className="body-editorial text-sm"
+                  style={{ color: SILK, opacity: 0.4 }}
+                >
+                  {info.addressLine1}
+                  <br />
+                  {info.addressLine2}
+                </p>
+              </div>
+            </div>
+
+            {/* Col 3: Hours */}
+            <div>
+              <p
+                className="label-micro mb-6"
+                style={{ color: GLAZE }}
+              >
+                Hours
+              </p>
+              <ul className="space-y-3">
+                {info.hours.map((schedule) => (
+                  <li key={schedule.days}>
+                    <span
+                      className="body-editorial text-sm block"
+                      style={{ color: SILK, opacity: 0.4 }}
+                    >
+                      {schedule.days}
+                    </span>
+                    <span
+                      className="body-editorial text-sm"
+                      style={{ color: SILK, opacity: 0.7 }}
+                    >
+                      {schedule.hours}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 4: Newsletter + Socials */}
+            <div>
+              <p
+                className="label-micro mb-6"
+                style={{ color: GLAZE }}
+              >
+                Stay in the Know
+              </p>
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="mb-8"
+              >
+                <div className="flex items-end gap-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Your email"
+                    aria-label="Email for newsletter"
+                    disabled={status === "loading"}
+                    className="flex-1 bg-transparent border-b py-2 text-sm outline-none transition-colors duration-500 placeholder:opacity-40"
+                    style={{
+                      borderColor: `${GLAZE}40`,
+                      color: SILK,
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = GLAZE)}
+                    onBlur={(e) => (e.target.style.borderColor = `${GLAZE}40`)}
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="label-micro shrink-0 pb-2 cursor-pointer transition-opacity duration-500 hover:opacity-100"
+                    style={{ color: GLAZE, opacity: 0.8 }}
+                  >
+                    {status === "loading"
+                      ? "..."
+                      : status === "success"
+                        ? "Joined"
+                        : "Subscribe"}
+                  </button>
+                </div>
+                {status === "success" && (
+                  <p className="label-micro mt-3" style={{ color: GLAZE }}>
+                    Welcome to the MADE family.
+                  </p>
+                )}
+                {status === "error" && (
+                  <p className="label-micro mt-3" style={{ color: "var(--color-secondary)" }}>
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+              </form>
+
+              {/* Socials */}
+              <div className="flex gap-6">
+                {info.socials.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="label-micro transition-all duration-500 hover:opacity-100"
+                    style={{ color: SILK, opacity: 0.5 }}
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Bottom bar ── */}
+          <div
+            className="pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4"
+            style={{ borderColor: `${SILK}10` }}
           >
-            {link.label}
-          </Link>
-        ))}
-        {info.socials.map((social) => (
-          <a
-            key={social.label}
-            href={social.href}
-            className="link-ghost"
-            style={{ color: "var(--color-primary)" }}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={social.label}
-          >
-            {social.label}
-          </a>
-        ))}
+            <p
+              className="label-micro"
+              style={{ color: SILK, opacity: 0.25 }}
+            >
+              &copy; {currentYear} MADE Med Spa Aesthetics &amp; Wellness
+            </p>
+            <div className="flex gap-6">
+              {legalLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="label-micro transition-opacity duration-500 hover:opacity-50"
+                  style={{ color: SILK, opacity: 0.25 }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Newsletter */}
-      <form
-        onSubmit={handleNewsletterSubmit}
-        className="flex items-end gap-4 w-full max-w-sm"
-      >
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your email for updates"
-          aria-label="Email for newsletter"
-          disabled={status === "loading"}
-          className="input-editorial flex-1"
-        />
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="link-ghost shrink-0 pb-3 cursor-pointer"
-          style={{ color: "var(--color-primary)" }}
-        >
-          {status === "loading"
-            ? "..."
-            : status === "success"
-              ? "Joined!"
-              : "Subscribe"}
-        </button>
-      </form>
-      {status === "success" && (
-        <p
-          className="label-micro"
-          style={{ color: "var(--color-tertiary)", marginTop: "-2rem" }}
-        >
-          Welcome to the MADE family!
-        </p>
-      )}
-      {status === "error" && (
-        <p
-          className="label-micro"
-          style={{ color: "var(--color-secondary)", marginTop: "-2rem" }}
-        >
-          Something went wrong. Please try again.
-        </p>
-      )}
-
-      {/* Address */}
-      <p
-        className="label-micro text-center"
-        style={{ color: "var(--color-primary)", opacity: 0.4 }}
-      >
-        {info.addressLine1} &middot; {info.addressLine2} &middot;{" "}
-        <a href={info.phoneHref}>{info.phone}</a>
-      </p>
-
-      {/* Copyright */}
-      <p
-        className="label-micro"
-        style={{ color: "var(--color-primary)", opacity: 0.4 }}
-      >
-        &copy; {currentYear} MADE Med Spa. All rights reserved.
-      </p>
     </footer>
   );
 }

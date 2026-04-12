@@ -11,6 +11,7 @@ const navItems = [
   { label: "FAQs", href: "/admin/faqs", icon: "F" },
   { label: "Team", href: "/admin/team", icon: "T" },
   { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
+  { label: "Media", href: "/admin/media", icon: "M" },
   { label: "Content", href: "/admin/content", icon: "W" },
   { label: "Contacts", href: "/admin/contacts", icon: "C" },
 ];

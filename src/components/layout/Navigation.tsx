@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,8 +17,31 @@ export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [transitionsEnabled, setTransitionsEnabled] = useState(false);
+  const prevPathnameRef = useRef(pathname);
 
-  const isHeroOverlay = pathname === "/" && !isScrolled;
+  const heroOverlayRoutes = new Set(["/", "/services", "/about"]);
+  const lightTextRoutes = new Set(["/"]);
+  const isOverlayRoute = heroOverlayRoutes.has(pathname);
+  const isHeroOverlay = isOverlayRoute && !isScrolled;
+  const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;
+
+  // Detect route change during render — disable transitions immediately
+  if (prevPathnameRef.current !== pathname) {
+    prevPathnameRef.current = pathname;
+    if (transitionsEnabled) {
+      setTransitionsEnabled(false);
+    }
+  }
+
+  // Re-enable transitions after route change paint
+  useEffect(() => {
+    setIsScrolled(window.scrollY > 20);
+    const raf = requestAnimationFrame(() => {
+      setTransitionsEnabled(true);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +65,7 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className="fixed top-0 w-full z-50 transition-all duration-500"
+        className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
           backgroundColor: isHeroOverlay
             ? "transparent"
@@ -58,7 +81,7 @@ export default function Navigation() {
             href="/"
             className="font-headline italic text-2xl tracking-tight transition-colors duration-500"
             style={{
-              color: isHeroOverlay
+              color: useLightNavText
                 ? "var(--color-on-primary)"
                 : "var(--color-primary)",
             }}
@@ -74,14 +97,14 @@ export default function Navigation() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="font-headline italic tracking-wide text-base transition-all duration-500"
+                    className="font-headline italic tracking-wide text-lg transition-all duration-500"
                     style={{
-                      color: isHeroOverlay
+                      color: useLightNavText
                         ? "var(--color-on-primary)"
                         : "var(--color-primary)",
                       opacity: isActive ? 1 : 0.6,
                       borderBottom: isActive
-                        ? isHeroOverlay
+                        ? useLightNavText
                           ? "1px solid var(--color-on-primary)"
                           : "1px solid var(--color-primary)"
                         : "1px solid transparent",
@@ -123,7 +146,7 @@ export default function Navigation() {
                   backgroundColor:
                     isMobileMenuOpen
                       ? "var(--color-primary)"
-                      : isHeroOverlay
+                      : useLightNavText
                         ? "var(--color-on-primary)"
                         : "var(--color-primary)",
                   transform: isMobileMenuOpen
@@ -137,7 +160,7 @@ export default function Navigation() {
                   backgroundColor:
                     isMobileMenuOpen
                       ? "var(--color-primary)"
-                      : isHeroOverlay
+                      : useLightNavText
                         ? "var(--color-on-primary)"
                         : "var(--color-primary)",
                   opacity: isMobileMenuOpen ? 0 : 1,
@@ -149,7 +172,7 @@ export default function Navigation() {
                   backgroundColor:
                     isMobileMenuOpen
                       ? "var(--color-primary)"
-                      : isHeroOverlay
+                      : useLightNavText
                         ? "var(--color-on-primary)"
                         : "var(--color-primary)",
                   transform: isMobileMenuOpen

@@ -35,7 +35,7 @@
   --color-secondary-fixed: #ffdad9;
 
   /* --- Typography --- */
-  --font-headline: var(--font-playfair), "Playfair Display", "Newsreader", Georgia, serif;
+  --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
   --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
   --font-label: var(--font-inter), "Inter", "Manrope", sans-serif;
 

@@ -3,7 +3,6 @@
 import HeroSection from "@/components/sections/HeroSection";
 import FeaturedServices from "@/components/sections/FeaturedServices";
 import AboutTeaser from "@/components/sections/AboutTeaser";
-import EditorialBreak from "@/components/sections/EditorialBreak";
 import TestimonialSection from "@/components/sections/TestimonialSection";
 import CTABanner from "@/components/sections/CTABanner";
 
@@ -13,21 +12,7 @@ export default function Home() {
       {/* Hero */}
       <HeroSection />
 
-      {/* Philosophy — editorial quote break */}
-      <EditorialBreak
-        variant="silk"
-        text={
-          <>
-            We believe beauty is deeply personal —{" "}
-            <span style={{ color: "var(--color-secondary)" }}>
-              every treatment
-            </span>{" "}
-            is a collaboration between science, artistry, and you.
-          </>
-        }
-      />
-
-      {/* Featured Services */}
+      {/* Featured Services — first thing after the hook */}
       <FeaturedServices />
 
       {/* Why MADE / About teaser */}
@@ -42,6 +27,8 @@ export default function Home() {
         headline="Begin Your Journey to Refined Radiance."
         ctaText="Book Your Consult"
         ctaHref="/booking"
+        secondaryText="Explore Services"
+        secondaryHref="/services"
       />
     </>
   );
