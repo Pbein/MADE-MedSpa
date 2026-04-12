@@ -84,7 +84,7 @@ export const metadata: Metadata = {
       "Luxury aesthetic med spa in McLean, Virginia. Natural results from a nurse injector who takes the time to get it right.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "MADE Med Spa - Luxury Aesthetic Treatments in McLean, Virginia",
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
     title: "MADE Med Spa | Luxury Aesthetic Treatments in McLean, VA",
     description:
       "Luxury aesthetic med spa in McLean, Virginia. Natural results from a nurse injector who takes the time to get it right.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
