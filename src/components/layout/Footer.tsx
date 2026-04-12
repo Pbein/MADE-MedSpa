@@ -55,7 +55,7 @@ const legalLinks = [
 
 const ESPRESSO = "#391e1e";
 const SILK = "#f7f6eb";
-const GLAZE = "#c6a87d";
+const GLAZE = "#d7cfc5";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -86,7 +86,7 @@ export default function Footer() {
       className="relative w-full overflow-hidden"
       style={{
         background: [
-          "radial-gradient(ellipse 80% 60% at 15% 90%, rgba(198,168,125,0.08) 0%, transparent 55%)",
+          "radial-gradient(ellipse 80% 60% at 15% 90%, rgba(215,207,197,0.08) 0%, transparent 55%)",
           "radial-gradient(ellipse 60% 50% at 85% 10%, rgba(162,60,64,0.04) 0%, transparent 50%)",
           `linear-gradient(170deg, ${ESPRESSO} 0%, #2d1515 50%, #200a0a 100%)`,
         ].join(", "),

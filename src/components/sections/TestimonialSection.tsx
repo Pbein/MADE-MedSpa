@@ -99,15 +99,15 @@ export default function TestimonialSection() {
             <div className="flex items-center justify-center gap-4">
               <div
                 className="w-16 h-px"
-                style={{ backgroundColor: "rgba(198,168,125,0.4)" }}
+                style={{ backgroundColor: "rgba(215,207,197,0.4)" }}
               />
               <div
                 className="w-1.5 h-1.5 rotate-45 border"
-                style={{ borderColor: "rgba(198,168,125,0.5)" }}
+                style={{ borderColor: "rgba(215,207,197,0.5)" }}
               />
               <div
                 className="w-16 h-px"
-                style={{ backgroundColor: "rgba(198,168,125,0.4)" }}
+                style={{ backgroundColor: "rgba(215,207,197,0.4)" }}
               />
             </div>
           </motion.div>
@@ -123,7 +123,7 @@ export default function TestimonialSection() {
             <div className="text-center mb-8">
               <span
                 className="inline-block font-headline text-[8rem] md:text-[10rem] leading-none select-none"
-                style={{ color: "rgba(198,168,125,0.2)" }}
+                style={{ color: "rgba(215,207,197,0.2)" }}
               >
                 &ldquo;
               </span>

@@ -38,7 +38,7 @@ export default function AboutTeaser() {
           <div
             className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full pointer-events-none"
             style={{
-              background: "rgba(198,168,125,0.15)",
+              background: "rgba(215,207,197,0.15)",
               filter: "blur(60px)",
             }}
           />

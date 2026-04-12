@@ -8,7 +8,7 @@ import { hasNavigatedWithinApp } from "@/lib/navigation";
 
 const ESPRESSO = "#391e1e";
 const SILK = "#f7f6eb";
-const GLAZE = "#c6a87d";
+const GLAZE = "#d7cfc5";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 
@@ -84,17 +84,17 @@ export default function ContactPageClient() {
       >
         {/* Mocha texture background */}
         <img
-          src="/images/contact-hero-bg.png"
+          src="/images/contact-hero-bg.png?v=2"
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Dark overlay for text legibility */}
+        {/* Light overlay for text legibility — keeps texture visible */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(57,30,30,0.35) 0%, rgba(57,30,30,0.2) 50%, rgba(57,30,30,0.4) 100%)",
+              "linear-gradient(to bottom, rgba(57,30,30,0.15) 0%, rgba(57,30,30,0.05) 50%, rgba(57,30,30,0.2) 100%)",
           }}
         />
         <motion.div

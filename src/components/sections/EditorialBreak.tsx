@@ -46,7 +46,7 @@ export default function EditorialBreak({
           className="absolute inset-0 pointer-events-none"
           style={{
             background: [
-              "radial-gradient(ellipse 60% 80% at 30% 50%, rgba(198,168,125,0.07) 0%, transparent 70%),",
+              "radial-gradient(ellipse 60% 80% at 30% 50%, rgba(215,207,197,0.07) 0%, transparent 70%),",
               "radial-gradient(ellipse 60% 80% at 70% 50%, rgba(132,38,44,0.03) 0%, transparent 70%)",
             ].join(" "),
           }}
@@ -68,7 +68,7 @@ export default function EditorialBreak({
                 style={{
                   backgroundColor: isDark
                     ? "rgba(247,246,235,0.15)"
-                    : "rgba(198,168,125,0.35)",
+                    : "rgba(215,207,197,0.35)",
                 }}
               />
               <div
@@ -76,7 +76,7 @@ export default function EditorialBreak({
                 style={{
                   borderColor: isDark
                     ? "rgba(247,246,235,0.2)"
-                    : "rgba(198,168,125,0.4)",
+                    : "rgba(215,207,197,0.4)",
                 }}
               />
               <div
@@ -84,7 +84,7 @@ export default function EditorialBreak({
                 style={{
                   backgroundColor: isDark
                     ? "rgba(247,246,235,0.15)"
-                    : "rgba(198,168,125,0.35)",
+                    : "rgba(215,207,197,0.35)",
                 }}
               />
             </div>
@@ -108,7 +108,7 @@ export default function EditorialBreak({
                 style={{
                   backgroundColor: isDark
                     ? "rgba(247,246,235,0.15)"
-                    : "rgba(198,168,125,0.35)",
+                    : "rgba(215,207,197,0.35)",
                 }}
               />
               <div
@@ -116,7 +116,7 @@ export default function EditorialBreak({
                 style={{
                   borderColor: isDark
                     ? "rgba(247,246,235,0.2)"
-                    : "rgba(198,168,125,0.4)",
+                    : "rgba(215,207,197,0.4)",
                 }}
               />
               <div
@@ -124,7 +124,7 @@ export default function EditorialBreak({
                 style={{
                   backgroundColor: isDark
                     ? "rgba(247,246,235,0.15)"
-                    : "rgba(198,168,125,0.35)",
+                    : "rgba(215,207,197,0.35)",
                 }}
               />
             </div>

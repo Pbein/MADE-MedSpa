@@ -8,10 +8,10 @@
 
 :root {
   /* --- Core Palette --- */
-  --color-primary: #200a0a;
-  --color-primary-container: #391e1e;
-  --color-secondary: #a23c40;
-  --color-tertiary: #838d60;
+  --color-primary: #391e1e;          /* Espresso */
+  --color-primary-container: #391e1e; /* Espresso */
+  --color-secondary: #84262c;        /* Blush */
+  --color-tertiary: #838d60;         /* Matcha */
 
   /* --- Surfaces --- */
   --color-surface: #fbfaef;
@@ -32,7 +32,7 @@
   --color-outline-variant: #d4c3c2;
   --color-tertiary-fixed: #dde8b4;
   --color-tertiary-fixed-dim: #c1cc9a;
-  --color-secondary-fixed: #ffdad9;
+  --color-secondary-fixed: #f0d4d5;
 
   /* --- Typography --- */
   --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;

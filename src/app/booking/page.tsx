@@ -114,7 +114,7 @@ export default function BookingPage() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(198,168,125,0.08) 0%, transparent 60%)",
+                "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(215,207,197,0.08) 0%, transparent 60%)",
             }}
           />
         </div>
@@ -175,7 +175,7 @@ export default function BookingPage() {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(140deg, transparent 0%, rgba(198,168,125,0.12) 12%, transparent 22%, rgba(212,195,194,0.18) 32%, transparent 42%, rgba(198,168,125,0.1) 52%, transparent 62%, rgba(212,195,194,0.15) 72%, transparent 82%, rgba(198,168,125,0.08) 92%, transparent 100%)",
+                "linear-gradient(140deg, transparent 0%, rgba(215,207,197,0.12) 12%, transparent 22%, rgba(212,195,194,0.18) 32%, transparent 42%, rgba(215,207,197,0.1) 52%, transparent 62%, rgba(212,195,194,0.15) 72%, transparent 82%, rgba(215,207,197,0.08) 92%, transparent 100%)",
             }}
           />
           {/* Cross-folds — opposing angle */}
@@ -183,7 +183,7 @@ export default function BookingPage() {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(30deg, rgba(198,168,125,0.08) 0%, transparent 15%, rgba(212,195,194,0.12) 30%, transparent 45%, rgba(198,168,125,0.1) 60%, transparent 75%, rgba(212,195,194,0.08) 90%, transparent 100%)",
+                "linear-gradient(30deg, rgba(215,207,197,0.08) 0%, transparent 15%, rgba(212,195,194,0.12) 30%, transparent 45%, rgba(215,207,197,0.1) 60%, transparent 75%, rgba(212,195,194,0.08) 90%, transparent 100%)",
             }}
           />
           {/* Soft depth pools where folds gather */}
@@ -191,9 +191,9 @@ export default function BookingPage() {
             className="absolute inset-0"
             style={{
               background: [
-                "radial-gradient(ellipse 70% 40% at 20% 30%, rgba(198,168,125,0.1) 0%, transparent 60%)",
+                "radial-gradient(ellipse 70% 40% at 20% 30%, rgba(215,207,197,0.1) 0%, transparent 60%)",
                 "radial-gradient(ellipse 60% 35% at 80% 60%, rgba(212,195,194,0.12) 0%, transparent 55%)",
-                "radial-gradient(ellipse 50% 30% at 45% 80%, rgba(198,168,125,0.08) 0%, transparent 50%)",
+                "radial-gradient(ellipse 50% 30% at 45% 80%, rgba(215,207,197,0.08) 0%, transparent 50%)",
               ].join(", "),
             }}
           />
@@ -201,7 +201,7 @@ export default function BookingPage() {
           <div
             className="absolute inset-0 opacity-[0.04]"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4h8M4 0v8' stroke='%23c6a87d' stroke-width='0.4' fill='none'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4h8M4 0v8' stroke='%23d7cfc5' stroke-width='0.4' fill='none'/%3E%3C/svg%3E")`,
               backgroundSize: "8px 8px",
             }}
           />
@@ -214,7 +214,7 @@ export default function BookingPage() {
               "linear-gradient(180deg,",
               "rgba(57,30,30,0.07) 0%,",
               "rgba(57,30,30,0.03) 20%,",
-              "rgba(198,168,125,0.04) 50%,",
+              "rgba(215,207,197,0.04) 50%,",
               "transparent 100%)",
             ].join(" "),
           }}
@@ -224,7 +224,7 @@ export default function BookingPage() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(198,168,125,0.06) 0%, transparent 70%)",
+              "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(215,207,197,0.06) 0%, transparent 70%)",
           }}
         />
         <motion.div

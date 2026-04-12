@@ -61,9 +61,9 @@ export default function FeaturedServices() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background: [
-            "radial-gradient(ellipse 50% 60% at 15% 20%, rgba(198,168,125,0.08) 0%, transparent 70%),",
+            "radial-gradient(ellipse 50% 60% at 15% 20%, rgba(215,207,197,0.08) 0%, transparent 70%),",
             "radial-gradient(ellipse 50% 60% at 85% 50%, rgba(132,38,44,0.03) 0%, transparent 70%),",
-            "radial-gradient(ellipse 80% 50% at 50% 90%, rgba(198,168,125,0.06) 0%, transparent 60%)",
+            "radial-gradient(ellipse 80% 50% at 50% 90%, rgba(215,207,197,0.06) 0%, transparent 60%)",
           ].join(" "),
         }}
       />
@@ -118,7 +118,7 @@ export default function FeaturedServices() {
             />
             <div
               className="w-1.5 h-1.5 rotate-45"
-              style={{ backgroundColor: "rgba(198,168,125,0.5)" }}
+              style={{ backgroundColor: "rgba(215,207,197,0.5)" }}
             />
             <div
               className="w-12 h-px"

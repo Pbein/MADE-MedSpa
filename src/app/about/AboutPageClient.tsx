@@ -206,7 +206,7 @@ export default function AboutPageClient({
         className="py-32 md:py-40 px-6 overflow-hidden relative"
         style={{
           background: [
-            "radial-gradient(ellipse 80% 70% at 10% 90%, rgba(198,168,125,0.12) 0%, transparent 55%)",
+            "radial-gradient(ellipse 80% 70% at 10% 90%, rgba(215,207,197,0.12) 0%, transparent 55%)",
             "radial-gradient(ellipse 60% 50% at 90% 10%, rgba(162,60,64,0.08) 0%, transparent 50%)",
             "linear-gradient(155deg, #3d2222 0%, #391e1e 30%, #2d1515 65%, #200a0a 100%)",
           ].join(", "),
@@ -218,15 +218,15 @@ export default function AboutPageClient({
           <div className="absolute top-16 left-1/2 -translate-x-1/2 flex items-center gap-4">
             <div
               className="w-12 h-px"
-              style={{ backgroundColor: "rgba(198,168,125,0.25)" }}
+              style={{ backgroundColor: "rgba(215,207,197,0.25)" }}
             />
             <div
               className="w-2 h-2 rotate-45 border"
-              style={{ borderColor: "rgba(198,168,125,0.3)" }}
+              style={{ borderColor: "rgba(215,207,197,0.3)" }}
             />
             <div
               className="w-12 h-px"
-              style={{ backgroundColor: "rgba(198,168,125,0.25)" }}
+              style={{ backgroundColor: "rgba(215,207,197,0.25)" }}
             />
           </div>
 
@@ -234,15 +234,15 @@ export default function AboutPageClient({
           <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-4">
             <div
               className="w-12 h-px"
-              style={{ backgroundColor: "rgba(198,168,125,0.25)" }}
+              style={{ backgroundColor: "rgba(215,207,197,0.25)" }}
             />
             <div
               className="w-2 h-2 rotate-45 border"
-              style={{ borderColor: "rgba(198,168,125,0.3)" }}
+              style={{ borderColor: "rgba(215,207,197,0.3)" }}
             />
             <div
               className="w-12 h-px"
-              style={{ backgroundColor: "rgba(198,168,125,0.25)" }}
+              style={{ backgroundColor: "rgba(215,207,197,0.25)" }}
             />
           </div>
         </div>
@@ -329,7 +329,7 @@ export default function AboutPageClient({
           <div
             className="absolute inset-0"
             style={{
-              backgroundColor: "rgba(198,168,125,0.15)",
+              backgroundColor: "rgba(215,207,197,0.15)",
               mixBlendMode: "color",
             }}
           />
