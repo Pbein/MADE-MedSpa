@@ -62,15 +62,26 @@ export default function Navigation() {
     };
   }, [isMobileMenuOpen]);
 
+  const navBg = isHeroOverlay ? "transparent" : "rgba(251, 250, 239, 0.95)";
+
   return (
     <>
+      {/* Status bar cover — blocks content from showing above the nav on notched iPhones */}
+      {!isHeroOverlay && (
+        <div
+          className="fixed top-0 w-full z-50"
+          style={{
+            height: "env(safe-area-inset-top, 0px)",
+            backgroundColor: "rgb(251, 250, 239)",
+          }}
+        />
+      )}
+
       <nav
         className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
           paddingTop: "env(safe-area-inset-top, 0px)",
-          backgroundColor: isHeroOverlay
-            ? "transparent"
-            : "rgba(251, 250, 239, 0.85)",
+          backgroundColor: navBg,
           backdropFilter: isHeroOverlay ? "none" : "blur(20px)",
           WebkitBackdropFilter: isHeroOverlay ? "none" : "blur(20px)",
           boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
