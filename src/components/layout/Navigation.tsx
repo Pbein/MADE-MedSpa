@@ -86,9 +86,8 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className={`fixed w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
+        className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
-          top: "env(safe-area-inset-top, 0px)",
           backgroundColor: isHeroOverlay
             ? "transparent"
             : "#fbfaef",

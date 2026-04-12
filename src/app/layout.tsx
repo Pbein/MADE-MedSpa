@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import {
   Playfair_Display,
   Cormorant_Garamond,
@@ -30,10 +30,6 @@ const inter = Inter({
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
-
-export const viewport: Viewport = {
-  viewportFit: "cover",
-};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mademedspaaesthetics.com"),

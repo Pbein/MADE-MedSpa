@@ -19,15 +19,10 @@ export default function PublicShell({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div
-      style={{
-        paddingTop: "env(safe-area-inset-top, 0px)",
-        backgroundColor: "#fbfaef",
-      }}
-    >
+    <>
       <Navigation />
       {children}
       <Footer />
-    </div>
+    </>
   );
 }
