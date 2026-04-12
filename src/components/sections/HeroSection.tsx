@@ -48,7 +48,13 @@ export default function HeroSection() {
   const posterSrc = heroPoster?.imageUrl || DEFAULT_POSTER;
 
   return (
-    <section className="relative h-screen w-full flex flex-col overflow-hidden">
+    <section
+      className="relative w-full flex flex-col overflow-hidden"
+      style={{
+        height: "calc(100vh - env(safe-area-inset-top, 0px))",
+        marginTop: "env(safe-area-inset-top, 0px)",
+      }}
+    >
       {/* Background: Video with smooth fade-in */}
       <div
         className="absolute inset-0 z-0"
