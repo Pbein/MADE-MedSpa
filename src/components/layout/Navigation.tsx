@@ -51,11 +51,15 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollYRef = useRef(0);
+  const isNavigatingRef = useRef(false);
+
   useEffect(() => {
     if (isMobileMenuOpen) {
-      const scrollY = window.scrollY;
+      scrollYRef.current = window.scrollY;
+      isNavigatingRef.current = false;
       document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
+      document.body.style.top = `-${scrollYRef.current}px`;
       document.body.style.left = "0";
       document.body.style.right = "0";
       document.body.style.overflow = "hidden";
@@ -65,10 +69,19 @@ export default function Navigation() {
         document.body.style.left = "";
         document.body.style.right = "";
         document.body.style.overflow = "";
-        window.scrollTo(0, scrollY);
+        if (isNavigatingRef.current) {
+          window.scrollTo(0, 0);
+        } else {
+          window.scrollTo(0, scrollYRef.current);
+        }
       };
     }
   }, [isMobileMenuOpen]);
+
+  const handleMobileNavClick = () => {
+    isNavigatingRef.current = true;
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -254,7 +267,7 @@ export default function Navigation() {
                     >
                       <Link
                         href={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={handleMobileNavClick}
                         className="font-headline italic text-3xl tracking-tight transition-opacity duration-500"
                         style={{
                           color: "var(--color-primary)",
@@ -280,7 +293,7 @@ export default function Navigation() {
               >
                 <Link
                   href="/booking"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={handleMobileNavClick}
                   className="btn-primary w-full text-center"
                 >
                   Book Consultation

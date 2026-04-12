@@ -93,6 +93,21 @@ html {
   background-color: #fbfaef;
 }
 
+/* iOS Safari safe area — solid bar behind status bar */
+@supports (padding-top: env(safe-area-inset-top)) {
+  html::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0px);
+    background-color: #fbfaef;
+    z-index: 9998;
+    pointer-events: none;
+  }
+}
+
 body {
   background-color: var(--color-surface);
   color: var(--color-primary);
