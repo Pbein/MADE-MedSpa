@@ -154,32 +154,63 @@ export default function Navigation() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          MOBILE — Single fixed hamburger (always present)
-          Background fades in on scroll
+          MOBILE — Single fixed hamburger with animated X
+          Always visible, animates between states
           ═══════════════════════════════════════════ */}
-      {!isMobileMenuOpen && (
-        <button
-          onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
-          className="lg:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px] transition-all duration-500"
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isMobileMenuOpen}
+        className="lg:hidden fixed top-5 right-6 z-[80] w-11 h-11 flex flex-col justify-center items-center gap-0 transition-all duration-500"
+        style={{
+          backgroundColor: isMobileMenuOpen
+            ? "transparent"
+            : isScrolled
+              ? "#221010"
+              : "transparent",
+        }}
+      >
+        {/* Top line — rotates to form X */}
+        <span
+          className="block w-5 h-[1.5px] transition-all duration-400 origin-center"
           style={{
-            backgroundColor: isScrolled ? "#221010" : "transparent",
+            backgroundColor: isMobileMenuOpen
+              ? "var(--color-primary)"
+              : isScrolled
+                ? "#f7f6eb"
+                : useLightNavText ? "#ffffff" : "#391e1e",
+            transform: isMobileMenuOpen
+              ? "translateY(0.5px) rotate(45deg)"
+              : "translateY(-4px)",
           }}
-        >
-          <span
-            className="block w-5 h-[1.5px] transition-colors duration-500"
-            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
-          />
-          <span
-            className="block w-5 h-[1.5px] transition-colors duration-500"
-            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
-          />
-          <span
-            className="block w-5 h-[1.5px] transition-colors duration-500"
-            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
-          />
-        </button>
-      )}
+        />
+        {/* Middle line — fades out */}
+        <span
+          className="block w-5 h-[1.5px] transition-all duration-400"
+          style={{
+            backgroundColor: isMobileMenuOpen
+              ? "var(--color-primary)"
+              : isScrolled
+                ? "#f7f6eb"
+                : useLightNavText ? "#ffffff" : "#391e1e",
+            opacity: isMobileMenuOpen ? 0 : 1,
+          }}
+        />
+        {/* Bottom line — rotates to form X */}
+        <span
+          className="block w-5 h-[1.5px] transition-all duration-400 origin-center"
+          style={{
+            backgroundColor: isMobileMenuOpen
+              ? "var(--color-primary)"
+              : isScrolled
+                ? "#f7f6eb"
+                : useLightNavText ? "#ffffff" : "#391e1e",
+            transform: isMobileMenuOpen
+              ? "translateY(-0.5px) rotate(-45deg)"
+              : "translateY(4px)",
+          }}
+        />
+      </button>
 
       {/* ═══════════════════════════════════════════
           MOBILE MENU OVERLAY
@@ -188,8 +219,7 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <>
             <motion.div
-              className="fixed z-[65] bg-black/20"
-              style={{ top: "-50px", left: 0, right: 0, bottom: "-50px" }}
+              className="fixed inset-0 z-[65] bg-black/20"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -198,15 +228,9 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed z-[70] flex flex-col justify-center px-8 sm:px-12"
+              className="fixed inset-0 z-[70] flex flex-col justify-center px-8 sm:px-12"
               style={{
-                top: "-50px",
-                left: 0,
-                right: 0,
-                bottom: "-50px",
                 backgroundColor: "var(--color-surface)",
-                paddingTop: "calc(50px + env(safe-area-inset-top, 0px))",
-                paddingBottom: "calc(50px + env(safe-area-inset-bottom, 0px))",
                 touchAction: "none",
                 overscrollBehavior: "none",
               }}
@@ -219,22 +243,6 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
-              {/* Close button */}
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close menu"
-                className="absolute right-6 w-10 h-10 flex items-center justify-center"
-                style={{ top: "calc(env(safe-area-inset-top, 0px) + 1.25rem)" }}
-              >
-                <span
-                  className="absolute block w-6 h-[1.5px] rotate-45"
-                  style={{ backgroundColor: "var(--color-primary)" }}
-                />
-                <span
-                  className="absolute block w-6 h-[1.5px] -rotate-45"
-                  style={{ backgroundColor: "var(--color-primary)" }}
-                />
-              </button>
 
               <ul className="flex flex-col gap-8">
                 <motion.li
