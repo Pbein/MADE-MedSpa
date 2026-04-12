@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions",
+  title: "FAQ",
   description:
-    "Find answers to common questions about treatments, booking, memberships, and aftercare at MADE Med Spa.",
+    "Frequently asked questions about aesthetic treatments, booking, aftercare, and what to expect at MADE Med Spa in McLean, Virginia.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

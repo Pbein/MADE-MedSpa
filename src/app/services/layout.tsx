@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Services",
+  title: "Aesthetic Services in McLean, VA",
   description:
-    "Explore our full menu of luxury aesthetic treatments, from injectables and facials to body contouring and skin rejuvenation.",
+    "Botox, dermal fillers, Sculptra, PRF, lip enhancement, and advanced skin treatments at MADE Med Spa in McLean, Virginia. Natural results from an experienced nurse injector.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
