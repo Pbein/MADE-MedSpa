@@ -81,6 +81,46 @@ export default function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
+  const [isOverDark, setIsOverDark] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const checkBackground = () => {
+      const x = window.innerWidth - 40;
+      const y = 40;
+      const el = document.elementFromPoint(x, y);
+      if (!el) return;
+
+      let node: Element | null = el;
+      while (node && node !== document.body) {
+        const bg = getComputedStyle(node).backgroundColor;
+        const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (match) {
+          const [, r, g, b] = match.map(Number);
+          const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+          if (luminance < 0.45) {
+            setIsOverDark(true);
+            return;
+          } else if (luminance > 0.1) {
+            setIsOverDark(false);
+            return;
+          }
+        }
+        node = node.parentElement;
+      }
+      setIsOverDark(false);
+    };
+
+    const handleScroll = () => {
+      requestAnimationFrame(checkBackground);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    checkBackground();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
+
   const hamburgerColor = isMobileMenuOpen
     ? "var(--color-primary)"
     : useLightNavText
@@ -199,16 +239,27 @@ export default function Navigation() {
             transition={{ duration: 0.3 }}
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
-            className="md:hidden fixed top-5 right-6 z-50 w-10 h-10 flex flex-col justify-center items-center gap-[5px] rounded-full"
+            className="md:hidden fixed top-5 right-6 z-50 w-10 h-10 flex flex-col justify-center items-center gap-[5px] rounded-full transition-colors duration-300"
             style={{
-              backgroundColor: "rgba(57,30,30,0.85)",
+              backgroundColor: isOverDark
+                ? "rgba(247,246,235,0.9)"
+                : "rgba(57,30,30,0.85)",
               backdropFilter: "blur(8px)",
               WebkitBackdropFilter: "blur(8px)",
             }}
           >
-            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
-            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
-            <span className="block w-4 h-[1.5px] bg-[#f7f6eb]" />
+            <span
+              className="block w-4 h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+            />
+            <span
+              className="block w-4 h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+            />
+            <span
+              className="block w-4 h-[1.5px] transition-colors duration-300"
+              style={{ backgroundColor: isOverDark ? "#391e1e" : "#f7f6eb" }}
+            />
           </motion.button>
         )}
       </AnimatePresence>
