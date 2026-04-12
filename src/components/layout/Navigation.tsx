@@ -224,26 +224,18 @@ export default function Navigation() {
         {isScrolled && !isMobileMenuOpen && (
           <motion.button
             key="floating-hamburger"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
-            className="md:hidden fixed top-5 right-6 z-50 w-8 h-5 flex flex-col justify-between"
+            className="md:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px]"
+            style={{ backgroundColor: "#221010" }}
           >
-            <span
-              className="block w-full h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
-            />
-            <span
-              className="block w-full h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
-            />
-            <span
-              className="block w-full h-[1.5px] transition-colors duration-300"
-              style={{ backgroundColor: isOverDark ? "#f7f6eb" : "#391e1e" }}
-            />
+            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
+            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
+            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
           </motion.button>
         )}
       </AnimatePresence>
