@@ -64,6 +64,17 @@ export default function Navigation() {
 
   return (
     <>
+      {/* iOS safe area cover — always solid, sits above everything */}
+      <div
+        className="fixed top-0 left-0 right-0 z-[60]"
+        aria-hidden
+        style={{
+          height: "env(safe-area-inset-top, 0px)",
+          backgroundColor: isHeroOverlay ? "#391e1e" : "#fbfaef",
+          transition: transitionsEnabled ? "background-color 500ms" : "none",
+        }}
+      />
+
       <nav
         className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
