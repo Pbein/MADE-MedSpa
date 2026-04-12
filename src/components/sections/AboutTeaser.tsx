@@ -7,8 +7,7 @@ import { motion } from "framer-motion";
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 const viewportOnce = { once: true, margin: "-80px" } as const;
 
-const DEFAULT_ABOUT_IMAGE =
-  "https://placehold.co/800x1000/4a2c17/f5f0e8?text=Our+Philosophy";
+const DEFAULT_ABOUT_IMAGE = "/images/placeholder-portrait.svg";
 
 interface AboutTeaserProps {
   aboutImageUrl?: string;

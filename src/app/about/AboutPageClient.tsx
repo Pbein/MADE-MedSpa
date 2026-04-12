@@ -29,14 +29,13 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const DEFAULT_STORY_IMAGE =
-  "https://placehold.co/800x1000/4a2c17/f5f0e8?text=Our+Story";
+const DEFAULT_STORY_IMAGE = "/images/placeholder-portrait.svg";
 
 const TEAM_IMAGES = [
-  "https://placehold.co/450x600/3c2415/f5f0e8?text=Dr.+Karlyne",
-  "https://placehold.co/450x600/5c3a1e/f5f0e8?text=Sophia+L.",
-  "https://placehold.co/450x600/4a2c17/f5f0e8?text=Mia+C.",
-  "https://placehold.co/450x600/6b4226/f5f0e8?text=Olivia+H.",
+  "/images/placeholder-team.svg",
+  "/images/placeholder-team.svg",
+  "/images/placeholder-team.svg",
+  "/images/placeholder-team.svg",
 ];
 
 const FALLBACK_TEAM: { name: string; title: string; bio: string; imageUrl?: string }[] = [
@@ -446,7 +445,7 @@ export default function AboutPageClient({
               <motion.div key={member.name} variants={revealUp}>
                 <div className="overflow-hidden mb-6 relative aspect-[3/4]">
                   <Image
-                    src={member.imageUrl || TEAM_IMAGES[i] || `https://placehold.co/450x600/3c2415/f5f0e8?text=${encodeURIComponent(member.name)}`}
+                    src={member.imageUrl || TEAM_IMAGES[i] || "/images/placeholder-team.svg"}
                     alt={member.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

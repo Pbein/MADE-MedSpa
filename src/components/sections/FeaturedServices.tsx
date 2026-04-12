@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
 const DEFAULT_IMAGES = [
-  "https://placehold.co/600x600/3c2415/f5f0e8?text=Regeneration",
-  "https://placehold.co/600x600/5c3a1e/f5f0e8?text=Texture",
-  "https://placehold.co/600x600/4a2c17/f5f0e8?text=Glow",
+  "/images/placeholder-service.svg",
+  "/images/placeholder-service.svg",
+  "/images/placeholder-service.svg",
 ];
 
 const FALLBACK_LABELS = ["REGENERATION", "TEXTURE", "GLOW"];

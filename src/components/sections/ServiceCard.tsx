@@ -35,7 +35,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         {/* Image */}
         <div className="overflow-hidden relative aspect-[4/3]">
           <Image
-            src={service.imageUrl || "https://placehold.co/600x450/4a2c17/f5f0e8?text=Service"}
+            src={service.imageUrl || "/images/placeholder-service.svg"}
             alt={service.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

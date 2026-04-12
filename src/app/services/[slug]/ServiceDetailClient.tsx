@@ -137,7 +137,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
             >
               <div className="relative aspect-[4/5] w-full">
                 <Image
-                  src={service.imageUrl || "https://placehold.co/640x800/4a2c17/f5f0e8?text=Service+Image"}
+                  src={service.imageUrl || "/images/placeholder-service.svg"}
                   alt={service.name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 42vw"
