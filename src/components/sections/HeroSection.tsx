@@ -105,7 +105,7 @@ export default function HeroSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-6xl mx-auto flex flex-col flex-1 w-full"
+          className="max-w-6xl mx-auto flex flex-col flex-1 w-full items-center md:items-start text-center md:text-left"
         >
           {/* Eyebrow label */}
           <motion.span
