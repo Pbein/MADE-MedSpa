@@ -147,8 +147,7 @@ export default function HeroSection() {
             </span>
           </motion.h1>
 
-          {/* Spacer — pushes buttons to bottom while text stays higher */}
-          <div className="flex-grow" />
+          <div className="flex-grow max-h-24 md:max-h-32" />
 
           {/* CTA buttons */}
           <motion.div
