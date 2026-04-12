@@ -89,6 +89,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  background-color: #fbfaef;
+}
+
 body {
   background-color: var(--color-surface);
   color: var(--color-primary);
