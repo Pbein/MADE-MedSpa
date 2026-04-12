@@ -67,6 +67,7 @@ export default function Navigation() {
       <nav
         className={`fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
           backgroundColor: isHeroOverlay
             ? "transparent"
             : "rgba(251, 250, 239, 0.85)",
@@ -75,10 +76,7 @@ export default function Navigation() {
           boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
         }}
       >
-        <div
-          className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8"
-          style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}
-        >
+        <div className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8">
           {/* Logo */}
           <Link
             href="/"
