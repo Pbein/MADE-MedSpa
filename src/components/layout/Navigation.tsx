@@ -20,8 +20,8 @@ export default function Navigation() {
   const [transitionsEnabled, setTransitionsEnabled] = useState(false);
   const prevPathnameRef = useRef(pathname);
 
-  const heroOverlayRoutes = new Set(["/", "/services", "/about"]);
-  const lightTextRoutes = new Set(["/"]);
+  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/faq"]);
+  const lightTextRoutes = new Set(["/", "/booking", "/faq"]);
   const isOverlayRoute = heroOverlayRoutes.has(pathname);
   const isHeroOverlay = isOverlayRoute && !isScrolled;
   const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;
