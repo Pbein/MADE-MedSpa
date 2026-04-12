@@ -72,51 +72,6 @@ export default function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
-  const [isOverDark, setIsOverDark] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const checkBackground = () => {
-      const x = window.innerWidth - 40;
-      const y = 40;
-      const el = document.elementFromPoint(x, y);
-      if (!el) return;
-
-      let node: Element | null = el;
-      while (node && node !== document.body) {
-        const bg = getComputedStyle(node).backgroundColor;
-        const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (match) {
-          const [, r, g, b] = match.map(Number);
-          const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-          if (luminance < 0.45) {
-            setIsOverDark(true);
-            return;
-          } else if (luminance > 0.1) {
-            setIsOverDark(false);
-            return;
-          }
-        }
-        node = node.parentElement;
-      }
-      setIsOverDark(false);
-    };
-
-    const handleScroll = () => {
-      requestAnimationFrame(checkBackground);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    checkBackground();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [pathname]);
-
-  const hamburgerColor = isMobileMenuOpen
-    ? "var(--color-primary)"
-    : useLightNavText
-      ? "var(--color-on-primary)"
-      : "var(--color-primary)";
 
   return (
     <>
@@ -182,9 +137,9 @@ export default function Navigation() {
       </nav>
 
       {/* ═══════════════════════════════════════════
-          MOBILE — Static header (scrolls with page, overlays hero)
+          MOBILE — MADE logo (scrolls with page)
           ═══════════════════════════════════════════ */}
-      <div className="md:hidden relative z-10 flex justify-between items-center px-6 py-5" style={{ marginBottom: "-60px" }}>
+      <div className="md:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-60px" }}>
         <Link
           href="/"
           className="font-headline italic text-2xl tracking-tight"
@@ -196,49 +151,35 @@ export default function Navigation() {
         >
           MADE
         </Link>
-
-        <button
-          onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
-          className="relative w-8 h-5 flex flex-col justify-between"
-        >
-          <span
-            className="block w-full h-[1.5px]"
-            style={{ backgroundColor: hamburgerColor }}
-          />
-          <span
-            className="block w-full h-[1.5px]"
-            style={{ backgroundColor: hamburgerColor }}
-          />
-          <span
-            className="block w-full h-[1.5px]"
-            style={{ backgroundColor: hamburgerColor }}
-          />
-        </button>
       </div>
 
       {/* ═══════════════════════════════════════════
-          MOBILE — Floating hamburger (fixed, visible when scrolled)
+          MOBILE — Single fixed hamburger (always present)
+          Background fades in on scroll
           ═══════════════════════════════════════════ */}
-      <AnimatePresence>
-        {isScrolled && !isMobileMenuOpen && (
-          <motion.button
-            key="floating-hamburger"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open menu"
-            className="md:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px]"
-            style={{ backgroundColor: "#221010" }}
-          >
-            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
-            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
-            <span className="block w-5 h-[1.5px] bg-[#f7f6eb]" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {!isMobileMenuOpen && (
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open menu"
+          className="md:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px] transition-all duration-500"
+          style={{
+            backgroundColor: isScrolled ? "#221010" : "transparent",
+          }}
+        >
+          <span
+            className="block w-5 h-[1.5px] transition-colors duration-500"
+            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
+          />
+          <span
+            className="block w-5 h-[1.5px] transition-colors duration-500"
+            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
+          />
+          <span
+            className="block w-5 h-[1.5px] transition-colors duration-500"
+            style={{ backgroundColor: isScrolled ? "#f7f6eb" : (useLightNavText ? "#ffffff" : "#391e1e") }}
+          />
+        </button>
+      )}
 
       {/* ═══════════════════════════════════════════
           MOBILE MENU OVERLAY
