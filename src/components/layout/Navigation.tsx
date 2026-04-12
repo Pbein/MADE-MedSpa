@@ -139,7 +139,7 @@ export default function Navigation() {
       {/* ═══════════════════════════════════════════
           MOBILE — MADE logo (scrolls with page)
           ═══════════════════════════════════════════ */}
-      <div className="md:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-60px" }}>
+      <div className="md:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-100px" }}>
         <Link
           href="/"
           className="font-headline italic text-2xl tracking-tight"
