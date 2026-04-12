@@ -188,7 +188,8 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[65] bg-black/20"
+              className="fixed z-[65] bg-black/20"
+              style={{ top: "-50px", left: 0, right: 0, bottom: "-50px" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -197,11 +198,15 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed inset-0 z-[70] flex flex-col justify-center px-8 sm:px-12"
+              className="fixed z-[70] flex flex-col justify-center px-8 sm:px-12"
               style={{
+                top: "-50px",
+                left: 0,
+                right: 0,
+                bottom: "-50px",
                 backgroundColor: "var(--color-surface)",
-                paddingTop: "env(safe-area-inset-top, 0px)",
-                paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                paddingTop: "calc(50px + env(safe-area-inset-top, 0px))",
+                paddingBottom: "calc(50px + env(safe-area-inset-bottom, 0px))",
                 touchAction: "none",
                 overscrollBehavior: "none",
               }}
