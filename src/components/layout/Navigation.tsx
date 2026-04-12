@@ -184,7 +184,7 @@ export default function Navigation() {
       {/* ═══════════════════════════════════════════
           MOBILE — Static header (scrolls with page, overlays hero)
           ═══════════════════════════════════════════ */}
-      <div className="md:hidden absolute top-0 left-0 right-0 flex justify-between items-center px-6 py-5 z-10">
+      <div className="md:hidden relative z-10 flex justify-between items-center px-6 py-5" style={{ marginBottom: "-60px" }}>
         <Link
           href="/"
           className="font-headline italic text-2xl tracking-tight"
