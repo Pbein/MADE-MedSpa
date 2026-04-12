@@ -75,7 +75,10 @@ export default function Navigation() {
           boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
         }}
       >
-        <div className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8">
+        <div
+          className="flex justify-between items-center px-6 md:px-12 py-6 md:py-8"
+          style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}
+        >
           {/* Logo */}
           <Link
             href="/"
