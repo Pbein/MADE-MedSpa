@@ -79,7 +79,7 @@ export default function Navigation() {
           DESKTOP NAV — fixed, full bar (hidden on mobile)
           ═══════════════════════════════════════════ */}
       <nav
-        className={`hidden md:block fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
+        className={`hidden lg:block fixed top-0 w-full z-50 ${transitionsEnabled ? "transition-all duration-500" : ""}`}
         style={{
           backgroundColor: isHeroOverlay ? "transparent" : "#fbfaef",
           boxShadow: isScrolled ? "var(--shadow-nav)" : "none",
@@ -139,7 +139,7 @@ export default function Navigation() {
       {/* ═══════════════════════════════════════════
           MOBILE — MADE logo (scrolls with page)
           ═══════════════════════════════════════════ */}
-      <div className="md:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-100px" }}>
+      <div className="lg:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-100px" }}>
         <Link
           href="/"
           className="font-headline italic text-2xl tracking-tight"
@@ -161,7 +161,7 @@ export default function Navigation() {
         <button
           onClick={() => setIsMobileMenuOpen(true)}
           aria-label="Open menu"
-          className="md:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px] transition-all duration-500"
+          className="lg:hidden fixed top-5 right-6 z-50 w-11 h-11 flex flex-col justify-center items-center gap-[6px] transition-all duration-500"
           style={{
             backgroundColor: isScrolled ? "#221010" : "transparent",
           }}
