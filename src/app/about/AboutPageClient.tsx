@@ -352,7 +352,7 @@ export default function AboutPageClient({
           <motion.div variants={revealUp} className="text-center mb-20">
             <span
               className="label-micro block mb-4"
-              style={{ color: "var(--color-on-surface-variant)" }}
+              style={{ color: "var(--color-primary)", opacity: 0.6 }}
             >
               {valuesContent?.title || "What Guides Us"}
             </span>
@@ -381,7 +381,7 @@ export default function AboutPageClient({
                 </h3>
                 <p
                   className="body-editorial"
-                  style={{ color: "var(--color-on-surface-variant)" }}
+                  style={{ color: "var(--color-primary)" }}
                 >
                   {value.description}
                 </p>
@@ -393,7 +393,7 @@ export default function AboutPageClient({
             <motion.p
               variants={revealUp}
               className="body-editorial text-center mt-16 max-w-2xl mx-auto"
-              style={{ color: "var(--color-on-surface-variant)" }}
+              style={{ color: "var(--color-primary)" }}
             >
               {valuesContent.body}
             </motion.p>

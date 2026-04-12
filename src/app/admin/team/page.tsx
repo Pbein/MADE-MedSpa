@@ -4,6 +4,7 @@ import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 interface TeamMemberFormData {
   name: string;
@@ -93,19 +94,11 @@ function TeamMemberForm({
           />
         </div>
         <div>
-          <label
-            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
-            style={{ color: "#111827" }}
-          >
-            Image URL
-          </label>
-          <input
-            type="text"
+          <ImageUpload
+            label="Team Member Photo"
             value={form.imageUrl}
-            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-            placeholder="https://..."
-            className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
-            style={{ borderColor: "#e5e7eb" }}
+            onChange={(url) => setForm({ ...form, imageUrl: url })}
+            aspect="3/4"
           />
         </div>
         <div>
