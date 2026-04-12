@@ -185,7 +185,7 @@ a {
   align-items: center;
   justify-content: center;
   padding: 1rem 2.5rem;
-  background-color: #2a1414;
+  background-color: #221010;
   color: var(--color-on-primary);
   border: none;
   font-family: var(--font-headline);
@@ -197,7 +197,7 @@ a {
 }
 
 .btn-primary:hover {
-  background-color: #331919;
+  background-color: #2a1414;
 }
 
 .btn-light {
