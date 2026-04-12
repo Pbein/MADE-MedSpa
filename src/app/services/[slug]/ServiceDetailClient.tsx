@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { motion } from "framer-motion";
@@ -134,11 +135,15 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
               initial="hidden"
               animate="visible"
             >
-              <img
-                src={service.imageUrl || "https://placehold.co/640x800/4a2c17/f5f0e8?text=Service+Image"}
-                alt={service.name}
-                className="image-editorial aspect-[4/5] w-full object-cover"
-              />
+              <div className="relative aspect-[4/5] w-full">
+                <Image
+                  src={service.imageUrl || "https://placehold.co/640x800/4a2c17/f5f0e8?text=Service+Image"}
+                  alt={service.name}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 42vw"
+                  className="object-cover image-editorial"
+                />
+              </div>
             </motion.div>
           </div>
         </div>

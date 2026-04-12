@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 const viewportOnce = { once: true, margin: "-80px" } as const;
@@ -11,9 +10,12 @@ const viewportOnce = { once: true, margin: "-80px" } as const;
 const DEFAULT_ABOUT_IMAGE =
   "https://placehold.co/800x1000/4a2c17/f5f0e8?text=Our+Philosophy";
 
-export default function AboutTeaser() {
-  const aboutImage = useQuery(api.siteContent.getByKey, { key: "about_philosophy_image" });
-  const imageSrc = aboutImage?.imageUrl || DEFAULT_ABOUT_IMAGE;
+interface AboutTeaserProps {
+  aboutImageUrl?: string;
+}
+
+export default function AboutTeaser({ aboutImageUrl }: AboutTeaserProps) {
+  const imageSrc = aboutImageUrl || DEFAULT_ABOUT_IMAGE;
 
   return (
     <section className="py-32 md:py-40 px-8 md:px-16 lg:px-24 bg-[var(--color-surface)]">
@@ -26,14 +28,15 @@ export default function AboutTeaser() {
           transition={{ duration: 0.9, ease: luxuryEase }}
           className="md:col-span-6 relative"
         >
-          <img
-            src={imageSrc}
-            alt="MADE Med Spa philosophy"
-            className="w-full aspect-[4/5] object-cover"
-            style={{
-              boxShadow: "8px 8px 40px rgba(57,30,30,0.08)",
-            }}
-          />
+          <div className="relative w-full aspect-[4/5]" style={{ boxShadow: "8px 8px 40px rgba(57,30,30,0.08)" }}>
+            <Image
+              src={imageSrc}
+              alt="MADE Med Spa philosophy"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
           {/* Decorative warm blur */}
           <div
             className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full pointer-events-none"

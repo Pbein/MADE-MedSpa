@@ -109,7 +109,7 @@ const MEDIA_SLOTS: MediaSlot[] = [
     description: "Silk texture behind the Contact page hero. Dark espresso/mocha tones.",
     type: "image",
     aspect: "21/9",
-    defaultUrl: "/images/contact-hero-bg.png",
+    defaultUrl: "/images/contact-hero-bg.webp",
     category: "hero",
   },
 

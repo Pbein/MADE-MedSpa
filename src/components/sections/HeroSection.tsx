@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
 const containerVariants = {
@@ -36,16 +34,19 @@ const lineVariants = {
 };
 
 const DEFAULT_VIDEO = "/videos/hero.mp4";
-const DEFAULT_POSTER = "/images/hero-poster.png";
+const DEFAULT_POSTER = "/images/hero-poster.webp";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  heroVideoUrl?: string;
+  heroPosterUrl?: string;
+}
+
+export default function HeroSection({ heroVideoUrl, heroPosterUrl }: HeroSectionProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const heroVideo = useQuery(api.siteContent.getByKey, { key: "hero_video" });
-  const heroPoster = useQuery(api.siteContent.getByKey, { key: "hero_poster" });
 
-  const videoSrc = heroVideo?.imageUrl || DEFAULT_VIDEO;
-  const posterSrc = heroPoster?.imageUrl || DEFAULT_POSTER;
+  const videoSrc = heroVideoUrl || DEFAULT_VIDEO;
+  const posterSrc = heroPosterUrl || DEFAULT_POSTER;
 
   return (
     <section className="relative h-screen w-full flex flex-col overflow-hidden">
@@ -55,10 +56,13 @@ export default function HeroSection() {
         style={{ backgroundColor: "#391e1e" }}
       >
         {/* Poster image — always present, sits behind the video */}
-        <img
+        <Image
           src={posterSrc}
           alt="MADE Med Spa"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
 
         {!videoFailed ? (

@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -13,25 +12,29 @@ const DEFAULT_IMAGES = [
   "https://placehold.co/600x600/4a2c17/f5f0e8?text=Glow",
 ];
 
-const FEATURED_KEYS = [
-  "featured_service_image_1",
-  "featured_service_image_2",
-  "featured_service_image_3",
-];
-
 const FALLBACK_LABELS = ["REGENERATION", "TEXTURE", "GLOW"];
 
 const viewportOnce = { once: true, margin: "-50px" } as const;
 
-export default function FeaturedServices() {
-  const services = useQuery(api.services.list);
-  const img1 = useQuery(api.siteContent.getByKey, { key: FEATURED_KEYS[0] });
-  const img2 = useQuery(api.siteContent.getByKey, { key: FEATURED_KEYS[1] });
-  const img3 = useQuery(api.siteContent.getByKey, { key: FEATURED_KEYS[2] });
+interface ServiceData {
+  _id: string;
+  name: string;
+  slug: string;
+  shortDescription: string;
+  category: string;
+  imageUrl?: string;
+}
+
+interface FeaturedServicesProps {
+  services?: ServiceData[];
+  featuredImageUrls?: (string | undefined)[];
+}
+
+export default function FeaturedServices({ services, featuredImageUrls }: FeaturedServicesProps) {
   const featuredImages = [
-    img1?.imageUrl || DEFAULT_IMAGES[0],
-    img2?.imageUrl || DEFAULT_IMAGES[1],
-    img3?.imageUrl || DEFAULT_IMAGES[2],
+    featuredImageUrls?.[0] || DEFAULT_IMAGES[0],
+    featuredImageUrls?.[1] || DEFAULT_IMAGES[1],
+    featuredImageUrls?.[2] || DEFAULT_IMAGES[2],
   ];
 
   const featured = services?.slice(0, 3);
@@ -159,11 +162,13 @@ export default function FeaturedServices() {
                         boxShadow: "0 2px 20px rgba(57,30,30,0.04)",
                       }}
                     >
-                      <div className="overflow-hidden">
-                        <img
+                      <div className="overflow-hidden relative aspect-[4/5]">
+                        <Image
                           src={imageUrl}
                           alt={service.name}
-                          className="w-full aspect-[4/5] object-cover group-hover:scale-[1.03] transition-transform duration-1000"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-[1.03] transition-transform duration-1000"
                           style={{ filter: "brightness(0.97) contrast(1.02)" }}
                         />
                         <div

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
@@ -32,11 +33,13 @@ export default function EditorialBreak({
     >
       {/* Background texture for silk variant */}
       {isSilk && (
-        <img
-          src="/images/editorial-break-bg.png"
+        <Image
+          src="/images/editorial-break-bg.webp"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
       )}
 

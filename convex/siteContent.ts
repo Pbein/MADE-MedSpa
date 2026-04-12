@@ -19,6 +19,23 @@ export const list = query({
   },
 });
 
+export const getByKeys = query({
+  args: { keys: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    const results: Record<string, { key: string; imageUrl?: string; title?: string; body?: string } | null> = {};
+    await Promise.all(
+      args.keys.map(async (key) => {
+        const content = await ctx.db
+          .query("siteContent")
+          .withIndex("by_key", (q) => q.eq("key", key))
+          .first();
+        results[key] = content;
+      })
+    );
+    return results;
+  },
+});
+
 export const upsert = mutation({
   args: {
     key: v.string(),

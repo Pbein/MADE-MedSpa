@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
@@ -127,12 +128,14 @@ export default function AboutPageClient({
             variants={revealLeft}
             className="md:col-span-5"
           >
-            <div className="overflow-hidden aspect-[4/5]" style={{ backgroundColor: "var(--color-surface-high)" }}>
+            <div className="overflow-hidden aspect-[4/5] relative" style={{ backgroundColor: "var(--color-surface-high)" }}>
               {!storyImageLoading && (
-                <img
+                <Image
                   src={storyImage}
                   alt="MADE Med Spa studio"
-                  className="w-full h-full object-cover image-editorial"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 42vw"
+                  className="object-cover image-editorial"
                   style={{ boxShadow: "12px 12px 40px rgba(32,10,10,0.06)" }}
                 />
               )}
@@ -316,10 +319,12 @@ export default function AboutPageClient({
       >
         {/* Background image — warm glaze-tinted editorial treatment */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <img
-            src="/images/values-bg.png"
+          <Image
+            src="/images/values-bg.webp"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
             style={{
               filter: "grayscale(100%) brightness(1.2) contrast(0.8)",
               opacity: 0.12,
@@ -439,11 +444,13 @@ export default function AboutPageClient({
           >
             {teamMembers.map((member, i) => (
               <motion.div key={member.name} variants={revealUp}>
-                <div className="overflow-hidden mb-6">
-                  <img
+                <div className="overflow-hidden mb-6 relative aspect-[3/4]">
+                  <Image
                     src={member.imageUrl || TEAM_IMAGES[i] || `https://placehold.co/450x600/3c2415/f5f0e8?text=${encodeURIComponent(member.name)}`}
                     alt={member.name}
-                    className="image-editorial aspect-[3/4] w-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover image-editorial"
                     style={{
                       boxShadow: "8px 8px 30px rgba(32,10,10,0.06)",
                     }}

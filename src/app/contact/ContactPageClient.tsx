@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
@@ -83,11 +84,14 @@ export default function ContactPageClient() {
         style={{ backgroundColor: ESPRESSO }}
       >
         {/* Mocha texture background */}
-        <img
-          src="/images/contact-hero-bg.png?v=2"
+        <Image
+          src="/images/contact-hero-bg.webp"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
         {/* Light overlay for text legibility — keeps texture visible */}
         <div

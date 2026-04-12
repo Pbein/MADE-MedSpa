@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
 
@@ -51,11 +52,13 @@ export default function PageHero({
     >
       {hasBackground && (
         <>
-          <img
-            src={backgroundImage}
+          <Image
+            src={backgroundImage!}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
           <div
             aria-hidden="true"

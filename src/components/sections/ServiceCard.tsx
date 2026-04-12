@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 interface ServiceData {
@@ -32,11 +33,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     >
       <Link href={`/services/${service.slug}`} className="block">
         {/* Image */}
-        <div className="overflow-hidden">
-          <img
+        <div className="overflow-hidden relative aspect-[4/3]">
+          <Image
             src={service.imageUrl || "https://placehold.co/600x450/4a2c17/f5f0e8?text=Service"}
             alt={service.name}
-            className="w-full aspect-[4/3] object-cover image-editorial-light group-hover:scale-105 transition-transform duration-1000"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover image-editorial-light group-hover:scale-105 transition-transform duration-1000"
           />
         </div>
 

@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 const viewportOnce = { once: true, margin: "-80px" } as const;
@@ -29,13 +28,22 @@ const FALLBACK_TESTIMONIALS = [
   },
 ];
 
-export default function TestimonialSection() {
-  const dbTestimonials = useQuery(api.testimonials.list);
+interface TestimonialData {
+  quote: string;
+  name: string;
+  treatment: string;
+}
+
+interface TestimonialSectionProps {
+  testimonials?: TestimonialData[];
+  testimonialBgUrl?: string;
+}
+
+export default function TestimonialSection({ testimonials: propTestimonials, testimonialBgUrl }: TestimonialSectionProps) {
   const testimonials =
-    dbTestimonials && dbTestimonials.length > 0
-      ? dbTestimonials
+    propTestimonials && propTestimonials.length > 0
+      ? propTestimonials
       : FALLBACK_TESTIMONIALS;
-  const testimonialBg = useQuery(api.siteContent.getByKey, { key: "testimonial_bg" });
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
@@ -57,22 +65,24 @@ export default function TestimonialSection() {
     return () => clearInterval(interval);
   }, [next]);
 
-  if (dbTestimonials && dbTestimonials.length === 0) return null;
+  if (propTestimonials && propTestimonials.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden">
       {/* ── Background texture image ── */}
-      {testimonialBg?.imageUrl && (
-        <img
-          src={testimonialBg.imageUrl}
+      {testimonialBgUrl && (
+        <Image
+          src={testimonialBgUrl}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
       )}
 
       {/* ── Fallback base color (shown while image loads) ── */}
-      {!testimonialBg?.imageUrl && (
+      {!testimonialBgUrl && (
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ backgroundColor: "var(--color-surface)" }}

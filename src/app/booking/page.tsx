@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import CTABanner from "@/components/sections/CTABanner";
@@ -76,11 +77,14 @@ export default function BookingPage() {
           style={{ backgroundColor: "#391e1e" }}
         >
           {/* Poster — shows immediately while video loads */}
-          <img
-            src="/images/booking-hero-poster.png"
+          <Image
+            src="/images/booking-hero-poster.webp"
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
 
           {/* Video — fades in once ready */}
@@ -263,10 +267,12 @@ export default function BookingPage() {
       <section className="bg-[var(--color-surface-low)] py-32 md:py-40 relative overflow-hidden">
         {/* Background image — desaturated, slightly more visible than about/values */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <img
-            src="/images/values-bg.png"
+          <Image
+            src="/images/values-bg.webp"
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
             style={{
               filter: "grayscale(70%) brightness(1.1) contrast(0.9)",
               opacity: 0.12,
