@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADE Med Spa &mdash; Your Website, Explained</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --espresso: #3C2415;
+      --blush: #D4A59A;
+      --matcha: #8A9A6E;
+      --cream: #FAF6F1;
+      --warm-gray: #7A706A;
+      --light-border: #E8E0D8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      color: var(--espresso);
+      background: var(--cream);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ---------- Cover Page ---------- */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(160deg, var(--cream) 0%, #F3EDE6 100%);
+      page-break-after: always;
+    }
+
+    .cover-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .cover-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 3rem;
+    }
+
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--blush);
+      margin: 0 auto 3rem;
+    }
+
+    .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--espresso);
+      margin-bottom: 0.5rem;
+    }
+
+    .cover-subtitle {
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      margin-bottom: 4rem;
+    }
+
+    .cover-date {
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--light-border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+    }
+
+    /* ---------- Content Pages ---------- */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem;
+      page-break-after: always;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    h2 + .section-line {
+      width: 40px;
+      height: 2px;
+      background: var(--blush);
+      margin-bottom: 1.75rem;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .highlight {
+      background: white;
+      border-left: 3px solid var(--blush);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong { font-weight: 500; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      border: 1px solid var(--light-border);
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon.blush { background: rgba(212, 165, 154, 0.2); }
+    .card-icon.matcha { background: rgba(138, 154, 110, 0.2); }
+    .card-icon.espresso { background: rgba(60, 36, 21, 0.1); }
+
+    .card h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--espresso);
+    }
+
+    .card p {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* Pages list */
+    .pages-list {
+      list-style: none;
+      margin: 1.25rem 0;
+    }
+
+    .pages-list li {
+      display: flex;
+      align-items: baseline;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--light-border);
+      font-size: 0.9rem;
+    }
+
+    .pages-list li:last-child { border-bottom: none; }
+
+    .page-name {
+      font-weight: 500;
+      min-width: 140px;
+      color: var(--espresso);
+    }
+
+    .page-desc {
+      color: var(--warm-gray);
+    }
+
+    /* Comparison Table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .compare-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--light-border);
+      font-weight: 500;
+      color: var(--warm-gray);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .compare-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-border);
+      vertical-align: top;
+    }
+
+    .compare-table tr:last-child td { border-bottom: none; }
+
+    .check { color: var(--matcha); font-weight: 600; }
+    .cross { color: var(--blush); }
+
+    /* Footer */
+    .doc-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--warm-gray);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--light-border);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .doc-footer strong {
+      font-weight: 500;
+      color: var(--espresso);
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white; font-size: 13px; }
+      .cover { min-height: auto; padding: 4in 2rem 3in; }
+      .page { padding: 2rem 0; }
+      .card { break-inside: avoid; }
+    }
+
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .cover-logo { font-size: 2.5rem; }
+      .page { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== COVER ========== -->
+  <div class="cover">
+    <div class="cover-logo">MADE</div>
+    <div class="cover-tagline">Med Spa</div>
+    <div class="cover-divider"></div>
+    <div class="cover-title">Your Website, Explained</div>
+    <div class="cover-subtitle">A plain-language overview of how your site was built, what it can do, and why it matters.</div>
+    <div class="cover-date">Prepared April 2026</div>
+    <div class="cover-badge">Custom-Built &bull; Not a Template</div>
+  </div>
+
+  <!-- ========== SECTION 1: WHAT WAS BUILT ========== -->
+  <div class="page">
+    <h2>What Was Built</h2>
+    <div class="section-line"></div>
+
+    <p>
+      Your website is a <strong>fully custom-coded</strong> website &mdash; not built on a template
+      platform like Wix or Squarespace. Every page, animation, and feature was designed and
+      written specifically for MADE Med Spa.
+    </p>
+
+    <div class="highlight">
+      <strong>Think of it this way:</strong> Wix and Squarespace are like renting an apartment &mdash;
+      you can decorate, but you can't knock down walls. Your site is like owning the building.
+      You control everything, and nothing is limited by someone else's rules.
+    </div>
+
+    <p>
+      The site is built with technologies used by companies like Netflix, Nike, TikTok, and
+      Hulu. These are industry-standard, professional-grade tools &mdash; not experimental or niche.
+    </p>
+
+    <h3>Your Pages</h3>
+    <ul class="pages-list">
+      <li><span class="page-name">Home</span> <span class="page-desc">Hero video, featured services, testimonials, newsletter</span></li>
+      <li><span class="page-name">About</span> <span class="page-desc">Your story, your team, your approach</span></li>
+      <li><span class="page-name">Services</span> <span class="page-desc">Full catalog with individual detail pages for each service</span></li>
+      <li><span class="page-name">Membership</span> <span class="page-desc">Membership tiers with benefits and pricing</span></li>
+      <li><span class="page-name">Shop</span> <span class="page-desc">Product catalog for skincare and retail</span></li>
+      <li><span class="page-name">Booking</span> <span class="page-desc">Connects clients to your booking system</span></li>
+      <li><span class="page-name">FAQ</span> <span class="page-desc">Commonly asked questions, organized by category</span></li>
+      <li><span class="page-name">Contact</span> <span class="page-desc">Contact form with lead capture</span></li>
+      <li><span class="page-name">Privacy &amp; Terms</span> <span class="page-desc">Legal pages</span></li>
+    </ul>
+  </div>
+
+  <!-- ========== SECTION 2: TECHNOLOGY ========== -->
+  <div class="page">
+    <h2>The Technology Behind It</h2>
+    <div class="section-line"></div>
+
+    <p>
+      You don't need to understand the technical details to run your business &mdash; that's what
+      your developer is for. But here's a friendly overview of what powers your site, in case
+      you're ever asked.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon blush">&#9672;</div>
+        <h4>Next.js</h4>
+        <p>The framework that builds your website. Used by Nike, TikTok, Hulu, and thousands of businesses. It makes the site extremely fast and great for search engines (Google).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon matcha">&#9672;</div>
+        <h4>React</h4>
+        <p>The technology that makes the site feel smooth and interactive. Buttons, menus, animations &mdash; all powered by React, created by Meta (Facebook).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon espresso">&#9672;</div>
+        <h4>Convex</h4>
+        <p>Your database and content management system. This is where your services, team bios, FAQs, testimonials, products, and memberships are stored. You manage it through your admin panel.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon blush">&#9672;</div>
+        <h4>Clerk</h4>
+        <p>Handles secure login for your admin panel. Only authorized people can access the back end of the site to make changes.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon matcha">&#9672;</div>
+        <h4>Vercel</h4>
+        <p>Where your site lives on the internet (hosting). Vercel is made by the same company that builds Next.js &mdash; so they work perfectly together. Fast, secure, and reliable.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon espresso">&#9672;</div>
+        <h4>Framer Motion</h4>
+        <p>The animation engine. Every smooth fade, slide, and hover effect on the site is powered by this. It gives the site a premium, editorial feel.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: ADMIN PANEL ========== -->
+  <div class="page">
+    <h2>Your Admin Panel</h2>
+    <div class="section-line"></div>
+
+    <p>
+      You have a private admin area at <strong>yoursite.com/admin</strong> where you can manage
+      your website content without needing a developer for everyday updates.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Services</h4>
+        <p>Add, edit, reorder, or hide services. Each one gets its own detail page automatically.</p>
+      </div>
+      <div class="card">
+        <h4>Team</h4>
+        <p>Update team member bios, photos, and titles.</p>
+      </div>
+      <div class="card">
+        <h4>FAQs</h4>
+        <p>Add or edit frequently asked questions, organized by category.</p>
+      </div>
+      <div class="card">
+        <h4>Testimonials</h4>
+        <p>Manage client testimonials shown on the site.</p>
+      </div>
+      <div class="card">
+        <h4>Contact Leads</h4>
+        <p>View form submissions from potential clients.</p>
+      </div>
+      <div class="card">
+        <h4>Site Content</h4>
+        <p>Update headlines, text, and images across the site.</p>
+      </div>
+      <div class="card">
+        <h4>Memberships</h4>
+        <p>Create and manage membership tiers, pricing, and benefits.</p>
+      </div>
+      <div class="card">
+        <h4>Shop Products</h4>
+        <p>Add retail products with descriptions, pricing, and images.</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>No coding required.</strong> The admin panel is a simple, visual interface. If you
+      can use Instagram, you can update your website.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 4: CUSTOM vs TEMPLATE ========== -->
+  <div class="page">
+    <h2>Custom-Built vs. Template Platforms</h2>
+    <div class="section-line"></div>
+
+    <p>Here's how your custom site compares to common website platforms:</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Your Site</th>
+          <th>Wix / Squarespace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Design</td>
+          <td><span class="check">&#10003;</span> 100% custom to your brand</td>
+          <td>Based on shared templates</td>
+        </tr>
+        <tr>
+          <td>Speed</td>
+          <td><span class="check">&#10003;</span> Optimized for fast loading</td>
+          <td>Can be slow due to bloat</td>
+        </tr>
+        <tr>
+          <td>Google / SEO</td>
+          <td><span class="check">&#10003;</span> Built-in best practices</td>
+          <td>Limited control</td>
+        </tr>
+        <tr>
+          <td>Monthly platform fee</td>
+          <td><span class="check">&#10003;</span> None (just hosting)</td>
+          <td>$16&ndash;$49/month</td>
+        </tr>
+        <tr>
+          <td>Animations</td>
+          <td><span class="check">&#10003;</span> Premium, smooth, custom</td>
+          <td>Basic presets only</td>
+        </tr>
+        <tr>
+          <td>Ownership</td>
+          <td><span class="check">&#10003;</span> You own the code</td>
+          <td>Locked to their platform</td>
+        </tr>
+        <tr>
+          <td>Scalability</td>
+          <td><span class="check">&#10003;</span> Unlimited growth</td>
+          <td>Limited by plan tier</td>
+        </tr>
+        <tr>
+          <td>Admin panel</td>
+          <td><span class="check">&#10003;</span> Custom-built for you</td>
+          <td>Generic, one-size-fits-all</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>You own everything.</strong> If you ever switch developers, the entire codebase
+      belongs to you. With Wix or Squarespace, if you leave, you start from scratch.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 5: SECURITY ========== -->
+  <div class="page">
+    <h2>Security &amp; Performance</h2>
+    <div class="section-line"></div>
+
+    <p>Your website was built with security and speed as priorities, not afterthoughts.</p>
+
+    <h3>Security</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Protected Admin Access</h4>
+        <p>Only authorized users can log into the admin panel. Authentication is handled by Clerk, an industry-leading security provider.</p>
+      </div>
+      <div class="card">
+        <h4>Security Headers</h4>
+        <p>The site includes protections against common web attacks (clickjacking, XSS, content sniffing) &mdash; all configured automatically.</p>
+      </div>
+    </div>
+
+    <h3>Performance</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Fast Loading</h4>
+        <p>Images and videos are optimized and cached so pages load quickly, even on slower connections.</p>
+      </div>
+      <div class="card">
+        <h4>Mobile-Friendly</h4>
+        <p>The entire site is responsive &mdash; it looks great on phones, tablets, and desktops.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 6: INTEGRATIONS ========== -->
+  <div class="page">
+    <h2>Integrations</h2>
+    <div class="section-line"></div>
+
+    <p>Your website is designed to work alongside the tools you already use to run your business.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Pabau (EMR System)</h4>
+        <p>Your practice management software. The site links to Pabau for online booking, membership sign-ups, and product purchases &mdash; keeping everything in one system.</p>
+      </div>
+      <div class="card">
+        <h4>Newsletter</h4>
+        <p>Built-in email capture. Visitors can subscribe directly from your site, and you can view subscribers in your admin panel.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="doc-footer">
+    <p><strong>MADE Med Spa</strong> &mdash; Website Overview</p>
+    <p>This document was prepared for internal reference. For technical questions, contact your developer.</p>
+    <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--blush);">&#9672; &nbsp; Custom-built with care &nbsp; &#9672;</p>
+  </div>
+
+</body>
+</html>
