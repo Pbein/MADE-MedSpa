@@ -459,55 +459,80 @@
     <div class="section-line"></div>
 
     <p>
-      Good news &mdash; we already have most of this information on the site from what you&rsquo;ve
-      provided. Just review the details below and let us know if anything needs to be changed.
+      These appear in the footer of every page, on the contact page, and in Google search
+      results. We need the real details from you to replace the placeholder data.
     </p>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
+    <div class="field-group">
       <div class="field-label">Business Name</div>
-      <div class="field-context">Currently on site: <strong>MADE Med Spa</strong></div>
-      <input class="field-input" type="text" placeholder="Change only if incorrect">
+      <div class="field-context">Currently on site: <em>MADE Med Spa</em> (confirm or correct)</div>
+      <input class="field-input" type="text" placeholder="Your official business name">
     </div>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
-      <div class="field-label">Address</div>
-      <div class="field-context">Currently on site: <strong>1311 A Dolley Madison Blvd Ste 1B, McLean, VA 22101</strong></div>
-      <input class="field-input" type="text" placeholder="Change only if incorrect">
+    <div class="field-group">
+      <div class="field-label">Street Address</div>
+      <div class="field-context">Include suite/unit number if applicable</div>
+      <input class="field-input" type="text" placeholder="e.g. 1234 Main Street, Suite 200">
     </div>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
+    <div class="field-group">
       <div class="field-row">
         <div>
-          <div class="field-label">Phone Number</div>
-          <div class="field-context">Currently: <strong>(240) 315-7300</strong></div>
-          <input class="field-input" type="tel" placeholder="Change only if incorrect">
+          <div class="field-label">City, State</div>
+          <input class="field-input" type="text" placeholder="e.g. McLean, VA" value="McLean, VA">
         </div>
         <div>
-          <div class="field-label">Email Address</div>
-          <div class="field-context">Currently: <strong>info@mademedspa.com</strong></div>
-          <input class="field-input" type="email" placeholder="Change only if incorrect">
+          <div class="field-label">ZIP Code</div>
+          <input class="field-input" type="text" placeholder="e.g. 22101">
         </div>
       </div>
     </div>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
+    <div class="field-group">
+      <div class="field-row">
+        <div>
+          <div class="field-label">Phone Number</div>
+          <input class="field-input" type="tel" placeholder="(xxx) xxx-xxxx">
+        </div>
+        <div>
+          <div class="field-label">Email Address</div>
+          <div class="field-context">Your public-facing email (e.g. info@mademedspa.com)</div>
+          <input class="field-input" type="email" placeholder="info@mademedspa.com">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
       <div class="field-label">Business Hours</div>
-      <div class="field-context">Currently on site:</div>
+      <div class="field-context">Fill in your actual hours for each day:</div>
       <table class="hours-table">
         <tr>
-          <td>Monday &ndash; Friday</td>
-          <td>10:00 AM &ndash; 6:00 PM</td>
-          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+          <td>Monday</td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 6:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Tuesday</td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 6:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Wednesday</td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 6:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Thursday</td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 6:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Friday</td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 6:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
         </tr>
         <tr>
           <td>Saturday</td>
-          <td>10:00 AM &ndash; 3:00 PM</td>
-          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+          <td><input class="field-input" type="text" placeholder="e.g. 10:00 AM - 3:00 PM, or Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
         </tr>
         <tr>
           <td>Sunday</td>
-          <td>Closed</td>
-          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+          <td><input class="field-input" type="text" placeholder="e.g. Closed" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
         </tr>
       </table>
     </div>
@@ -520,22 +545,21 @@
 
     <p>These appear in the footer and help Google verify your business presence.</p>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
+    <div class="field-group">
       <div class="field-label">Instagram</div>
-      <div class="field-context">Currently on site: <strong>@mademedspa</strong> &check;</div>
-      <input class="field-input" type="url" placeholder="Change only if incorrect">
+      <input class="field-input" type="url" placeholder="https://instagram.com/yourhandle">
     </div>
 
     <div class="field-group">
       <div class="field-label">Facebook</div>
-      <div class="field-context">Not yet provided. If you have a Facebook page, paste the URL. If not, we&rsquo;ll remove it from the site.</div>
+      <div class="field-context">If you don&rsquo;t have Facebook, leave blank and we&rsquo;ll remove it from the site.</div>
       <input class="field-input" type="url" placeholder="https://facebook.com/yourpage">
     </div>
 
-    <div class="field-group" style="border-left: 3px solid var(--matcha); border-radius: 0 10px 10px 0;">
+    <div class="field-group">
       <div class="field-label">TikTok</div>
-      <div class="field-context">Currently on site: <strong>@mademedspa</strong> &check;</div>
-      <input class="field-input" type="url" placeholder="Change only if incorrect">
+      <div class="field-context">If you don&rsquo;t have TikTok, leave blank and we&rsquo;ll remove it from the site.</div>
+      <input class="field-input" type="url" placeholder="https://tiktok.com/@yourhandle">
     </div>
   </div>
 
