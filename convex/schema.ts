@@ -80,6 +80,31 @@ export default defineSchema({
     isActive: v.boolean(),
   }),
 
+  // --- Memberships ---
+  memberships: defineTable({
+    name: v.string(),
+    price: v.number(),
+    billingPeriod: v.string(),
+    tagline: v.string(),
+    benefits: v.array(v.string()),
+    isFeatured: v.boolean(),
+    pabauLink: v.optional(v.string()),
+    sortOrder: v.number(),
+    isActive: v.boolean(),
+  }),
+
+  // --- Shop Products ---
+  shopProducts: defineTable({
+    name: v.string(),
+    description: v.string(),
+    price: v.number(),
+    category: v.string(),
+    imageUrl: v.optional(v.string()),
+    pabauLink: v.optional(v.string()),
+    sortOrder: v.number(),
+    isActive: v.boolean(),
+  }).index("by_category", ["category"]),
+
   // --- Site Content (CMS-lite) ---
   siteContent: defineTable({
     key: v.string(),

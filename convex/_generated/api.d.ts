@@ -10,9 +10,11 @@
 
 import type * as contactSubmissions from "../contactSubmissions.js";
 import type * as faqs from "../faqs.js";
+import type * as memberships from "../memberships.js";
 import type * as newsletter from "../newsletter.js";
 import type * as seed from "../seed.js";
 import type * as services from "../services.js";
+import type * as shopProducts from "../shopProducts.js";
 import type * as siteContent from "../siteContent.js";
 import type * as storage from "../storage.js";
 import type * as teamMembers from "../teamMembers.js";
@@ -28,9 +30,11 @@ import type {
 declare const fullApi: ApiFromModules<{
   contactSubmissions: typeof contactSubmissions;
   faqs: typeof faqs;
+  memberships: typeof memberships;
   newsletter: typeof newsletter;
   seed: typeof seed;
   services: typeof services;
+  shopProducts: typeof shopProducts;
   siteContent: typeof siteContent;
   storage: typeof storage;
   teamMembers: typeof teamMembers;

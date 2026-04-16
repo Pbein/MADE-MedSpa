@@ -42,6 +42,8 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
 
 const navLinks = [
   { href: "/services", label: "Services" },
+  { href: "/membership", label: "Membership" },
+  { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/booking", label: "Booking" },

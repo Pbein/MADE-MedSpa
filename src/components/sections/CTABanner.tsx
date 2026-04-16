@@ -36,7 +36,7 @@ export default function CTABanner({
       ref={ref}
       className={`py-40 md:py-52 text-center ${
         dark
-          ? "bg-[#413e2a] text-[#f7f6eb]"
+          ? "bg-[#f0ede4] text-[#391e1e]"
           : "bg-[var(--color-surface)] text-[var(--color-primary)]"
       }`}
     >
@@ -51,14 +51,14 @@ export default function CTABanner({
             className="mx-auto mb-10 h-px w-16 opacity-30"
             style={{
               backgroundColor: dark
-                ? "#f7f6eb"
+                ? "#391e1e"
                 : "var(--color-outline-variant)",
             }}
           />
 
           <h2
             className="headline-section text-4xl md:text-5xl italic mb-8"
-            style={{ color: dark ? "#f7f6eb" : "var(--color-primary)" }}
+            style={{ color: dark ? "#391e1e" : "var(--color-primary)" }}
           >
             {headline}
           </h2>
@@ -68,7 +68,7 @@ export default function CTABanner({
               className="body-editorial mb-12 max-w-xl"
               style={{
                 color: dark
-                  ? "#f7f6eb"
+                  ? "#391e1e"
                   : "var(--color-on-surface-variant)",
                 opacity: dark ? 0.6 : 0.8,
               }}
@@ -83,14 +83,14 @@ export default function CTABanner({
                 href={ctaHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={dark ? "btn-light" : "btn-primary"}
+                className={dark ? "btn-primary" : "btn-primary"}
               >
                 {ctaText}
               </a>
             ) : (
               <Link
                 href={ctaHref}
-                className={dark ? "btn-light" : "btn-primary"}
+                className={dark ? "btn-primary" : "btn-primary"}
               >
                 {ctaText}
               </Link>
@@ -100,7 +100,7 @@ export default function CTABanner({
               <Link
                 href={secondaryHref}
                 className={`link-ghost ${
-                  dark ? "text-[#f7f6eb]" : "text-[var(--color-primary)]"
+                  dark ? "text-[#391e1e]" : "text-[var(--color-primary)]"
                 }`}
               >
                 {secondaryText}

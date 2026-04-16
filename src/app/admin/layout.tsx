@@ -8,10 +8,12 @@ import { useUser, useClerk } from "@clerk/nextjs";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: "D" },
   { label: "Services", href: "/admin/services", icon: "S" },
+  { label: "Memberships", href: "/admin/memberships", icon: "M" },
+  { label: "Shop", href: "/admin/shop", icon: "P" },
   { label: "FAQs", href: "/admin/faqs", icon: "F" },
   { label: "Team", href: "/admin/team", icon: "T" },
   { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
-  { label: "Media", href: "/admin/media", icon: "M" },
+  { label: "Media", href: "/admin/media", icon: "I" },
   { label: "Content", href: "/admin/content", icon: "W" },
   { label: "Contacts", href: "/admin/contacts", icon: "C" },
 ];

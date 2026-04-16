@@ -160,9 +160,10 @@
 
 ## Section 7: Booking System
 
-- [ ] **Pabau online booking link**
-  > The "Book Appointment" button needs your real Pabau scheduling URL.
-  > Your booking link: _______________
+- [x] **Pabau online booking link**
+  > ~~The "Book Appointment" button needs your real Pabau scheduling URL.~~
+  > Booking link: `https://partner.pabau.com/online-bookings/made-51g64` (obtained 2026-04-15)
+  > API key also obtained and stored in `.env.local`
 
 ---
 
