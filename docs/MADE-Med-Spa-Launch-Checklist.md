@@ -169,15 +169,25 @@
 
 ## Section 8: Legal
 
-*Required before going live to the public.*
+*Required before going live to the public. Important note on scope below.*
 
-- [ ] **Privacy Policy** — do you have one, or should we generate a standard med spa privacy policy for your review?
-  > [ ] I have one (attach or paste)
-  > [ ] Please generate one for me to review
+> **Scope note:** Drafting legal documents is not part of our website scope. Med spas have specific legal requirements (HIPAA, Virginia medical board advertising rules, treatment consent forms) that generic templates don't properly cover. We'll publish whatever policies you provide, but we aren't qualified to draft them for you.
 
-- [ ] **Terms of Service** — same question:
-  > [ ] I have one (attach or paste)
-  > [ ] Please generate one for me to review
+**Your options:**
+
+- [ ] **Option 1 — Work with an attorney (recommended)**
+  > Hire a healthcare or med spa attorney to draft your Privacy Policy, Terms of Service, and any consent forms. Typical cost: $500–$2,000. This is the safest path and what most established med spas do.
+
+- [ ] **Option 2 — Use a legal template service**
+  > Services like Termly, iubenda, or TermsFeed auto-generate legal documents for ~$10–30/month. Better than nothing, but not as thorough as a real attorney for a medical business.
+
+- [ ] **Option 3 — Use policies you already have**
+  > If you have existing policies from another business or consultation, send them over and we'll publish them on the site.
+
+**Which option works for you?**
+  > _______________
+
+*Once you have your policies, send them our way and we'll publish them on the site. The site can technically launch with placeholder legal pages, but we recommend getting this sorted within the first few weeks of going live.*
 
 ---
 
