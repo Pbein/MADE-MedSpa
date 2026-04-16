@@ -719,16 +719,32 @@
         <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--espresso);"><input type="checkbox"> Skincare Consultations</label>
       </div>
 
-      <div style="margin-top: 1rem;">
-        <div class="field-label">Anything else not listed above?</div>
-        <textarea class="field-input" style="min-height: 60px; margin-top: 0.5rem;" placeholder="List any additional services you offer..."></textarea>
+      <div style="margin-top: 1.5rem;">
+        <div class="field-label">Additional services not listed above?</div>
+        <div class="field-context">
+          For any service we missed, fill in the details below. Only the name is required &mdash;
+          everything else is optional. If you have a lot to add, the easiest option is to keep
+          it all in Pabau and we&rsquo;ll sync it automatically.
+        </div>
+        <textarea class="field-input tall" style="min-height: 200px; margin-top: 0.5rem; font-family: 'Inter', monospace; font-size: 0.85rem;" placeholder="Example format &mdash; just list them out however works for you:
+
+Service Name | Price | Duration | Short Description
+Example: Aquagold | $600 | 45 min | Micro-channeling facial with custom serums
+
+Or just list names:
+- Aquagold
+- PDO threads
+- Semaglutide program
+
+We&rsquo;ll take it from there."></textarea>
       </div>
     </div>
 
     <div class="highlight">
-      <strong>You don&rsquo;t need to provide pricing here.</strong> Once you confirm which services
-      you offer, you can add pricing and details directly in Pabau (it will sync to the website)
-      or through your admin panel at mademedspa.com/admin/services.
+      <strong>Easiest path: add everything in Pabau.</strong> If you plan to have 10+ services,
+      just add them all to Pabau (names, prices, descriptions, durations) &mdash; the website
+      will sync them automatically. You can also always edit directly through the admin panel
+      at mademedspa.com/admin/services.
     </div>
   </div>
 
