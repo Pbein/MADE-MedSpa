@@ -556,71 +556,56 @@
     <div class="section-line"></div>
 
     <p>
-      We wrote your bio based on what your clients say about you in their reviews. Please
-      confirm or edit it to match how you want to be presented.
+      We have your name, title, bio, and headshot already on the site from what you&rsquo;ve
+      provided. Let us know if anything needs updating.
     </p>
 
     <div class="field-group">
-      <div class="field-label">Your Full Name (as displayed on the site)</div>
-      <div class="field-context">Currently showing: <em>Nurse Karlyne</em></div>
-      <input class="field-input" type="text" placeholder="e.g. Karlyne [Last Name], RN">
+      <div class="field-label">Name on the site</div>
+      <div class="field-context">Currently: <em>Karlyne Bassam, BSN, RN</em></div>
+      <input class="field-input" type="text" placeholder="Change only if incorrect">
     </div>
 
     <div class="field-group">
-      <div class="field-label">Title &amp; Credentials</div>
-      <div class="field-context">Currently: <em>Founder &amp; Lead Aesthetic Nurse Injector</em></div>
-      <input class="field-input" type="text" placeholder="Your full title with credentials (RN, NP, BSN, etc.)">
+      <div class="field-label">Title</div>
+      <div class="field-context">Currently: <em>The Founder</em></div>
+      <input class="field-input" type="text" placeholder="Change only if you want a different title">
     </div>
 
     <div class="field-group">
-      <div class="field-label">Your Bio</div>
-      <div class="field-context">We wrote this based on your client testimonials. Edit freely:</div>
-      <textarea class="field-input tall" placeholder="Your bio...">"Aesthetic nurse injector and founder of MADE Med Spa, known for unhurried consultations, restrained results, and a refusal to upsell. Her approach starts with a real conversation &mdash; what you want, what you don't, and what actually fits your face &mdash; before any needle is touched. Clients consistently cite her patience, transparency, and post-appointment follow-up."</textarea>
+      <div class="field-label">Bio</div>
+      <div class="field-context">Your bio is already on the site. Any edits you&rsquo;d like?</div>
+      <textarea class="field-input tall" placeholder="Leave blank to keep your current bio, or paste an updated version here..."></textarea>
     </div>
 
     <h3>Additional Team Members</h3>
     <p>
-      The site currently lists three other team members. Please let us know &mdash; are these
-      real people on your team, or should we remove them?
+      Right now the only team member we have is you (Nurse Karlyne). Will anyone else be
+      working with you at launch &mdash; another injector, esthetician, coordinator, receptionist?
     </p>
 
-    <div class="team-card">
-      <div class="team-info">
-        <div class="team-name">Sophia Laurent</div>
-        <div class="team-title">Lead Aesthetic Nurse Practitioner</div>
-      </div>
-      <div class="team-actions" style="display: flex; gap: 1rem; font-size: 0.88rem;">
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="sophia" value="keep"> Keep</label>
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #8B4D3E;"><input type="radio" name="sophia" value="remove"> Remove</label>
+    <div class="field-group">
+      <div class="field-label">Do you have other team members to add?</div>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.88rem;">
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="team_others" value="solo"> It&rsquo;s just me for now</label>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="team_others" value="adding"> Yes, I have team members to add</label>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="team_others" value="later"> Not yet, but I&rsquo;ll add some after launch</label>
       </div>
     </div>
 
-    <div class="team-card">
-      <div class="team-info">
-        <div class="team-name">Mia Chen</div>
-        <div class="team-title">Licensed Esthetician</div>
+    <div class="field-group">
+      <div class="field-label">If you have team members, list them below</div>
+      <div class="field-context">
+        For each person, we need a name, title/credentials, short bio, and headshot. You can
+        also fill this in later yourself through your admin panel.
       </div>
-      <div class="team-actions" style="display: flex; gap: 1rem; font-size: 0.88rem;">
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="mia" value="keep"> Keep</label>
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #8B4D3E;"><input type="radio" name="mia" value="remove"> Remove</label>
-      </div>
-    </div>
-
-    <div class="team-card">
-      <div class="team-info">
-        <div class="team-name">Olivia Hart</div>
-        <div class="team-title">Patient Experience Coordinator</div>
-      </div>
-      <div class="team-actions" style="display: flex; gap: 1rem; font-size: 0.88rem;">
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--espresso);"><input type="radio" name="olivia" value="keep"> Keep</label>
-        <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #8B4D3E;"><input type="radio" name="olivia" value="remove"> Remove</label>
-      </div>
+      <textarea class="field-input tall" style="min-height: 140px;" placeholder="Example:&#10;&#10;Jane Smith, RN &mdash; Aesthetic Nurse&#10;Bio: 10 years of experience in cosmetic nursing, specializing in...&#10;&#10;(Add as many as you need)"></textarea>
     </div>
 
     <div class="highlight">
-      <strong>For any team member you keep:</strong> please provide a headshot (minimum
-      900 &times; 1200px, vertical portrait) and confirm the bio is accurate. You can also
-      update team members anytime from the admin panel.
+      <strong>No rush.</strong> You can add, edit, or remove team members anytime from your
+      admin panel at <strong>mademedspa.com/admin/team</strong>. If it&rsquo;s just you at
+      launch, that&rsquo;s totally fine &mdash; many successful solo practices launch that way.
     </div>
   </div>
 
@@ -842,9 +827,9 @@
     </p>
 
     <div class="photo-grid">
-      <div class="photo-card">
-        <h4>Your Headshot</h4>
-        <p>Professional portrait for the About page and team section.</p>
+      <div class="photo-card" style="border-color: var(--matcha); background: rgba(138,154,110,0.05);">
+        <h4>Your Headshot <span style="font-size: 0.7rem; color: var(--matcha); font-weight: 500;">&check; Already provided</span></h4>
+        <p>Your current headshot is live on the site. Send a new one if you&rsquo;d like to update it.</p>
         <span class="spec">Min. 900 &times; 1200px &bull; Vertical</span>
       </div>
       <div class="photo-card">
