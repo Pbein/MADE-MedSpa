@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MADE Med Spa — Website Launch Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --espresso: #391e1e;
+    --silk: #f7f6eb;
+    --glaze: #c6a87d;
+    --surface: #fbfaef;
+    --muted: #504443;
+    --outline: #d4c3c2;
+    --secondary: #a23c40;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--espresso);
+    background: white;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 50px 0 40px;
+    border-bottom: 1px solid var(--outline);
+    margin-bottom: 50px;
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 42px;
+    color: var(--espresso);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--glaze);
+    margin-bottom: 20px;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Section headers */
+  .section {
+    margin-bottom: 50px;
+    page-break-inside: avoid;
+  }
+  .section-number {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--glaze);
+    margin-bottom: 6px;
+  }
+  .section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--espresso);
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* Form items */
+  .field {
+    margin-bottom: 24px;
+    padding-left: 28px;
+    position: relative;
+  }
+  .field::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--outline);
+    border-radius: 2px;
+  }
+  .field-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--espresso);
+    margin-bottom: 4px;
+  }
+  .field-current {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .field-current em {
+    color: var(--secondary);
+    font-style: normal;
+  }
+  .field-input {
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--outline);
+    padding: 8px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--espresso);
+    background: transparent;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+  thead th {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--espresso);
+  }
+  tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: 1px solid var(--outline); }
+  .correction-col {
+    min-width: 180px;
+    border-bottom: 1px dashed var(--outline) !important;
+  }
+
+  /* Choice items */
+  .choice {
+    margin: 12px 0;
+    padding-left: 28px;
+    position: relative;
+  }
+  .choice::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--outline);
+    border-radius: 50%;
+  }
+
+  /* Sub-sections */
+  .subsection {
+    margin: 30px 0;
+    padding: 20px 24px;
+    background: var(--surface);
+    border-left: 3px solid var(--glaze);
+  }
+  .subsection h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--espresso);
+    margin-bottom: 12px;
+  }
+
+  /* Priority table */
+  .priority-table td:first-child {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .priority-must { color: var(--secondary); }
+  .priority-should { color: var(--glaze); }
+  .priority-nice { color: var(--muted); }
+
+  /* Hours table */
+  .hours-table { max-width: 400px; }
+  .hours-table td:last-child { text-align: right; }
+
+  /* Divider */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--outline);
+    margin: 40px 0;
+  }
+
+  /* Footer */
+  .doc-footer {
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid var(--outline);
+    margin-top: 50px;
+    color: var(--muted);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  @media print {
+    body { padding: 30px 20px; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>MADE Med Spa</h1>
+  <h2>Website Launch Checklist</h2>
+  <p>Everything we need from you to take the site live. Please fill in, confirm, or correct each item and send this back.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-number">Section 1</div>
+  <h3>Your Business Details</h3>
+  <p class="section-desc">These appear on every page of the site (footer, contact page) and feed directly into Google search results, Google Maps, and click-to-call on mobile.</p>
+
+  <div class="field">
+    <div class="field-label">Business Legal Name</div>
+    <div class="field-current">Currently using: <em>MADE Med Spa Aesthetics &amp; Wellness</em></div>
+    <input class="field-input" type="text" placeholder="Correct name if different">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Street Address (full)</div>
+    <div class="field-current">Currently using placeholder: <em>123 Beauty Lane, Suite 100</em></div>
+    <input class="field-input" type="text" placeholder="Your real street address">
+  </div>
+
+  <div class="field">
+    <div class="field-label">City, State, ZIP</div>
+    <div class="field-current">We have: <em>McLean, VA</em> — need full ZIP code</div>
+    <input class="field-input" type="text" placeholder="McLean, VA 22___">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Phone Number</div>
+    <div class="field-current">Currently using placeholder: <em>(555) 123-4567</em></div>
+    <input class="field-input" type="text" placeholder="Your real phone number">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Email Address</div>
+    <div class="field-current">Currently using: <em>hello@mademedpsa.com</em> (note: this has a typo)</div>
+    <input class="field-input" type="text" placeholder="Your real email address">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Business Hours</div>
+    <div class="field-current">Please confirm or correct:</div>
+    <table class="hours-table">
+      <tbody>
+        <tr><td>Monday – Friday</td><td>9:00 AM – 7:00 PM</td></tr>
+        <tr><td>Saturday</td><td>10:00 AM – 5:00 PM</td></tr>
+        <tr><td>Sunday</td><td>Closed</td></tr>
+      </tbody>
+    </table>
+    <input class="field-input" type="text" placeholder="Any changes to hours?">
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-number">Section 2</div>
+  <h3>Social Media</h3>
+  <p class="section-desc">These link from the footer on every page and help Google verify your business for local search.</p>
+
+  <div class="field">
+    <div class="field-label">Instagram URL</div>
+    <input class="field-input" type="text" placeholder="https://instagram.com/...">
+  </div>
+  <div class="field">
+    <div class="field-label">Facebook URL</div>
+    <input class="field-input" type="text" placeholder="https://facebook.com/...">
+  </div>
+  <div class="field">
+    <div class="field-label">TikTok URL</div>
+    <input class="field-input" type="text" placeholder="https://tiktok.com/@... (or write 'remove' if not active)">
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-number">Section 3</div>
+  <h3>About You &amp; Your Team</h3>
+  <p class="section-desc">We wrote your bio and title based on what your clients say in their reviews. Please confirm or rewrite.</p>
+
+  <div class="subsection">
+    <h4>Karlyne</h4>
+    <div class="field">
+      <div class="field-label">Full name as you want it displayed</div>
+      <div class="field-current">Currently: <em>Nurse Karlyne</em></div>
+      <input class="field-input" type="text" placeholder="Your preferred name">
+    </div>
+    <div class="field">
+      <div class="field-label">Title &amp; credentials</div>
+      <div class="field-current">Currently: <em>Founder &amp; Lead Aesthetic Nurse Injector</em></div>
+      <input class="field-input" type="text" placeholder="Correct title with credentials (RN, NP, BSN, etc.)">
+    </div>
+    <div class="field">
+      <div class="field-label">Bio</div>
+      <div class="field-current">We wrote this from your client testimonials:</div>
+      <p style="font-size: 13px; color: var(--muted); margin: 8px 0 12px; line-height: 1.8;">"Aesthetic nurse injector and founder of MADE Med Spa, known for unhurried consultations, restrained results, and a refusal to upsell. Her approach starts with a real conversation — what you want, what you don't, and what actually fits your face — before any needle is touched. Clients consistently cite her patience, transparency, and post-appointment follow-up."</p>
+      <input class="field-input" type="text" placeholder="Any edits? Or write 'approved'">
+    </div>
+    <div class="field">
+      <div class="field-label">Professional Headshot</div>
+      <div class="field-current">Needed: high-quality portrait photo, minimum 900 &times; 1200 pixels</div>
+      <input class="field-input" type="text" placeholder="Will provide by: ___">
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Additional Team Members</h4>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">The site currently lists three other team members. Are these real people, or should we remove them?</p>
+
+    <div class="field">
+      <div class="field-label">Sophia Laurent — Lead Aesthetic Nurse Practitioner</div>
+      <div class="choice">Real person — keep on site (will provide headshot)</div>
+      <div class="choice">Not real — please remove</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Mia Chen — Licensed Esthetician</div>
+      <div class="choice">Real person — keep on site (will provide headshot)</div>
+      <div class="choice">Not real — please remove</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Olivia Hart — Patient Experience Coordinator</div>
+      <div class="choice">Real person — keep on site (will provide headshot)</div>
+      <div class="choice">Not real — please remove</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-number">Section 4</div>
+  <h3>Services — Confirm or Correct</h3>
+  <p class="section-desc">We built your service list from your client testimonials and industry knowledge. All prices and durations are our best estimates. Please correct anything that's wrong.</p>
+
+  <h4 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; margin: 20px 0 10px; color: var(--glaze);">Injectables</h4>
+  <table>
+    <thead><tr><th>Service</th><th>Price Listed</th><th>Duration</th><th>Your Corrections</th></tr></thead>
+    <tbody>
+      <tr><td>Botox Cosmetic</td><td>$250 – $600</td><td>30 min</td><td class="correction-col"></td></tr>
+      <tr><td>Dermal Fillers</td><td>$550 – $1,200</td><td>45 min</td><td class="correction-col"></td></tr>
+      <tr><td>Lip Enhancement</td><td>$450 – $850</td><td>30 min</td><td class="correction-col"></td></tr>
+      <tr><td>Sculptra</td><td>$850 – $1,400/vial</td><td>60 min</td><td class="correction-col"></td></tr>
+      <tr><td>Hyperdilute Radiesse</td><td>$650 – $1,200</td><td>60 min</td><td class="correction-col"></td></tr>
+      <tr><td>PRF Facial Rejuvenation</td><td>$600 – $1,100</td><td>75 min</td><td class="correction-col"></td></tr>
+      <tr><td>PRP Under-Eye Treatment</td><td>$500 – $900</td><td>60 min</td><td class="correction-col"></td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; margin: 20px 0 10px; color: var(--glaze);">Skin</h4>
+  <table>
+    <thead><tr><th>Service</th><th>Price Listed</th><th>Duration</th><th>Your Corrections</th></tr></thead>
+    <tbody>
+      <tr><td>HydraFacial Signature</td><td>$225 – $350</td><td>60 min</td><td class="correction-col"></td></tr>
+      <tr><td>Chemical Peel</td><td>$150 – $400</td><td>45 min</td><td class="correction-col"></td></tr>
+      <tr><td>Microneedling with PRP</td><td>$400 – $700</td><td>75 min</td><td class="correction-col"></td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; margin: 20px 0 10px; color: var(--glaze);">Body</h4>
+  <table>
+    <thead><tr><th>Service</th><th>Price Listed</th><th>Duration</th><th>Your Corrections</th></tr></thead>
+    <tbody>
+      <tr><td>CoolSculpting Elite</td><td>$750 – $1,500</td><td>60 min</td><td class="correction-col"></td></tr>
+      <tr><td>Laser Hair Removal</td><td>$150 – $500</td><td>30–90 min</td><td class="correction-col"></td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; margin: 20px 0 10px; color: var(--glaze);">Wellness</h4>
+  <table>
+    <thead><tr><th>Service</th><th>Price Listed</th><th>Duration</th><th>Your Corrections</th></tr></thead>
+    <tbody>
+      <tr><td>IV Vitamin Therapy</td><td>$175 – $350</td><td>45–60 min</td><td class="correction-col"></td></tr>
+      <tr><td>Hormone Optimization</td><td>$300 – $600/mo</td><td>60 min consult</td><td class="correction-col"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="field">
+    <div class="field-label">Any services we're missing?</div>
+    <input class="field-input" type="text" placeholder="List any additional services you offer">
+  </div>
+  <div class="field">
+    <div class="field-label">Any services listed that you DON'T offer?</div>
+    <input class="field-input" type="text" placeholder="List any to remove">
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-number">Section 5</div>
+  <h3>Testimonials</h3>
+  <p class="section-desc">We added all 15 testimonials you provided. They currently display as "Verified Client" since no names were given.</p>
+
+  <div class="field">
+    <div class="field-label">How would you like testimonials attributed?</div>
+    <div class="choice">Keep all as "Verified Client"</div>
+    <div class="choice">Add first names or initials (I'll provide a list)</div>
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-number">Section 6</div>
+  <h3>Images &amp; Media</h3>
+  <p class="section-desc">The site uses placeholder images in several spots. Please provide real photos for the following:</p>
+
+  <table>
+    <thead><tr><th>What</th><th>Where It Shows</th><th>Minimum Size</th><th>Will Provide By</th></tr></thead>
+    <tbody>
+      <tr><td>Karlyne's headshot</td><td>About page, team section</td><td>900 &times; 1200px (portrait)</td><td class="correction-col"></td></tr>
+      <tr><td>Studio / office photos (2–3)</td><td>About page "Our Story"</td><td>1600 &times; 1000px</td><td class="correction-col"></td></tr>
+      <tr><td>Treatment room or detail shots</td><td>Individual service pages</td><td>1200 &times; 800px</td><td class="correction-col"></td></tr>
+      <tr><td>Branded social share image</td><td>When site is shared on social media</td><td>Exactly 1200 &times; 630px</td><td class="correction-col"></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-number">Section 7</div>
+  <h3>Booking System</h3>
+  <p class="section-desc">The "Book Appointment" button on the site needs your real scheduling link.</p>
+
+  <div class="field">
+    <div class="field-label">Pabau Online Booking Link</div>
+    <input class="field-input" type="text" placeholder="https://...">
+  </div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="section">
+  <div class="section-number">Section 8</div>
+  <h3>Legal Pages</h3>
+  <p class="section-desc">Required before going live to the public.</p>
+
+  <div class="field">
+    <div class="field-label">Privacy Policy</div>
+    <div class="choice">I have one — will send it over</div>
+    <div class="choice">Please generate a standard one for me to review</div>
+  </div>
+  <div class="field">
+    <div class="field-label">Terms of Service</div>
+    <div class="choice">I have one — will send it over</div>
+    <div class="choice">Please generate a standard one for me to review</div>
+  </div>
+</div>
+
+<!-- SECTION 9 -->
+<div class="section">
+  <div class="section-number">Section 9</div>
+  <h3>Domain &amp; Technical</h3>
+  <p class="section-desc">We handle the technical setup — just need a few things from you.</p>
+
+  <div class="field">
+    <div class="field-label">Is the domain mademedspa.com confirmed and purchased?</div>
+    <div class="choice">Yes</div>
+    <div class="choice">No — need help with this</div>
+  </div>
+  <div class="field">
+    <div class="field-label">Do you have an existing Google Business Profile?</div>
+    <div class="choice">Yes — will share access</div>
+    <div class="choice">No — need to create one</div>
+  </div>
+  <div class="field">
+    <div class="field-label">Google Analytics Measurement ID (if you have one)</div>
+    <input class="field-input" type="text" placeholder="G-XXXXXXXXXX">
+  </div>
+  <div class="field">
+    <div class="field-label">Meta / Facebook Pixel ID (if running social ads)</div>
+    <input class="field-input" type="text" placeholder="Pixel ID or 'N/A'">
+  </div>
+</div>
+
+<hr>
+
+<!-- PRIORITY -->
+<div class="section">
+  <div class="section-number">Priority Summary</div>
+  <h3>What We Need First</h3>
+  <table class="priority-table">
+    <thead><tr><th>Priority</th><th>What</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="priority-must">Must have</td><td>Address, phone, email, hours, social links</td><td>Site shows fake data without these</td></tr>
+      <tr><td class="priority-must">Must have</td><td>Team confirmation (remove fake members)</td><td>Trust and credibility</td></tr>
+      <tr><td class="priority-must">Must have</td><td>Booking URL</td><td>Primary call-to-action is broken</td></tr>
+      <tr><td class="priority-should">Should have</td><td>Karlyne's headshot, studio photos</td><td>Placeholder images look unprofessional</td></tr>
+      <tr><td class="priority-should">Should have</td><td>Service pricing confirmation</td><td>Inaccurate prices damage trust</td></tr>
+      <tr><td class="priority-nice">First week</td><td>Legal pages, Google Business, Analytics</td><td>SEO and compliance</td></tr>
+      <tr><td class="priority-nice">Nice to have</td><td>Testimonial names, treatment photos</td><td>Polish</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="doc-footer">
+  <p>Please fill out what you can and send this back. The sooner we get Sections 1 &amp; 2, the sooner we can go live.</p>
+  <p style="margin-top: 12px; opacity: 0.6;">MADE Med Spa — Website Launch Checklist</p>
+</div>
+
+</body>
+</html>

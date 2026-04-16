@@ -22,7 +22,7 @@ export async function generateMetadata({
     title: service.name,
     description: service.shortDescription,
     alternates: {
-      canonical: `https://mademedspaaesthetics.com/services/${slug}`,
+      canonical: `https://mademedspa.com/services/${slug}`,
     },
     openGraph: {
       title: `${service.name} | MADE Med Spa`,

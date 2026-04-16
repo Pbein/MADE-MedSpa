@@ -3,7 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://mademedspaaesthetics.com";
+  const baseUrl = "https://mademedspa.com";
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [

@@ -32,7 +32,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mademedspaaesthetics.com"),
+  metadataBase: new URL("https://mademedspa.com"),
   title: {
     default: "MADE Med Spa McLean, VA | Luxury Aesthetic Treatments",
     template: "%s | MADE Med Spa McLean, VA",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "MADE Med Spa Aesthetics & Wellness" }],
   alternates: {
-    canonical: "https://mademedspaaesthetics.com",
+    canonical: "https://mademedspa.com",
   },
   openGraph: {
     type: "website",
@@ -126,13 +126,13 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "MedicalBusiness",
               name: "MADE Med Spa",
-              url: "https://mademedspaaesthetics.com",
+              url: "https://mademedspa.com",
               description:
                 "Luxury aesthetic med spa in McLean, Virginia offering Botox, dermal fillers, Sculptra, PRF, and advanced skin treatments with unhurried consultations and natural results.",
-              image: "https://mademedspaaesthetics.com/og-image.jpg",
+              image: "https://mademedspa.com/og-image.jpg",
               priceRange: "$$-$$$",
               telephone: "+1-555-123-4567",
-              email: "hello@mademedspaaesthetics.com",
+              email: "hello@mademedspa.com",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "McLean",

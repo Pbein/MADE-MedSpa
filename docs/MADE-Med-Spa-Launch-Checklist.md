@@ -183,7 +183,7 @@
 
 ## Section 9: Domain & Technical (we handle this, just need your input)
 
-- [ ] **Domain:** Is `mademedspaaesthetics.com` confirmed and purchased?
+- [ ] **Domain:** Is `mademedspa.com` confirmed and purchased?
 - [ ] **Google Business Profile:** Do you have an existing Google Business listing? If so, please share access.
 - [ ] **Google Analytics:** Do you have a GA4 property? If so, provide the Measurement ID (starts with G-).
 - [ ] **Meta/Facebook Pixel:** If running social ads, provide your Pixel ID.
