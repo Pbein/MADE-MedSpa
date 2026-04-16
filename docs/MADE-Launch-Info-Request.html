@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADE Med Spa &mdash; What We Need From You</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --espresso: #3C2415;
+      --blush: #D4A59A;
+      --matcha: #8A9A6E;
+      --cream: #FAF6F1;
+      --warm-gray: #7A706A;
+      --light-border: #E8E0D8;
+      --soft-bg: #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      color: var(--espresso);
+      background: var(--cream);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ---------- Cover ---------- */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(160deg, var(--cream) 0%, #F3EDE6 100%);
+      page-break-after: always;
+    }
+
+    .cover-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .cover-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 3rem;
+    }
+
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--blush);
+      margin: 0 auto 3rem;
+    }
+
+    .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--espresso);
+      margin-bottom: 0.5rem;
+    }
+
+    .cover-subtitle {
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      max-width: 480px;
+      margin: 0 auto 4rem;
+    }
+
+    .cover-date {
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--light-border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+    }
+
+    /* ---------- Content ---------- */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem;
+      page-break-after: always;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    h2 + .section-line {
+      width: 40px;
+      height: 2px;
+      background: var(--blush);
+      margin-bottom: 1.75rem;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .highlight {
+      background: var(--soft-bg);
+      border-left: 3px solid var(--blush);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong { font-weight: 500; }
+
+    .highlight.matcha { border-left-color: var(--matcha); }
+
+    /* Input fields */
+    .field-group {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .field-group + .field-group { margin-top: 0.75rem; }
+
+    .field-label {
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .field-context {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--light-border);
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--espresso);
+      background: var(--cream);
+      outline: none;
+    }
+
+    .field-input:focus { border-color: var(--blush); }
+
+    .field-input.tall { min-height: 80px; resize: vertical; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    /* Priority badges */
+    .priority {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .priority.must { background: rgba(212,165,154,0.25); color: #8B4D3E; }
+    .priority.should { background: rgba(138,154,110,0.2); color: #5A6B42; }
+    .priority.nice { background: rgba(60,36,21,0.08); color: var(--warm-gray); }
+
+    /* Hours table */
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin: 0.5rem 0;
+    }
+
+    .hours-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--light-border);
+    }
+
+    .hours-table td:first-child {
+      font-weight: 400;
+      color: var(--espresso);
+      width: 45%;
+    }
+
+    .hours-table td:nth-child(2) {
+      color: var(--warm-gray);
+      width: 35%;
+    }
+
+    .hours-table td:last-child { width: 20%; }
+
+    .hours-table tr:last-child td { border-bottom: none; }
+
+    /* Team cards */
+    .team-card {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .team-info { flex: 1; }
+
+    .team-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--espresso);
+    }
+
+    .team-title {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+    }
+
+    .team-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--light-border);
+      background: var(--cream);
+      color: var(--espresso);
+      cursor: pointer;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-sm.remove {
+      border-color: rgba(212,165,154,0.5);
+      color: #8B4D3E;
+    }
+
+    /* Photo checklist */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .photo-card {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .photo-card h4 {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .photo-card p {
+      font-size: 0.78rem;
+      color: var(--warm-gray);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .photo-card .spec {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.15rem 0.5rem;
+      background: var(--cream);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      color: var(--warm-gray);
+      font-weight: 400;
+    }
+
+    /* Summary table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .summary-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--light-border);
+      font-weight: 500;
+      color: var(--warm-gray);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .summary-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-border);
+      vertical-align: top;
+    }
+
+    .summary-table tr:last-child td { border-bottom: none; }
+
+    /* Footer */
+    .doc-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--warm-gray);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--light-border);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .doc-footer strong {
+      font-weight: 500;
+      color: var(--espresso);
+    }
+
+    @media print {
+      body { background: white; font-size: 13px; }
+      .cover { min-height: auto; padding: 4in 2rem 3in; }
+      .page { padding: 2rem 0; }
+      .field-group, .team-card, .photo-card { break-inside: avoid; }
+      .field-input { border-color: #ccc; }
+    }
+
+    @media (max-width: 600px) {
+      .cover-logo { font-size: 2.5rem; }
+      .page { padding: 2.5rem 1.5rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .photo-grid { grid-template-columns: 1fr; }
+      .team-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== COVER ========== -->
+  <div class="cover">
+    <div class="cover-logo">MADE</div>
+    <div class="cover-tagline">Med Spa</div>
+    <div class="cover-divider"></div>
+    <div class="cover-title">What We Need From You</div>
+    <div class="cover-subtitle">
+      Your website is built and ready for your content. Here&rsquo;s everything we need
+      to take it from &ldquo;looking great&rdquo; to &ldquo;ready to launch.&rdquo;
+    </div>
+    <div class="cover-date">April 2026</div>
+    <div class="cover-badge">Fill in what you can &bull; We&rsquo;ll handle the rest</div>
+  </div>
+
+  <!-- ========== SECTION 1: BEFORE YOU START ========== -->
+  <div class="page">
+    <h2>Before You Start</h2>
+    <div class="section-line"></div>
+
+    <p>
+      This document covers everything we need from you to launch the website. Most items only
+      take a minute &mdash; fill in what you have, skip what you don&rsquo;t, and we&rsquo;ll
+      work through the rest together.
+    </p>
+
+    <div class="highlight matcha">
+      <strong>Good news &mdash; some things you can update yourself.</strong> Services, pricing,
+      memberships, products, FAQs, and testimonials can all be managed through your admin panel
+      at <strong>yoursite.com/admin</strong> or through Pabau. You don&rsquo;t need us for those
+      day-to-day updates.
+    </div>
+
+    <p>
+      The items below are the things that <em>we</em> need to set up for you &mdash; they&rsquo;re
+      built into the bones of the site and can&rsquo;t be changed from the admin panel.
+    </p>
+
+    <h3>Priority Guide</h3>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>What</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="priority must">Must Have</span></td>
+          <td>Business details, team confirmation, photos</td>
+          <td>Site has placeholder data that visitors will see</td>
+        </tr>
+        <tr>
+          <td><span class="priority should">Should Have</span></td>
+          <td>Social links, legal pages, headshot</td>
+          <td>Professionalism and compliance</td>
+        </tr>
+        <tr>
+          <td><span class="priority nice">Nice to Have</span></td>
+          <td>Analytics, OG image, testimonial names</td>
+          <td>Marketing optimization</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== SECTION 2: BUSINESS DETAILS ========== -->
+  <div class="page">
+    <h2>Your Business Details <span class="priority must">Must Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      These appear in the footer of every page, on the contact page, and in Google search
+      results. The site currently has placeholder data that needs to be replaced.
+    </p>
+
+    <div class="field-group">
+      <div class="field-label">Business Name</div>
+      <div class="field-context">Currently showing: <em>MADE Med Spa Aesthetics &amp; Wellness</em></div>
+      <input class="field-input" type="text" placeholder="Your official business name">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Street Address</div>
+      <div class="field-context">Currently showing placeholder: <em>123 Beauty Lane, Suite 100</em></div>
+      <input class="field-input" type="text" placeholder="Full street address including suite number">
+    </div>
+
+    <div class="field-group">
+      <div class="field-row">
+        <div>
+          <div class="field-label">City, State</div>
+          <input class="field-input" type="text" placeholder="e.g. McLean, VA" value="McLean, VA">
+        </div>
+        <div>
+          <div class="field-label">ZIP Code</div>
+          <input class="field-input" type="text" placeholder="e.g. 22101">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-row">
+        <div>
+          <div class="field-label">Phone Number</div>
+          <div class="field-context">Currently: <em>(555) 123-4567</em></div>
+          <input class="field-input" type="tel" placeholder="(xxx) xxx-xxxx">
+        </div>
+        <div>
+          <div class="field-label">Email Address</div>
+          <div class="field-context">Currently: <em>hello@mademedpsa.com</em> (has a typo)</div>
+          <input class="field-input" type="email" placeholder="hello@yourdomain.com">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Business Hours</div>
+      <div class="field-context">Please confirm or correct:</div>
+      <table class="hours-table">
+        <tr>
+          <td>Monday &ndash; Friday</td>
+          <td>9:00 AM &ndash; 7:00 PM</td>
+          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Saturday</td>
+          <td>10:00 AM &ndash; 5:00 PM</td>
+          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+        <tr>
+          <td>Sunday</td>
+          <td>Closed</td>
+          <td><input class="field-input" type="text" placeholder="Correct?" style="padding: 0.3rem 0.5rem; font-size: 0.8rem;"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: SOCIAL MEDIA ========== -->
+  <div class="page">
+    <h2>Social Media Links <span class="priority should">Should Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>These appear in the footer and help Google verify your business presence.</p>
+
+    <div class="field-group">
+      <div class="field-label">Instagram</div>
+      <input class="field-input" type="url" placeholder="https://instagram.com/yourhandle">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Facebook</div>
+      <input class="field-input" type="url" placeholder="https://facebook.com/yourpage">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">TikTok</div>
+      <div class="field-context">If you don&rsquo;t have TikTok, just leave blank and we&rsquo;ll remove it from the site.</div>
+      <input class="field-input" type="url" placeholder="https://tiktok.com/@yourhandle">
+    </div>
+  </div>
+
+  <!-- ========== SECTION 4: ABOUT YOU ========== -->
+  <div class="page">
+    <h2>About You &amp; Your Team <span class="priority must">Must Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      We wrote your bio based on what your clients say about you in their reviews. Please
+      confirm or edit it to match how you want to be presented.
+    </p>
+
+    <div class="field-group">
+      <div class="field-label">Your Full Name (as displayed on the site)</div>
+      <div class="field-context">Currently showing: <em>Nurse Karlyne</em></div>
+      <input class="field-input" type="text" placeholder="e.g. Karlyne [Last Name], RN">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Title &amp; Credentials</div>
+      <div class="field-context">Currently: <em>Founder &amp; Lead Aesthetic Nurse Injector</em></div>
+      <input class="field-input" type="text" placeholder="Your full title with credentials (RN, NP, BSN, etc.)">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Your Bio</div>
+      <div class="field-context">We wrote this based on your client testimonials. Edit freely:</div>
+      <textarea class="field-input tall" placeholder="Your bio...">"Aesthetic nurse injector and founder of MADE Med Spa, known for unhurried consultations, restrained results, and a refusal to upsell. Her approach starts with a real conversation &mdash; what you want, what you don't, and what actually fits your face &mdash; before any needle is touched. Clients consistently cite her patience, transparency, and post-appointment follow-up."</textarea>
+    </div>
+
+    <h3>Additional Team Members</h3>
+    <p>
+      The site currently lists three other team members. Please let us know &mdash; are these
+      real people on your team, or should we remove them?
+    </p>
+
+    <div class="team-card">
+      <div class="team-info">
+        <div class="team-name">Sophia Laurent</div>
+        <div class="team-title">Lead Aesthetic Nurse Practitioner</div>
+      </div>
+      <div class="team-actions">
+        <button class="btn-sm">Keep</button>
+        <button class="btn-sm remove">Remove</button>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-info">
+        <div class="team-name">Mia Chen</div>
+        <div class="team-title">Licensed Esthetician</div>
+      </div>
+      <div class="team-actions">
+        <button class="btn-sm">Keep</button>
+        <button class="btn-sm remove">Remove</button>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-info">
+        <div class="team-name">Olivia Hart</div>
+        <div class="team-title">Patient Experience Coordinator</div>
+      </div>
+      <div class="team-actions">
+        <button class="btn-sm">Keep</button>
+        <button class="btn-sm remove">Remove</button>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>For any team member you keep:</strong> please provide a headshot (minimum
+      900 &times; 1200px, vertical portrait) and confirm the bio is accurate. You can also
+      update team members anytime from the admin panel.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 5: SERVICES & PRICING ========== -->
+  <div class="page">
+    <h2>Services &amp; Pricing</h2>
+    <div class="section-line"></div>
+
+    <div class="highlight matcha">
+      <strong>You can manage this yourself.</strong> Service names, descriptions, pricing, and
+      images can all be updated two ways:<br><br>
+      <strong>1. Through Pabau</strong> &mdash; add or update services in Pabau and sync them to the
+      website using the &ldquo;Pabau Sync&rdquo; tool in your admin panel.<br><br>
+      <strong>2. Through your admin panel</strong> &mdash; go to <strong>yoursite.com/admin/services</strong>
+      to add, edit, or remove services directly on the website.<br><br>
+      <em>Pro tip: Keep pricing and availability in Pabau (your source of truth for business data),
+      and use the admin panel for website-specific things like photos and custom descriptions.</em>
+    </div>
+
+    <p>
+      Right now the site has 10 services we created based on your testimonials, plus 20 Aerolase
+      NeoHair services from your Pabau account. The prices on the website are estimates &mdash;
+      you can correct them in the admin panel or update Pabau and sync.
+    </p>
+
+    <p><strong>No action needed from you here</strong> &mdash; this is all manageable through your tools.</p>
+  </div>
+
+  <!-- ========== SECTION 6: MEMBERSHIPS & SHOP ========== -->
+  <div class="page">
+    <h2>Memberships &amp; Shop</h2>
+    <div class="section-line"></div>
+
+    <div class="highlight matcha">
+      <strong>You can manage these yourself too.</strong> Both memberships and shop products
+      are fully editable from your admin panel.<br><br>
+      <strong>Memberships:</strong> yoursite.com/admin/memberships &mdash; add, edit, or remove
+      tiers, update pricing, toggle the &ldquo;Most Popular&rdquo; badge.<br><br>
+      <strong>Shop:</strong> yoursite.com/admin/shop &mdash; add products with photos, descriptions,
+      pricing, and links to purchase through Pabau.
+    </div>
+
+    <p>
+      We&rsquo;ve already set up the four membership tiers you provided (In The Making, Well Made,
+      Made For You, The Reserve). The shop page shows a &ldquo;Coming Soon&rdquo; state until you
+      add products through the admin panel.
+    </p>
+
+    <div class="field-group">
+      <div class="field-label">Pabau Membership Link</div>
+      <div class="field-context">
+        If Pabau has a specific URL for membership sign-ups, paste it here so the
+        &ldquo;Get Started&rdquo; buttons on each tier link directly to it. Otherwise, they&rsquo;ll
+        link to your general booking page.
+      </div>
+      <input class="field-input" type="url" placeholder="https://partner.pabau.com/... (if available)">
+    </div>
+  </div>
+
+  <!-- ========== SECTION 7: PHOTOS ========== -->
+  <div class="page">
+    <h2>Photos &amp; Images <span class="priority must">Must Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      The site uses placeholder images in several spots. Real photos are the single biggest
+      thing that will make the site feel like <em>yours</em>.
+    </p>
+
+    <div class="photo-grid">
+      <div class="photo-card">
+        <h4>Your Headshot</h4>
+        <p>Professional portrait for the About page and team section.</p>
+        <span class="spec">Min. 900 &times; 1200px &bull; Vertical</span>
+      </div>
+      <div class="photo-card">
+        <h4>Studio / Office</h4>
+        <p>2&ndash;3 photos of your space &mdash; interior, treatment rooms, or exterior.</p>
+        <span class="spec">Min. 1600 &times; 1000px &bull; Landscape</span>
+      </div>
+      <div class="photo-card">
+        <h4>Treatment Photos</h4>
+        <p>Detail shots of treatments, equipment, or products in use.</p>
+        <span class="spec">Min. 1200 &times; 800px &bull; Any orientation</span>
+      </div>
+      <div class="photo-card">
+        <h4>Social Share Image</h4>
+        <p>Appears when someone shares your site on social media or text messages.</p>
+        <span class="spec">Exactly 1200 &times; 630px</span>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Don&rsquo;t have professional photos yet?</strong> That&rsquo;s okay. We can launch
+      with the current placeholders and swap in real photos later. But this is the #1 thing
+      that will elevate the site from &ldquo;great structure&rdquo; to &ldquo;this is us.&rdquo;
+    </div>
+  </div>
+
+  <!-- ========== SECTION 8: TESTIMONIALS ========== -->
+  <div class="page">
+    <h2>Testimonials</h2>
+    <div class="section-line"></div>
+
+    <p>
+      We added all 15 testimonials you provided. They currently display as &ldquo;Verified Client&rdquo;
+      because no names were given.
+    </p>
+
+    <div class="field-group">
+      <div class="field-label">Would you like to add first names or initials?</div>
+      <div class="field-context">
+        This adds a personal touch. Even just &ldquo;Sarah M.&rdquo; or &ldquo;J.T.&rdquo; feels
+        more real than &ldquo;Verified Client.&rdquo;
+      </div>
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn-sm">Keep as &ldquo;Verified Client&rdquo;</button>
+        <button class="btn-sm">I&rsquo;ll provide names</button>
+      </div>
+    </div>
+
+    <div class="highlight matcha">
+      <strong>You can also manage this yourself.</strong> Go to <strong>yoursite.com/admin/testimonials</strong>
+      to edit names, add new testimonials, or remove old ones anytime.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 9: LEGAL ========== -->
+  <div class="page">
+    <h2>Legal Pages <span class="priority should">Should Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>Required before going live to the public. The site has placeholder legal pages that need real content.</p>
+
+    <div class="field-group">
+      <div class="field-label">Privacy Policy</div>
+      <div class="field-context">
+        Do you have a privacy policy, or should we generate a standard med spa privacy policy
+        for your review?
+      </div>
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn-sm">I have one</button>
+        <button class="btn-sm">Please generate one</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Terms of Service</div>
+      <div class="field-context">Same question:</div>
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn-sm">I have one</button>
+        <button class="btn-sm">Please generate one</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 10: DOMAIN & TECHNICAL ========== -->
+  <div class="page">
+    <h2>Domain &amp; Technical <span class="priority nice">Nice to Have</span></h2>
+    <div class="section-line"></div>
+
+    <p>We handle all of this &mdash; we just need a few details from you.</p>
+
+    <div class="field-group">
+      <div class="field-label">Domain Name</div>
+      <div class="field-context">Is <strong>mademedspaaesthetics.com</strong> confirmed and purchased?</div>
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn-sm">Yes, confirmed</button>
+        <button class="btn-sm">Not yet</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Google Business Profile</div>
+      <div class="field-context">Do you have a Google Business listing? If so, we&rsquo;ll need access to connect it.</div>
+      <input class="field-input" type="text" placeholder="Yes / No / Not sure">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Google Analytics</div>
+      <div class="field-context">If you have a GA4 property, provide the Measurement ID (starts with G-).</div>
+      <input class="field-input" type="text" placeholder="G-XXXXXXXXXX">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Meta / Facebook Pixel</div>
+      <div class="field-context">If you&rsquo;re running social ads, provide your Pixel ID.</div>
+      <input class="field-input" type="text" placeholder="Pixel ID (if applicable)">
+    </div>
+  </div>
+
+  <!-- ========== SUMMARY ========== -->
+  <div class="page">
+    <h2>Quick Reference</h2>
+    <div class="section-line"></div>
+
+    <p>Here&rsquo;s the full picture of what we need vs. what you can manage on your own:</p>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Who Handles It</th>
+          <th>Where</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Business name, address, phone, email, hours</td>
+          <td>Send to us (this doc)</td>
+          <td>Built into site code</td>
+        </tr>
+        <tr>
+          <td>Social media links</td>
+          <td>Send to us (this doc)</td>
+          <td>Built into site footer</td>
+        </tr>
+        <tr>
+          <td>Your name, title, bio</td>
+          <td>Send to us (this doc)</td>
+          <td>We&rsquo;ll set up, then editable in admin</td>
+        </tr>
+        <tr>
+          <td>Team members</td>
+          <td>Confirm who&rsquo;s real (this doc)</td>
+          <td>yoursite.com/admin/team</td>
+        </tr>
+        <tr>
+          <td>Photos &amp; images</td>
+          <td>Send to us</td>
+          <td>We&rsquo;ll place them, then editable in admin</td>
+        </tr>
+        <tr>
+          <td>Services &amp; pricing</td>
+          <td><strong>You</strong></td>
+          <td>Pabau + yoursite.com/admin/services</td>
+        </tr>
+        <tr>
+          <td>Memberships</td>
+          <td><strong>You</strong></td>
+          <td>yoursite.com/admin/memberships</td>
+        </tr>
+        <tr>
+          <td>Shop products</td>
+          <td><strong>You</strong></td>
+          <td>yoursite.com/admin/shop</td>
+        </tr>
+        <tr>
+          <td>FAQs</td>
+          <td><strong>You</strong></td>
+          <td>yoursite.com/admin/faqs</td>
+        </tr>
+        <tr>
+          <td>Testimonials</td>
+          <td><strong>You</strong></td>
+          <td>yoursite.com/admin/testimonials</td>
+        </tr>
+        <tr>
+          <td>Legal pages</td>
+          <td>Send or we generate</td>
+          <td>Built into site</td>
+        </tr>
+        <tr>
+          <td>Domain &amp; analytics</td>
+          <td>We handle (need your IDs)</td>
+          <td>Hosting &amp; config</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>Bottom line:</strong> We need about 10 minutes of your time to fill in the business
+      basics (address, phone, email, hours, social links) and confirm your team. Everything else
+      is either in your hands already or can wait until after launch.
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="doc-footer">
+    <p><strong>MADE Med Spa</strong> &mdash; Launch Information Request</p>
+    <p>Fill in what you can and send it back. We&rsquo;ll take care of the rest.</p>
+    <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--blush);">&#9672; &nbsp; Custom-built with care &nbsp; &#9672;</p>
+  </div>
+
+</body>
+</html>

@@ -170,11 +170,19 @@ Each phase: build → test in browser → verify mobile → move to next.
 
 ## Known Issues & Notes
 
-### Services data: Pabau vs. Convex mismatch
-- Pabau API returns 20 real services (Aerolase NeoHair laser treatments) with real prices and booking URLs
-- Convex services table has manually entered services (injectables, skin, body, wellness) with estimated prices from launch checklist
-- Decision needed: sync Pabau services to replace Convex data, or keep both as complementary sources
-- For now: Convex services power the site; Pabau sync is a future enhancement
+### Data ownership model (Pabau vs. Admin)
+- **Pabau = source of truth for business data** (prices, durations, availability)
+- **Site admin = source of truth for website presentation** (descriptions, images, sort order, featured flags)
+- Sync direction: Pabau → Site only (read-only pull). We do NOT write back to Pabau from the site.
+- Admin panel for Pabau-linked services should show price/duration as read-only "from Pabau" fields
+- Admin panel for site-only services (not in Pabau) allows full editing
+- Future: add "Last synced" timestamp and auto-refresh, clear labeling in admin UI
+
+### Services data: Pabau vs. Convex
+- Pabau has 20 Aerolase NeoHair laser services (real prices, booking URLs)
+- Convex has 10 manually entered services (injectables, skin, body, wellness) with estimated prices
+- Admin can import Pabau services via /admin/pabau sync tool
+- Imported services get per-service booking URLs for deep-linking
 
 ### Launch checklist dependencies (docs/MADE-Med-Spa-Launch-Checklist.md)
 - Placeholder data still in footer: fake address, phone, email (has typo: "mademedpsa.com")
