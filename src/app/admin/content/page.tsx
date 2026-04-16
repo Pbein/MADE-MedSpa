@@ -27,8 +27,8 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
   addressLine2: "City, State 12345",
   phone: "(555) 123-4567",
   phoneHref: "tel:+15551234567",
-  email: "hello@mademedpsa.com",
-  emailHref: "mailto:hello@mademedpsa.com",
+  email: "hello@mademedspa.com",
+  emailHref: "mailto:hello@mademedspa.com",
   hours: [
     { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
     { days: "Saturday", hours: "10:00 AM - 5:00 PM" },

@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     "nurse injector",
     "aesthetic nurse",
   ],
-  authors: [{ name: "MADE Med Spa Aesthetics & Wellness" }],
+  authors: [{ name: "MADE Med Spa" }],
   alternates: {
     canonical: "https://mademedspa.com",
   },

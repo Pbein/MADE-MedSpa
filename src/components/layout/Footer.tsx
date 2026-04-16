@@ -26,8 +26,8 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
   addressLine2: "City, State 12345",
   phone: "(555) 123-4567",
   phoneHref: "tel:+15551234567",
-  email: "hello@mademedpsa.com",
-  emailHref: "mailto:hello@mademedpsa.com",
+  email: "hello@mademedspa.com",
+  emailHref: "mailto:hello@mademedspa.com",
   hours: [
     { days: "Monday — Friday", hours: "9:00 AM – 7:00 PM" },
     { days: "Saturday", hours: "10:00 AM – 5:00 PM" },
@@ -286,7 +286,7 @@ export default function Footer() {
               className="label-micro"
               style={{ color: SILK, opacity: 0.25 }}
             >
-              &copy; {currentYear} MADE Med Spa Aesthetics &amp; Wellness
+              &copy; {currentYear} MADE Med Spa
             </p>
             <div className="flex gap-6">
               {legalLinks.map((link) => (

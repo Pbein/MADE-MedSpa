@@ -394,8 +394,8 @@ export const insertSeedData = internalMutation({
         addressLine2: "City, State 12345",
         phone: "(555) 123-4567",
         phoneHref: "tel:+15551234567",
-        email: "hello@mademedpsa.com",
-        emailHref: "mailto:hello@mademedpsa.com",
+        email: "hello@mademedspa.com",
+        emailHref: "mailto:hello@mademedspa.com",
         hours: [
           { days: "Monday - Friday", hours: "9:00 AM - 7:00 PM" },
           { days: "Saturday", hours: "10:00 AM - 5:00 PM" },
@@ -415,7 +415,7 @@ export const insertSeedData = internalMutation({
     await ctx.db.insert("siteContent", {
       key: "privacy_policy",
       title: "Privacy Policy",
-      body: "This privacy policy explains how MADE Med Spa Aesthetics and Wellness collects, uses, and protects your personal information. Please check back for our full privacy policy before our grand opening.",
+      body: "This privacy policy explains how MADE Med Spa collects, uses, and protects your personal information. Please check back for our full privacy policy before our grand opening.",
       updatedAt: now,
     });
 

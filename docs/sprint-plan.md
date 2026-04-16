@@ -184,10 +184,9 @@ Each phase: build → test in browser → verify mobile → move to next.
 - Admin can import Pabau services via /admin/pabau sync tool
 - Imported services get per-service booking URLs for deep-linking
 
-### Launch checklist dependencies (docs/MADE-Med-Spa-Launch-Checklist.md)
-- Placeholder data still in footer: fake address, phone, email (has typo: "mademedpsa.com")
-- Team members may include fictional people (Sophia Laurent, Mia Chen, Olivia Hart)
-- Service prices are estimated — client hasn't confirmed
+### Launch blockers awaiting client response (docs/MADE-Launch-Info-Request.html)
+- Placeholder data still in footer: fake address, phone, email
+- Service list needs client confirmation via the launch info request doc
 - These are separate from this sprint but should be resolved before launch
 
 ### Brand voice guardrail
