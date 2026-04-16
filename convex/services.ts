@@ -58,6 +58,8 @@ export const create = mutation({
     imageUrl: v.optional(v.string()),
     galleryImageUrls: v.optional(v.array(v.string())),
     faqs: v.optional(v.array(v.object({ question: v.string(), answer: v.string() }))),
+    pabauServiceId: v.optional(v.number()),
+    pabauBookingUrl: v.optional(v.string()),
     sortOrder: v.number(),
   },
   handler: async (ctx, args) => {
@@ -82,6 +84,8 @@ export const update = mutation({
     imageUrl: v.optional(v.string()),
     galleryImageUrls: v.optional(v.array(v.string())),
     faqs: v.optional(v.array(v.object({ question: v.string(), answer: v.string() }))),
+    pabauServiceId: v.optional(v.number()),
+    pabauBookingUrl: v.optional(v.string()),
     isActive: v.optional(v.boolean()),
     sortOrder: v.optional(v.number()),
   },

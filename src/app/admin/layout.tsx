@@ -16,6 +16,7 @@ const navItems = [
   { label: "Media", href: "/admin/media", icon: "I" },
   { label: "Content", href: "/admin/content", icon: "W" },
   { label: "Contacts", href: "/admin/contacts", icon: "C" },
+  { label: "Pabau Sync", href: "/admin/pabau", icon: "↔" },
 ];
 
 function getPageTitle(pathname: string): string {

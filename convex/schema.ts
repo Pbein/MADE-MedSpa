@@ -34,6 +34,8 @@ export default defineSchema({
         })
       )
     ),
+    pabauServiceId: v.optional(v.number()),
+    pabauBookingUrl: v.optional(v.string()),
     isActive: v.boolean(),
     sortOrder: v.number(),
   })

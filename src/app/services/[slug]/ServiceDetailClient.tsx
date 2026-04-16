@@ -24,7 +24,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
   const service = useQuery(api.services.getBySlug, { slug });
   const allServices = useQuery(api.services.list);
 
-  const bookingUrl = process.env.NEXT_PUBLIC_PABAU_BOOKING_URL || "/booking";
+  const bookingUrl = service?.pabauBookingUrl || process.env.NEXT_PUBLIC_PABAU_BOOKING_URL || "/booking";
   const skipAnimation = hasNavigatedWithinApp();
 
   // Related services: same category, different slug
