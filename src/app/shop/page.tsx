@@ -75,8 +75,8 @@ export default function ShopPage() {
         {/* Bright warm glow — top right corner (sunlight source) */}
         <div className="pointer-events-none absolute -top-[200px] -right-[200px] w-[900px] h-[900px] rounded-full" style={{ background: "radial-gradient(circle, rgba(255,235,220,0.9) 0%, rgba(220,190,170,0.4) 40%, transparent 70%)", filter: "blur(40px)" }} />
 
-        {/* Thin diagonal light rays from top-right */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(125deg, transparent 18%, rgba(255,248,240,0.18) 21%, transparent 24%, rgba(255,245,235,0.12) 30%, transparent 33%, rgba(255,248,240,0.1) 40%, transparent 42%, rgba(255,245,235,0.08) 52%, transparent 54%, rgba(255,248,240,0.06) 63%, transparent 65%)" }} />
+        {/* Diagonal light rays from top-right — visible but refined */}
+        <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(125deg, transparent 15%, rgba(255,255,255,0.45) 18%, transparent 22%, rgba(255,255,255,0.3) 28%, transparent 32%, rgba(255,255,255,0.22) 39%, transparent 43%, rgba(255,255,255,0.15) 51%, transparent 55%, rgba(255,255,255,0.1) 63%, transparent 66%)" }} />
 
         {/* Soft warm wash — left side darker/moodier */}
         <div className="pointer-events-none absolute top-0 left-0 w-[50%] h-full" style={{ background: "linear-gradient(90deg, rgba(180,140,120,0.12) 0%, transparent 100%)" }} />
