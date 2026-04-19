@@ -7,9 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const primaryLinks = [
   { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
   { href: "/membership", label: "Membership" },
   { href: "/shop", label: "Shop" },
-  { href: "/about", label: "About" },
 ];
 
 const exploreLinks = [
