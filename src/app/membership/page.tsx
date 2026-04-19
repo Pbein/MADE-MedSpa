@@ -172,25 +172,25 @@ function MembershipCard({
         </div>
       )}
 
-      <div className={`flex flex-col flex-1 ${tier.isFeatured ? "px-6 pt-5 pb-6 lg:px-7 lg:pt-6 lg:pb-7" : "px-6 pt-6 pb-6 lg:px-7"}`}>
+      <div className={`flex flex-col flex-1 ${tier.isFeatured ? "p-7 lg:p-8" : "p-7"}`}>
         {/* Tier name */}
         <h3
-          className="font-headline italic text-sm mb-4"
+          className="font-headline italic text-base mb-5"
           style={{ color: "rgba(57,30,30,0.65)", fontWeight: 300 }}
         >
           {tier.name}
         </h3>
 
         {/* Price */}
-        <div className="flex items-baseline gap-1 mb-1.5">
+        <div className="flex items-baseline gap-1 mb-2">
           <span
-            className="font-headline text-3xl lg:text-4xl"
+            className="font-headline text-4xl"
             style={{ color: "var(--color-primary)", lineHeight: 1.1, letterSpacing: "-0.02em" }}
           >
             ${tier.price}
           </span>
           <span
-            className="text-xs"
+            className="text-sm"
             style={{ color: "rgba(57,30,30,0.4)" }}
           >
             /{tier.billingPeriod}
@@ -199,7 +199,7 @@ function MembershipCard({
 
         {/* Tagline */}
         <p
-          className="text-xs mb-5"
+          className="text-sm mb-6"
           style={{ color: "rgba(57,30,30,0.5)", lineHeight: 1.5 }}
         >
           {tier.tagline}
@@ -207,12 +207,12 @@ function MembershipCard({
 
         {/* Divider */}
         <div
-          className="h-px w-full mb-4"
+          className="h-px w-full mb-5"
           style={{ backgroundColor: "rgba(57,30,30,0.07)" }}
         />
 
         {/* Benefits */}
-        <ul className="space-y-2 mb-6 flex-1">
+        <ul className="space-y-2.5 mb-8 flex-1">
           {tier.benefits.map((benefit, j) => (
             <li key={j} className="flex items-start gap-2.5">
               <span
@@ -220,7 +220,7 @@ function MembershipCard({
                 style={{ backgroundColor: "var(--color-blush)", opacity: 0.35 }}
               />
               <span
-                className="text-xs leading-relaxed"
+                className="text-sm leading-relaxed"
                 style={{ color: "rgba(57,30,30,0.6)" }}
               >
                 {benefit}
@@ -239,10 +239,10 @@ function MembershipCard({
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "0.75rem 1.5rem",
+            padding: "0.875rem 1.5rem",
             fontFamily: "var(--font-headline)",
             fontStyle: "italic",
-            fontSize: "0.9375rem",
+            fontSize: "1rem",
             letterSpacing: "0.02em",
             cursor: "pointer",
             ...(tier.isFeatured
