@@ -414,30 +414,47 @@ function MediaSlotCard({
           {/* File upload */}
           <div>
             <label style={labelStyle}>Or Upload File</label>
-            <input
-              ref={fileRef}
-              type="file"
-              accept={slot.type === "video" ? "video/mp4,video/webm" : "image/*"}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleFileUpload(file);
-              }}
+            <label
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.6rem 1.25rem",
+                border: "2px dashed #d1d5db",
+                borderRadius: "0.5rem",
+                backgroundColor: "#f9fafb",
+                color: uploading ? "#9ca3af" : "#374151",
                 fontSize: "0.875rem",
-                color: "#374151",
+                fontWeight: 500,
+                cursor: uploading ? "wait" : "pointer",
+                transition: "all 0.15s ease",
               }}
-            />
-            {uploading && (
-              <p
-                style={{
-                  fontSize: "0.875rem",
-                  color: "#6366f1",
-                  margin: "0.5rem 0 0 0",
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              {uploading
+                ? "Uploading..."
+                : slot.type === "video"
+                  ? "Choose Video File"
+                  : "Choose Image File"}
+              <input
+                ref={fileRef}
+                type="file"
+                accept={slot.type === "video" ? "video/mp4,video/webm" : "image/*"}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFileUpload(file);
                 }}
-              >
-                Uploading...
-              </p>
-            )}
+                style={{ display: "none" }}
+                disabled={uploading}
+              />
+            </label>
+            <p style={{ fontSize: "0.75rem", color: "#9ca3af", margin: "0.375rem 0 0 0" }}>
+              {slot.type === "video" ? "MP4 or WebM, ideally under 5 MB" : "JPG, PNG, or WebP"}
+            </p>
           </div>
 
           {/* Actions */}
