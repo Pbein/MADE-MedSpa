@@ -78,15 +78,6 @@ export default function ShopPage() {
         {/* Header */}
         <section className="pt-36 md:pt-44 pb-10 md:pb-12 px-6">
           <div className="mx-auto max-w-6xl">
-            <motion.span
-              className="label-micro block mb-5"
-              style={{ color: "rgba(57,30,30,0.5)" }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, ease: luxuryEase }}
-            >
-              Shop
-            </motion.span>
             <motion.h1
               className="font-headline italic text-3xl md:text-4xl lg:text-5xl mb-4"
               style={{ color: "var(--color-primary)", lineHeight: 1.15 }}
