@@ -68,15 +68,14 @@ export default function ShopPage() {
       {/* ═══ ATMOSPHERE WRAPPER — one continuous background ═══ */}
       <div
         className="made-noise relative overflow-hidden"
-        style={{ backgroundColor: "#e6d5ca" }}
+        style={{
+          backgroundColor: "#e6d5ca",
+          backgroundImage: "url('/images/shop-atmosphere-bg.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        {/* Atmospheric background image */}
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/images/shop-atmosphere-bg.webp')" }}
-        />
-        {/* Subtle white wash to soften */}
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-white/[0.08]" />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
