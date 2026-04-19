@@ -30,8 +30,8 @@ export default function Navigation() {
   const exploreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevPathnameRef = useRef(pathname);
 
-  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/faq", "/testimonials"]);
-  const lightTextRoutes = new Set(["/", "/booking", "/faq"]);
+  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/testimonials", "/shop", "/membership", "/faq"]);
+  const lightTextRoutes = new Set(["/", "/booking"]);
   const isOverlayRoute = heroOverlayRoutes.has(pathname);
   const isHeroOverlay = isOverlayRoute && !isScrolled;
   const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;
