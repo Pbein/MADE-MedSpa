@@ -77,16 +77,25 @@ export default function TestimonialsPage() {
   }, [categorized, activeFilter, featured]);
 
   return (
-    <main style={{ backgroundColor: "var(--color-surface)" }}>
+    <main
+      style={{
+        backgroundColor: "#f0e8e1",
+        backgroundImage: "url('/images/testimonials-atmosphere-bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* 1. COMPACT HERO */}
       <PageHeaderCompact
         eyebrow="Client Stories"
         title="Real Reviews"
         description="Every word is from a real client. No scripts, no edits — just honest experiences."
+        transparent
       />
 
       {/* 2. FILTERS */}
-      <section className="pb-8 px-6" style={{ backgroundColor: "var(--color-surface)" }}>
+      <section className="pb-8 px-6" style={{ backgroundColor: "transparent" }}>
         <div className="mx-auto max-w-3xl">
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
@@ -118,7 +127,7 @@ export default function TestimonialsPage() {
       {featured && activeFilter === "All" && (
         <section
           className="py-16 md:py-20 px-6"
-          style={{ backgroundColor: "var(--color-surface-low)" }}
+          style={{ backgroundColor: "rgba(255,255,255,0.35)" }}
         >
           <motion.div
             className="mx-auto max-w-3xl"
@@ -149,7 +158,7 @@ export default function TestimonialsPage() {
       )}
 
       {/* 4. TESTIMONIALS — GROUPED BY CATEGORY (when "All") or FLAT LIST (when filtered) */}
-      <section className="py-16 md:py-20 px-6" style={{ backgroundColor: "var(--color-surface)" }}>
+      <section className="py-16 md:py-20 px-6" style={{ backgroundColor: "transparent" }}>
         <div className="mx-auto max-w-3xl">
           {!testimonials ? (
             <div className="flex justify-center py-16">
@@ -218,7 +227,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* 5. TRUST REINFORCEMENT */}
-      <section className="py-12 md:py-16 px-6" style={{ backgroundColor: "var(--color-surface-low)" }}>
+      <section className="py-12 md:py-16 px-6" style={{ backgroundColor: "rgba(255,255,255,0.35)" }}>
         <div className="mx-auto max-w-2xl text-center">
           <p
             className="font-headline italic text-base md:text-lg"
