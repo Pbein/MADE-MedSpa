@@ -113,6 +113,7 @@ export default function AdminLayout({
       items: [
         { label: "Site Settings", href: "/admin/settings", icon: "\u2699" },
         { label: "System", href: "/admin/system", icon: "\u2630" },
+        { label: "Admin Guide", href: "/admin/guide", icon: "?" },
       ],
     },
   ];
