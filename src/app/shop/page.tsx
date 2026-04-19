@@ -72,17 +72,20 @@ export default function ShopPage() {
           background: "linear-gradient(180deg, #ecddd4 0%, #e8d5cb 35%, #e3cfc4 60%, #ecddd4 100%)",
         }}
       >
-        {/* Warm light bloom — top left */}
-        <div className="pointer-events-none absolute -top-[150px] -left-[50px] w-[600px] h-[600px] rounded-full" style={{ background: "rgba(255,245,238,0.5)", filter: "blur(100px)" }} />
+        {/* Large bright light bloom — top right (like sunlight through window) */}
+        <div className="pointer-events-none absolute -top-[100px] right-[5%] w-[800px] h-[800px] rounded-full" style={{ background: "rgba(255,255,255,0.7)", filter: "blur(80px)" }} />
 
-        {/* Warm light bloom — bottom right */}
-        <div className="pointer-events-none absolute -bottom-[100px] -right-[50px] w-[500px] h-[500px] rounded-full" style={{ background: "rgba(216,192,187,0.3)", filter: "blur(100px)" }} />
+        {/* Secondary bloom — center left */}
+        <div className="pointer-events-none absolute top-[30%] -left-[100px] w-[500px] h-[500px] rounded-full" style={{ background: "rgba(255,252,248,0.5)", filter: "blur(90px)" }} />
 
-        {/* Diagonal light ray */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ background: "linear-gradient(135deg, transparent 25%, rgba(255,248,242,0.7) 45%, transparent 60%)" }} />
+        {/* Warm accent bloom — bottom */}
+        <div className="pointer-events-none absolute bottom-[10%] right-[20%] w-[400px] h-[400px] rounded-full" style={{ background: "rgba(216,192,187,0.25)", filter: "blur(80px)" }} />
 
-        {/* Vignette */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle, transparent 45%, rgba(57,30,30,0.08) 100%)" }} />
+        {/* Diagonal light ray — like window light */}
+        <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(135deg, transparent 15%, rgba(255,255,255,0.35) 35%, rgba(255,255,255,0.15) 50%, transparent 65%)" }} />
+
+        {/* Vignette — darker edges */}
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(57,30,30,0.1) 100%)" }} />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
