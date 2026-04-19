@@ -71,50 +71,30 @@ export default function AdminLayout({
       ],
     },
     {
-      title: "Your Business",
+      title: "Manage",
       items: [
         { label: "Services", href: "/admin/services", icon: "S" },
         { label: "Memberships", href: "/admin/memberships", icon: "M" },
         { label: "Shop", href: "/admin/shop", icon: "P" },
         { label: "Team", href: "/admin/team", icon: "T" },
-      ],
-    },
-    {
-      title: "Pages",
-      items: [
-        { label: "Homepage", href: "/admin/pages/home", icon: "H" },
-        { label: "About", href: "/admin/pages/about", icon: "A" },
-        { label: "Services Page", href: "/admin/pages/services", icon: "S" },
-        { label: "Membership Page", href: "/admin/pages/membership", icon: "M" },
-        { label: "Shop Page", href: "/admin/pages/shop", icon: "P" },
-        { label: "Contact", href: "/admin/pages/contact", icon: "C" },
-        { label: "FAQ", href: "/admin/pages/faq", icon: "F" },
-        { label: "Booking", href: "/admin/pages/booking", icon: "B" },
-        { label: "Testimonials Page", href: "/admin/pages/testimonials", icon: "Q" },
-        { label: "Footer", href: "/admin/pages/footer", icon: "G" },
-      ],
-    },
-    {
-      title: "Content",
-      items: [
-        { label: "SEO", href: "/admin/seo", icon: "\u2197" },
         { label: "FAQs", href: "/admin/faqs", icon: "F" },
         { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
       ],
     },
     {
-      title: "Leads",
+      title: "Website",
       items: [
+        { label: "Edit Pages", href: "/admin/pages", icon: "\u2726" },
+        { label: "SEO", href: "/admin/seo", icon: "\u2197" },
         { label: "Contacts", href: "/admin/contacts", icon: "C", badge: newContacts ?? 0 },
         { label: "Pabau Sync", href: "/admin/pabau", icon: "\u2194" },
       ],
     },
     {
-      title: "Settings",
+      title: "",
       items: [
         { label: "Site Settings", href: "/admin/settings", icon: "\u2699" },
-        { label: "System", href: "/admin/system", icon: "\u2630" },
-        { label: "Admin Guide", href: "/admin/guide", icon: "?" },
+        { label: "System & Guide", href: "/admin/system", icon: "\u2630" },
       ],
     },
   ];
