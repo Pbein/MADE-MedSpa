@@ -5,22 +5,32 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-const navLinks = [
+const primaryLinks = [
   { href: "/services", label: "Services" },
   { href: "/membership", label: "Membership" },
   { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
+];
+
+const exploreLinks = [
+  { href: "/testimonials", label: "Testimonials" },
+  { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
+
+// All links for mobile menu
+const allLinks = [...primaryLinks, ...exploreLinks];
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [transitionsEnabled, setTransitionsEnabled] = useState(false);
+  const [exploreOpen, setExploreOpen] = useState(false);
+  const exploreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevPathnameRef = useRef(pathname);
 
-  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/faq"]);
+  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/faq", "/testimonials"]);
   const lightTextRoutes = new Set(["/", "/booking", "/faq"]);
   const isOverlayRoute = heroOverlayRoutes.has(pathname);
   const isHeroOverlay = isOverlayRoute && !isScrolled;
@@ -111,8 +121,8 @@ export default function Navigation() {
             MADE
           </Link>
 
-          <ul className="flex gap-12 items-center">
-            {navLinks.map((link) => {
+          <ul className="flex gap-10 items-center">
+            {primaryLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <li key={link.href}>
@@ -137,6 +147,88 @@ export default function Navigation() {
                 </li>
               );
             })}
+
+            {/* Explore dropdown */}
+            <li
+              className="relative"
+              onMouseEnter={() => {
+                if (exploreTimeoutRef.current) clearTimeout(exploreTimeoutRef.current);
+                setExploreOpen(true);
+              }}
+              onMouseLeave={() => {
+                exploreTimeoutRef.current = setTimeout(() => setExploreOpen(false), 200);
+              }}
+            >
+              <button
+                className="font-headline italic tracking-wide text-lg transition-all duration-500"
+                style={{
+                  color: useLightNavText
+                    ? "var(--color-on-primary)"
+                    : "var(--color-primary)",
+                  opacity: exploreLinks.some((l) => pathname === l.href) ? 1 : 0.6,
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  paddingBottom: "0.25rem",
+                  borderBottom: exploreLinks.some((l) => pathname === l.href)
+                    ? useLightNavText
+                      ? "1px solid var(--color-on-primary)"
+                      : "1px solid var(--color-primary)"
+                    : "1px solid transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                Explore
+                <span style={{ fontSize: "0.6em", marginTop: 2 }}>&#9662;</span>
+              </button>
+
+              <AnimatePresence>
+                {exploreOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      marginTop: "0.75rem",
+                      backgroundColor: "#fbfaef",
+                      borderRadius: "0.5rem",
+                      boxShadow: "0 10px 40px rgba(57,30,30,0.1)",
+                      border: "1px solid rgba(212,195,194,0.3)",
+                      padding: "0.5rem 0",
+                      minWidth: 180,
+                      zIndex: 100,
+                    }}
+                  >
+                    {exploreLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="font-headline italic tracking-wide transition-all duration-300"
+                        style={{
+                          display: "block",
+                          padding: "0.6rem 1.5rem",
+                          fontSize: "1rem",
+                          color: "var(--color-primary)",
+                          opacity: pathname === link.href ? 1 : 0.65,
+                          textDecoration: "none",
+                        }}
+                        onClick={() => setExploreOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </li>
           </ul>
 
           <Link
@@ -290,7 +382,7 @@ export default function Navigation() {
                     Home
                   </Link>
                 </motion.li>
-                {navLinks.map((link, index) => {
+                {allLinks.map((link, index) => {
                   const isActive = pathname === link.href;
                   return (
                     <motion.li

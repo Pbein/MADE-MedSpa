@@ -691,6 +691,60 @@ export const PAGE_DEFINITIONS: PageDefinition[] = [
       },
     ],
   },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TESTIMONIALS PAGE
+  // ═══════════════════════════════════════════════════════════════════════════
+  {
+    key: "testimonials",
+    label: "Testimonials",
+    path: "/testimonials",
+    description: "Full-page showcase of all client testimonials with treatment filtering. Builds trust with prospective clients.",
+    sections: [
+      {
+        key: "hero",
+        label: "Hero",
+        description: "Page hero with headline.",
+        contentKey: "section_testimonials_hero",
+        fields: [
+          { fieldKey: "eyebrow", label: "Eyebrow", type: "text", defaultValue: "Client Stories" },
+          { fieldKey: "headline", label: "Headline", type: "text", defaultValue: "What Our Clients Say" },
+          { fieldKey: "subtitle", label: "Subtitle", type: "textarea", defaultValue: "Real experiences from real clients. Every review reflects the care, expertise, and results that define MADE Med Spa." },
+        ],
+        media: [],
+        hasColorOverride: false,
+        defaultVisible: true,
+      },
+      {
+        key: "grid",
+        label: "Testimonials Grid",
+        description: "All testimonials displayed as cards with treatment type filtering.",
+        contentKey: "section_testimonials_grid",
+        fields: [],
+        media: [],
+        hasColorOverride: true,
+        crud: { manageHref: "/admin/testimonials", manageLabel: "Manage Testimonials", description: "Shows all active testimonials with treatment type tags." },
+        defaultVisible: true,
+      },
+      {
+        key: "cta",
+        label: "CTA Banner",
+        description: "Call-to-action at the bottom.",
+        contentKey: "section_testimonials_cta",
+        fields: [
+          { fieldKey: "headline", label: "Headline", type: "text", defaultValue: "Ready to start your journey?" },
+          { fieldKey: "subtitle", label: "Subtitle", type: "textarea", defaultValue: "Book a consultation and experience the MADE difference for yourself." },
+          { fieldKey: "cta_text", label: "Button Text", type: "text", defaultValue: "Book Consultation" },
+          { fieldKey: "cta_href", label: "Button Link", type: "url", defaultValue: "/booking" },
+          { fieldKey: "secondary_text", label: "Secondary Link", type: "text", defaultValue: "View Services" },
+          { fieldKey: "secondary_href", label: "Secondary URL", type: "url", defaultValue: "/services" },
+        ],
+        media: [],
+        hasColorOverride: true,
+        defaultVisible: true,
+      },
+    ],
+  },
 ];
 
 // ── Footer (Global Section) ──────────────────────────────────────────────────

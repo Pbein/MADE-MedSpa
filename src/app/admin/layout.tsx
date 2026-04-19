@@ -90,6 +90,7 @@ export default function AdminLayout({
         { label: "Contact", href: "/admin/pages/contact", icon: "C" },
         { label: "FAQ", href: "/admin/pages/faq", icon: "F" },
         { label: "Booking", href: "/admin/pages/booking", icon: "B" },
+        { label: "Testimonials Page", href: "/admin/pages/testimonials", icon: "Q" },
         { label: "Footer", href: "/admin/pages/footer", icon: "G" },
       ],
     },
