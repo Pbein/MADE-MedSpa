@@ -2,7 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import PageHero from "@/components/sections/PageHero";
+import PageHeaderCompact from "@/components/sections/PageHeaderCompact";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -24,8 +24,8 @@ export default function MembershipPage() {
   const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("membership");
   const { data: heroText } = useSectionContent("section_membership_hero", {
     eyebrow: "Membership",
-    headline: "Invest in You. Consistently.",
-    subtitle: "Exclusive tiers designed for every stage of your aesthetic journey. Real savings, real care, real results.",
+    headline: "Membership Plans",
+    subtitle: "Choose a plan that fits your routine. Save on treatments, stay consistent, see real results.",
   });
   const { data: ctaText } = useSectionContent("section_membership_cta", {
     headline: "Ready to become a member?",
@@ -40,56 +40,22 @@ export default function MembershipPage() {
     <main style={styleOverrides}>
       {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && (
-        <PageHero
+        <PageHeaderCompact
           eyebrow={heroText.eyebrow}
-          headline={
-            <>
-              {heroText.headline.split(".")[0]}.{" "}
-              <span className="font-extralight">
-                {heroText.headline.split(".").slice(1).join(".").trim() || "Consistently."}
-              </span>
-            </>
-          }
-          subtitle={heroText.subtitle}
+          title={heroText.headline}
+          description={heroText.subtitle}
         />
       )}
 
       {/* Membership Tiers */}
       <section
         ref={gridRef}
-        className="py-32 md:py-40"
-        style={{ backgroundColor: "var(--color-surface)" }}
+        className="pt-8 pb-32 md:pb-40"
+        style={{
+          background: "radial-gradient(circle at 20% 20%, rgba(216,192,187,0.2), transparent 40%), radial-gradient(circle at 80% 10%, rgba(201,170,150,0.15), transparent 35%), linear-gradient(180deg, var(--color-silk) 0%, var(--color-powder) 100%)",
+        }}
       >
         <div className="mx-auto max-w-7xl px-6">
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-16 md:mb-20"
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 0.8, ease: luxuryEase }}
-          >
-            <span
-              className="label-micro block mb-5"
-              style={{ color: "var(--color-on-surface-variant)" }}
-            >
-              Choose Your Tier
-            </span>
-            <h2
-              className="headline-section text-3xl md:text-5xl mb-6"
-              style={{ color: "var(--color-primary)" }}
-            >
-              Membership Plans
-            </h2>
-
-            {/* Ornamental divider */}
-            <div className="flex items-center justify-center gap-3 mt-8">
-              <div className="w-12 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-              <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: "rgba(215,207,197,0.5)" }} />
-              <div className="w-12 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-            </div>
-          </motion.div>
-
           {/* Cards */}
           {!memberships ? (
             <div className="flex justify-center py-20">
@@ -171,39 +137,44 @@ function MembershipCard({
       initial={{ opacity: 0, y: 35 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: luxuryEase, delay: index * 0.1 }}
-      className="relative flex flex-col border transition-all duration-700"
+      className="relative flex flex-col transition-all duration-700 group"
       style={{
-        borderColor: tier.isFeatured
-          ? "var(--color-outline-variant)"
-          : "rgba(215,207,197,0.35)",
-        backgroundColor: tier.isFeatured
-          ? "var(--color-surface-lowest)"
-          : "var(--color-surface)",
+        border: tier.isFeatured ? "none" : "1px solid rgba(57,30,30,0.06)",
+        background: tier.isFeatured
+          ? "linear-gradient(180deg, #ffffff 0%, var(--color-powder) 100%)"
+          : "rgba(255,255,255,0.4)",
         boxShadow: tier.isFeatured
-          ? "0 8px 40px rgba(57,30,30,0.06)"
-          : "none",
+          ? "0 20px 50px rgba(57,30,30,0.12)"
+          : "0 4px 20px rgba(57,30,30,0.03)",
+        transform: tier.isFeatured ? "translateY(-12px)" : "none",
+      }}
+      whileHover={{
+        y: tier.isFeatured ? -16 : -4,
+        boxShadow: tier.isFeatured
+          ? "0 24px 60px rgba(57,30,30,0.15)"
+          : "0 12px 35px rgba(57,30,30,0.08)",
       }}
     >
       {/* Featured badge */}
       {tier.isFeatured && (
         <div
-          className="text-center py-2"
+          className="text-center py-2.5"
           style={{
-            backgroundColor: "var(--color-primary)",
+            background: "linear-gradient(135deg, #391e1e 0%, #84262c 100%)",
             color: "var(--color-on-primary)",
           }}
         >
-          <span className="label-micro" style={{ letterSpacing: "0.15em" }}>
+          <span style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-label)" }}>
             Most Popular
           </span>
         </div>
       )}
 
-      <div className="flex flex-col flex-1 p-8 lg:p-7 xl:p-8">
+      <div className="flex flex-col flex-1 p-8 lg:p-7 xl:p-9">
         {/* Tier name */}
         <h3
-          className="font-headline italic text-lg mb-6"
-          style={{ color: "var(--color-primary)" }}
+          className="font-headline italic text-base mb-6"
+          style={{ color: "var(--color-primary)", opacity: 0.7, fontWeight: 300 }}
         >
           {tier.name}
         </h3>
@@ -211,14 +182,14 @@ function MembershipCard({
         {/* Price */}
         <div className="mb-2">
           <span
-            className="font-headline text-4xl xl:text-5xl tracking-tight"
-            style={{ color: "var(--color-primary)" }}
+            className="font-headline text-5xl xl:text-6xl"
+            style={{ color: "var(--color-primary)", lineHeight: 1, letterSpacing: "-0.02em" }}
           >
             ${tier.price}
           </span>
           <span
-            className="text-sm ml-1.5"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
+            className="text-xs ml-1.5"
+            style={{ color: "var(--color-on-surface-variant)", opacity: 0.45 }}
           >
             /{tier.billingPeriod}
           </span>
@@ -227,7 +198,7 @@ function MembershipCard({
         {/* Tagline */}
         <p
           className="body-editorial text-sm mb-8"
-          style={{ color: "var(--color-on-surface-variant)", opacity: 0.75 }}
+          style={{ color: "rgba(57,30,30,0.55)" }}
         >
           {tier.tagline}
         </p>
@@ -235,7 +206,7 @@ function MembershipCard({
         {/* Divider */}
         <div
           className="h-px w-full mb-6"
-          style={{ backgroundColor: "var(--color-outline-variant)", opacity: 0.4 }}
+          style={{ backgroundColor: "rgba(57,30,30,0.08)" }}
         />
 
         {/* Benefits */}
@@ -243,12 +214,12 @@ function MembershipCard({
           {tier.benefits.map((benefit, j) => (
             <li key={j} className="flex items-start gap-3">
               <span
-                className="mt-2 h-px w-4 shrink-0"
-                style={{ backgroundColor: "var(--color-secondary)", opacity: 0.5 }}
+                className="mt-2.5 h-1 w-1 rounded-full shrink-0"
+                style={{ backgroundColor: "var(--color-blush)", opacity: 0.4 }}
               />
               <span
                 className="text-sm leading-relaxed"
-                style={{ color: "var(--color-on-surface)", opacity: 0.85 }}
+                style={{ color: "rgba(57,30,30,0.7)" }}
               >
                 {benefit}
               </span>
@@ -261,7 +232,30 @@ function MembershipCard({
           href={tier.pabauLink || BOOKING_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${tier.isFeatured ? "btn-primary" : "btn-outline"} w-full text-center`}
+          className="w-full text-center"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1rem 2.5rem",
+            fontFamily: "var(--font-headline)",
+            fontStyle: "italic",
+            fontSize: "1.125rem",
+            letterSpacing: "0.02em",
+            cursor: "pointer",
+            transition: "all 0.5s cubic-bezier(0.2, 0, 0, 1)",
+            ...(tier.isFeatured
+              ? {
+                  background: "linear-gradient(135deg, #391e1e 0%, #84262c 100%)",
+                  color: "var(--color-on-primary)",
+                  border: "none",
+                }
+              : {
+                  background: "transparent",
+                  color: "var(--color-primary)",
+                  border: "1px solid rgba(57,30,30,0.15)",
+                }),
+          }}
         >
           Get Started
         </a>
