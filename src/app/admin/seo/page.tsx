@@ -228,6 +228,29 @@ function SEOCard({ page }: { page: PageSEO }) {
             </div>
           </div>
 
+          {/* Social Share Preview */}
+          <div style={{ margin: "0.75rem 0 0", padding: "1rem", backgroundColor: "#f9fafb", borderRadius: "0.375rem", border: "1px solid #f3f4f6" }}>
+            <div style={{ fontSize: "0.6875rem", fontWeight: 500, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
+              Social Share Preview (Facebook / LinkedIn)
+            </div>
+            <div style={{ border: "1px solid #e5e7eb", borderRadius: "0.375rem", overflow: "hidden", maxWidth: 400 }}>
+              <div style={{ backgroundColor: "#e5e7eb", height: 100, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", color: "#9ca3af" }}>
+                OG Image (1200x630)
+              </div>
+              <div style={{ padding: "0.75rem", backgroundColor: "#fff" }}>
+                <div style={{ fontSize: "0.6875rem", color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                  mademedspa.com
+                </div>
+                <div style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#111827", marginTop: 2, lineHeight: 1.3 }}>
+                  {displayTitle.length > 65 ? displayTitle.slice(0, 62) + "..." : displayTitle}
+                </div>
+                <div style={{ fontSize: "0.8125rem", color: "#6b7280", marginTop: 2, lineHeight: 1.4 }}>
+                  {displayDesc.length > 100 ? displayDesc.slice(0, 97) + "..." : displayDesc}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Fields */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
             <div>

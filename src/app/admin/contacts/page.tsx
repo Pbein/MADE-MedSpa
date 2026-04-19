@@ -64,10 +64,52 @@ export default function AdminContactsPage() {
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#111827", margin: 0 }}>Contact Submissions</h1>
-        <span style={{ fontSize: "0.9375rem", color: "#374151" }}>
-          {submissions ? `${submissions.length} submissions` : "Loading..."}
-        </span>
+        <div>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#111827", margin: 0 }}>Contact Submissions</h1>
+          <p style={{ fontSize: "0.875rem", color: "#6b7280", margin: "0.25rem 0 0 0" }}>
+            {submissions ? `${submissions.length} submissions` : "Loading..."}
+          </p>
+        </div>
+        {submissions && submissions.length > 0 && (
+          <button
+            onClick={() => {
+              const headers = ["Date", "First Name", "Last Name", "Email", "Phone", "Message", "Status", "Source"];
+              const rows = submissions.map((s) => [
+                new Date(s.createdAt).toISOString().split("T")[0],
+                s.firstName,
+                s.lastName,
+                s.email,
+                s.phone || "",
+                `"${s.message.replace(/"/g, '""')}"`,
+                s.status || "new",
+                s.source || "",
+              ]);
+              const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `made-contacts-${new Date().toISOString().split("T")[0]}.csv`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            style={{
+              padding: "0.5rem 1rem",
+              border: "1px solid #e5e7eb",
+              borderRadius: "0.375rem",
+              backgroundColor: "#fff",
+              fontSize: "0.8125rem",
+              fontWeight: 500,
+              cursor: "pointer",
+              color: "#374151",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Search */}
