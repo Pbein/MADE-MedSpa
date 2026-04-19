@@ -97,7 +97,7 @@ export default function ContactPageClient() {
       >
         {/* Mocha texture background */}
         <Image
-          src="/images/contact-hero-bg.webp"
+          src="/images/contact-hero-bg.png"
           alt=""
           aria-hidden="true"
           fill

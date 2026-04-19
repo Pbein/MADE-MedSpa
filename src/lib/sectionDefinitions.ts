@@ -497,7 +497,7 @@ export const PAGE_DEFINITIONS: PageDefinition[] = [
           { fieldKey: "headline", label: "Headline", type: "text", defaultValue: "Let's talk." },
         ],
         media: [
-          { mediaKey: "contact_hero_bg", label: "Hero Background", type: "image", aspect: "21/9", defaultUrl: "/images/contact-hero-bg.webp", description: "Dark textured background behind the contact hero." },
+          { mediaKey: "contact_hero_bg", label: "Hero Background", type: "image", aspect: "21/9", defaultUrl: "/images/contact-hero-bg.png", description: "Dark textured background behind the contact hero." },
         ],
         hasColorOverride: true,
         legacyKeys: ["contact_hero"],
