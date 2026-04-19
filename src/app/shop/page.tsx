@@ -69,20 +69,20 @@ export default function ShopPage() {
       <div
         className="made-noise relative overflow-hidden"
         style={{
-          background: "radial-gradient(circle at 20% 30%, rgba(255,255,255,0.6), transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.4), transparent 45%), linear-gradient(180deg, #f6efe9 0%, #f3e9e2 40%, #efe3dc 100%)",
+          background: "linear-gradient(180deg, #ecddd4 0%, #e8d5cb 35%, #e3cfc4 60%, #ecddd4 100%)",
         }}
       >
-        {/* Soft light bloom — top left */}
-        <div className="pointer-events-none absolute -top-[200px] -left-[100px] w-[700px] h-[700px] rounded-full opacity-50" style={{ background: "rgba(255,255,255,0.6)", filter: "blur(120px)" }} />
+        {/* Warm light bloom — top left */}
+        <div className="pointer-events-none absolute -top-[150px] -left-[50px] w-[600px] h-[600px] rounded-full" style={{ background: "rgba(255,245,238,0.5)", filter: "blur(100px)" }} />
 
-        {/* Soft light bloom — bottom right */}
-        <div className="pointer-events-none absolute -bottom-[200px] -right-[100px] w-[600px] h-[600px] rounded-full opacity-40" style={{ background: "rgba(255,255,255,0.5)", filter: "blur(120px)" }} />
+        {/* Warm light bloom — bottom right */}
+        <div className="pointer-events-none absolute -bottom-[100px] -right-[50px] w-[500px] h-[500px] rounded-full" style={{ background: "rgba(216,192,187,0.3)", filter: "blur(100px)" }} />
 
         {/* Diagonal light ray */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ background: "linear-gradient(135deg, transparent 20%, rgba(255,255,255,0.8) 45%, transparent 55%)" }} />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ background: "linear-gradient(135deg, transparent 25%, rgba(255,248,242,0.7) 45%, transparent 60%)" }} />
 
         {/* Vignette */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle, transparent 50%, rgba(57,30,30,0.06) 100%)" }} />
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle, transparent 45%, rgba(57,30,30,0.08) 100%)" }} />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
