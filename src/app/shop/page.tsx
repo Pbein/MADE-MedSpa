@@ -113,11 +113,9 @@ export default function ShopPage() {
                   style={{
                     padding: "0.4rem 1rem",
                     border: "1px solid",
-                    borderColor: activeCategory === cat ? "transparent" : "rgba(57,30,30,0.1)",
-                    background: activeCategory === cat
-                      ? "linear-gradient(135deg, #391e1e 0%, #84262c 100%)"
-                      : "var(--color-glaze)",
-                    color: activeCategory === cat ? "var(--color-on-primary)" : "rgba(57,30,30,0.6)",
+                    borderColor: activeCategory === cat ? "var(--color-espresso)" : "rgba(57,30,30,0.1)",
+                    background: activeCategory === cat ? "transparent" : "var(--color-glaze)",
+                    color: activeCategory === cat ? "var(--color-espresso)" : "rgba(57,30,30,0.5)",
                     fontSize: "0.6875rem",
                     fontWeight: 500,
                     letterSpacing: "0.12em",
