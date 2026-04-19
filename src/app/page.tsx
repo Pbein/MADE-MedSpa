@@ -9,7 +9,7 @@ import {
   buildStyleOverrides,
   isSectionVisible,
   getHeroOverrides,
-} from "@/components/PageSettingsWrapper";
+} from "@/lib/pageSettings";
 
 export default async function Home() {
   const [content, services, testimonials, pageSettings] = await Promise.all([

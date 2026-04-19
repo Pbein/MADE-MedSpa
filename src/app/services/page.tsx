@@ -1,7 +1,7 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../convex/_generated/api";
 import ServicesPageClient from "./ServicesPageClient";
-import { buildStyleOverrides } from "@/components/PageSettingsWrapper";
+import { buildStyleOverrides } from "@/lib/pageSettings";
 
 export default async function ServicesPage() {
   const [heroBg, pageSettings] = await Promise.all([
