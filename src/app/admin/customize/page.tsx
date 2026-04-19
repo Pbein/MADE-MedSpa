@@ -486,14 +486,16 @@ function PageSettingsCard({
                   Reset to Defaults
                 </button>
               )}
-              <a
-                href={definition.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ ...btnSecondary, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+              <button
+                onClick={() => {
+                  const draft = JSON.stringify({ colors, hero, sections });
+                  const encoded = encodeURIComponent(draft);
+                  window.open(`${definition.path}?_preview=${encoded}`, "_blank");
+                }}
+                style={{ ...btnSecondary, display: "inline-flex", alignItems: "center", gap: 4 }}
               >
-                Preview Page &#8599;
-              </a>
+                Preview Changes &#8599;
+              </button>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               {saved && (

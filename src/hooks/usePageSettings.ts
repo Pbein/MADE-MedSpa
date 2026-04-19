@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "convex/react";
+import { useSearchParams } from "next/navigation";
 import { api } from "../../convex/_generated/api";
 import { CSSProperties, useMemo } from "react";
 
@@ -44,6 +45,8 @@ export interface ResolvedPageSettings {
   raw: PageSettings | null;
   /** Whether settings are still loading */
   isLoading: boolean;
+  /** Whether this is an unsaved preview from the admin */
+  isPreview: boolean;
 }
 
 // ── Page definitions ─────────────────────────────────────────────────────────
@@ -139,30 +142,49 @@ export const PAGE_DEFINITIONS: Record<
 
 // ── Hook ─────────────────────────────────────────────────────────────────────
 
+function buildOverrides(colors: PageColors | undefined): CSSProperties {
+  if (!colors) return {};
+  const style: Record<string, string> = {};
+  const map: Record<string, string> = {
+    primary: "--color-primary",
+    secondary: "--color-secondary",
+    surface: "--color-surface",
+    surfaceLow: "--color-surface-low",
+    onSurface: "--color-on-surface",
+    onSurfaceVariant: "--color-on-surface-variant",
+    outline: "--color-outline",
+  };
+  for (const [key, cssVar] of Object.entries(map)) {
+    const val = colors[key as keyof PageColors];
+    if (val) style[cssVar] = val;
+  }
+  return style as CSSProperties;
+}
+
 export function usePageSettings(pageKey: string): ResolvedPageSettings {
   const content = useQuery(api.siteContent.getByKey, {
     key: `page_settings_${pageKey}`,
   });
+  const searchParams = useSearchParams();
 
   return useMemo(() => {
-    const isLoading = content === undefined;
-    const settings = (content?.metadata as PageSettings) || null;
-
-    // Build CSS variable overrides from color settings
-    const styleOverrides: CSSProperties = {};
-    if (settings?.colors) {
-      const c = settings.colors;
-      if (c.primary) (styleOverrides as Record<string, string>)["--color-primary"] = c.primary;
-      if (c.secondary) (styleOverrides as Record<string, string>)["--color-secondary"] = c.secondary;
-      if (c.surface) (styleOverrides as Record<string, string>)["--color-surface"] = c.surface;
-      if (c.surfaceLow) (styleOverrides as Record<string, string>)["--color-surface-low"] = c.surfaceLow;
-      if (c.onSurface) (styleOverrides as Record<string, string>)["--color-on-surface"] = c.onSurface;
-      if (c.onSurfaceVariant) (styleOverrides as Record<string, string>)["--color-on-surface-variant"] = c.onSurfaceVariant;
-      if (c.outline) (styleOverrides as Record<string, string>)["--color-outline"] = c.outline;
+    // Check for preview params (unsaved draft from admin)
+    const previewParam = searchParams.get("_preview");
+    let previewSettings: PageSettings | null = null;
+    if (previewParam) {
+      try {
+        previewSettings = JSON.parse(decodeURIComponent(previewParam));
+      } catch {
+        // Invalid preview param, ignore
+      }
     }
 
+    const isPreview = previewSettings !== null;
+    const isLoading = !isPreview && content === undefined;
+    const settings = previewSettings || (content?.metadata as PageSettings) || null;
+
     return {
-      styleOverrides,
+      styleOverrides: buildOverrides(settings?.colors),
       isSectionVisible: (sectionKey: string) => {
         if (!settings?.sections) return true;
         return settings.sections[sectionKey] !== false;
@@ -170,6 +192,7 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
       hero: settings?.hero || {},
       raw: settings,
       isLoading,
+      isPreview,
     };
-  }, [content]);
+  }, [content, searchParams]);
 }

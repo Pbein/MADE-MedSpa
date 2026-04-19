@@ -9,6 +9,7 @@ import Accordion from "@/components/ui/Accordion";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import PreviewBanner from "@/components/PreviewBanner";
 
 const faqCategories = [
   "General",
@@ -74,7 +75,7 @@ export default function FAQPage() {
   }, [filteredFaqs]);
 
   const categoryKeys = Object.keys(groupedFaqs);
-  const { styleOverrides, isSectionVisible } = usePageSettings("faq");
+  const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("faq");
 
   // FAQPage structured data for Google rich results
   const faqJsonLd = useMemo(() => {
@@ -95,6 +96,7 @@ export default function FAQPage() {
 
   return (
     <main style={styleOverrides}>
+      {isPreview && <PreviewBanner />}
       {faqJsonLd && (
         <script
           type="application/ld+json"

@@ -7,6 +7,7 @@ import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import PreviewBanner from "@/components/PreviewBanner";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -32,10 +33,11 @@ export default function ShopPage() {
     return products.filter((p) => p.category === activeCategory);
   }, [products, activeCategory]);
 
-  const { styleOverrides, isSectionVisible, hero } = usePageSettings("shop");
+  const { styleOverrides, isSectionVisible, hero, isPreview } = usePageSettings("shop");
 
   return (
     <main style={styleOverrides}>
+      {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && <PageHero
         eyebrow="Shop"
         headline={

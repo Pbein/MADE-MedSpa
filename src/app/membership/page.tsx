@@ -7,6 +7,7 @@ import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import PreviewBanner from "@/components/PreviewBanner";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -18,10 +19,11 @@ export default function MembershipPage() {
   const memberships = useQuery(api.memberships.list);
   const gridRef = useRef(null);
   const isInView = useInView(gridRef, { once: true, amount: 0.1 });
-  const { styleOverrides, isSectionVisible, hero } = usePageSettings("membership");
+  const { styleOverrides, isSectionVisible, hero, isPreview } = usePageSettings("membership");
 
   return (
     <main style={styleOverrides}>
+      {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && <PageHero
         eyebrow="Membership"
         headline={
