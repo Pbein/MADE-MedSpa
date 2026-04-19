@@ -113,8 +113,8 @@ export default function ShopPage() {
                   style={{
                     padding: "0.4rem 1rem",
                     border: "1px solid",
-                    borderColor: activeCategory === cat ? "var(--color-espresso)" : "rgba(57,30,30,0.1)",
-                    background: activeCategory === cat ? "transparent" : "var(--color-glaze)",
+                    borderColor: activeCategory === cat ? "var(--color-rose-dust)" : "rgba(57,30,30,0.08)",
+                    background: activeCategory === cat ? "var(--color-rose-dust)" : "var(--color-glaze)",
                     color: activeCategory === cat ? "var(--color-espresso)" : "rgba(57,30,30,0.5)",
                     fontSize: "0.6875rem",
                     fontWeight: 500,
