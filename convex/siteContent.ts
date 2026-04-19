@@ -36,6 +36,14 @@ export const getByKeys = query({
   },
 });
 
+export const getByPrefix = query({
+  args: { prefix: v.string() },
+  handler: async (ctx, args) => {
+    const all = await ctx.db.query("siteContent").collect();
+    return all.filter((r) => r.key.startsWith(args.prefix));
+  },
+});
+
 export const upsert = mutation({
   args: {
     key: v.string(),

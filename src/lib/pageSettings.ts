@@ -50,3 +50,36 @@ export function getHeroOverrides(
   if (!metadata) return {};
   return (metadata as { hero?: Record<string, string> }).hero || {};
 }
+
+/**
+ * Server-side helper: merge section content from a pre-fetched siteContent
+ * record with default values. Used in server components where hooks can't run.
+ */
+export function getSectionContent<T extends Record<string, unknown>>(
+  contentRecord: { metadata?: unknown } | null | undefined,
+  defaults: T
+): T {
+  if (!contentRecord?.metadata) return defaults;
+  return { ...defaults, ...(contentRecord.metadata as Partial<T>) };
+}
+
+/**
+ * Server-side helper: get per-section color overrides from page settings.
+ * Returns CSS variable overrides for a specific section.
+ */
+export function getSectionColorOverrides(
+  pageSettingsMetadata: Record<string, unknown> | null | undefined,
+  sectionKey: string
+): import("react").CSSProperties {
+  if (!pageSettingsMetadata) return {};
+  const sections = (pageSettingsMetadata as {
+    sections?: Record<string, boolean | { visible?: boolean; colors?: Record<string, string> }>;
+  }).sections;
+  if (!sections) return {};
+
+  const sectionConfig = sections[sectionKey];
+  if (!sectionConfig || typeof sectionConfig === "boolean") return {};
+  if (!sectionConfig.colors) return {};
+
+  return buildStyleOverrides({ colors: sectionConfig.colors });
+}
