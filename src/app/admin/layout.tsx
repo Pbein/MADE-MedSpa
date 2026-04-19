@@ -4,28 +4,41 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: "D" },
-  { label: "Services", href: "/admin/services", icon: "S" },
-  { label: "Memberships", href: "/admin/memberships", icon: "M" },
-  { label: "Shop", href: "/admin/shop", icon: "P" },
-  { label: "FAQs", href: "/admin/faqs", icon: "F" },
-  { label: "Team", href: "/admin/team", icon: "T" },
-  { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
-  { label: "Media", href: "/admin/media", icon: "I" },
-  { label: "Content", href: "/admin/content", icon: "W" },
-  { label: "Contacts", href: "/admin/contacts", icon: "C" },
-  { label: "Pabau Sync", href: "/admin/pabau", icon: "↔" },
-];
-
-function getPageTitle(pathname: string): string {
-  if (pathname === "/admin") return "Dashboard";
-  const item = navItems.find(
-    (n) => n.href !== "/admin" && pathname.startsWith(n.href)
-  );
-  return item ? item.label : "Dashboard";
+interface NavItem {
+  label: string;
+  href: string;
+  icon: string;
+  badge?: number;
 }
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+function getPageTitle(pathname: string, sections: NavSection[]): string {
+  if (pathname === "/admin") return "Dashboard";
+  for (const section of sections) {
+    const item = section.items.find(
+      (n) => n.href !== "/admin" && pathname.startsWith(n.href)
+    );
+    if (item) return item.label;
+  }
+  return "Dashboard";
+}
+
+const sectionLabelStyle: React.CSSProperties = {
+  fontSize: 10,
+  fontWeight: 600,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: "#6b7280",
+  padding: "16px 16px 4px",
+  display: "block",
+};
 
 export default function AdminLayout({
   children,
@@ -37,6 +50,7 @@ export default function AdminLayout({
   const { signOut } = useClerk();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const newContacts = useQuery(api.contactSubmissions.countNew);
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -49,7 +63,50 @@ export default function AdminLayout({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const pageTitle = getPageTitle(pathname);
+  const navSections: NavSection[] = [
+    {
+      title: "",
+      items: [
+        { label: "Dashboard", href: "/admin", icon: "D" },
+      ],
+    },
+    {
+      title: "Your Business",
+      items: [
+        { label: "Services", href: "/admin/services", icon: "S" },
+        { label: "Memberships", href: "/admin/memberships", icon: "M" },
+        { label: "Shop", href: "/admin/shop", icon: "P" },
+        { label: "Team", href: "/admin/team", icon: "T" },
+      ],
+    },
+    {
+      title: "Website",
+      items: [
+        { label: "Customize Pages", href: "/admin/customize", icon: "\u2726" },
+        { label: "Site Text", href: "/admin/content", icon: "W" },
+        { label: "Images & Video", href: "/admin/media", icon: "I" },
+        { label: "SEO", href: "/admin/seo", icon: "\u2197" },
+        { label: "FAQs", href: "/admin/faqs", icon: "F" },
+        { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
+      ],
+    },
+    {
+      title: "Leads & Tools",
+      items: [
+        { label: "Contacts", href: "/admin/contacts", icon: "C", badge: newContacts ?? 0 },
+        { label: "Pabau Sync", href: "/admin/pabau", icon: "\u2194" },
+      ],
+    },
+    {
+      title: "Settings",
+      items: [
+        { label: "Site Settings", href: "/admin/settings", icon: "\u2699" },
+        { label: "System", href: "/admin/system", icon: "\u2630" },
+      ],
+    },
+  ];
+
+  const pageTitle = getPageTitle(pathname, navSections);
   const showSidebar = isDesktop || sidebarOpen;
 
   return (
@@ -96,52 +153,77 @@ export default function AdminLayout({
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
-          {navItems.map((item) => {
-            const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin"
-                : pathname.startsWith(item.href);
+        <nav style={{ flex: 1, overflowY: "auto", padding: "4px 0" }}>
+          {navSections.map((section) => (
+            <div key={section.title || "top"}>
+              {section.title && (
+                <span style={sectionLabelStyle}>{section.title}</span>
+              )}
+              {section.items.map((item) => {
+                const isActive =
+                  item.href === "/admin"
+                    ? pathname === "/admin"
+                    : pathname.startsWith(item.href);
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "9px 16px",
-                  margin: "2px 8px",
-                  borderRadius: 6,
-                  color: isActive ? "#fff" : "#a0a0b0",
-                  backgroundColor: isActive ? "rgba(99,102,241,0.15)" : "transparent",
-                  textDecoration: "none",
-                  fontSize: 15,
-                  fontWeight: isActive ? 500 : 400,
-                  transition: "all 0.15s ease",
-                }}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <span style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 5,
-                  backgroundColor: isActive ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.06)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: isActive ? "#818cf8" : "#888",
-                  flexShrink: 0,
-                }}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "8px 16px",
+                      margin: "1px 8px",
+                      borderRadius: 6,
+                      color: isActive ? "#fff" : "#a0a0b0",
+                      backgroundColor: isActive ? "rgba(99,102,241,0.15)" : "transparent",
+                      textDecoration: "none",
+                      fontSize: 14,
+                      fontWeight: isActive ? 500 : 400,
+                      transition: "all 0.15s ease",
+                    }}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <span style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 5,
+                      backgroundColor: isActive ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.06)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: isActive ? "#818cf8" : "#888",
+                      flexShrink: 0,
+                    }}>
+                      {item.icon}
+                    </span>
+                    <span style={{ flex: 1 }}>{item.label}</span>
+                    {item.badge !== undefined && item.badge > 0 && (
+                      <span style={{
+                        minWidth: 18,
+                        height: 18,
+                        borderRadius: 9,
+                        backgroundColor: "#ef4444",
+                        color: "#fff",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "0 5px",
+                        flexShrink: 0,
+                      }}>
+                        {item.badge > 99 ? "99+" : item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* Footer */}
@@ -160,30 +242,57 @@ export default function AdminLayout({
                 fontSize: 12,
                 fontWeight: 600,
                 flexShrink: 0,
+                overflow: "hidden",
               }}>
-                {user.firstName?.[0] || user.emailAddresses?.[0]?.emailAddress?.[0] || "U"}
+                {user.imageUrl ? (
+                  <img src={user.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <span>{user.firstName?.[0] || user.emailAddresses?.[0]?.emailAddress?.[0] || "U"}</span>
+                )}
               </div>
               <div style={{ fontSize: 13, color: "#ccc", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {user.fullName || user.emailAddresses?.[0]?.emailAddress || "Admin"}
               </div>
             </div>
           )}
-          <button
-            onClick={() => signOut()}
-            style={{
-              background: "none",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "#999",
-              fontSize: 12,
-              padding: "6px 12px",
-              borderRadius: 5,
-              cursor: "pointer",
-              width: "100%",
-              transition: "all 0.15s ease",
-            }}
-          >
-            Sign Out
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                background: "none",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "#999",
+                fontSize: 12,
+                padding: "6px 12px",
+                borderRadius: 5,
+                cursor: "pointer",
+                textAlign: "center",
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+              }}
+            >
+              View Site
+            </a>
+            <button
+              onClick={() => signOut()}
+              style={{
+                flex: 1,
+                background: "none",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "#999",
+                fontSize: 12,
+                padding: "6px 12px",
+                borderRadius: 5,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </aside>
 

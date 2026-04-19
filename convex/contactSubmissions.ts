@@ -10,6 +10,14 @@ export const list = query({
   },
 });
 
+export const countNew = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("contactSubmissions").collect();
+    return all.filter((s) => !s.status || s.status === "new").length;
+  },
+});
+
 export const create = mutation({
   args: {
     firstName: v.string(),
