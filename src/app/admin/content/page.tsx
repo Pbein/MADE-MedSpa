@@ -2,7 +2,17 @@
 
 import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
+import Link from "next/link";
 import { api } from "../../../../convex/_generated/api";
+
+function LegacyBanner() {
+  return (
+    <div style={{ backgroundColor: "#FEF3C7", border: "1px solid #F59E0B", borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 14, color: "#92400E", lineHeight: 1.5 }}>
+      <strong>This page has been replaced by the new page editors.</strong> You can now edit text directly on each page.
+      Go to <Link href="/admin/pages/home" style={{ color: "#D97706", fontWeight: 500 }}>Pages</Link> in the sidebar to get started. Changes here still work.
+    </div>
+  );
+}
 
 interface ContentBlock {
   key: string;
@@ -421,6 +431,7 @@ export default function AdminContentPage() {
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      <LegacyBanner />
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
         <h1 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#111827", margin: "0 0 0.25rem 0" }}>Site Content</h1>

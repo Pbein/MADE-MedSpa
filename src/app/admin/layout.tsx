@@ -80,18 +80,29 @@ export default function AdminLayout({
       ],
     },
     {
-      title: "Website",
+      title: "Pages",
       items: [
-        { label: "Customize Pages", href: "/admin/customize", icon: "\u2726" },
-        { label: "Site Text", href: "/admin/content", icon: "W" },
-        { label: "Images & Video", href: "/admin/media", icon: "I" },
+        { label: "Homepage", href: "/admin/pages/home", icon: "H" },
+        { label: "About", href: "/admin/pages/about", icon: "A" },
+        { label: "Services Page", href: "/admin/pages/services", icon: "S" },
+        { label: "Membership Page", href: "/admin/pages/membership", icon: "M" },
+        { label: "Shop Page", href: "/admin/pages/shop", icon: "P" },
+        { label: "Contact", href: "/admin/pages/contact", icon: "C" },
+        { label: "FAQ", href: "/admin/pages/faq", icon: "F" },
+        { label: "Booking", href: "/admin/pages/booking", icon: "B" },
+        { label: "Footer", href: "/admin/pages/footer", icon: "G" },
+      ],
+    },
+    {
+      title: "Content",
+      items: [
         { label: "SEO", href: "/admin/seo", icon: "\u2197" },
         { label: "FAQs", href: "/admin/faqs", icon: "F" },
         { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
       ],
     },
     {
-      title: "Leads & Tools",
+      title: "Leads",
       items: [
         { label: "Contacts", href: "/admin/contacts", icon: "C", badge: newContacts ?? 0 },
         { label: "Pabau Sync", href: "/admin/pabau", icon: "\u2194" },
