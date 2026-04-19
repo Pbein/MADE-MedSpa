@@ -91,7 +91,7 @@ export default function MembershipPage() {
           {/* Bottom note */}
           {memberships && memberships.length > 0 && (
             <motion.p
-              className="text-center mt-16 body-editorial text-sm"
+              className="text-center mt-20 body-editorial text-sm"
               style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.6 }}
