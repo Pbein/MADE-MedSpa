@@ -69,11 +69,12 @@ export default function ShopPage() {
       <div
         className="made-noise relative overflow-hidden"
         style={{
-          backgroundColor: "#e6d5ca",
+          backgroundColor: "#f0e8e1",
           backgroundImage: "url('/images/shop-atmosphere-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          backgroundBlendMode: "soft-light",
         }}
       >
 
