@@ -7,6 +7,7 @@ import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import { useSectionContent } from "@/hooks/useSectionContent";
 import PreviewBanner from "@/components/PreviewBanner";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
@@ -33,20 +34,28 @@ export default function ShopPage() {
     return products.filter((p) => p.category === activeCategory);
   }, [products, activeCategory]);
 
-  const { styleOverrides, isSectionVisible, hero, isPreview } = usePageSettings("shop");
+  const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("shop");
+  const { data: heroText } = useSectionContent("section_shop_hero", {
+    eyebrow: "Shop",
+    headline: "Curated for You. Intentionally.",
+    subtitle: "Medical-grade skincare and wellness products selected by Nurse Karlyne for real results at home.",
+  });
+  const { data: ctaText } = useSectionContent("section_shop_cta", {
+    headline: "Questions about our products?",
+    subtitle: "Nurse Karlyne personally selects every product in our collection. Book a consultation to find what's right for your skin.",
+    cta_text: "Book Consultation",
+    cta_href: "",
+    secondary_text: "Contact Us",
+    secondary_href: "/contact",
+  });
 
   return (
     <main style={styleOverrides}>
       {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && <PageHero
-        eyebrow="Shop"
-        headline={
-          <>
-            Curated for You.{" "}
-            <span className="font-extralight">Intentionally.</span>
-          </>
-        }
-        subtitle={hero.subtitle || "Medical-grade skincare and wellness products selected by Nurse Karlyne for real results at home."}
+        eyebrow={heroText.eyebrow}
+        headline={heroText.headline}
+        subtitle={heroText.subtitle}
       />}
 
       {isSectionVisible("filters") && products && products.length > 0 && categories.length > 2 && (
@@ -191,13 +200,13 @@ export default function ShopPage() {
 
       {isSectionVisible("cta") && (
         <CTABanner
-          headline="Questions about our products?"
-          subtitle="Nurse Karlyne personally selects every product in our collection. Book a consultation to find what's right for your skin."
-          ctaText={hero.ctaText || "Book Consultation"}
-          ctaHref={hero.ctaLink || BOOKING_URL}
-          ctaExternal={!hero.ctaLink}
-          secondaryText="Contact Us"
-          secondaryHref="/contact"
+          headline={ctaText.headline}
+          subtitle={ctaText.subtitle}
+          ctaText={ctaText.cta_text}
+          ctaHref={ctaText.cta_href || BOOKING_URL}
+          ctaExternal={!ctaText.cta_href}
+          secondaryText={ctaText.secondary_text}
+          secondaryHref={ctaText.secondary_href}
         />
       )}
     </main>

@@ -9,6 +9,7 @@ import Accordion from "@/components/ui/Accordion";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import { useSectionContent } from "@/hooks/useSectionContent";
 import PreviewBanner from "@/components/PreviewBanner";
 
 const faqCategories = [
@@ -76,6 +77,19 @@ export default function FAQPage() {
 
   const categoryKeys = Object.keys(groupedFaqs);
   const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("faq");
+  const { data: heroText } = useSectionContent("section_faq_hero", {
+    eyebrow: "Support",
+    headline: "Frequently Asked Questions",
+    subtitle: "Find answers to common questions about our treatments, membership programs, and booking process.",
+  });
+  const { data: ctaText } = useSectionContent("section_faq_cta", {
+    headline: "Still Have Questions?",
+    subtitle: "Our team is here to help. Reach out and we will get back to you promptly.",
+    cta_text: "Contact Us",
+    cta_href: "/contact",
+    secondary_text: "Browse Services",
+    secondary_href: "/services",
+  });
 
   // FAQPage structured data for Google rich results
   const faqJsonLd = useMemo(() => {
@@ -106,9 +120,9 @@ export default function FAQPage() {
       {/* Hero */}
       {isSectionVisible("hero") && <PageHero
         dark
-        eyebrow="Support"
-        headline="Frequently Asked Questions"
-        subtitle="Find answers to common questions about our treatments, membership programs, and booking process."
+        eyebrow={heroText.eyebrow}
+        headline={heroText.headline}
+        subtitle={heroText.subtitle}
       >
         {/* Search Input */}
         <div className="max-w-md mx-auto">
@@ -235,12 +249,12 @@ export default function FAQPage() {
       {isSectionVisible("cta") && (
         <CTABanner
           dark
-          headline="Still Have Questions?"
-          subtitle="Our team is here to help. Reach out and we will get back to you promptly."
-          ctaText="Contact Us"
-          ctaHref="/contact"
-          secondaryText="Browse Services"
-          secondaryHref="/services"
+          headline={ctaText.headline}
+          subtitle={ctaText.subtitle}
+          ctaText={ctaText.cta_text}
+          ctaHref={ctaText.cta_href}
+          secondaryText={ctaText.secondary_text}
+          secondaryHref={ctaText.secondary_href}
         />
       )}
     </main>

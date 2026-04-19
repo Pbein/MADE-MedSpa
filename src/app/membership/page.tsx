@@ -7,6 +7,7 @@ import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { usePageSettings } from "@/hooks/usePageSettings";
+import { useSectionContent } from "@/hooks/useSectionContent";
 import PreviewBanner from "@/components/PreviewBanner";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
@@ -19,20 +20,33 @@ export default function MembershipPage() {
   const memberships = useQuery(api.memberships.list);
   const gridRef = useRef(null);
   const isInView = useInView(gridRef, { once: true, amount: 0.1 });
-  const { styleOverrides, isSectionVisible, hero, isPreview } = usePageSettings("membership");
+  const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("membership");
+  const { data: heroText } = useSectionContent("section_membership_hero", {
+    eyebrow: "Membership",
+    headline: "Invest in You. Consistently.",
+    subtitle: "Exclusive tiers designed for every stage of your aesthetic journey. Real savings, real care, real results.",
+  });
+  const { data: ctaText } = useSectionContent("section_membership_cta", {
+    headline: "Ready to become a member?",
+    subtitle: "Choose the tier that fits your goals and start saving on the treatments you love.",
+    cta_text: "Book Consultation",
+    cta_href: "",
+    secondary_text: "Contact Us",
+    secondary_href: "/contact",
+  });
 
   return (
     <main style={styleOverrides}>
       {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && <PageHero
-        eyebrow="Membership"
+        eyebrow={heroText.eyebrow}
         headline={
           <>
-            Invest in You.{" "}
-            <span className="font-extralight">Consistently.</span>
+            {heroText.headline.split(".")[0]}.{" "}
+            <span className="font-extralight">{heroText.headline.split(".").slice(1).join(".").trim() || "Consistently."}</span>
           </>
         }
-        subtitle={hero.subtitle || "Exclusive tiers designed for every stage of your aesthetic journey. Real savings, real care, real results."}
+        subtitle={heroText.subtitle}
       />}
 
       <section
@@ -79,13 +93,13 @@ export default function MembershipPage() {
 
       {isSectionVisible("cta") && (
         <CTABanner
-          headline="Ready to become a member?"
-          subtitle="Choose the tier that fits your goals and start saving on the treatments you love."
-          ctaText={hero.ctaText || "Book Consultation"}
-          ctaHref={hero.ctaLink || BOOKING_URL}
-          ctaExternal={!hero.ctaLink}
-          secondaryText="Contact Us"
-          secondaryHref="/contact"
+          headline={ctaText.headline}
+          subtitle={ctaText.subtitle}
+          ctaText={ctaText.cta_text}
+          ctaHref={ctaText.cta_href || BOOKING_URL}
+          ctaExternal={!ctaText.cta_href}
+          secondaryText={ctaText.secondary_text}
+          secondaryHref={ctaText.secondary_href}
         />
       )}
     </main>
