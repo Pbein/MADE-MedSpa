@@ -37,9 +37,10 @@ interface TestimonialData {
 interface TestimonialSectionProps {
   testimonials?: TestimonialData[];
   testimonialBgUrl?: string;
+  sectionContent?: { eyebrow: string };
 }
 
-export default function TestimonialSection({ testimonials: propTestimonials, testimonialBgUrl }: TestimonialSectionProps) {
+export default function TestimonialSection({ testimonials: propTestimonials, testimonialBgUrl, sectionContent }: TestimonialSectionProps) {
   const testimonials =
     propTestimonials && propTestimonials.length > 0
       ? propTestimonials
@@ -104,7 +105,7 @@ export default function TestimonialSection({ testimonials: propTestimonials, tes
               className="label-micro block mb-4"
               style={{ color: "var(--color-on-surface-variant)" }}
             >
-              What Our Clients Say
+              {sectionContent?.eyebrow || "What Our Clients Say"}
             </span>
             <div className="flex items-center justify-center gap-4">
               <div

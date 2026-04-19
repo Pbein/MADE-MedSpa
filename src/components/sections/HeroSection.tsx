@@ -36,14 +36,28 @@ const lineVariants = {
 const DEFAULT_VIDEO = "/videos/hero.mp4";
 const DEFAULT_POSTER = "/images/hero-poster.webp";
 
+interface HeroSectionContent {
+  eyebrow: string;
+  headline_1: string;
+  headline_2: string;
+  headline_3: string;
+  cta_text: string;
+  cta_href: string;
+  secondary_text: string;
+  secondary_href: string;
+}
+
 interface HeroSectionProps {
   heroVideoUrl?: string;
   heroPosterUrl?: string;
+  /** @deprecated Use sectionContent instead */
   headlineOverride?: string;
+  /** @deprecated Use sectionContent instead */
   subtitleOverride?: string;
+  sectionContent?: HeroSectionContent;
 }
 
-export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverride, subtitleOverride }: HeroSectionProps) {
+export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverride, subtitleOverride, sectionContent }: HeroSectionProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
@@ -123,7 +137,7 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
               textShadow: "0 1px 8px rgba(57,30,30,0.5)",
             }}
           >
-            Luxury Aesthetic Studio
+            {sectionContent?.eyebrow || "Luxury Aesthetic Studio"}
           </motion.span>
 
           {/* Headline — 3-line editorial hierarchy with vertical breathing room */}
@@ -140,19 +154,19 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
               className="block italic font-light text-3xl sm:text-4xl md:text-7xl lg:text-[6.5rem] leading-none"
               style={{ color: "#f7f6eb", opacity: 0.9 }}
             >
-              Beauty,
+              {sectionContent?.headline_1 || "Beauty,"}
             </span>
             <span
               className="block italic font-medium text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
               style={{ color: "#f7f6eb", letterSpacing: "-0.035em" }}
             >
-              Deeply Personal.
+              {sectionContent?.headline_2 || "Deeply Personal."}
             </span>
             <span
               className="block italic font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
               style={{ color: "rgba(247,246,235,0.6)", letterSpacing: "0.01em" }}
             >
-              Thoughtfully Designed.
+              {sectionContent?.headline_3 || "Thoughtfully Designed."}
             </span>
           </motion.h1>
 
@@ -163,18 +177,18 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             variants={fadeUpVariants}
             className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
           >
-            <Link href="/booking" className="btn-primary">
-              Book Consultation
+            <Link href={sectionContent?.cta_href || "/booking"} className="btn-primary">
+              {sectionContent?.cta_text || "Book Consultation"}
             </Link>
             <Link
-              href="/services"
+              href={sectionContent?.secondary_href || "/services"}
               className="link-ghost"
               style={{
                 color: "#f7f6eb",
                 textShadow: "0 1px 6px rgba(57,30,30,0.4)",
               }}
             >
-              Explore Services
+              {sectionContent?.secondary_text || "Explore Services"}
             </Link>
           </motion.div>
         </motion.div>

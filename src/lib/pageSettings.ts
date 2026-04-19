@@ -54,13 +54,16 @@ export function getHeroOverrides(
 /**
  * Server-side helper: merge section content from a pre-fetched siteContent
  * record with default values. Used in server components where hooks can't run.
+ * Accepts any record shape from getByKey or getByKeys queries.
  */
 export function getSectionContent<T extends Record<string, unknown>>(
-  contentRecord: { metadata?: unknown } | null | undefined,
+  contentRecord: Record<string, unknown> | null | undefined,
   defaults: T
 ): T {
-  if (!contentRecord?.metadata) return defaults;
-  return { ...defaults, ...(contentRecord.metadata as Partial<T>) };
+  if (!contentRecord) return defaults;
+  const metadata = (contentRecord as { metadata?: unknown }).metadata;
+  if (!metadata || typeof metadata !== "object") return defaults;
+  return { ...defaults, ...(metadata as Partial<T>) };
 }
 
 /**

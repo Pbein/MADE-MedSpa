@@ -9,11 +9,20 @@ const viewportOnce = { once: true, margin: "-80px" } as const;
 
 const DEFAULT_ABOUT_IMAGE = "/images/placeholder-portrait.svg";
 
-interface AboutTeaserProps {
-  aboutImageUrl?: string;
+interface AboutTeaserContent {
+  eyebrow: string;
+  headline: string;
+  body: string;
+  link_text: string;
+  link_href: string;
 }
 
-export default function AboutTeaser({ aboutImageUrl }: AboutTeaserProps) {
+interface AboutTeaserProps {
+  aboutImageUrl?: string;
+  sectionContent?: AboutTeaserContent;
+}
+
+export default function AboutTeaser({ aboutImageUrl, sectionContent }: AboutTeaserProps) {
   const imageSrc = aboutImageUrl || DEFAULT_ABOUT_IMAGE;
 
   return (
@@ -59,25 +68,20 @@ export default function AboutTeaser({ aboutImageUrl }: AboutTeaserProps) {
             style={{ boxShadow: "0 4px 30px rgba(57,30,30,0.05)" }}
           >
             <span className="label-micro text-[var(--color-secondary)] block mb-6">
-              Our Philosophy
+              {sectionContent?.eyebrow || "Our Philosophy"}
             </span>
 
             <h2 className="headline-section text-3xl md:text-4xl mb-8 leading-tight">
-              Where Science Meets
-              <br />
-              Artistry.
+              {sectionContent?.headline || "Where Science Meets\nArtistry."}
             </h2>
 
             <p className="body-editorial text-[var(--color-on-surface-variant)] max-w-md">
-              At MADE, we believe beauty is deeply personal. Our approach combines
-              advanced medical aesthetics with an artist&apos;s eye for balance,
-              proportion, and harmony. Ensuring every treatment enhances what
-              makes you uniquely you.
+              {sectionContent?.body || "At MADE, we believe beauty is deeply personal. Our approach combines advanced medical aesthetics with an artist\u2019s eye for balance, proportion, and harmony. Ensuring every treatment enhances what makes you uniquely you."}
             </p>
 
             <div className="mt-12">
-              <Link href="/about" className="link-editorial">
-                Discover Our Method
+              <Link href={sectionContent?.link_href || "/about"} className="link-editorial">
+                {sectionContent?.link_text || "Discover Our Method"}
               </Link>
             </div>
           </div>

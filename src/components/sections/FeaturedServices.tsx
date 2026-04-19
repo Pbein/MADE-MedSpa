@@ -25,12 +25,20 @@ interface ServiceData {
   imageUrl?: string;
 }
 
+interface FeaturedServicesContent {
+  eyebrow: string;
+  headline: string;
+  body: string;
+  link_text: string;
+}
+
 interface FeaturedServicesProps {
   services?: ServiceData[];
   featuredImageUrls?: (string | undefined)[];
+  sectionContent?: FeaturedServicesContent;
 }
 
-export default function FeaturedServices({ services, featuredImageUrls }: FeaturedServicesProps) {
+export default function FeaturedServices({ services, featuredImageUrls, sectionContent }: FeaturedServicesProps) {
   const featuredImages = [
     featuredImageUrls?.[0] || DEFAULT_IMAGES[0],
     featuredImageUrls?.[1] || DEFAULT_IMAGES[1],
@@ -95,22 +103,21 @@ export default function FeaturedServices({ services, featuredImageUrls }: Featur
             className="label-micro block mb-6"
             style={{ color: "var(--color-on-surface-variant)" }}
           >
-            Our Expertise
+            {sectionContent?.eyebrow || "Our Expertise"}
           </span>
 
           <h2
             className="headline-section text-4xl md:text-5xl lg:text-6xl mb-6"
             style={{ color: "var(--color-primary)" }}
           >
-            Curated Services
+            {sectionContent?.headline || "Curated Services"}
           </h2>
 
           <p
             className="body-editorial max-w-xl mx-auto"
             style={{ color: "var(--color-on-surface-variant)", opacity: 0.8 }}
           >
-            Each treatment is thoughtfully designed to enhance your natural beauty
-            with precision, artistry, and care.
+            {sectionContent?.body || "Each treatment is thoughtfully designed to enhance your natural beauty with precision, artistry, and care."}
           </p>
 
           {/* Ornamental divider */}
@@ -254,7 +261,7 @@ export default function FeaturedServices({ services, featuredImageUrls }: Featur
           className="text-center mt-20"
         >
           <Link href="/services" className="link-editorial">
-            View All Services
+            {sectionContent?.link_text || "View All Services"}
           </Link>
         </motion.div>
       </div>
