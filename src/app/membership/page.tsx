@@ -37,13 +37,23 @@ export default function MembershipPage() {
   });
 
   return (
-    <main style={styleOverrides}>
+    <main
+      style={{
+        ...styleOverrides,
+        backgroundColor: "#f0e8e1",
+        backgroundImage: "url('/images/membership-atmosphere-bg.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && (
         <PageHeaderCompact
           eyebrow={heroText.eyebrow}
           title={heroText.headline}
           description={heroText.subtitle}
+          transparent
         />
       )}
 
@@ -51,13 +61,6 @@ export default function MembershipPage() {
       <section
         ref={gridRef}
         className="pt-8 pb-32 md:pb-40"
-        style={{
-          backgroundColor: "#f0e8e1",
-          backgroundImage: "url('/images/membership-atmosphere-bg.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-        }}
       >
         <div className="mx-auto max-w-7xl px-6">
           {/* Cards */}
