@@ -69,11 +69,10 @@ export default function ShopPage() {
       <div
         className="made-noise relative overflow-hidden"
         style={{
-          background: "linear-gradient(180deg, #ecddd4 0%, #e8d5cb 35%, #e3cfc4 60%, #ecddd4 100%)",
+          backgroundColor: "#e6d5ca",
+          backgroundImage: "radial-gradient(ellipse 120% 80% at 80% 20%, rgba(255,238,224,0.85) 0%, transparent 60%), radial-gradient(ellipse 80% 60% at 20% 80%, rgba(200,165,145,0.2) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(57,30,30,0.12) 100%)",
         }}
       >
-        {/* All lighting in one layer — no separate divs with edges */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 85% 15%, rgba(255,240,225,0.7) 0%, transparent 50%), radial-gradient(ellipse at 70% 5%, rgba(255,245,235,0.4) 0%, transparent 40%), radial-gradient(ellipse at 95% 40%, rgba(255,235,220,0.3) 0%, transparent 35%), radial-gradient(ellipse at 15% 60%, rgba(180,140,120,0.08) 0%, transparent 40%), radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(57,30,30,0.08) 100%)" }} />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
