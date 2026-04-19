@@ -7,6 +7,7 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import ServiceCard from "@/components/sections/ServiceCard";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
+import { useSectionContent } from "@/hooks/useSectionContent";
 
 const categories = ["All", "Injectables", "Skin", "Body", "Wellness"];
 const editorialEase = [0.2, 0, 0, 1] as const;
@@ -20,6 +21,17 @@ export default function ServicesPageClient({
 }) {
   const sections = (pageSettings as { sections?: Record<string, boolean> } | undefined)?.sections;
   const show = (key: string) => !sections || sections[key] !== false;
+  const { data: heroText } = useSectionContent("section_services_hero", {
+    eyebrow: "Treatments",
+    headline: "Our Services. The Art of Self-Care.",
+    subtitle: "Personalized treatments designed to enhance your natural beauty with precision, science, and artistry.",
+  });
+  const { data: ctaText } = useSectionContent("section_services_cta", {
+    headline: "The path to effortless maintenance begins with a conversation.",
+    subtitle: "Book a consultation and let us craft a personalized treatment plan just for you.",
+    cta_text: "Book Consultation",
+    cta_href: "/booking",
+  });
   const services = useQuery(api.services.list);
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
@@ -40,14 +52,9 @@ export default function ServicesPageClient({
     <main>
       {/* Hero */}
       {show("hero") && <PageHero
-        eyebrow="Treatments"
-        headline={
-          <>
-            Our Services.{" "}
-            <span className="font-extralight">The Art of Self-Care.</span>
-          </>
-        }
-        subtitle="Personalized treatments designed to enhance your natural beauty with precision, science, and artistry."
+        eyebrow={heroText.eyebrow}
+        headline={heroText.headline}
+        subtitle={heroText.subtitle}
         backgroundImage={heroBgUrl}
       />}
 
@@ -140,10 +147,10 @@ export default function ServicesPageClient({
       {show("cta") && (
         <CTABanner
           dark
-          headline="The path to effortless maintenance begins with a conversation."
-          subtitle="Book a consultation and let us craft a personalized treatment plan just for you."
-          ctaText="Book Consultation"
-          ctaHref="/booking"
+          headline={ctaText.headline}
+          subtitle={ctaText.subtitle}
+          ctaText={ctaText.cta_text}
+          ctaHref={ctaText.cta_href}
         />
       )}
     </main>
