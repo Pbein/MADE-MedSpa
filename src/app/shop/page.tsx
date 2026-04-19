@@ -68,13 +68,21 @@ export default function ShopPage() {
       {/* ═══ ATMOSPHERE WRAPPER — one continuous background ═══ */}
       <div
         className="made-noise relative overflow-hidden"
-        style={{ background: "var(--gradient-shop-atmosphere)" }}
+        style={{
+          background: "radial-gradient(circle at 20% 30%, rgba(255,255,255,0.6), transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.4), transparent 45%), linear-gradient(180deg, #f6efe9 0%, #f3e9e2 40%, #efe3dc 100%)",
+        }}
       >
+        {/* Soft light bloom — top left */}
+        <div className="pointer-events-none absolute -top-[200px] -left-[100px] w-[700px] h-[700px] rounded-full opacity-50" style={{ background: "rgba(255,255,255,0.6)", filter: "blur(120px)" }} />
+
+        {/* Soft light bloom — bottom right */}
+        <div className="pointer-events-none absolute -bottom-[200px] -right-[100px] w-[600px] h-[600px] rounded-full opacity-40" style={{ background: "rgba(255,255,255,0.5)", filter: "blur(120px)" }} />
+
+        {/* Diagonal light ray */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ background: "linear-gradient(135deg, transparent 20%, rgba(255,255,255,0.8) 45%, transparent 55%)" }} />
+
         {/* Vignette */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(circle, transparent 55%, rgba(57,30,30,0.05) 100%)" }}
-        />
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle, transparent 50%, rgba(57,30,30,0.06) 100%)" }} />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
