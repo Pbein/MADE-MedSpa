@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import CTABanner from "@/components/sections/CTABanner";
@@ -9,255 +9,301 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
-const viewportOnce = { once: true, margin: "-80px" } as const;
+const viewportOnce = { once: true, margin: "-50px" } as const;
 
 export default function TestimonialsPage() {
   const testimonials = useQuery(api.testimonials.list);
+  const [activeFilter, setActiveFilter] = useState("All");
 
   const { data: ctaText } = useSectionContent("section_testimonials_cta", {
-    headline: "Ready to start your journey?",
+    headline: "Ready when you are.",
     subtitle: "Book a consultation and experience the MADE difference for yourself.",
-    cta_text: "Book Consultation",
+    cta_text: "Book Your Consultation",
     cta_href: "/booking",
     secondary_text: "View Services",
     secondary_href: "/services",
   });
 
-  // Split testimonials: first one is featured, rest are editorial
-  const featured = testimonials?.[0];
-  const remaining = useMemo(() => testimonials?.slice(1) || [], [testimonials]);
+  // Categorize testimonials for filters
+  const categorized = useMemo(() => {
+    if (!testimonials) return [];
+    return testimonials.map((t) => {
+      let category = "All";
+      const q = t.quote.toLowerCase();
+      const treat = t.treatment.toLowerCase();
+      if (treat.includes("botox") || treat.includes("filler") || treat.includes("lip") || treat.includes("sculptra") || treat.includes("radiesse")) {
+        category = "Injectables";
+      } else if (treat.includes("prf") || treat.includes("prp") || treat.includes("facial")) {
+        category = "Skin Treatments";
+      } else if (q.includes("natural") || q.includes("subtle") || q.includes("rested") || q.includes("refreshed")) {
+        category = "Natural Results";
+      } else if (q.includes("nervous") || q.includes("first") || q.includes("comfortable")) {
+        category = "First Visit";
+      }
+      return { ...t, category };
+    });
+  }, [testimonials]);
+
+  const categories = ["All", "Natural Results", "First Visit", "Injectables", "Skin Treatments"];
+
+  const filtered = useMemo(() => {
+    if (activeFilter === "All") return categorized;
+    return categorized.filter((t) => t.category === activeFilter);
+  }, [categorized, activeFilter]);
+
+  // Pick featured: a strong, specific quote
+  const featuredIndex = useMemo(() => {
+    const idx = categorized.findIndex((t) =>
+      t.quote.includes("look like myself") || t.quote.includes("most natural")
+    );
+    return idx >= 0 ? idx : 0;
+  }, [categorized]);
+
+  const featured = categorized[featuredIndex];
+
+  // Top 4 for immediate proof (skip featured)
+  const topProof = useMemo(() => {
+    return categorized.filter((_, i) => i !== featuredIndex).slice(0, 4);
+  }, [categorized, featuredIndex]);
+
+  // Remaining for the full list
+  const remaining = useMemo(() => {
+    const shown = new Set([featured?._id, ...topProof.map((t) => t._id)]);
+    return filtered.filter((t) => !shown.has(t._id));
+  }, [filtered, featured, topProof]);
 
   return (
-    <main>
+    <main style={{ backgroundColor: "var(--color-surface)" }}>
+
       {/* ═══════════════════════════════════════════
-          HERO — Minimal, text-only, sets the tone
+          1. HERO — Small, fast, gets out of the way
           ═══════════════════════════════════════════ */}
-      <section
-        className="pt-40 md:pt-52 pb-24 md:pb-32 px-6"
-        style={{ backgroundColor: "var(--color-surface)" }}
-      >
-        <div className="mx-auto max-w-4xl text-center">
+      <section className="pt-36 md:pt-44 pb-16 md:pb-20 px-6">
+        <div className="mx-auto max-w-3xl">
           <motion.span
-            className="label-micro block mb-8"
+            className="label-micro block mb-5"
             style={{ color: "var(--color-on-surface-variant)" }}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: luxuryEase }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: luxuryEase }}
           >
             Client Stories
           </motion.span>
-
           <motion.h1
-            className="headline-section text-4xl md:text-6xl lg:text-7xl mb-8"
-            style={{ color: "var(--color-primary)" }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: luxuryEase, delay: 0.1 }}
-          >
-            The Results<br />
-            <span className="font-extralight">Speak for Themselves.</span>
-          </motion.h1>
-
-          <motion.p
-            className="body-editorial max-w-2xl mx-auto"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.7 }}
+            className="font-headline italic text-3xl md:text-4xl lg:text-5xl mb-5"
+            style={{ color: "var(--color-primary)", lineHeight: 1.15 }}
             initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 0.7, y: 0 }}
-            transition={{ duration: 0.8, ease: luxuryEase, delay: 0.2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: luxuryEase, delay: 0.05 }}
           >
-            Every review is from a real client who trusted us with their care. No scripts, no edits — just honest words from people who experienced the MADE difference.
+            Real experiences.<br />
+            Thoughtful care.<br />
+            Results that feel like you.
+          </motion.h1>
+          <motion.p
+            className="body-editorial max-w-xl"
+            style={{ color: "var(--color-on-surface-variant)", opacity: 0.65 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.65 }}
+            transition={{ duration: 0.6, ease: luxuryEase, delay: 0.15 }}
+          >
+            Every word below is from a real client. No scripts, no edits.
           </motion.p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          FEATURED TESTIMONIAL — Full-width, large quote
+          2. IMMEDIATE PROOF — Best testimonials first
+          ═══════════════════════════════════════════ */}
+      {topProof.length > 0 && (
+        <section className="pb-20 md:pb-28 px-6">
+          <div className="mx-auto max-w-3xl space-y-12">
+            {topProof.map((t, i) => (
+              <motion.div
+                key={t._id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportOnce}
+                transition={{ duration: 0.7, ease: luxuryEase, delay: i * 0.05 }}
+              >
+                <blockquote
+                  className="font-headline italic text-lg md:text-xl leading-relaxed mb-4"
+                  style={{ color: "var(--color-primary)", opacity: 0.9 }}
+                >
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
+                  <span className="label-micro" style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}>
+                    {t.name}
+                  </span>
+                  <span className="label-micro" style={{ color: "var(--color-secondary)", opacity: 0.4 }}>
+                    {t.treatment}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════
+          3. FEATURED — One editorial moment
           ═══════════════════════════════════════════ */}
       {featured && (
         <section
-          className="py-24 md:py-32 px-6"
-          style={{
-            backgroundColor: "var(--color-primary)",
-          }}
+          className="py-20 md:py-28 px-6"
+          style={{ backgroundColor: "var(--color-surface-low)" }}
         >
           <motion.div
-            className="mx-auto max-w-4xl text-center"
-            initial={{ opacity: 0, y: 30 }}
+            className="mx-auto max-w-3xl text-center"
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewportOnce}
-            transition={{ duration: 1, ease: luxuryEase }}
+            transition={{ duration: 0.9, ease: luxuryEase }}
           >
-            {/* Large quote mark */}
-            <div
-              className="font-headline italic"
-              style={{
-                fontSize: "8rem",
-                lineHeight: 0.5,
-                color: "rgba(215,207,197,0.15)",
-                marginBottom: "2rem",
-              }}
-            >
-              &ldquo;
-            </div>
-
             <blockquote
-              className="font-headline italic text-xl md:text-2xl lg:text-3xl leading-relaxed mb-10"
-              style={{ color: "rgba(247,246,235,0.9)" }}
+              className="font-headline italic text-2xl md:text-3xl lg:text-4xl leading-snug mb-8"
+              style={{ color: "var(--color-primary)" }}
             >
-              {featured.quote}
+              &ldquo;{featured.quote.length > 200
+                ? featured.quote.split(".").slice(0, 3).join(".") + "."
+                : featured.quote}&rdquo;
             </blockquote>
-
-            <div className="flex items-center justify-center gap-4">
-              <div
-                className="w-8 h-px"
-                style={{ backgroundColor: "rgba(215,207,197,0.3)" }}
-              />
-              <span
-                className="label-micro"
-                style={{ color: "rgba(215,207,197,0.6)" }}
-              >
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-6 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
+              <span className="label-micro" style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}>
                 {featured.name} &middot; {featured.treatment}
               </span>
-              <div
-                className="w-8 h-px"
-                style={{ backgroundColor: "rgba(215,207,197,0.3)" }}
-              />
+              <div className="w-6 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
             </div>
           </motion.div>
         </section>
       )}
 
       {/* ═══════════════════════════════════════════
-          EDITORIAL GRID — Asymmetric, breathing room
+          4. TRUST REINFORCEMENT
           ═══════════════════════════════════════════ */}
-      <section
-        className="py-32 md:py-44 px-6"
-        style={{ backgroundColor: "var(--color-surface)" }}
-      >
-        <div className="mx-auto max-w-6xl">
-          {/* Section intro */}
-          <motion.div
-            className="text-center mb-20 md:mb-28"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 0.8, ease: luxuryEase }}
+      <section className="py-16 md:py-20 px-6">
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={viewportOnce}
+          transition={{ duration: 0.8, ease: luxuryEase }}
+        >
+          <p
+            className="font-headline italic text-lg md:text-xl leading-relaxed"
+            style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
           >
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-16 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-              <span
-                className="label-micro"
-                style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+            No pressure. No overcorrection. No guessing.<br />
+            Every treatment is intentional, informed, and tailored to you.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          5. CATEGORY FILTERS + FULL LIST
+          ═══════════════════════════════════════════ */}
+      <section className="pb-32 md:pb-44 px-6">
+        <div className="mx-auto max-w-3xl">
+          {/* Filters */}
+          <motion.div
+            className="flex flex-wrap gap-2 mb-16"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={viewportOnce}
+            transition={{ duration: 0.6, ease: luxuryEase }}
+          >
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat)}
+                className="transition-all duration-300"
+                style={{
+                  padding: "0.4rem 1rem",
+                  border: "1px solid",
+                  borderColor: activeFilter === cat ? "var(--color-primary)" : "var(--color-outline-variant)",
+                  backgroundColor: activeFilter === cat ? "var(--color-primary)" : "transparent",
+                  color: activeFilter === cat ? "var(--color-on-primary)" : "var(--color-on-surface-variant)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 500,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase" as const,
+                  cursor: "pointer",
+                }}
               >
-                More Stories
-              </span>
-              <div className="w-16 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-            </div>
+                {cat}
+              </button>
+            ))}
           </motion.div>
 
-          {/* Loading */}
-          {!testimonials && (
-            <div className="flex justify-center py-20">
-              <div
-                className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
-                style={{ borderColor: "var(--color-outline-variant)" }}
-              />
-            </div>
-          )}
-
-          {/* Editorial layout — alternating large and small */}
-          {remaining.length > 0 && (
-            <div className="space-y-16 md:space-y-24">
-              {remaining.map((testimonial, i) => {
-                const isLarge = i % 3 === 0;
-                const isRight = i % 2 === 1;
-
-                return (
-                  <motion.div
-                    key={testimonial._id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={viewportOnce}
-                    transition={{ duration: 0.9, ease: luxuryEase }}
-                    className={`${isLarge ? "max-w-4xl" : "max-w-2xl"} ${isRight && !isLarge ? "ml-auto" : ""}`}
+          {/* Testimonial list */}
+          {remaining.length > 0 ? (
+            <div className="space-y-14">
+              {remaining.map((t, i) => (
+                <motion.div
+                  key={t._id}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={viewportOnce}
+                  transition={{ duration: 0.6, ease: luxuryEase, delay: (i % 3) * 0.05 }}
+                  style={{ borderLeft: "2px solid var(--color-outline-variant)", paddingLeft: "1.5rem" }}
+                >
+                  <blockquote
+                    className="body-editorial text-base md:text-lg leading-relaxed mb-3"
+                    style={{ color: "var(--color-on-surface)", opacity: 0.85 }}
                   >
-                    {/* Quote */}
-                    <div className={`${isLarge ? "mb-8" : "mb-6"}`}>
-                      {isLarge && (
-                        <div
-                          className="font-headline italic mb-4"
-                          style={{
-                            fontSize: "4rem",
-                            lineHeight: 0.5,
-                            color: "var(--color-secondary)",
-                            opacity: 0.15,
-                          }}
-                        >
-                          &ldquo;
-                        </div>
-                      )}
-                      <blockquote
-                        className={`font-headline italic leading-relaxed ${
-                          isLarge
-                            ? "text-xl md:text-2xl"
-                            : "text-lg md:text-xl"
-                        }`}
-                        style={{ color: "var(--color-primary)", opacity: 0.85 }}
-                      >
-                        &ldquo;{testimonial.quote}&rdquo;
-                      </blockquote>
-                    </div>
-
-                    {/* Attribution */}
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-6 h-px"
-                        style={{ backgroundColor: "var(--color-outline-variant)" }}
-                      />
-                      <span
-                        className="label-micro"
-                        style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
-                      >
-                        {testimonial.name}
-                      </span>
-                      <span
-                        className="label-micro"
-                        style={{ color: "var(--color-secondary)", opacity: 0.5 }}
-                      >
-                        {testimonial.treatment}
-                      </span>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-xs font-medium"
+                      style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+                    >
+                      {t.name}
+                    </span>
+                    <span style={{ color: "var(--color-outline-variant)" }}>&middot;</span>
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--color-secondary)", opacity: 0.5 }}
+                    >
+                      {t.treatment}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
             </div>
+          ) : (
+            <p
+              className="font-headline italic text-lg text-center py-12"
+              style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+            >
+              No reviews in this category yet.
+            </p>
           )}
 
-          {/* Count + link back */}
+          {/* Count */}
           {testimonials && (
-            <motion.div
-              className="text-center mt-24 md:mt-32"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.8, ease: luxuryEase }}
-            >
+            <div className="mt-20 pt-12" style={{ borderTop: "1px solid var(--color-outline-variant)" }}>
               <p
-                className="body-editorial text-sm mb-6"
-                style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+                className="body-editorial text-sm mb-1"
+                style={{ color: "var(--color-on-surface-variant)", opacity: 0.4 }}
               >
-                {testimonials.length} client reviews
+                {testimonials.length} verified client reviews
               </p>
-              <Link href="/services" className="link-editorial">
-                Explore Our Services
+              <Link href="/services" className="link-editorial text-sm">
+                Explore our services
               </Link>
-            </motion.div>
+            </div>
           )}
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════
+          6. CTA — Soft, not salesy
+          ═══════════════════════════════════════════ */}
       <CTABanner
-        dark
         headline={ctaText.headline}
         subtitle={ctaText.subtitle}
         ctaText={ctaText.cta_text}
