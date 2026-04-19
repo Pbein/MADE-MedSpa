@@ -77,15 +77,15 @@ export default function TestimonialsPage() {
   }, [categorized, activeFilter, featured]);
 
   return (
-    <main
-      style={{
-        backgroundColor: "#f0e8e1",
-        backgroundImage: "url('/images/testimonials-atmosphere-bg.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center top",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "var(--color-silk)" }}>
+      {/* Editorial atmosphere layers */}
+      <div className="pointer-events-none absolute inset-0 bg-editorial-base" />
+      <div className="pointer-events-none absolute inset-0 bg-editorial-glow" />
+      <div className="pointer-events-none absolute inset-0 bg-editorial-vignette" />
+      <div className="pointer-events-none absolute inset-0 made-noise" style={{ opacity: 0.03 }} />
+
+      {/* Content */}
+      <div className="relative z-10">
       {/* 1. COMPACT HERO */}
       <PageHeaderCompact
         eyebrow="Client Stories"
@@ -248,6 +248,7 @@ export default function TestimonialsPage() {
         secondaryText={ctaText.secondary_text}
         secondaryHref={ctaText.secondary_href}
       />
+      </div>
     </main>
   );
 }

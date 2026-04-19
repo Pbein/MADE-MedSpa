@@ -392,6 +392,25 @@ a {
 }
 
 /* ============================================
+   Editorial Background System
+   ============================================ */
+
+.bg-editorial-base {
+  background: linear-gradient(180deg, #f6f1ea 0%, #efe7df 45%, #f6f1ea 100%);
+}
+
+.bg-editorial-glow {
+  background:
+    radial-gradient(circle at 50% 25%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.12) 22%, transparent 52%),
+    radial-gradient(circle at 20% 50%, rgba(220,207,196,0.18) 0%, transparent 32%),
+    radial-gradient(circle at 85% 55%, rgba(183,163,154,0.10) 0%, transparent 28%);
+}
+
+.bg-editorial-vignette {
+  background: radial-gradient(circle at center, transparent 58%, rgba(57,30,30,0.035) 100%);
+}
+
+/* ============================================
    Utility: Editorial Noise Grain
    ============================================ */
 
