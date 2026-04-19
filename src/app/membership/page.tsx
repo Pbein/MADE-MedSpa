@@ -137,59 +137,61 @@ function MembershipCard({
       initial={{ opacity: 0, y: 35 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: luxuryEase, delay: index * 0.1 }}
-      className="relative flex flex-col transition-all duration-700 group"
+      className="relative flex flex-col transition-all duration-500 group"
       style={{
         border: tier.isFeatured ? "none" : "1px solid rgba(57,30,30,0.06)",
         background: tier.isFeatured
-          ? "linear-gradient(180deg, #ffffff 0%, var(--color-powder) 100%)"
-          : "rgba(255,255,255,0.4)",
+          ? "linear-gradient(180deg, #ffffff 0%, var(--color-powder) 60%, var(--color-glaze) 100%)"
+          : "rgba(255,255,255,0.35)",
         boxShadow: tier.isFeatured
-          ? "0 20px 50px rgba(57,30,30,0.12)"
-          : "0 4px 20px rgba(57,30,30,0.03)",
-        transform: tier.isFeatured ? "translateY(-12px)" : "none",
+          ? "0 24px 48px rgba(57,30,30,0.14)"
+          : "0 2px 12px rgba(57,30,30,0.02)",
+        transform: tier.isFeatured ? "translateY(-16px)" : "none",
+        opacity: tier.isFeatured ? 1 : 0.88,
       }}
       whileHover={{
-        y: tier.isFeatured ? -16 : -4,
+        y: tier.isFeatured ? -20 : -6,
+        opacity: 1,
         boxShadow: tier.isFeatured
-          ? "0 24px 60px rgba(57,30,30,0.15)"
-          : "0 12px 35px rgba(57,30,30,0.08)",
+          ? "0 28px 60px rgba(57,30,30,0.16)"
+          : "0 16px 40px rgba(57,30,30,0.1)",
       }}
     >
       {/* Featured badge */}
       {tier.isFeatured && (
         <div
-          className="text-center py-2.5"
+          className="text-center py-2"
           style={{
-            background: "linear-gradient(135deg, #391e1e 0%, #84262c 100%)",
+            background: "linear-gradient(135deg, #391e1e 0%, #84262c 70%)",
             color: "var(--color-on-primary)",
           }}
         >
-          <span style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "var(--font-label)" }}>
+          <span style={{ fontSize: "10px", fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "var(--font-label)" }}>
             Most Popular
           </span>
         </div>
       )}
 
-      <div className="flex flex-col flex-1 p-8 lg:p-7 xl:p-9">
+      <div className={`flex flex-col flex-1 ${tier.isFeatured ? "px-6 pt-5 pb-6 lg:px-7 lg:pt-6 lg:pb-7" : "px-6 pt-6 pb-6 lg:px-7"}`}>
         {/* Tier name */}
         <h3
-          className="font-headline italic text-base mb-6"
-          style={{ color: "var(--color-primary)", opacity: 0.7, fontWeight: 300 }}
+          className="font-headline italic text-sm mb-4"
+          style={{ color: "rgba(57,30,30,0.65)", fontWeight: 300 }}
         >
           {tier.name}
         </h3>
 
         {/* Price */}
-        <div className="mb-2">
+        <div className="flex items-baseline gap-1 mb-1.5">
           <span
-            className="font-headline text-5xl xl:text-6xl"
-            style={{ color: "var(--color-primary)", lineHeight: 1, letterSpacing: "-0.02em" }}
+            className="font-headline text-3xl lg:text-4xl"
+            style={{ color: "var(--color-primary)", lineHeight: 1.1, letterSpacing: "-0.02em" }}
           >
             ${tier.price}
           </span>
           <span
-            className="text-xs ml-1.5"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.45 }}
+            className="text-xs"
+            style={{ color: "rgba(57,30,30,0.4)" }}
           >
             /{tier.billingPeriod}
           </span>
@@ -197,29 +199,29 @@ function MembershipCard({
 
         {/* Tagline */}
         <p
-          className="body-editorial text-sm mb-8"
-          style={{ color: "rgba(57,30,30,0.55)" }}
+          className="text-xs mb-5"
+          style={{ color: "rgba(57,30,30,0.5)", lineHeight: 1.5 }}
         >
           {tier.tagline}
         </p>
 
         {/* Divider */}
         <div
-          className="h-px w-full mb-6"
-          style={{ backgroundColor: "rgba(57,30,30,0.08)" }}
+          className="h-px w-full mb-4"
+          style={{ backgroundColor: "rgba(57,30,30,0.07)" }}
         />
 
         {/* Benefits */}
-        <ul className="space-y-3.5 mb-10 flex-1">
+        <ul className="space-y-2 mb-6 flex-1">
           {tier.benefits.map((benefit, j) => (
-            <li key={j} className="flex items-start gap-3">
+            <li key={j} className="flex items-start gap-2.5">
               <span
-                className="mt-2.5 h-1 w-1 rounded-full shrink-0"
-                style={{ backgroundColor: "var(--color-blush)", opacity: 0.4 }}
+                className="mt-2 h-1 w-1 rounded-full shrink-0"
+                style={{ backgroundColor: "var(--color-blush)", opacity: 0.35 }}
               />
               <span
-                className="text-sm leading-relaxed"
-                style={{ color: "rgba(57,30,30,0.7)" }}
+                className="text-xs leading-relaxed"
+                style={{ color: "rgba(57,30,30,0.6)" }}
               >
                 {benefit}
               </span>
@@ -232,28 +234,28 @@ function MembershipCard({
           href={tier.pabauLink || BOOKING_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full text-center"
+          className="w-full text-center transition-all duration-300"
           style={{
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "1rem 2.5rem",
+            padding: "0.75rem 1.5rem",
             fontFamily: "var(--font-headline)",
             fontStyle: "italic",
-            fontSize: "1.125rem",
+            fontSize: "0.9375rem",
             letterSpacing: "0.02em",
             cursor: "pointer",
-            transition: "all 0.5s cubic-bezier(0.2, 0, 0, 1)",
             ...(tier.isFeatured
               ? {
                   background: "linear-gradient(135deg, #391e1e 0%, #84262c 100%)",
                   color: "var(--color-on-primary)",
                   border: "none",
+                  boxShadow: "0 8px 20px rgba(57,30,30,0.2)",
                 }
               : {
                   background: "transparent",
                   color: "var(--color-primary)",
-                  border: "1px solid rgba(57,30,30,0.15)",
+                  border: "1px solid rgba(57,30,30,0.12)",
                 }),
           }}
         >
