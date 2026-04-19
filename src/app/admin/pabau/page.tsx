@@ -140,6 +140,62 @@ export default function AdminPabauPage() {
         </p>
       </div>
 
+      {/* What to do in Pabau */}
+      <details style={{
+        backgroundColor: "#fff",
+        border: "1px solid #e5e7eb",
+        borderRadius: "0.5rem",
+        marginBottom: "1.5rem",
+        overflow: "hidden",
+      }}>
+        <summary style={{
+          padding: "0.75rem 1.25rem",
+          cursor: "pointer",
+          fontSize: "0.875rem",
+          fontWeight: 600,
+          color: "#111827",
+          userSelect: "none",
+          listStyle: "none",
+          display: "flex",
+          justifyContent: "space-between",
+        }}>
+          <span>When to use Pabau vs. the Admin Portal</span>
+          <span style={{ fontSize: "0.75rem", color: "#9ca3af", fontWeight: 400 }}>click to expand</span>
+        </summary>
+        <div style={{ padding: "0 1.25rem 1.25rem", fontSize: "0.8125rem", color: "#374151", lineHeight: 1.7 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "0.5rem" }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                <th style={{ textAlign: "left", padding: "0.5rem 0.75rem", fontWeight: 600, color: "#6b7280", fontSize: "0.75rem" }}>Task</th>
+                <th style={{ textAlign: "left", padding: "0.5rem 0.75rem", fontWeight: 600, color: "#6b7280", fontSize: "0.75rem" }}>Where</th>
+                <th style={{ textAlign: "left", padding: "0.5rem 0.75rem", fontWeight: 600, color: "#6b7280", fontSize: "0.75rem" }}>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Add/edit service pricing & duration", "Pabau", "Pabau is the source of truth for business data"],
+                ["Update service descriptions & images for website", "Admin Portal", "Website-specific content not in Pabau"],
+                ["Manage client bookings", "Pabau", "All scheduling happens in Pabau"],
+                ["View revenue reports", "Pabau", "Financial data lives in Pabau"],
+                ["Update what visitors see on the website", "Admin Portal", "Page editors control the public site"],
+                ["Track contact form leads", "Admin Portal", "Leads come through the website contact form"],
+                ["Manage memberships for the website", "Admin Portal", "Membership display is website-managed"],
+                ["Process payments & checkout", "Pabau", "All transactions go through Pabau"],
+              ].map(([task, where, why]) => (
+                <tr key={task} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                  <td style={{ padding: "0.5rem 0.75rem" }}>{task}</td>
+                  <td style={{ padding: "0.5rem 0.75rem", fontWeight: 500, color: where === "Pabau" ? "#7c3aed" : "#6366f1" }}>{where}</td>
+                  <td style={{ padding: "0.5rem 0.75rem", color: "#6b7280" }}>{why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p style={{ marginTop: "1rem", marginBottom: 0 }}>
+            <strong>Rule of thumb:</strong> If it affects how a client books or pays, do it in Pabau. If it affects how the website looks to visitors, do it in the Admin Portal.
+          </p>
+        </div>
+      </details>
+
       {/* Stats bar */}
       {!loading && !error && (
         <div className="mb-6 flex gap-6 flex-wrap">

@@ -344,12 +344,12 @@ export const PAGE_DEFINITIONS: PageDefinition[] = [
       {
         key: "grid",
         label: "Services Grid",
-        description: "Filterable grid of service cards. Services managed separately.",
+        description: "Filterable grid of service cards. Services managed separately. You can also import services from Pabau via the Pabau Sync page.",
         contentKey: "section_services_grid",
         fields: [],
         media: [],
         hasColorOverride: true,
-        crud: { manageHref: "/admin/services", manageLabel: "Manage Services", description: "Shows all active services with category filters and search." },
+        crud: { manageHref: "/admin/services", manageLabel: "Manage Services", description: "Shows all active services. Import from Pabau via Leads > Pabau Sync." },
         defaultVisible: true,
       },
       {
