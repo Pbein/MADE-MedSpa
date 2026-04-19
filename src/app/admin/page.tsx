@@ -10,6 +10,8 @@ export default function AdminDashboard() {
   const contacts = useQuery(api.contactSubmissions.list);
   const faqs = useQuery(api.faqs.list);
   const team = useQuery(api.teamMembers.list);
+  const seedMemberships = useQuery(api.memberships.countSeed);
+  const seedProducts = useQuery(api.shopProducts.countSeed);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -35,8 +37,37 @@ export default function AdminDashboard() {
     { label: "View Contacts", href: "/admin/contacts" },
   ];
 
+  const totalSeed = (seedMemberships ?? 0) + (seedProducts ?? 0);
+
   return (
     <div>
+      {totalSeed > 0 && (
+        <div
+          style={{
+            backgroundColor: "#FEF3C7",
+            border: "1px solid #F59E0B",
+            borderRadius: 8,
+            padding: "14px 18px",
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 10,
+          }}
+        >
+          <span style={{ fontSize: 18, lineHeight: 1 }}>!</span>
+          <div style={{ fontSize: 14, color: "#92400E", lineHeight: 1.5 }}>
+            <strong>{totalSeed} item{totalSeed !== 1 ? "s" : ""} still ha{totalSeed !== 1 ? "ve" : "s"} placeholder data</strong> that should be reviewed before launch.
+            {(seedMemberships ?? 0) > 0 && (
+              <> <Link href="/admin/memberships" style={{ color: "#D97706", fontWeight: 500 }}>{seedMemberships} membership{seedMemberships !== 1 ? "s" : ""}</Link></>
+            )}
+            {(seedMemberships ?? 0) > 0 && (seedProducts ?? 0) > 0 && <> and</>}
+            {(seedProducts ?? 0) > 0 && (
+              <> <Link href="/admin/shop" style={{ color: "#D97706", fontWeight: 500 }}>{seedProducts} product{seedProducts !== 1 ? "s" : ""}</Link></>
+            )}
+            {" "} need to be edited with real details. Once you edit an item, this warning clears automatically.
+          </div>
+        </div>
+      )}
       <div
         style={{
           display: "grid",

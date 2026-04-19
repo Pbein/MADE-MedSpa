@@ -93,6 +93,7 @@ export default defineSchema({
     pabauLink: v.optional(v.string()),
     sortOrder: v.number(),
     isActive: v.boolean(),
+    isSeed: v.optional(v.boolean()),
   }),
 
   // --- Shop Products ---
@@ -105,6 +106,7 @@ export default defineSchema({
     pabauLink: v.optional(v.string()),
     sortOrder: v.number(),
     isActive: v.boolean(),
+    isSeed: v.optional(v.boolean()),
   }).index("by_category", ["category"]),
 
   // --- Site Content (CMS-lite) ---

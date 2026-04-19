@@ -188,19 +188,68 @@ function MediaSlotCard({
 
   const displayUrl = currentUrl || slot.defaultUrl;
 
+  async function uploadBlob(blob: Blob): Promise<string> {
+    const uploadUrl = await generateUploadUrl();
+    const result = await fetch(uploadUrl, {
+      method: "POST",
+      headers: { "Content-Type": blob.type },
+      body: blob,
+    });
+    const { storageId } = await result.json();
+    const convexUrl = await convex.query(api.storage.getUrl, { storageId });
+    if (!convexUrl) throw new Error("Failed to resolve storage URL");
+    return convexUrl;
+  }
+
+  function extractFirstFrame(file: File): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = "auto";
+      const objectUrl = URL.createObjectURL(file);
+      video.src = objectUrl;
+
+      video.addEventListener("seeked", () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d")!.drawImage(video, 0, 0);
+        URL.revokeObjectURL(objectUrl);
+        canvas.toBlob(
+          (blob) => (blob ? resolve(blob) : reject(new Error("Frame capture failed"))),
+          "image/webp",
+          0.85
+        );
+      }, { once: true });
+
+      video.addEventListener("error", () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Could not load video"));
+      }, { once: true });
+
+      video.addEventListener("loadeddata", () => {
+        video.currentTime = 0.1;
+      }, { once: true });
+    });
+  }
+
   async function handleFileUpload(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      const { storageId } = await result.json();
-      const convexUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!convexUrl) throw new Error("Failed to resolve storage URL");
+      const convexUrl = await uploadBlob(file);
       setUrlValue(convexUrl);
+
+      // Auto-generate poster from first frame when uploading a hero video
+      if (slot.key === "hero_video" && file.type.startsWith("video/")) {
+        try {
+          const posterBlob = await extractFirstFrame(file);
+          const posterUrl = await uploadBlob(posterBlob);
+          await onSave("hero_poster", posterUrl);
+        } catch {
+          // Poster generation is best-effort — video upload still succeeds
+        }
+      }
     } catch {
       alert("Upload failed. Please try again.");
     } finally {

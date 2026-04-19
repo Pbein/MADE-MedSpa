@@ -53,7 +53,7 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...fields } = args;
-    const updates: Record<string, unknown> = {};
+    const updates: Record<string, unknown> = { isSeed: false };
     for (const [key, value] of Object.entries(fields)) {
       if (value !== undefined) {
         updates[key] = value;
@@ -68,6 +68,14 @@ export const remove = mutation({
   args: { id: v.id("memberships") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
+  },
+});
+
+export const countSeed = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("memberships").collect();
+    return all.filter((m) => m.isSeed).length;
   },
 });
 

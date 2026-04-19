@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useConvex } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 interface ImageUploadProps {
@@ -20,6 +20,7 @@ export default function ImageUpload({
   aspect = "4/3",
 }: ImageUploadProps) {
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
+  const convex = useConvex();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -36,26 +37,8 @@ export default function ImageUpload({
       });
       if (!result.ok) throw new Error("Upload failed");
       const { storageId } = await result.json();
-      const getUrlMutation = api.storage.getUrl;
-      const url = await fetch(
-        `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/query`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            path: "storage:getUrl",
-            args: { storageId },
-          }),
-        }
-      );
-      // Use the Convex storage URL pattern
-      void getUrlMutation;
-      const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.replace(
-        ".cloud",
-        ".site"
-      );
-      const storageUrl = `${convexSiteUrl}/api/storage/${storageId}`;
-      void url;
+      const storageUrl = await convex.query(api.storage.getUrl, { storageId });
+      if (!storageUrl) throw new Error("Failed to resolve storage URL");
       onChange(storageUrl);
     } catch {
       setError("Upload failed. Please try again.");
