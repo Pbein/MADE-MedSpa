@@ -72,23 +72,8 @@ export default function ShopPage() {
           background: "linear-gradient(180deg, #ecddd4 0%, #e8d5cb 35%, #e3cfc4 60%, #ecddd4 100%)",
         }}
       >
-        {/* Bright warm glow — top right corner (sunlight source) */}
-        <div className="pointer-events-none absolute -top-[200px] -right-[200px] w-[900px] h-[900px] rounded-full" style={{ background: "radial-gradient(circle, rgba(255,235,220,0.9) 0%, rgba(220,190,170,0.4) 40%, transparent 70%)", filter: "blur(40px)" }} />
-
-        {/* Organic light rays — elliptical radials from top-right, not full-page */}
-        <div className="pointer-events-none absolute top-0 right-0 w-[80%] h-[70%]" style={{ background: "radial-gradient(ellipse at 95% -10%, rgba(255,250,242,0.5) 0%, transparent 45%)" }} />
-        <div className="pointer-events-none absolute top-[5%] right-[10%] w-[60%] h-[50%]" style={{ background: "radial-gradient(ellipse at 100% -5%, rgba(255,248,238,0.35) 0%, transparent 50%)", transform: "rotate(-8deg)" }} />
-        <div className="pointer-events-none absolute top-[2%] right-[5%] w-[50%] h-[45%]" style={{ background: "radial-gradient(ellipse at 90% 0%, rgba(255,252,245,0.3) 0%, transparent 40%)", transform: "rotate(-15deg)" }} />
-        <div className="pointer-events-none absolute top-[8%] right-[15%] w-[45%] h-[35%]" style={{ background: "radial-gradient(ellipse at 100% 10%, rgba(255,245,235,0.25) 0%, transparent 45%)", transform: "rotate(-22deg)" }} />
-
-        {/* Soft warm wash — left side darker/moodier */}
-        <div className="pointer-events-none absolute top-0 left-0 w-[50%] h-full" style={{ background: "linear-gradient(90deg, rgba(180,140,120,0.12) 0%, transparent 100%)" }} />
-
-        {/* Bottom fade to slightly darker */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-[40%]" style={{ background: "linear-gradient(0deg, rgba(200,170,150,0.15) 0%, transparent 100%)" }} />
-
-        {/* Vignette */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 70% 30%, transparent 30%, rgba(57,30,30,0.1) 100%)" }} />
+        {/* All lighting in one layer — no separate divs with edges */}
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 85% 15%, rgba(255,240,225,0.7) 0%, transparent 50%), radial-gradient(ellipse at 70% 5%, rgba(255,245,235,0.4) 0%, transparent 40%), radial-gradient(ellipse at 95% 40%, rgba(255,235,220,0.3) 0%, transparent 35%), radial-gradient(ellipse at 15% 60%, rgba(180,140,120,0.08) 0%, transparent 40%), radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(57,30,30,0.08) 100%)" }} />
 
         {/* ═══ HEADER ═══ */}
         <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
