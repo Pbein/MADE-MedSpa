@@ -75,8 +75,11 @@ export default function ShopPage() {
         {/* Bright warm glow — top right corner (sunlight source) */}
         <div className="pointer-events-none absolute -top-[200px] -right-[200px] w-[900px] h-[900px] rounded-full" style={{ background: "radial-gradient(circle, rgba(255,235,220,0.9) 0%, rgba(220,190,170,0.4) 40%, transparent 70%)", filter: "blur(40px)" }} />
 
-        {/* Diagonal light rays from top-right — visible but refined */}
-        <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(125deg, transparent 15%, rgba(255,255,255,0.45) 18%, transparent 22%, rgba(255,255,255,0.3) 28%, transparent 32%, rgba(255,255,255,0.22) 39%, transparent 43%, rgba(255,255,255,0.15) 51%, transparent 55%, rgba(255,255,255,0.1) 63%, transparent 66%)" }} />
+        {/* Organic light rays — elliptical radials from top-right, not full-page */}
+        <div className="pointer-events-none absolute top-0 right-0 w-[80%] h-[70%]" style={{ background: "radial-gradient(ellipse at 95% -10%, rgba(255,250,242,0.5) 0%, transparent 45%)" }} />
+        <div className="pointer-events-none absolute top-[5%] right-[10%] w-[60%] h-[50%]" style={{ background: "radial-gradient(ellipse at 100% -5%, rgba(255,248,238,0.35) 0%, transparent 50%)", transform: "rotate(-8deg)" }} />
+        <div className="pointer-events-none absolute top-[2%] right-[5%] w-[50%] h-[45%]" style={{ background: "radial-gradient(ellipse at 90% 0%, rgba(255,252,245,0.3) 0%, transparent 40%)", transform: "rotate(-15deg)" }} />
+        <div className="pointer-events-none absolute top-[8%] right-[15%] w-[45%] h-[35%]" style={{ background: "radial-gradient(ellipse at 100% 10%, rgba(255,245,235,0.25) 0%, transparent 45%)", transform: "rotate(-22deg)" }} />
 
         {/* Soft warm wash — left side darker/moodier */}
         <div className="pointer-events-none absolute top-0 left-0 w-[50%] h-full" style={{ background: "linear-gradient(90deg, rgba(180,140,120,0.12) 0%, transparent 100%)" }} />
