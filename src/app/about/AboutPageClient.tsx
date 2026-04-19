@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
+import { useSectionContent } from "@/hooks/useSectionContent";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -91,6 +92,24 @@ export default function AboutPageClient({
 }) {
   const sections = (pageSettings as { sections?: Record<string, boolean> } | undefined)?.sections;
   const show = (key: string) => !sections || sections[key] !== false;
+  const { data: heroText } = useSectionContent("section_about_hero", {
+    eyebrow: "About MADE",
+    headline: "The Story of MADE",
+    subtitle: "A luxury aesthetic studio built on the belief that beauty is personal, science is essential, and every detail matters.",
+  });
+  const { data: storyText } = useSectionContent("section_about_story", { eyebrow: "Our Beginning" });
+  const { data: editorialText } = useSectionContent("section_about_editorial", { text: "Refinement over Transformation." });
+  const { data: missionText } = useSectionContent("section_about_mission", { eyebrow: "Our Mission" });
+  const { data: valuesText } = useSectionContent("section_about_values", { eyebrow: "What Guides Us", headline: "Our Values" });
+  const { data: teamText } = useSectionContent("section_about_team", { eyebrow: "The Team", headline: "Meet the Experts" });
+  const { data: ctaText } = useSectionContent("section_about_cta", {
+    headline: "Ready to experience the MADE difference?",
+    subtitle: "Your journey to elevated beauty begins with a single conversation. Let us craft a personalized plan just for you.",
+    cta_text: "Book Consultation",
+    cta_href: "/booking",
+    secondary_text: "Explore Services",
+    secondary_href: "/services",
+  });
   const dbTeam = useQuery(api.teamMembers.list);
   const teamMembers = dbTeam && dbTeam.length > 0 ? dbTeam : FALLBACK_TEAM;
   const story = useQuery(api.siteContent.getByKey, { key: "about_story" });
@@ -106,15 +125,9 @@ export default function AboutPageClient({
     <>
       {/* HERO */}
       {show("hero") && <PageHero
-        eyebrow="About MADE"
-        headline={
-          <>
-            The Story
-            <br />
-            <span className="font-extralight">of MADE</span>
-          </>
-        }
-        subtitle="A luxury aesthetic studio built on the belief that beauty is personal, science is essential, and every detail matters."
+        eyebrow={heroText.eyebrow}
+        headline={heroText.headline}
+        subtitle={heroText.subtitle}
         backgroundImage={heroBgUrl}
       />}
 
@@ -157,7 +170,7 @@ export default function AboutPageClient({
               className="label-micro block mb-4"
               style={{ color: "var(--color-on-surface-variant)" }}
             >
-              Our Beginning
+              {storyText.eyebrow}
             </motion.span>
 
             <motion.h2
@@ -267,9 +280,7 @@ export default function AboutPageClient({
               textWrap: "balance",
             } as React.CSSProperties}
           >
-            Refinement <em className="font-extralight">over</em>
-            <br />
-            Transformation.
+            {editorialText.text}
           </p>
         </motion.div>
       </section>
@@ -291,7 +302,7 @@ export default function AboutPageClient({
             className="label-micro block mb-4"
             style={{ color: "var(--color-on-surface-variant)" }}
           >
-            Our Mission
+            {missionText.eyebrow}
           </motion.span>
 
           <motion.h2
@@ -362,13 +373,13 @@ export default function AboutPageClient({
               className="label-micro block mb-4"
               style={{ color: "var(--color-primary)", opacity: 0.6 }}
             >
-              {valuesContent?.title || "What Guides Us"}
+              {valuesText.eyebrow}
             </span>
             <h2
               className="headline-section text-3xl md:text-5xl"
               style={{ color: "var(--color-primary)" }}
             >
-              Our Values
+              {valuesText.headline}
             </h2>
           </motion.div>
 
@@ -427,14 +438,14 @@ export default function AboutPageClient({
               className="label-micro block mb-4"
               style={{ color: "var(--color-on-surface-variant)" }}
             >
-              The Team
+              {teamText.eyebrow}
             </motion.span>
             <motion.h2
               variants={revealUp}
               className="headline-section text-3xl md:text-5xl"
               style={{ color: "var(--color-primary)" }}
             >
-              Meet the Experts
+              {teamText.headline}
             </motion.h2>
           </motion.div>
 
@@ -490,12 +501,12 @@ export default function AboutPageClient({
       {show("cta") && (
         <CTABanner
           dark
-          headline="Ready to experience the MADE difference?"
-          subtitle="Your journey to elevated beauty begins with a single conversation. Let us craft a personalized plan just for you."
-          ctaText="Book Consultation"
-          ctaHref="/booking"
-          secondaryText="Explore Services"
-          secondaryHref="/services"
+          headline={ctaText.headline}
+          subtitle={ctaText.subtitle}
+          ctaText={ctaText.cta_text}
+          ctaHref={ctaText.cta_href}
+          secondaryText={ctaText.secondary_text}
+          secondaryHref={ctaText.secondary_href}
         />
       )}
     </>
