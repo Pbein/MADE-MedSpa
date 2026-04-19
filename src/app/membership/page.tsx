@@ -52,7 +52,11 @@ export default function MembershipPage() {
         ref={gridRef}
         className="pt-8 pb-32 md:pb-40"
         style={{
-          background: "radial-gradient(circle at 20% 20%, rgba(216,192,187,0.2), transparent 40%), radial-gradient(circle at 80% 10%, rgba(201,170,150,0.15), transparent 35%), linear-gradient(180deg, var(--color-silk) 0%, var(--color-powder) 100%)",
+          backgroundColor: "#f0e8e1",
+          backgroundImage: "url('/images/membership-atmosphere-bg.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="mx-auto max-w-7xl px-6">
