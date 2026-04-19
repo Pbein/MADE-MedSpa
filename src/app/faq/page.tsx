@@ -76,8 +76,31 @@ export default function FAQPage() {
   const categoryKeys = Object.keys(groupedFaqs);
   const { styleOverrides, isSectionVisible } = usePageSettings("faq");
 
+  // FAQPage structured data for Google rich results
+  const faqJsonLd = useMemo(() => {
+    if (!faqs || faqs.length === 0) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    };
+  }, [faqs]);
+
   return (
     <main style={styleOverrides}>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       {/* Hero */}
       {isSectionVisible("hero") && <PageHero
         dark
