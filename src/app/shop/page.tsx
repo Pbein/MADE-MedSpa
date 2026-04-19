@@ -71,10 +71,16 @@ export default function ShopPage() {
           One gradient background, no hard breaks
           ═══════════════════════════════════════════ */}
       <div
+        className="relative"
         style={{
-          background: "radial-gradient(circle at 15% 25%, rgba(216,192,187,0.18), transparent 45%), radial-gradient(circle at 85% 10%, rgba(201,170,150,0.12), transparent 40%), linear-gradient(180deg, var(--color-silk) 0%, var(--color-powder) 40%, var(--color-silk) 100%)",
+          background: "radial-gradient(circle at 50% 30%, rgba(255,240,232,0.6) 0%, rgba(232,224,213,0.8) 40%, rgba(247,230,235,0.45) 70%, rgba(255,255,255,0.85) 100%), linear-gradient(180deg, #f7f3ef 0%, #e8e0d5 50%, #f3e7e4 100%)",
         }}
       >
+        {/* Soft vignette */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(circle, transparent 55%, rgba(57,30,30,0.06) 100%)" }}
+        />
         {/* Header — centered, unified entry */}
         <section className="pt-36 md:pt-44 pb-6 md:pb-8 px-6">
           <div className="mx-auto max-w-4xl text-center">
@@ -175,9 +181,12 @@ export default function ShopPage() {
                     transition={{ duration: 0.7, ease: luxuryEase, delay: i * 0.1 }}
                     whileHover={{ y: -4 }}
                     style={{
-                      background: "rgba(255,255,255,0.5)",
-                      border: "1px solid rgba(57,30,30,0.04)",
-                      boxShadow: "0 4px 20px rgba(57,30,30,0.04)",
+                      background: "rgba(255,255,255,0.7)",
+                      backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.4)",
+                      borderRadius: "12px",
+                      boxShadow: "0 8px 30px rgba(57,30,30,0.06)",
                       display: "flex",
                       flexDirection: "row",
                       overflow: "hidden",
@@ -282,15 +291,19 @@ export default function ShopPage() {
                     className="group transition-all duration-500"
                     whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(57,30,30,0.1)" }}
                     style={{
-                      background: "rgba(255,255,255,0.45)",
-                      border: "1px solid rgba(57,30,30,0.04)",
-                      boxShadow: "0 2px 12px rgba(57,30,30,0.03)",
+                      background: "rgba(255,255,255,0.7)",
+                      backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.4)",
+                      borderRadius: "12px",
+                      boxShadow: "0 8px 30px rgba(57,30,30,0.06)",
                     }}
                   >
                     <div
                       className="aspect-square overflow-hidden"
                       style={{
                         background: product.imageUrl ? "var(--color-glaze)" : "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)",
+                        borderRadius: "12px 12px 0 0",
                       }}
                     >
                       {product.imageUrl ? (
