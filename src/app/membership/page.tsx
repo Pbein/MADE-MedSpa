@@ -149,7 +149,7 @@ function MembershipCard({
         border: tier.isFeatured ? "none" : "1px solid rgba(57,30,30,0.06)",
         background: tier.isFeatured
           ? "linear-gradient(180deg, #ffffff 0%, var(--color-powder) 60%, var(--color-glaze) 100%)"
-          : "rgba(255,255,255,0.35)",
+          : "rgba(255,255,255,0.8)",
         boxShadow: tier.isFeatured
           ? "0 24px 48px rgba(57,30,30,0.14)"
           : "0 2px 12px rgba(57,30,30,0.02)",
