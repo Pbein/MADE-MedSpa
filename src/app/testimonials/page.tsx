@@ -1,25 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { useSectionContent } from "@/hooks/useSectionContent";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
-const viewportOnce = { once: true, margin: "-50px" } as const;
+const viewportOnce = { once: true, margin: "-80px" } as const;
 
 export default function TestimonialsPage() {
   const testimonials = useQuery(api.testimonials.list);
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const { data: heroText } = useSectionContent("section_testimonials_hero", {
-    eyebrow: "Client Stories",
-    headline: "What Our Clients Say",
-    subtitle: "Real experiences from real clients. Every review reflects the care, expertise, and results that define MADE Med Spa.",
-  });
 
   const { data: ctaText } = useSectionContent("section_testimonials_cta", {
     headline: "Ready to start your journey?",
@@ -30,192 +23,235 @@ export default function TestimonialsPage() {
     secondary_href: "/services",
   });
 
-  const treatments = useMemo(() => {
-    if (!testimonials) return ["All"];
-    const tags = Array.from(new Set(testimonials.map((t) => t.treatment))).sort();
-    return ["All", ...tags];
-  }, [testimonials]);
-
-  const filtered = useMemo(() => {
-    if (!testimonials) return [];
-    if (activeFilter === "All") return testimonials;
-    return testimonials.filter((t) => t.treatment === activeFilter);
-  }, [testimonials, activeFilter]);
+  // Split testimonials: first one is featured, rest are editorial
+  const featured = testimonials?.[0];
+  const remaining = useMemo(() => testimonials?.slice(1) || [], [testimonials]);
 
   return (
     <main>
-      <PageHero
-        eyebrow={heroText.eyebrow}
-        headline={
-          <>
-            {heroText.headline.split(".")[0]}
-            {heroText.headline.includes(".") && (
-              <span className="font-extralight">.{heroText.headline.split(".").slice(1).join(".")}</span>
-            )}
-          </>
-        }
-        subtitle={heroText.subtitle}
-      />
+      {/* ═══════════════════════════════════════════
+          HERO — Minimal, text-only, sets the tone
+          ═══════════════════════════════════════════ */}
+      <section
+        className="pt-40 md:pt-52 pb-24 md:pb-32 px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
+        <div className="mx-auto max-w-4xl text-center">
+          <motion.span
+            className="label-micro block mb-8"
+            style={{ color: "var(--color-on-surface-variant)" }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: luxuryEase }}
+          >
+            Client Stories
+          </motion.span>
 
-      {/* Filter Pills */}
-      {treatments.length > 2 && (
-        <section className="py-8" style={{ backgroundColor: "var(--color-surface-low)" }}>
-          <div className="mx-auto max-w-7xl px-6">
-            <motion.div
-              className="flex flex-wrap gap-2 justify-center"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: luxuryEase, delay: 0.3 }}
+          <motion.h1
+            className="headline-section text-4xl md:text-6xl lg:text-7xl mb-8"
+            style={{ color: "var(--color-primary)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: luxuryEase, delay: 0.1 }}
+          >
+            The Results<br />
+            <span className="font-extralight">Speak for Themselves.</span>
+          </motion.h1>
+
+          <motion.p
+            className="body-editorial max-w-2xl mx-auto"
+            style={{ color: "var(--color-on-surface-variant)", opacity: 0.7 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 0.7, y: 0 }}
+            transition={{ duration: 0.8, ease: luxuryEase, delay: 0.2 }}
+          >
+            Every review is from a real client who trusted us with their care. No scripts, no edits — just honest words from people who experienced the MADE difference.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FEATURED TESTIMONIAL — Full-width, large quote
+          ═══════════════════════════════════════════ */}
+      {featured && (
+        <section
+          className="py-24 md:py-32 px-6"
+          style={{
+            backgroundColor: "var(--color-primary)",
+          }}
+        >
+          <motion.div
+            className="mx-auto max-w-4xl text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewportOnce}
+            transition={{ duration: 1, ease: luxuryEase }}
+          >
+            {/* Large quote mark */}
+            <div
+              className="font-headline italic"
+              style={{
+                fontSize: "8rem",
+                lineHeight: 0.5,
+                color: "rgba(215,207,197,0.15)",
+                marginBottom: "2rem",
+              }}
             >
-              {treatments.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setActiveFilter(tag)}
-                  className="transition-all duration-500"
-                  style={{
-                    padding: "0.5rem 1.25rem",
-                    borderRadius: "9999px",
-                    border: "1px solid",
-                    borderColor: activeFilter === tag ? "var(--color-primary)" : "var(--color-outline-variant)",
-                    backgroundColor: activeFilter === tag ? "var(--color-primary)" : "transparent",
-                    color: activeFilter === tag ? "var(--color-on-primary)" : "var(--color-on-surface-variant)",
-                    fontSize: "0.6875rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase" as const,
-                    cursor: "pointer",
-                  }}
-                >
-                  {tag}
-                </button>
-              ))}
-            </motion.div>
-          </div>
+              &ldquo;
+            </div>
+
+            <blockquote
+              className="font-headline italic text-xl md:text-2xl lg:text-3xl leading-relaxed mb-10"
+              style={{ color: "rgba(247,246,235,0.9)" }}
+            >
+              {featured.quote}
+            </blockquote>
+
+            <div className="flex items-center justify-center gap-4">
+              <div
+                className="w-8 h-px"
+                style={{ backgroundColor: "rgba(215,207,197,0.3)" }}
+              />
+              <span
+                className="label-micro"
+                style={{ color: "rgba(215,207,197,0.6)" }}
+              >
+                {featured.name} &middot; {featured.treatment}
+              </span>
+              <div
+                className="w-8 h-px"
+                style={{ backgroundColor: "rgba(215,207,197,0.3)" }}
+              />
+            </div>
+          </motion.div>
         </section>
       )}
 
-      {/* Testimonials Grid */}
-      <section className="py-32 md:py-40" style={{ backgroundColor: "var(--color-surface)" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          {/* Section Header */}
+      {/* ═══════════════════════════════════════════
+          EDITORIAL GRID — Asymmetric, breathing room
+          ═══════════════════════════════════════════ */}
+      <section
+        className="py-32 md:py-44 px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
+        <div className="mx-auto max-w-6xl">
+          {/* Section intro */}
           <motion.div
-            className="text-center mb-16 md:mb-20"
-            initial={{ opacity: 0, y: 25 }}
+            className="text-center mb-20 md:mb-28"
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewportOnce}
             transition={{ duration: 0.8, ease: luxuryEase }}
           >
-            <span
-              className="label-micro block mb-5"
-              style={{ color: "var(--color-on-surface-variant)" }}
-            >
-              Real Results
-            </span>
-            <h2
-              className="headline-section text-3xl md:text-5xl mb-6"
-              style={{ color: "var(--color-primary)" }}
-            >
-              In Their Words
-            </h2>
-
-            {/* Ornamental divider */}
-            <div className="flex items-center justify-center gap-3 mt-8">
-              <div className="w-12 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-              <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: "rgba(215,207,197,0.5)" }} />
-              <div className="w-12 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-16 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
+              <span
+                className="label-micro"
+                style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+              >
+                More Stories
+              </span>
+              <div className="w-16 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
             </div>
           </motion.div>
 
-          {/* Grid */}
-          {!testimonials ? (
+          {/* Loading */}
+          {!testimonials && (
             <div className="flex justify-center py-20">
               <div
                 className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
                 style={{ borderColor: "var(--color-outline-variant)" }}
               />
             </div>
-          ) : filtered.length === 0 ? (
-            <p
-              className="font-headline italic text-xl text-center py-16"
-              style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
-            >
-              No testimonials found for this category.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {filtered.map((testimonial, i) => (
-                <motion.div
-                  key={testimonial._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={viewportOnce}
-                  transition={{ duration: 0.8, ease: luxuryEase, delay: (i % 2) * 0.1 }}
-                  className="border transition-all duration-700 hover:shadow-[0_8px_40px_rgba(57,30,30,0.06)]"
-                  style={{
-                    borderColor: "rgba(215,207,197,0.35)",
-                    backgroundColor: "var(--color-surface)",
-                  }}
-                >
-                  <div className="p-8 md:p-10 flex flex-col h-full">
-                    {/* Large decorative quote */}
-                    <div
-                      className="font-headline italic leading-none mb-4"
-                      style={{
-                        fontSize: "4rem",
-                        color: "var(--color-secondary)",
-                        opacity: 0.2,
-                      }}
-                    >
-                      &ldquo;
+          )}
+
+          {/* Editorial layout — alternating large and small */}
+          {remaining.length > 0 && (
+            <div className="space-y-16 md:space-y-24">
+              {remaining.map((testimonial, i) => {
+                const isLarge = i % 3 === 0;
+                const isRight = i % 2 === 1;
+
+                return (
+                  <motion.div
+                    key={testimonial._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={viewportOnce}
+                    transition={{ duration: 0.9, ease: luxuryEase }}
+                    className={`${isLarge ? "max-w-4xl" : "max-w-2xl"} ${isRight && !isLarge ? "ml-auto" : ""}`}
+                  >
+                    {/* Quote */}
+                    <div className={`${isLarge ? "mb-8" : "mb-6"}`}>
+                      {isLarge && (
+                        <div
+                          className="font-headline italic mb-4"
+                          style={{
+                            fontSize: "4rem",
+                            lineHeight: 0.5,
+                            color: "var(--color-secondary)",
+                            opacity: 0.15,
+                          }}
+                        >
+                          &ldquo;
+                        </div>
+                      )}
+                      <blockquote
+                        className={`font-headline italic leading-relaxed ${
+                          isLarge
+                            ? "text-xl md:text-2xl"
+                            : "text-lg md:text-xl"
+                        }`}
+                        style={{ color: "var(--color-primary)", opacity: 0.85 }}
+                      >
+                        &ldquo;{testimonial.quote}&rdquo;
+                      </blockquote>
                     </div>
 
-                    {/* Quote */}
-                    <p
-                      className="font-headline italic text-lg md:text-xl leading-relaxed flex-1"
-                      style={{ color: "var(--color-primary)", opacity: 0.85 }}
-                    >
-                      {testimonial.quote}
-                    </p>
-
-                    {/* Divider */}
-                    <div
-                      className="h-px w-full mt-8 mb-5"
-                      style={{ backgroundColor: "var(--color-outline-variant)", opacity: 0.3 }}
-                    />
-
                     {/* Attribution */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-6 h-px"
+                        style={{ backgroundColor: "var(--color-outline-variant)" }}
+                      />
                       <span
                         className="label-micro"
-                        style={{ color: "var(--color-on-surface-variant)" }}
+                        style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
                       >
                         {testimonial.name}
                       </span>
                       <span
                         className="label-micro"
-                        style={{ color: "var(--color-secondary)", opacity: 0.7 }}
+                        style={{ color: "var(--color-secondary)", opacity: 0.5 }}
                       >
                         {testimonial.treatment}
                       </span>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           )}
 
-          {/* Count */}
-          {testimonials && filtered.length > 0 && (
-            <motion.p
-              className="text-center mt-16 body-editorial text-sm"
-              style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+          {/* Count + link back */}
+          {testimonials && (
+            <motion.div
+              className="text-center mt-24 md:mt-32"
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 0.5 }}
+              whileInView={{ opacity: 1 }}
               viewport={viewportOnce}
-              transition={{ duration: 0.8, ease: luxuryEase, delay: 0.3 }}
+              transition={{ duration: 0.8, ease: luxuryEase }}
             >
-              {filtered.length} {activeFilter === "All" ? "client" : activeFilter} review{filtered.length !== 1 ? "s" : ""}
-            </motion.p>
+              <p
+                className="body-editorial text-sm mb-6"
+                style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}
+              >
+                {testimonials.length} client reviews
+              </p>
+              <Link href="/services" className="link-editorial">
+                Explore Our Services
+              </Link>
+            </motion.div>
           )}
         </div>
       </section>
