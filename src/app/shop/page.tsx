@@ -70,14 +70,14 @@ export default function ShopPage() {
         className="made-noise relative overflow-hidden"
         style={{ backgroundColor: "#f0e8e1" }}
       >
-        {/* Atmospheric background — full width, repeats vertically, lightened + contrast boosted */}
+        {/* Atmospheric background — covers full area, lightened + contrast */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage: "url('/images/shop-atmosphere-bg.webp')",
-            backgroundSize: "100% auto",
-            backgroundPosition: "top center",
-            backgroundRepeat: "repeat-y",
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
             filter: "brightness(1.2) contrast(1.15)",
           }}
         />
