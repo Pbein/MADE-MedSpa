@@ -960,6 +960,70 @@ Contact us by phone or through your client portal. Cancellation requests via soc
     for (const membership of memberships) {
       await ctx.db.insert("memberships", membership);
     }
+
+    // ────────────────────────────────────────────────────────────────────────
+    // SHOP PRODUCTS (sample products — isSeed=true, replace with real inventory)
+    // ────────────────────────────────────────────────────────────────────────
+    const shopProducts = [
+      {
+        name: "SkinCeuticals C E Ferulic",
+        description: "The gold standard vitamin C serum. Provides advanced environmental protection and improves the appearance of fine lines, wrinkles, and loss of firmness while brightening skin's complexion.",
+        price: 182,
+        category: "Skincare",
+        sortOrder: 1,
+        isActive: true,
+        isSeed: true,
+      },
+      {
+        name: "EltaMD UV Clear SPF 46",
+        description: "Lightweight, oil-free broad-spectrum sunscreen formulated for sensitive and acne-prone skin. Contains niacinamide to calm and protect. A daily essential for post-treatment care.",
+        price: 41,
+        category: "Skincare",
+        sortOrder: 2,
+        isActive: true,
+        isSeed: true,
+      },
+      {
+        name: "SkinMedica TNS Advanced+ Serum",
+        description: "Clinically proven to address fine lines, wrinkles, and skin tone in as little as 2 weeks. Features a blend of growth factors, peptides, and antioxidants for visible rejuvenation.",
+        price: 295,
+        category: "Skincare",
+        sortOrder: 3,
+        isActive: true,
+        isSeed: true,
+      },
+      {
+        name: "Alastin Restorative Skin Complex",
+        description: "Supports the skin's natural ability to produce new collagen and elastin. Ideal for post-procedure recovery and ongoing anti-aging maintenance. Fragrance-free and gentle.",
+        price: 195,
+        category: "Skincare",
+        sortOrder: 4,
+        isActive: true,
+        isSeed: true,
+      },
+      {
+        name: "MADE Gift Card",
+        description: "Give the gift of confidence. Redeemable for any treatment or product at MADE Med Spa. Available in any amount. Never expires.",
+        price: 100,
+        category: "Gift Cards",
+        sortOrder: 10,
+        isActive: true,
+        isSeed: true,
+      },
+      {
+        name: "Post-Treatment Recovery Kit",
+        description: "Everything you need for optimal healing after injectable treatments. Includes Arnica gel, gentle cleanser, hydrating mist, and SPF. Curated by Nurse Karlyne.",
+        price: 85,
+        category: "Bundles",
+        sortOrder: 11,
+        isActive: true,
+        isSeed: true,
+      },
+    ];
+
+    for (const product of shopProducts) {
+      await ctx.db.insert("shopProducts", product);
+    }
   },
 });
 
