@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import CTABanner from "@/components/sections/CTABanner";
+import { useSectionContent } from "@/hooks/useSectionContent";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
@@ -67,6 +68,32 @@ const cancellationPolicy = {
 
 export default function BookingPage() {
   const [videoReady, setVideoReady] = useState(false);
+  const { data: heroText } = useSectionContent("section_booking_hero", {
+    eyebrow: "Book Online",
+    headline: "Schedule Your Visit",
+    body: "Your journey to elevated beauty is just a click away. Book your appointment and we will take care of the rest.",
+    cta_text: "Book Your Appointment",
+  });
+  const { data: expectText } = useSectionContent("section_booking_expect", {
+    eyebrow: "Your Visit",
+    headline: "What to Expect",
+  });
+  const { data: prepText } = useSectionContent("section_booking_prep", {
+    eyebrow: "Before Your Visit",
+    headline: "Preparation Tips",
+  });
+  const { data: policyText } = useSectionContent("section_booking_policy", {
+    eyebrow: "Good to Know",
+    headline: "Cancellation Policy",
+  });
+  const { data: ctaText } = useSectionContent("section_booking_cta", {
+    headline: "Have questions before booking?",
+    subtitle: "Our team is here to help you choose the perfect treatment and answer any questions you may have.",
+    cta_text: "Contact Us",
+    cta_href: "/contact",
+    secondary_text: "Browse Services",
+    secondary_href: "/services",
+  });
 
   return (
     <>
@@ -134,7 +161,7 @@ export default function BookingPage() {
             className="label-micro block mb-6"
             style={{ color: "var(--color-surface)", opacity: 0.75 }}
           >
-            Book Online
+            {heroText.eyebrow}
           </motion.span>
 
           <motion.h1
@@ -142,7 +169,7 @@ export default function BookingPage() {
             className="headline-editorial text-5xl md:text-8xl"
             style={{ color: "var(--color-surface)" }}
           >
-            Schedule Your Visit
+            {heroText.headline}
           </motion.h1>
 
           <motion.p
@@ -150,8 +177,7 @@ export default function BookingPage() {
             className="body-editorial mt-8 max-w-2xl mx-auto"
             style={{ color: "var(--color-surface)", opacity: 0.85 }}
           >
-            Your journey to elevated beauty is just a click away. Book your
-            appointment and we will take care of the rest.
+            {heroText.body}
           </motion.p>
 
           <motion.div variants={revealUp} className="mt-10">
@@ -161,7 +187,7 @@ export default function BookingPage() {
               rel="noopener noreferrer"
               className="btn-light inline-block"
             >
-              Book Your Appointment
+              {heroText.cta_text}
             </a>
           </motion.div>
         </motion.div>
@@ -239,9 +265,9 @@ export default function BookingPage() {
           variants={staggerContainer}
         >
           <motion.div className="text-center mb-20" variants={revealUp}>
-            <p className="label-micro mb-4">Your Visit</p>
+            <p className="label-micro mb-4">{expectText.eyebrow}</p>
             <h2 className="headline-section text-3xl md:text-5xl">
-              What to Expect
+              {expectText.headline}
             </h2>
           </motion.div>
 
@@ -288,10 +314,10 @@ export default function BookingPage() {
           variants={staggerContainer}
         >
           <motion.p className="label-micro mb-4" variants={revealLeft}>
-            Before Your Visit
+            {prepText.eyebrow}
           </motion.p>
           <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealLeft}>
-            Preparation Tips
+            {prepText.headline}
           </motion.h2>
 
           <ul className="space-y-8">
@@ -323,10 +349,10 @@ export default function BookingPage() {
           variants={staggerContainer}
         >
           <motion.p className="label-micro mb-4" variants={revealUp}>
-            Good to Know
+            {policyText.eyebrow}
           </motion.p>
           <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealUp}>
-            Cancellation Policy
+            {policyText.headline}
           </motion.h2>
 
           <motion.div
@@ -354,12 +380,12 @@ export default function BookingPage() {
       {/* CTA */}
       <CTABanner
         dark
-        headline="Have questions before booking?"
-        subtitle="Our team is here to help you choose the perfect treatment and answer any questions you may have."
-        ctaText="Contact Us"
-        ctaHref="/contact"
-        secondaryText="Browse Services"
-        secondaryHref="/services"
+        headline={ctaText.headline}
+        subtitle={ctaText.subtitle}
+        ctaText={ctaText.cta_text}
+        ctaHref={ctaText.cta_href}
+        secondaryText={ctaText.secondary_text}
+        secondaryHref={ctaText.secondary_href}
       />
     </>
   );

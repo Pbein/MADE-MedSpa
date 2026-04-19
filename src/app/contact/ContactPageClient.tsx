@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
+import { useSectionContent } from "@/hooks/useSectionContent";
 
 const ESPRESSO = "#391e1e";
 const SILK = "#f7f6eb";
@@ -64,6 +65,17 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
 
 export default function ContactPageClient() {
   const skipAnimation = hasNavigatedWithinApp();
+  const { data: heroText } = useSectionContent("section_contact_hero", {
+    eyebrow: "Contact",
+    headline: "Let's talk.",
+  });
+  const { data: bodyText } = useSectionContent("section_contact_body", {
+    info_eyebrow: "Reach Out",
+    info_headline: "Direct to the studio",
+    form_eyebrow: "Send a Message",
+    form_headline: "Tell us a little about you",
+    form_subtitle: "We respond within 24 hours, always.",
+  });
   const heroContent = useQuery(api.siteContent.getByKey, {
     key: "contact_hero",
   });
@@ -112,7 +124,7 @@ export default function ContactPageClient() {
             className="label-micro block mb-8"
             style={{ color: GLAZE }}
           >
-            Contact
+            {heroText.eyebrow}
           </motion.span>
 
           <motion.h1
@@ -120,7 +132,7 @@ export default function ContactPageClient() {
             className="headline-editorial text-6xl md:text-7xl lg:text-8xl mb-10"
             style={{ color: SILK }}
           >
-            Let&rsquo;s <em className="font-extralight">talk</em>.
+            {heroText.headline}
           </motion.h1>
 
           {/* Glaze hairline */}
@@ -161,13 +173,13 @@ export default function ContactPageClient() {
               className="label-micro block mb-5"
               style={{ color: GLAZE }}
             >
-              Reach Out
+              {bodyText.info_eyebrow}
             </span>
             <h2
               className="headline-section text-3xl md:text-4xl mb-14"
               style={{ color: ESPRESSO }}
             >
-              Direct to the studio
+              {bodyText.info_headline}
             </h2>
 
             <div className="space-y-10">
@@ -280,19 +292,19 @@ export default function ContactPageClient() {
               className="label-micro block mb-5"
               style={{ color: GLAZE }}
             >
-              Send a Message
+              {bodyText.form_eyebrow}
             </span>
             <h2
               className="headline-section text-3xl md:text-4xl mb-4"
               style={{ color: ESPRESSO }}
             >
-              Tell us a little about you
+              {bodyText.form_headline}
             </h2>
             <p
               className="body-editorial mb-12"
               style={{ color: ESPRESSO, opacity: 0.65 }}
             >
-              We respond within 24 hours, always.
+              {bodyText.form_subtitle}
             </p>
 
             <ContactForm />
