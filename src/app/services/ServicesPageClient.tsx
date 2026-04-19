@@ -13,9 +13,13 @@ const editorialEase = [0.2, 0, 0, 1] as const;
 
 export default function ServicesPageClient({
   heroBgUrl,
+  pageSettings,
 }: {
   heroBgUrl?: string;
+  pageSettings?: Record<string, unknown>;
 }) {
+  const sections = (pageSettings as { sections?: Record<string, boolean> } | undefined)?.sections;
+  const show = (key: string) => !sections || sections[key] !== false;
   const services = useQuery(api.services.list);
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
@@ -35,7 +39,7 @@ export default function ServicesPageClient({
   return (
     <main>
       {/* Hero */}
-      <PageHero
+      {show("hero") && <PageHero
         eyebrow="Treatments"
         headline={
           <>
@@ -45,7 +49,7 @@ export default function ServicesPageClient({
         }
         subtitle="Personalized treatments designed to enhance your natural beauty with precision, science, and artistry."
         backgroundImage={heroBgUrl}
-      />
+      />}
 
       {/* Filter Bar */}
       <section className="bg-[var(--color-surface-low)] py-8">
@@ -133,13 +137,15 @@ export default function ServicesPageClient({
       </section>
 
       {/* CTA */}
-      <CTABanner
-        dark
-        headline="The path to effortless maintenance begins with a conversation."
-        subtitle="Book a consultation and let us craft a personalized treatment plan just for you."
-        ctaText="Book Consultation"
-        ctaHref="/booking"
-      />
+      {show("cta") && (
+        <CTABanner
+          dark
+          headline="The path to effortless maintenance begins with a conversation."
+          subtitle="Book a consultation and let us craft a personalized treatment plan just for you."
+          ctaText="Book Consultation"
+          ctaHref="/booking"
+        />
+      )}
     </main>
   );
 }

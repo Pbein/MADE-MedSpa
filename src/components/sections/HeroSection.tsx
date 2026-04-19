@@ -39,9 +39,11 @@ const DEFAULT_POSTER = "/images/hero-poster.webp";
 interface HeroSectionProps {
   heroVideoUrl?: string;
   heroPosterUrl?: string;
+  headlineOverride?: string;
+  subtitleOverride?: string;
 }
 
-export default function HeroSection({ heroVideoUrl, heroPosterUrl }: HeroSectionProps) {
+export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverride, subtitleOverride }: HeroSectionProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 

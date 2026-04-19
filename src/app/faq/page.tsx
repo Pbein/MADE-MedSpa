@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Accordion from "@/components/ui/Accordion";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
+import { usePageSettings } from "@/hooks/usePageSettings";
 
 const faqCategories = [
   "General",
@@ -73,11 +74,12 @@ export default function FAQPage() {
   }, [filteredFaqs]);
 
   const categoryKeys = Object.keys(groupedFaqs);
+  const { styleOverrides, isSectionVisible } = usePageSettings("faq");
 
   return (
-    <main>
+    <main style={styleOverrides}>
       {/* Hero */}
-      <PageHero
+      {isSectionVisible("hero") && <PageHero
         dark
         eyebrow="Support"
         headline="Frequently Asked Questions"
@@ -109,7 +111,7 @@ export default function FAQPage() {
             />
           </div>
         </div>
-      </PageHero>
+      </PageHero>}
 
       {/* Category Pills */}
       <section className="bg-[var(--color-surface)] py-8">
@@ -205,15 +207,17 @@ export default function FAQPage() {
       </section>
 
       {/* CTA */}
-      <CTABanner
-        dark
-        headline="Still Have Questions?"
-        subtitle="Our team is here to help. Reach out and we will get back to you promptly."
-        ctaText="Contact Us"
-        ctaHref="/contact"
-        secondaryText="Browse Services"
-        secondaryHref="/services"
-      />
+      {isSectionVisible("cta") && (
+        <CTABanner
+          dark
+          headline="Still Have Questions?"
+          subtitle="Our team is here to help. Reach out and we will get back to you promptly."
+          ctaText="Contact Us"
+          ctaHref="/contact"
+          secondaryText="Browse Services"
+          secondaryHref="/services"
+        />
+      )}
     </main>
   );
 }

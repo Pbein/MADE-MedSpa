@@ -6,6 +6,7 @@ import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { usePageSettings } from "@/hooks/usePageSettings";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -17,10 +18,11 @@ export default function MembershipPage() {
   const memberships = useQuery(api.memberships.list);
   const gridRef = useRef(null);
   const isInView = useInView(gridRef, { once: true, amount: 0.1 });
+  const { styleOverrides, isSectionVisible, hero } = usePageSettings("membership");
 
   return (
-    <main>
-      <PageHero
+    <main style={styleOverrides}>
+      {isSectionVisible("hero") && <PageHero
         eyebrow="Membership"
         headline={
           <>
@@ -28,8 +30,8 @@ export default function MembershipPage() {
             <span className="font-extralight">Consistently.</span>
           </>
         }
-        subtitle="Exclusive tiers designed for every stage of your aesthetic journey. Real savings, real care, real results."
-      />
+        subtitle={hero.subtitle || "Exclusive tiers designed for every stage of your aesthetic journey. Real savings, real care, real results."}
+      />}
 
       <section
         ref={gridRef}
@@ -73,15 +75,17 @@ export default function MembershipPage() {
         </div>
       </section>
 
-      <CTABanner
-        headline="Ready to become a member?"
-        subtitle="Choose the tier that fits your goals and start saving on the treatments you love."
-        ctaText="Book Consultation"
-        ctaHref={BOOKING_URL}
-        ctaExternal
-        secondaryText="Contact Us"
-        secondaryHref="/contact"
-      />
+      {isSectionVisible("cta") && (
+        <CTABanner
+          headline="Ready to become a member?"
+          subtitle="Choose the tier that fits your goals and start saving on the treatments you love."
+          ctaText={hero.ctaText || "Book Consultation"}
+          ctaHref={hero.ctaLink || BOOKING_URL}
+          ctaExternal={!hero.ctaLink}
+          secondaryText="Contact Us"
+          secondaryHref="/contact"
+        />
+      )}
     </main>
   );
 }

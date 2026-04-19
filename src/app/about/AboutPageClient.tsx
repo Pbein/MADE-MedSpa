@@ -84,9 +84,13 @@ const values = [
 
 export default function AboutPageClient({
   heroBgUrl,
+  pageSettings,
 }: {
   heroBgUrl?: string;
+  pageSettings?: Record<string, unknown>;
 }) {
+  const sections = (pageSettings as { sections?: Record<string, boolean> } | undefined)?.sections;
+  const show = (key: string) => !sections || sections[key] !== false;
   const dbTeam = useQuery(api.teamMembers.list);
   const teamMembers = dbTeam && dbTeam.length > 0 ? dbTeam : FALLBACK_TEAM;
   const story = useQuery(api.siteContent.getByKey, { key: "about_story" });
@@ -101,7 +105,7 @@ export default function AboutPageClient({
   return (
     <>
       {/* HERO */}
-      <PageHero
+      {show("hero") && <PageHero
         eyebrow="About MADE"
         headline={
           <>
@@ -112,7 +116,7 @@ export default function AboutPageClient({
         }
         subtitle="A luxury aesthetic studio built on the belief that beauty is personal, science is essential, and every detail matters."
         backgroundImage={heroBgUrl}
-      />
+      />}
 
       {/* STORY — Asymmetric editorial layout */}
       <section
@@ -483,15 +487,17 @@ export default function AboutPageClient({
       </section>
 
       {/* CTA */}
-      <CTABanner
-        dark
-        headline="Ready to experience the MADE difference?"
-        subtitle="Your journey to elevated beauty begins with a single conversation. Let us craft a personalized plan just for you."
-        ctaText="Book Consultation"
-        ctaHref="/booking"
-        secondaryText="Explore Services"
-        secondaryHref="/services"
-      />
+      {show("cta") && (
+        <CTABanner
+          dark
+          headline="Ready to experience the MADE difference?"
+          subtitle="Your journey to elevated beauty begins with a single conversation. Let us craft a personalized plan just for you."
+          ctaText="Book Consultation"
+          ctaHref="/booking"
+          secondaryText="Explore Services"
+          secondaryHref="/services"
+        />
+      )}
     </>
   );
 }

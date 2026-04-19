@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
+import { usePageSettings } from "@/hooks/usePageSettings";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -31,9 +32,11 @@ export default function ShopPage() {
     return products.filter((p) => p.category === activeCategory);
   }, [products, activeCategory]);
 
+  const { styleOverrides, isSectionVisible, hero } = usePageSettings("shop");
+
   return (
-    <main>
-      <PageHero
+    <main style={styleOverrides}>
+      {isSectionVisible("hero") && <PageHero
         eyebrow="Shop"
         headline={
           <>
@@ -41,10 +44,10 @@ export default function ShopPage() {
             <span className="font-extralight">Intentionally.</span>
           </>
         }
-        subtitle="Medical-grade skincare and wellness products selected by Nurse Karlyne for real results at home."
-      />
+        subtitle={hero.subtitle || "Medical-grade skincare and wellness products selected by Nurse Karlyne for real results at home."}
+      />}
 
-      {products && products.length > 0 && categories.length > 2 && (
+      {isSectionVisible("filters") && products && products.length > 0 && categories.length > 2 && (
         <section className="bg-[var(--color-surface-low)] py-8">
           <div className="mx-auto max-w-7xl px-6 flex flex-wrap gap-2 justify-center">
             {categories.map((cat) => (
@@ -184,15 +187,17 @@ export default function ShopPage() {
         </div>
       </section>
 
-      <CTABanner
-        headline="Questions about our products?"
-        subtitle="Nurse Karlyne personally selects every product in our collection. Book a consultation to find what's right for your skin."
-        ctaText="Book Consultation"
-        ctaHref={BOOKING_URL}
-        ctaExternal
-        secondaryText="Contact Us"
-        secondaryHref="/contact"
-      />
+      {isSectionVisible("cta") && (
+        <CTABanner
+          headline="Questions about our products?"
+          subtitle="Nurse Karlyne personally selects every product in our collection. Book a consultation to find what's right for your skin."
+          ctaText={hero.ctaText || "Book Consultation"}
+          ctaHref={hero.ctaLink || BOOKING_URL}
+          ctaExternal={!hero.ctaLink}
+          secondaryText="Contact Us"
+          secondaryHref="/contact"
+        />
+      )}
     </main>
   );
 }
