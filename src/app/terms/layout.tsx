@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "Terms of service for MADE Med Spa in McLean, Virginia. Guidelines governing use of our website and services.",
+  title: "Terms & Conditions",
+  description: "Terms and conditions for MADE Med Spa in McLean, Virginia. Guidelines governing appointments, payments, and services.",
+  alternates: { canonical: "https://mademedspa.com/terms" },
 };
 
 export default function TermsLayout({ children }: { children: React.ReactNode }) {
