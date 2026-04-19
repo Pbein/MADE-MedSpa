@@ -35,18 +35,17 @@ export default function ShopPage() {
     return products.filter((p) => p.category === activeCategory);
   }, [products, activeCategory]);
 
-  // Featured: first 2 products (or highest priced)
+  // Featured: top 2 by price
   const featured = useMemo(() => {
     if (!products || products.length < 3) return [];
-    const sorted = [...products].sort((a, b) => b.price - a.price);
-    return sorted.slice(0, 2);
+    return [...products].sort((a, b) => b.price - a.price).slice(0, 2);
   }, [products]);
 
-  // Grid products: everything except featured (when showing "All")
+  // Grid: everything except featured when "All"
   const gridProducts = useMemo(() => {
     if (activeCategory !== "All") return filteredProducts;
-    const featuredIds = new Set(featured.map((f) => f._id));
-    return filteredProducts.filter((p) => !featuredIds.has(p._id));
+    const ids = new Set(featured.map((f) => f._id));
+    return filteredProducts.filter((p) => !ids.has(p._id));
   }, [filteredProducts, featured, activeCategory]);
 
   const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("shop");
@@ -63,179 +62,165 @@ export default function ShopPage() {
   const showFilters = isSectionVisible("filters") && hasProducts && categories.length > 2;
 
   return (
-    <main style={styleOverrides}>
+    <main style={styleOverrides} className="min-h-screen text-[var(--color-espresso)]">
       {isPreview && <PreviewBanner />}
 
-      {/* ═══════════════════════════════════════════
-          CONTINUOUS FLOW — header → filters → featured → grid
-          One gradient background, no hard breaks
-          ═══════════════════════════════════════════ */}
+      {/* ═══ ATMOSPHERE WRAPPER — one continuous background ═══ */}
       <div
-        className="relative"
-        style={{
-          background: "radial-gradient(circle at 50% 30%, rgba(255,240,232,0.6) 0%, rgba(232,224,213,0.8) 40%, rgba(247,230,235,0.45) 70%, rgba(255,255,255,0.85) 100%), linear-gradient(180deg, #f7f3ef 0%, #e8e0d5 50%, #f3e7e4 100%)",
-        }}
+        className="made-noise relative overflow-hidden"
+        style={{ background: "var(--gradient-shop-atmosphere)" }}
       >
-        {/* Soft vignette */}
+        {/* Vignette */}
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(circle, transparent 55%, rgba(57,30,30,0.06) 100%)" }}
+          style={{ background: "radial-gradient(circle, transparent 55%, rgba(57,30,30,0.05) 100%)" }}
         />
-        {/* Header — centered, unified entry */}
-        <section className="pt-36 md:pt-44 pb-6 md:pb-8 px-6">
-          <div className="mx-auto max-w-4xl text-center">
-            <motion.span
-              className="label-micro block mb-5"
-              style={{ color: "rgba(57,30,30,0.45)" }}
+
+        {/* ═══ HEADER ═══ */}
+        <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
+          <div className="mx-auto max-w-[1180px] text-center">
+            <motion.p
+              className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
+              style={{ letterSpacing: "0.12em" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: luxuryEase }}
             >
               Treatments
-            </motion.span>
+            </motion.p>
+
             <motion.h1
-              className="font-headline italic text-3xl md:text-5xl lg:text-6xl mb-5"
-              style={{ color: "var(--color-primary)", lineHeight: 1.15 }}
+              className="mx-auto max-w-4xl font-headline text-[clamp(2.5rem,5vw,5rem)] leading-[0.95] text-[var(--color-espresso)]"
+              style={{ letterSpacing: "-0.03em" }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: luxuryEase, delay: 0.05 }}
+              transition={{ duration: 0.9, ease: luxuryEase, delay: 0.05 }}
             >
-              Curated skincare we trust<br />
-              <span className="font-extralight">in every treatment.</span>
+              Curated skincare we trust
+              <br />
+              <span className="font-light italic">in every treatment.</span>
             </motion.h1>
+
             <motion.p
-              className="body-editorial text-sm"
-              style={{ color: "rgba(57,30,30,0.5)" }}
+              className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[var(--color-soft-taupe)]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: luxuryEase, delay: 0.15 }}
             >
               Selected by our providers. Used in our treatments. Loved by our clients.
             </motion.p>
+
+            {/* Filters */}
+            {showFilters && (
+              <motion.div
+                className="mt-10 flex flex-wrap gap-3 justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, ease: luxuryEase, delay: 0.25 }}
+              >
+                {categories.map((cat) => {
+                  const isActive = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className="transition-all duration-300"
+                      style={{
+                        padding: "0.5rem 1.25rem",
+                        borderRadius: "999px",
+                        border: "1px solid",
+                        borderColor: isActive ? "transparent" : "var(--border-soft)",
+                        background: isActive ? "var(--gradient-featured)" : "rgba(255,255,255,0.4)",
+                        color: isActive ? "white" : "var(--color-soft-taupe)",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        textTransform: "uppercase" as const,
+                        letterSpacing: "0.12em",
+                        cursor: "pointer",
+                        boxShadow: isActive ? "var(--shadow-made-button)" : "none",
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
           </div>
         </section>
 
-        {/* Filters — centered, part of the header flow */}
-        {showFilters && (
-          <section className="pb-8 px-6">
-            <div className="mx-auto max-w-6xl">
-              <motion.div
-                className="flex flex-wrap gap-2 justify-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, ease: luxuryEase, delay: 0.2 }}
-              >
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className="transition-all duration-300"
-                    style={{
-                      padding: "0.4rem 1rem",
-                      borderRadius: "9999px",
-                      border: "1px solid",
-                      borderColor: activeCategory === cat ? "var(--color-rose-dust)" : "rgba(57,30,30,0.08)",
-                      background: activeCategory === cat ? "var(--color-rose-dust)" : "rgba(255,255,255,0.4)",
-                      color: activeCategory === cat ? "var(--color-espresso)" : "rgba(57,30,30,0.5)",
-                      fontSize: "0.6875rem",
-                      fontWeight: 500,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase" as const,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </motion.div>
-            </div>
-          </section>
-        )}
-
-        {/* Featured Products — larger cards, editorial feel */}
+        {/* ═══ FEATURED — Provider Favorites ═══ */}
         {featured.length > 0 && activeCategory === "All" && (
-          <section className="pb-6 px-6">
-            <div className="mx-auto max-w-6xl">
-              <motion.span
-                className="label-micro block mb-6"
-                style={{ color: "rgba(57,30,30,0.4)" }}
+          <section className="relative px-6 md:px-8 pt-8 pb-6">
+            <div className="mx-auto max-w-[1180px]">
+              <motion.p
+                className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
+                style={{ letterSpacing: "0.12em" }}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={viewportOnce}
                 transition={{ duration: 0.6, ease: luxuryEase }}
               >
                 Provider Favorites
-              </motion.span>
+              </motion.p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                 {featured.map((product, i) => (
                   <motion.a
                     key={product._id}
                     href={product.pabauLink || BOOKING_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block transition-all duration-500"
+                    className="group overflow-hidden transition-all duration-300 hover:-translate-y-1"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={viewportOnce}
                     transition={{ duration: 0.7, ease: luxuryEase, delay: i * 0.1 }}
-                    whileHover={{ y: -4 }}
                     style={{
-                      background: "rgba(255,255,255,0.7)",
-                      backdropFilter: "blur(10px)",
-                      WebkitBackdropFilter: "blur(10px)",
-                      border: "1px solid rgba(255,255,255,0.4)",
-                      borderRadius: "12px",
-                      boxShadow: "0 8px 30px rgba(57,30,30,0.06)",
-                      display: "flex",
-                      flexDirection: "row",
-                      overflow: "hidden",
+                      background: "var(--gradient-shop-surface)",
+                      border: "1px solid var(--border-soft)",
+                      borderRadius: "1rem",
+                      boxShadow: "var(--shadow-made-soft)",
+                      backdropFilter: "blur(2px)",
+                      display: "grid",
+                      gridTemplateColumns: "0.95fr 1.25fr",
                     }}
                   >
                     {/* Image */}
                     <div
-                      className="w-2/5 shrink-0 overflow-hidden"
-                      style={{
-                        background: product.imageUrl
-                          ? "var(--color-glaze)"
-                          : "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)",
-                      }}
+                      className="relative min-h-[280px] md:min-h-[320px]"
+                      style={{ background: "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)" }}
                     >
                       {product.imageUrl ? (
-                        <img
-                          src={product.imageUrl}
-                          alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
-                        />
+                        <img src={product.imageUrl} alt={product.name} className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]" />
                       ) : (
-                        <div className="flex h-full min-h-[200px] items-center justify-center">
-                          <span className="font-headline italic text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.3 }}>
-                            {product.name.charAt(0)}
-                          </span>
+                        <div className="flex h-full items-center justify-center">
+                          <span className="font-headline italic text-5xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.25 }}>{product.name.charAt(0)}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Info */}
-                    <div className="flex flex-col justify-center p-6 md:p-8 flex-1">
-                      <span style={{ color: "rgba(57,30,30,0.4)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.5rem", display: "block" }}>
-                        {product.category}
-                      </span>
-                      <h3 className="font-headline italic text-xl md:text-2xl mb-2" style={{ color: "var(--color-primary)", lineHeight: 1.25 }}>
-                        {product.name}
-                      </h3>
-                      <p className="text-sm mb-4 line-clamp-2" style={{ color: "rgba(57,30,30,0.55)", lineHeight: 1.6 }}>
-                        {product.description}
-                      </p>
-                      <div className="flex items-center justify-between mt-auto">
-                        <span className="font-headline text-xl" style={{ color: "var(--color-primary)" }}>
+                    <div className="flex flex-col justify-between p-6 md:p-8">
+                      <div>
+                        <p className="mb-4 text-[11px] uppercase text-[var(--color-soft-taupe)]" style={{ letterSpacing: "0.12em" }}>
+                          {product.category}
+                        </p>
+                        <h3 className="font-headline text-[1.75rem] md:text-[2rem] leading-[1.05] text-[var(--color-espresso)]" style={{ letterSpacing: "-0.02em" }}>
+                          {product.name}
+                        </h3>
+                        <p className="mt-4 text-[15px] leading-7 text-[var(--color-soft-taupe)]">
+                          {product.description}
+                        </p>
+                      </div>
+
+                      <div className="mt-8 flex items-end justify-between gap-6">
+                        <span className="font-headline text-[2rem] leading-none text-[var(--color-espresso)]">
                           ${product.price.toFixed(0)}
                         </span>
-                        <span className="group/link flex items-center gap-2 transition-all duration-500 group-hover:gap-3" style={{ color: "var(--color-primary)" }}>
-                          <span style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                            {product.pabauLink ? "Shop Now" : "Inquire"}
-                          </span>
-                          <span className="inline-block h-px transition-all duration-500 group-hover:w-8" style={{ width: "1.25rem", backgroundColor: "var(--color-primary)" }} />
+                        <span className="inline-flex items-center gap-3 text-[12px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1" style={{ letterSpacing: "0.12em" }}>
+                          {product.pabauLink ? "Shop Now" : "Inquire"}
+                          <span className="h-px w-6 bg-current" />
                         </span>
                       </div>
                     </div>
@@ -246,40 +231,36 @@ export default function ShopPage() {
           </section>
         )}
 
-        {/* Editorial micro-copy */}
+        {/* ═══ EDITORIAL LINE ═══ */}
         {hasProducts && activeCategory === "All" && (
-          <section className="py-10 px-6">
-            <div className="mx-auto max-w-6xl">
-              <motion.p
-                className="font-headline italic text-base"
-                style={{ color: "rgba(57,30,30,0.35)" }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={viewportOnce}
-                transition={{ duration: 0.6, ease: luxuryEase }}
-              >
-                Used in our treatments. Recommended for results you can maintain at home.
-              </motion.p>
-            </div>
-          </section>
+          <div className="relative px-6 md:px-8 py-8">
+            <motion.p
+              className="mx-auto max-w-[1180px] text-center text-lg italic text-[var(--color-soft-taupe)]"
+              style={{ opacity: 0.7 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.7 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.6, ease: luxuryEase }}
+            >
+              Used in our treatments. Recommended for results you can maintain at home.
+            </motion.p>
+          </div>
         )}
 
-        {/* Main Grid */}
-        <section ref={gridRef} className="pb-24 md:pb-32 px-6">
-          <div className="mx-auto max-w-6xl">
+        {/* ═══ PRODUCT GRID ═══ */}
+        <section ref={gridRef} className="relative px-6 md:px-8 pb-24 md:pb-32">
+          <div className="mx-auto max-w-[1180px]">
             {!products ? (
               <div className="flex justify-center py-20">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" style={{ borderColor: "var(--color-outline-variant)" }} />
               </div>
             ) : products.length === 0 ? (
               <motion.div className="text-center py-20 max-w-lg mx-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewportOnce} transition={{ duration: 0.8, ease: luxuryEase }}>
-                <p className="font-headline italic text-2xl mb-5" style={{ color: "var(--color-primary)" }}>Coming Soon</p>
-                <p className="body-editorial text-sm" style={{ color: "rgba(57,30,30,0.55)" }}>Our curated collection is being carefully selected.</p>
+                <p className="font-headline italic text-2xl mb-5" style={{ color: "var(--color-espresso)" }}>Coming Soon</p>
+                <p className="text-sm" style={{ color: "var(--color-soft-taupe)" }}>Our curated collection is being carefully selected.</p>
               </motion.div>
             ) : gridProducts.length === 0 && activeCategory !== "All" ? (
-              <div className="text-center py-16">
-                <p className="font-headline italic text-lg" style={{ color: "rgba(57,30,30,0.5)" }}>No products in this category yet.</p>
-              </div>
+              <p className="font-headline italic text-lg text-center py-16" style={{ color: "var(--color-soft-taupe)", opacity: 0.6 }}>No products in this category yet.</p>
             ) : gridProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                 {gridProducts.map((product, i) => (
@@ -288,50 +269,54 @@ export default function ShopPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, ease: luxuryEase, delay: i * 0.06 }}
-                    className="group transition-all duration-500"
-                    whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(57,30,30,0.1)" }}
+                    className="group overflow-hidden transition-all duration-300 hover:-translate-y-1"
                     style={{
-                      background: "rgba(255,255,255,0.7)",
-                      backdropFilter: "blur(10px)",
-                      WebkitBackdropFilter: "blur(10px)",
-                      border: "1px solid rgba(255,255,255,0.4)",
-                      borderRadius: "12px",
-                      boxShadow: "0 8px 30px rgba(57,30,30,0.06)",
+                      background: "rgba(255,255,255,0.5)",
+                      border: "1px solid var(--border-soft)",
+                      borderRadius: "1rem",
+                      boxShadow: "var(--shadow-made-soft)",
                     }}
                   >
                     <div
-                      className="aspect-square overflow-hidden"
+                      className="aspect-[4/5] overflow-hidden"
                       style={{
                         background: product.imageUrl ? "var(--color-glaze)" : "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)",
-                        borderRadius: "12px 12px 0 0",
+                        borderRadius: "1rem 1rem 0 0",
                       }}
                     >
                       {product.imageUrl ? (
                         <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <span className="font-headline italic text-3xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.3 }}>{product.name.charAt(0)}</span>
+                          <span className="font-headline italic text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}>{product.name.charAt(0)}</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="p-5">
-                      <span style={{ color: "rgba(57,30,30,0.4)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.375rem", display: "block" }}>
+                    <div className="p-6">
+                      <p className="mb-3 text-[11px] uppercase text-[var(--color-soft-taupe)]" style={{ letterSpacing: "0.12em", opacity: 0.7 }}>
                         {product.category}
-                      </span>
-                      <h3 className="font-headline italic text-lg mb-1.5" style={{ color: "var(--color-primary)", lineHeight: 1.25 }}>{product.name}</h3>
-                      <p className="text-sm mb-4 line-clamp-2" style={{ color: "rgba(57,30,30,0.5)", lineHeight: 1.5 }}>{product.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="font-headline text-lg" style={{ color: "var(--color-primary)" }}>${product.price.toFixed(0)}</span>
+                      </p>
+                      <h3 className="font-headline text-[1.5rem] md:text-[1.75rem] leading-[1.05] text-[var(--color-espresso)]" style={{ letterSpacing: "-0.02em" }}>
+                        {product.name}
+                      </h3>
+                      <p className="mt-3 text-[15px] leading-7 text-[var(--color-soft-taupe)] line-clamp-2">
+                        {product.description}
+                      </p>
+
+                      <div className="mt-6 flex items-end justify-between gap-4 border-t pt-5" style={{ borderColor: "var(--border-soft)" }}>
+                        <span className="font-headline text-[1.75rem] leading-none text-[var(--color-espresso)]">
+                          ${product.price.toFixed(0)}
+                        </span>
                         <a
                           href={product.pabauLink || BOOKING_URL}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/link flex items-center gap-2 transition-all duration-500 hover:gap-3"
-                          style={{ color: "var(--color-primary)" }}
+                          className="inline-flex items-center gap-3 text-[12px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1"
+                          style={{ letterSpacing: "0.12em" }}
                         >
-                          <span style={{ fontSize: "10px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" }}>{product.pabauLink ? "Shop" : "Inquire"}</span>
-                          <span className="inline-block h-px transition-all duration-500 group-hover/link:w-7" style={{ width: "1rem", backgroundColor: "var(--color-primary)" }} />
+                          {product.pabauLink ? "Shop" : "Inquire"}
+                          <span className="h-px w-6 bg-current" />
                         </a>
                       </div>
                     </div>
@@ -343,11 +328,11 @@ export default function ShopPage() {
         </section>
       </div>
 
-      {/* Consultation nudge */}
+      {/* ═══ CONSULTATION NUDGE ═══ */}
       {hasProducts && (
         <section className="py-14 px-6" style={{ backgroundColor: "var(--color-powder)" }}>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-headline italic text-lg md:text-xl mb-5" style={{ color: "rgba(57,30,30,0.55)" }}>
+            <p className="font-headline italic text-lg md:text-xl mb-5" style={{ color: "var(--color-soft-taupe)" }}>
               Not sure which products are right for you?
             </p>
             <Link href="/booking" className="link-editorial text-sm">

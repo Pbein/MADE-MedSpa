@@ -76,6 +76,22 @@
     var(--color-silk);
   --gradient-featured:
     linear-gradient(135deg, #391e1e 0%, #5b2729 52%, #84262c 100%);
+  --gradient-shop-atmosphere:
+    radial-gradient(circle at 50% 20%, rgba(239,231,223,0.72) 0%, rgba(239,231,223,0.10) 34%, transparent 58%),
+    radial-gradient(circle at 18% 52%, rgba(220,207,196,0.18) 0%, transparent 30%),
+    radial-gradient(circle at 84% 58%, rgba(201,170,150,0.12) 0%, transparent 26%),
+    linear-gradient(180deg, #f6f1ea 0%, #efe7df 42%, #f6f1ea 100%);
+  --gradient-shop-surface:
+    linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(248,243,238,0.72) 100%);
+
+  /* ═══ Card Surfaces ═══ */
+  --surface-card: rgba(255, 255, 255, 0.66);
+  --surface-card-soft: rgba(255, 255, 255, 0.46);
+
+  /* ═══ Shadows ═══ */
+  --shadow-made-soft: 0 10px 30px rgba(57, 30, 30, 0.08);
+  --shadow-made-lift: 0 18px 40px rgba(57, 30, 30, 0.12);
+  --shadow-made-button: 0 8px 20px rgba(57, 30, 30, 0.18);
 
   /* --- Typography --- */
   --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
@@ -373,6 +389,32 @@ a {
   background-color: rgba(251, 250, 239, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+/* ============================================
+   Utility: Editorial Noise Grain
+   ============================================ */
+
+.made-noise {
+  position: relative;
+  isolation: isolate;
+}
+
+.made-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(rgba(57,30,30,0.08) 0.5px, transparent 0.5px);
+  background-size: 8px 8px;
+  z-index: 0;
+}
+
+.made-noise > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ============================================
