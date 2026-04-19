@@ -75,11 +75,20 @@ export default function ShopPage() {
           background: "radial-gradient(circle at 15% 25%, rgba(216,192,187,0.18), transparent 45%), radial-gradient(circle at 85% 10%, rgba(201,170,150,0.12), transparent 40%), linear-gradient(180deg, var(--color-silk) 0%, var(--color-powder) 40%, var(--color-silk) 100%)",
         }}
       >
-        {/* Header */}
-        <section className="pt-36 md:pt-44 pb-10 md:pb-12 px-6">
-          <div className="mx-auto max-w-6xl">
+        {/* Header — centered, unified entry */}
+        <section className="pt-36 md:pt-44 pb-6 md:pb-8 px-6">
+          <div className="mx-auto max-w-4xl text-center">
+            <motion.span
+              className="label-micro block mb-5"
+              style={{ color: "rgba(57,30,30,0.45)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, ease: luxuryEase }}
+            >
+              Treatments
+            </motion.span>
             <motion.h1
-              className="font-headline italic text-3xl md:text-4xl lg:text-5xl mb-4"
+              className="font-headline italic text-3xl md:text-5xl lg:text-6xl mb-5"
               style={{ color: "var(--color-primary)", lineHeight: 1.15 }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -89,7 +98,7 @@ export default function ShopPage() {
               <span className="font-extralight">in every treatment.</span>
             </motion.h1>
             <motion.p
-              className="body-editorial text-sm max-w-lg"
+              className="body-editorial text-sm"
               style={{ color: "rgba(57,30,30,0.5)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -100,12 +109,12 @@ export default function ShopPage() {
           </div>
         </section>
 
-        {/* Filters */}
+        {/* Filters — centered, part of the header flow */}
         {showFilters && (
           <section className="pb-8 px-6">
             <div className="mx-auto max-w-6xl">
               <motion.div
-                className="flex flex-wrap gap-2"
+                className="flex flex-wrap gap-2 justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: luxuryEase, delay: 0.2 }}
