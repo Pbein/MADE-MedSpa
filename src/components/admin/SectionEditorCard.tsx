@@ -55,19 +55,66 @@ function MediaField({
 
   const currentUrl = content?.imageUrl || defaultUrl;
 
+  async function uploadBlob(blob: Blob): Promise<string> {
+    const url = await generateUploadUrl();
+    const result = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": blob.type },
+      body: blob,
+    });
+    const { storageId } = await result.json();
+    const storageUrl = await convex.query(api.storage.getUrl, { storageId });
+    if (!storageUrl) throw new Error("Failed to resolve URL");
+    return storageUrl;
+  }
+
+  function extractFirstFrame(file: File): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = "auto";
+      const objectUrl = URL.createObjectURL(file);
+      video.src = objectUrl;
+      video.addEventListener("seeked", () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d")!.drawImage(video, 0, 0);
+        URL.revokeObjectURL(objectUrl);
+        canvas.toBlob(
+          (blob) => (blob ? resolve(blob) : reject(new Error("Frame capture failed"))),
+          "image/webp",
+          0.85
+        );
+      }, { once: true });
+      video.addEventListener("error", () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Could not load video"));
+      }, { once: true });
+      video.addEventListener("loadeddata", () => {
+        video.currentTime = 0.1;
+      }, { once: true });
+    });
+  }
+
   async function handleUpload(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      const { storageId } = await result.json();
-      const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!storageUrl) throw new Error("Failed to resolve URL");
+      const storageUrl = await uploadBlob(file);
       await upsert({ key: mediaKey, imageUrl: storageUrl });
+
+      // Auto-generate poster from first frame when uploading hero video
+      if (mediaKey === "hero_video" && file.type.startsWith("video/")) {
+        try {
+          const posterBlob = await extractFirstFrame(file);
+          const posterUrl = await uploadBlob(posterBlob);
+          await upsert({ key: "hero_poster", imageUrl: posterUrl });
+        } catch {
+          // Poster generation is best-effort
+        }
+      }
+
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch {
