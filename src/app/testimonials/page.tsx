@@ -158,7 +158,7 @@ export default function TestimonialsPage() {
       )}
 
       {/* 4. TESTIMONIALS — GROUPED BY CATEGORY (when "All") or FLAT LIST (when filtered) */}
-      <section className="py-16 md:py-20 px-6" style={{ backgroundColor: "rgba(255,255,255,0.55)" }}>
+      <section className="py-16 md:py-20 px-6" style={{ backgroundColor: "rgba(255,255,255,0.4)" }}>
         <div className="mx-auto max-w-3xl">
           {!testimonials ? (
             <div className="flex justify-center py-16">
