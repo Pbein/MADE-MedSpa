@@ -87,13 +87,13 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             title="MADE Med Spa ambient background"
             width={1920}
             height={1080}
             onCanPlay={() => setVideoReady(true)}
             onError={() => setVideoFailed(true)}
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ease-[cubic-bezier(0.2,0,0,1)]"
             style={{ opacity: videoReady ? 1 : 0 }}
           >
             <source src={videoSrc} type="video/mp4" />
