@@ -9,8 +9,8 @@ import { hasNavigatedWithinApp } from "@/lib/navigation";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
 const ESPRESSO = "#391e1e";
-const SILK = "#f7f6eb";
-const GLAZE = "#d7cfc5";
+const SILK = "#f6f1ea";
+const GLAZE = "#e8e0d5";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 

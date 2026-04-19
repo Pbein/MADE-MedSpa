@@ -7,32 +7,75 @@
    ============================================ */
 
 :root {
-  /* --- Core Palette --- */
-  --color-primary: #391e1e;          /* Espresso */
-  --color-primary-container: #391e1e; /* Espresso */
-  --color-secondary: #84262c;        /* Blush */
-  --color-tertiary: #838d60;         /* Matcha */
+  /* ═══ Core Brand Palette ═══ */
+  --color-espresso: #391e1e;
+  --color-blush: #84262c;
+  --color-matcha: #838d60;
+  --color-olive: #413e2a;
+  --color-glaze: #e8e0d5;
+  --color-silk: #f6f1ea;
 
-  /* --- Surfaces --- */
-  --color-surface: #fbfaef;
-  --color-surface-low: #f5f4e9;
-  --color-surface-high: #e9e9de;
-  --color-surface-highest: #e4e3d8;
-  --color-surface-lowest: #ffffff;
-  --color-surface-variant: #e4e3d8;
+  /* ═══ Soft Support Tones (makeup-adjacent atmosphere) ═══ */
+  --color-powder: #efe7df;
+  --color-rose-dust: #d8c0bb;
+  --color-petal-beige: #dccfc4;
+  --color-warm-nude: #c9aa96;
+  --color-soft-taupe: #b7a39a;
+
+  /* ═══ Semantic Mappings ═══ */
+  --color-primary: var(--color-espresso);
+  --color-primary-container: var(--color-espresso);
+  --color-secondary: var(--color-blush);
+  --color-tertiary: var(--color-matcha);
+
+  /* --- Surfaces (warm neutral progression) --- */
+  --color-surface: var(--color-silk);           /* Primary page bg */
+  --color-surface-low: var(--color-powder);     /* Section contrast */
+  --color-surface-high: var(--color-glaze);     /* Elevated elements */
+  --color-surface-highest: var(--color-petal-beige);
+  --color-surface-lowest: #fdfaf6;              /* Cards, pure light */
+  --color-surface-variant: var(--color-glaze);
 
   /* --- Text --- */
-  --color-on-surface: #1b1c16;
-  --color-on-surface-variant: #504443;
+  --color-on-surface: var(--color-espresso);
+  --color-on-surface-variant: rgba(57, 30, 30, 0.72);
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #ab8382;
+  --color-on-primary-container: var(--color-rose-dust);
 
-  /* --- Accents & Borders --- */
-  --color-outline: #827473;
-  --color-outline-variant: #d4c3c2;
+  /* --- Borders & Accents --- */
+  --color-outline: var(--color-soft-taupe);
+  --color-outline-variant: var(--color-petal-beige);
   --color-tertiary-fixed: #dde8b4;
   --color-tertiary-fixed-dim: #c1cc9a;
   --color-secondary-fixed: #f0d4d5;
+
+  /* ═══ Semantic Surfaces ═══ */
+  --bg-page: var(--color-silk);
+  --bg-section: var(--color-glaze);
+  --bg-section-alt: var(--color-powder);
+  --text-primary: var(--color-espresso);
+  --text-secondary: rgba(57, 30, 30, 0.72);
+  --text-muted: rgba(57, 30, 30, 0.52);
+  --border-soft: rgba(57, 30, 30, 0.10);
+  --border-medium: rgba(57, 30, 30, 0.16);
+  --accent-primary: var(--color-blush);
+  --accent-soft: var(--color-rose-dust);
+  --surface-card: rgba(255, 255, 255, 0.45);
+  --surface-card-alt: var(--color-powder);
+
+  /* ═══ Reusable Gradients ═══ */
+  --gradient-hero-soft:
+    radial-gradient(circle at 20% 20%, rgba(216, 192, 187, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 15%, rgba(201, 170, 150, 0.18), transparent 36%),
+    linear-gradient(160deg, var(--color-silk) 0%, var(--color-powder) 50%, var(--color-glaze) 100%);
+  --gradient-editorial-wash:
+    linear-gradient(180deg, var(--color-silk) 0%, var(--color-powder) 100%);
+  --gradient-warm-atmosphere:
+    radial-gradient(ellipse at 30% 0%, rgba(216, 192, 187, 0.15), transparent 50%),
+    radial-gradient(ellipse at 70% 100%, rgba(220, 207, 196, 0.12), transparent 50%),
+    var(--color-silk);
+  --gradient-featured:
+    linear-gradient(135deg, #391e1e 0%, #5b2729 52%, #84262c 100%);
 
   /* --- Typography --- */
   --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
@@ -69,10 +112,17 @@
   --color-surface-low: var(--color-surface-low);
   --color-surface-high: var(--color-surface-high);
   --color-surface-highest: var(--color-surface-highest);
+  --color-surface-lowest: var(--color-surface-lowest);
   --color-on-surface: var(--color-on-surface);
   --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-on-primary: var(--color-on-primary);
   --color-outline-variant: var(--color-outline-variant);
   --color-tertiary-fixed: var(--color-tertiary-fixed);
+  --color-glaze: var(--color-glaze);
+  --color-silk: var(--color-silk);
+  --color-powder: var(--color-powder);
+  --color-rose-dust: var(--color-rose-dust);
+  --color-petal-beige: var(--color-petal-beige);
   --font-sans: var(--font-body);
   --font-headline: var(--font-headline);
 }
@@ -86,7 +136,7 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fbfaef;
+  background-color: var(--color-silk);
 }
 
 body {
@@ -129,8 +179,8 @@ a {
 }
 
 ::selection {
-  background-color: var(--color-secondary-fixed);
-  color: var(--color-primary);
+  background-color: var(--color-rose-dust);
+  color: var(--color-espresso);
 }
 
 ::-webkit-scrollbar { width: 4px; }
@@ -185,7 +235,7 @@ a {
   align-items: center;
   justify-content: center;
   padding: 1rem 2.5rem;
-  background-color: #221010;
+  background-color: var(--color-espresso);
   color: var(--color-on-primary);
   border: none;
   font-family: var(--font-headline);
@@ -197,7 +247,7 @@ a {
 }
 
 .btn-primary:hover {
-  background-color: #2a1414;
+  background-color: var(--color-blush);
 }
 
 .btn-outline {

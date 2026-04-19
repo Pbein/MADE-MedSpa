@@ -56,8 +56,8 @@ const legalLinks = [
 ];
 
 const ESPRESSO = "#391e1e";
-const SILK = "#f7f6eb";
-const GLAZE = "#d7cfc5";
+const SILK = "#f6f1ea";
+const GLAZE = "#e8e0d5";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
