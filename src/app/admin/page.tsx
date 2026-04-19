@@ -122,10 +122,9 @@ export default function AdminDashboard() {
         <h2 style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginBottom: 12 }}>Quick Actions</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {[
-            { label: "Update Services", href: "/admin/services" },
-            { label: "Edit Site Text", href: "/admin/content" },
-            { label: "Update Images", href: "/admin/media" },
-            { label: "Customize Pages", href: "/admin/customize" },
+            { label: "Edit Homepage", href: "/admin/pages/home" },
+            { label: "Edit About Page", href: "/admin/pages/about" },
+            { label: "Manage Services", href: "/admin/services" },
             { label: "SEO Settings", href: "/admin/seo" },
             { label: "View Contacts", href: "/admin/contacts" },
           ].map((action) => (

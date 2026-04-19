@@ -388,6 +388,21 @@ export default function SectionEditorCard({
             </div>
           )}
 
+          {/* Section Color Note */}
+          {section.hasColorOverride && (
+            <div style={{
+              marginTop: "1rem",
+              padding: "0.625rem 1rem",
+              backgroundColor: "#f9fafb",
+              borderRadius: "0.375rem",
+              border: "1px solid #e5e7eb",
+              fontSize: "0.8125rem",
+              color: "#6b7280",
+            }}>
+              This section supports custom colors. Use the <strong>Customize Pages</strong> tool in the sidebar to adjust this section&apos;s color palette.
+            </div>
+          )}
+
           {/* Actions */}
           {section.fields.length > 0 && (
             <div style={{
