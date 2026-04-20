@@ -227,10 +227,6 @@ function DesignPreview({
           {sectionLabel}
         </span>
 
-        {/* Body text sample */}
-        <span style={{ fontSize: "0.625rem", color: bodyColor, maxWidth: "70%" }}>
-          Your customized section styling applied live.
-        </span>
 
         {/* Buttons */}
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "0.25rem" }}>
