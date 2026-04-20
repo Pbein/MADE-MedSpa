@@ -126,7 +126,7 @@ function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: s
       <div style={{
         position: "relative",
         width: "100%",
-        height: 280,
+        height: 360,
         overflow: "hidden",
         borderRadius: "0.375rem",
         borderTop: "1px solid #d1d5db",
@@ -139,9 +139,9 @@ function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: s
           src={previewUrl}
           title="Live page preview"
           style={{
-            width: "250%",
-            height: "250%",
-            transform: "scale(0.4)",
+            width: "333%",
+            height: "333%",
+            transform: "scale(0.3)",
             transformOrigin: "top left",
             borderWidth: 0,
             pointerEvents: "none",
