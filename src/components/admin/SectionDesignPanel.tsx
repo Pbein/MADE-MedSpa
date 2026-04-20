@@ -13,6 +13,9 @@ interface SectionDesignConfig {
     surface?: string;
     onSurface?: string;
     secondary?: string;
+    buttonBg?: string;
+    buttonText?: string;
+    divider?: string;
   };
   backgroundImage?: string;
   designStyle?: string;
@@ -191,8 +194,10 @@ function DesignPreview({
   }
 
   const textColor = colors.onSurface || (preset?.lightText ? "#f6f1ea" : "#391e1e");
-  const accentColor = colors.secondary || "#84262c";
-  const mutedColor = preset?.lightText ? "rgba(246,241,234,0.5)" : "rgba(57,30,30,0.4)";
+  const bodyColor = colors.secondary || (preset?.lightText ? "rgba(246,241,234,0.6)" : "rgba(57,30,30,0.55)");
+  const btnBg = colors.buttonBg || (preset?.lightText ? "#f6f1ea" : "#391e1e");
+  const btnText = colors.buttonText || (preset?.lightText ? "#391e1e" : "#f6f1ea");
+  const dividerColor = colors.divider || (preset?.lightText ? "rgba(246,241,234,0.3)" : "rgba(57,30,30,0.15)");
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
@@ -207,27 +212,34 @@ function DesignPreview({
         )}
       </div>
       <div style={previewStyle}>
-        {/* Divider line like the real CTA */}
-        <div style={{ width: 32, height: 1, backgroundColor: mutedColor, marginBottom: "0.25rem" }} />
+        {/* Divider line */}
+        <div style={{ width: 32, height: 1, backgroundColor: dividerColor, marginBottom: "0.25rem" }} />
 
+        {/* Headline */}
         <span style={{
           fontFamily: "Georgia, 'Cormorant Garamond', serif",
           fontStyle: "italic",
           fontSize: "1.125rem",
           color: textColor,
           lineHeight: 1.3,
-          maxWidth: "80%",
+          maxWidth: "85%",
         }}>
           {sectionLabel}
         </span>
 
+        {/* Body text sample */}
+        <span style={{ fontSize: "0.625rem", color: bodyColor, maxWidth: "70%" }}>
+          Your customized section styling applied live.
+        </span>
+
+        {/* Buttons */}
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "0.25rem" }}>
           {ctaText && (
             <span style={{
               display: "inline-block",
               padding: "0.35rem 1rem",
-              backgroundColor: preset?.lightText ? "rgba(246,241,234,0.9)" : "#391e1e",
-              color: preset?.lightText ? "#391e1e" : "#f6f1ea",
+              backgroundColor: btnBg,
+              color: btnText,
               fontSize: "0.625rem",
               fontFamily: "Georgia, serif",
               fontStyle: "italic",
@@ -495,9 +507,9 @@ export default function SectionDesignPanel({
           {/* Colors */}
           <div style={{ marginBottom: "1rem" }}>
             <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>
-              Colors
+              Section Colors
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.625rem" }}>
               <ColorPicker
                 label="Background"
                 value={colors.surface}
@@ -509,7 +521,7 @@ export default function SectionDesignPanel({
                 })}
               />
               <ColorPicker
-                label="Text"
+                label="Headline Text"
                 value={colors.onSurface}
                 defaultValue={presetColors.onSurface}
                 onChange={(val) => setColors((prev) => {
@@ -519,12 +531,42 @@ export default function SectionDesignPanel({
                 })}
               />
               <ColorPicker
-                label="Accent"
+                label="Body Text"
                 value={colors.secondary}
                 defaultValue={presetColors.secondary}
                 onChange={(val) => setColors((prev) => {
                   const next = { ...prev };
                   if (val) next.secondary = val; else delete next.secondary;
+                  return next;
+                })}
+              />
+              <ColorPicker
+                label="Button Color"
+                value={colors.buttonBg}
+                defaultValue="#391e1e"
+                onChange={(val) => setColors((prev) => {
+                  const next = { ...prev };
+                  if (val) next.buttonBg = val; else delete next.buttonBg;
+                  return next;
+                })}
+              />
+              <ColorPicker
+                label="Button Text"
+                value={colors.buttonText}
+                defaultValue="#f6f1ea"
+                onChange={(val) => setColors((prev) => {
+                  const next = { ...prev };
+                  if (val) next.buttonText = val; else delete next.buttonText;
+                  return next;
+                })}
+              />
+              <ColorPicker
+                label="Divider Line"
+                value={colors.divider}
+                defaultValue="#d4c3c2"
+                onChange={(val) => setColors((prev) => {
+                  const next = { ...prev };
+                  if (val) next.divider = val; else delete next.divider;
                   return next;
                 })}
               />
