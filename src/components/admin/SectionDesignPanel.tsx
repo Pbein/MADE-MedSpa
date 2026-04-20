@@ -85,48 +85,52 @@ function ColorPicker({
 
 // ── Inline Preview ──────────────────────────────────────────────────────────
 
-function SectionPreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: string }) {
+function SectionPreview({ pagePath }: { pagePath: string; sectionKey: string }) {
   if (pagePath === "(global)") return null;
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
       <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>
-        Live Preview
+        Page Preview
       </div>
       <div style={{
         position: "relative",
         width: "100%",
-        height: 220,
+        height: 200,
         overflow: "hidden",
-        border: "1px solid #e5e7eb",
+        borderTop: "1px solid #e5e7eb",
+        borderLeft: "1px solid #e5e7eb",
+        borderRight: "1px solid #e5e7eb",
+        borderBottom: "1px solid #e5e7eb",
         borderRadius: "0.375rem",
         backgroundColor: "#f9fafb",
       }}>
         <iframe
-          src={`${pagePath}?_highlight=${sectionKey}`}
-          title="Section preview"
+          src={pagePath}
+          title="Page preview"
           style={{
-            width: "300%",
-            height: "300%",
-            transform: "scale(0.333)",
+            width: "400%",
+            height: "400%",
+            transform: "scale(0.25)",
             transformOrigin: "top left",
             border: "none",
             pointerEvents: "none",
           }}
         />
-        <div style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 40,
-          background: "linear-gradient(transparent, rgba(249,250,251,0.9))",
-          pointerEvents: "none",
-        }} />
       </div>
-      <p style={{ fontSize: "0.625rem", color: "#9ca3af", marginTop: "0.25rem" }}>
-        Save changes to see them reflected in the preview.
-      </p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.25rem" }}>
+        <p style={{ fontSize: "0.625rem", color: "#9ca3af", margin: 0 }}>
+          Save changes, then refresh to see updates.
+        </p>
+        <a
+          href={pagePath}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: "0.625rem", color: "#6366f1", textDecoration: "none" }}
+        >
+          Open full page &#8599;
+        </a>
+      </div>
     </div>
   );
 }
