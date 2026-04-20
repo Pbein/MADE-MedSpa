@@ -84,7 +84,7 @@ export default function PageEditor({ page }: { page: PageDefinition }) {
             }}>
               {index + 1}
             </div>
-            <SectionEditorCard section={section} pageKey={page.key} />
+            <SectionEditorCard section={section} pageKey={page.key} pagePath={page.path} />
           </div>
         ))}
       </div>

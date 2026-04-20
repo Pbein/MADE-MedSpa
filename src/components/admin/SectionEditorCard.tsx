@@ -5,6 +5,7 @@ import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import type { SectionDefinition } from "@/lib/sectionDefinitions";
+import SectionDesignPanel from "./SectionDesignPanel";
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 
@@ -195,9 +196,11 @@ function MediaField({
 export default function SectionEditorCard({
   section,
   pageKey,
+  pagePath,
 }: {
   section: SectionDefinition;
   pageKey: string;
+  pagePath: string;
 }) {
   const content = useQuery(api.siteContent.getByKey, { key: section.contentKey });
   const upsert = useMutation(api.siteContent.upsert);
@@ -435,19 +438,13 @@ export default function SectionEditorCard({
             </div>
           )}
 
-          {/* Section Color Note */}
+          {/* Section Design Customizer */}
           {section.hasColorOverride && (
-            <div style={{
-              marginTop: "1rem",
-              padding: "0.625rem 1rem",
-              backgroundColor: "#f9fafb",
-              borderRadius: "0.375rem",
-              border: "1px solid #e5e7eb",
-              fontSize: "0.8125rem",
-              color: "#6b7280",
-            }}>
-              This section supports custom colors. Use the <strong>Customize Pages</strong> tool in the sidebar to adjust this section&apos;s color palette.
-            </div>
+            <SectionDesignPanel
+              pageKey={pageKey}
+              sectionKey={section.key}
+              pagePath={pagePath}
+            />
           )}
 
           {/* Actions */}
