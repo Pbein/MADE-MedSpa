@@ -107,8 +107,11 @@ function ColorPicker({
 
 // ── Live Preview (iframe) ───────────────────────────────────────────────────
 
-function LivePreview({ pagePath }: { pagePath: string }) {
+function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: string }) {
   if (pagePath === "(global)") return null;
+
+  // Use hash to scroll iframe to the target section
+  const previewUrl = `${pagePath}#section-${sectionKey}`;
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
@@ -133,7 +136,7 @@ function LivePreview({ pagePath }: { pagePath: string }) {
         backgroundColor: "#1a1a1a",
       }}>
         <iframe
-          src={pagePath}
+          src={previewUrl}
           title="Live page preview"
           style={{
             width: "250%",
@@ -351,7 +354,7 @@ export default function SectionDesignPanel({
           </div>
 
           {/* Live Preview */}
-          <LivePreview key={previewKey} pagePath={pagePath} />
+          <LivePreview key={previewKey} pagePath={pagePath} sectionKey={sectionKey} />
         </div>
       )}
     </div>

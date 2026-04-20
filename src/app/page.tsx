@@ -10,6 +10,17 @@ import {
   isSectionVisible,
   getSectionContent,
 } from "@/lib/pageSettings";
+import { getPageMetadata } from "@/lib/siteSettings";
+
+export async function generateMetadata() {
+  return getPageMetadata({
+    pageKey: "home",
+    path: "/",
+    defaultTitle: "MADE Med Spa McLean, VA | Luxury Aesthetic Treatments",
+    defaultDescription:
+      "Luxury aesthetic med spa in McLean, Virginia. MADE Med Spa offers Botox, dermal fillers, Sculptra, PRF, and advanced skin treatments with unhurried consultations and natural results.",
+  });
+}
 
 export default async function Home() {
   const [content, services, testimonials, pageSettings, sectionData] =
@@ -86,49 +97,59 @@ export default async function Home() {
   return (
     <div style={styles}>
       {show("hero") && (
-        <HeroSection
-          heroVideoUrl={content.hero_video?.imageUrl}
-          heroPosterUrl={content.hero_poster?.imageUrl}
-          sectionContent={heroContent}
-        />
+        <div id="section-hero">
+          <HeroSection
+            heroVideoUrl={content.hero_video?.imageUrl}
+            heroPosterUrl={content.hero_poster?.imageUrl}
+            sectionContent={heroContent}
+          />
+        </div>
       )}
 
       {show("featured") && (
-        <FeaturedServices
-          services={services}
-          featuredImageUrls={[
-            content.featured_service_image_1?.imageUrl,
-            content.featured_service_image_2?.imageUrl,
-            content.featured_service_image_3?.imageUrl,
-          ]}
-          sectionContent={featuredContent}
-        />
+        <div id="section-featured">
+          <FeaturedServices
+            services={services}
+            featuredImageUrls={[
+              content.featured_service_image_1?.imageUrl,
+              content.featured_service_image_2?.imageUrl,
+              content.featured_service_image_3?.imageUrl,
+            ]}
+            sectionContent={featuredContent}
+          />
+        </div>
       )}
 
       {show("about") && (
-        <AboutTeaser
-          aboutImageUrl={content.about_philosophy_image?.imageUrl}
-          sectionContent={aboutContent}
-        />
+        <div id="section-about">
+          <AboutTeaser
+            aboutImageUrl={content.about_philosophy_image?.imageUrl}
+            sectionContent={aboutContent}
+          />
+        </div>
       )}
 
       {show("testimonials") && (
-        <TestimonialSection
-          testimonials={testimonials}
-          testimonialBgUrl={content.testimonial_bg?.imageUrl}
-          sectionContent={testimonialsContent}
-        />
+        <div id="section-testimonials">
+          <TestimonialSection
+            testimonials={testimonials}
+            testimonialBgUrl={content.testimonial_bg?.imageUrl}
+            sectionContent={testimonialsContent}
+          />
+        </div>
       )}
 
       {show("cta") && (
-        <CTABanner
-          dark
-          headline={ctaContent.headline}
-          ctaText={ctaContent.cta_text}
-          ctaHref={ctaContent.cta_href}
-          secondaryText={ctaContent.secondary_text}
-          secondaryHref={ctaContent.secondary_href}
-        />
+        <div id="section-cta">
+          <CTABanner
+            dark
+            headline={ctaContent.headline}
+            ctaText={ctaContent.cta_text}
+            ctaHref={ctaContent.cta_href}
+            secondaryText={ctaContent.secondary_text}
+            secondaryHref={ctaContent.secondary_href}
+          />
+        </div>
       )}
     </div>
   );
