@@ -9,6 +9,7 @@ import {
   buildStyleOverrides,
   isSectionVisible,
   getSectionContent,
+  getSectionDesignServer,
 } from "@/lib/pageSettings";
 import { getPageMetadata } from "@/lib/siteSettings";
 
@@ -53,6 +54,7 @@ export default async function Home() {
   const meta = pageSettings?.metadata as Record<string, unknown> | undefined;
   const styles = buildStyleOverrides(meta);
   const show = (key: string) => isSectionVisible(meta, key);
+  const design = (key: string) => getSectionDesignServer(meta, key);
 
   // Section content with defaults
   const heroContent = getSectionContent(sectionData.section_home_hero, {
@@ -97,7 +99,7 @@ export default async function Home() {
   return (
     <div style={styles}>
       {show("hero") && (
-        <div id="section-hero">
+        <div id="section-hero" style={design("hero")}>
           <HeroSection
             heroVideoUrl={content.hero_video?.imageUrl}
             heroPosterUrl={content.hero_poster?.imageUrl}
@@ -107,7 +109,7 @@ export default async function Home() {
       )}
 
       {show("featured") && (
-        <div id="section-featured">
+        <div id="section-featured" style={design("featured")}>
           <FeaturedServices
             services={services}
             featuredImageUrls={[
@@ -121,7 +123,7 @@ export default async function Home() {
       )}
 
       {show("about") && (
-        <div id="section-about">
+        <div id="section-about" style={design("about")}>
           <AboutTeaser
             aboutImageUrl={content.about_philosophy_image?.imageUrl}
             sectionContent={aboutContent}
@@ -130,7 +132,7 @@ export default async function Home() {
       )}
 
       {show("testimonials") && (
-        <div id="section-testimonials">
+        <div id="section-testimonials" style={design("testimonials")}>
           <TestimonialSection
             testimonials={testimonials}
             testimonialBgUrl={content.testimonial_bg?.imageUrl}
@@ -140,7 +142,7 @@ export default async function Home() {
       )}
 
       {show("cta") && (
-        <div id="section-cta">
+        <div id="section-cta" style={design("cta")}>
           <CTABanner
             dark
             headline={ctaContent.headline}
