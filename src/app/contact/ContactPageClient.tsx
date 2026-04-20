@@ -92,6 +92,7 @@ export default function ContactPageClient() {
           HERO — Espresso background, Silk text
           ────────────────────────────────────────────── */}
       <section
+        id="section-hero"
         className="relative pt-44 pb-28 md:pt-52 md:pb-32 px-6 overflow-hidden"
         style={{ backgroundColor: ESPRESSO }}
       >
@@ -157,6 +158,7 @@ export default function ContactPageClient() {
           BODY — Silk background, 2-column (info + form)
           ────────────────────────────────────────────── */}
       <section
+        id="section-form"
         className="py-24 md:py-36 px-6"
         style={{ backgroundColor: SILK }}
       >
