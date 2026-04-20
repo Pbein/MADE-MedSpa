@@ -98,7 +98,7 @@ export default function BookingPage() {
   return (
     <>
       {/* HERO — video background with mocha overlay */}
-      <section className="relative pt-32 md:pt-48 pb-24 px-6 overflow-hidden">
+      <section id="section-hero" className="relative pt-32 md:pt-48 pb-24 px-6 overflow-hidden">
         <div
           className="absolute inset-0 z-0"
           style={{ backgroundColor: "#391e1e" }}
@@ -195,6 +195,7 @@ export default function BookingPage() {
 
       {/* WHAT TO EXPECT */}
       <section
+        id="section-expect"
         className="relative py-32 md:py-40 overflow-hidden"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
@@ -290,7 +291,7 @@ export default function BookingPage() {
       </section>
 
       {/* PREPARATION TIPS */}
-      <section className="bg-[var(--color-surface-low)] py-32 md:py-40 relative overflow-hidden">
+      <section id="section-prep" className="bg-[var(--color-surface-low)] py-32 md:py-40 relative overflow-hidden">
         {/* Background image — desaturated, slightly more visible than about/values */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
           <Image
@@ -340,7 +341,7 @@ export default function BookingPage() {
       </section>
 
       {/* CANCELLATION POLICY */}
-      <section className="bg-[var(--color-surface)] py-32 md:py-40">
+      <section id="section-policy" className="bg-[var(--color-surface)] py-32 md:py-40">
         <motion.div
           className="mx-auto max-w-3xl px-6"
           initial="hidden"
@@ -378,6 +379,7 @@ export default function BookingPage() {
       </section>
 
       {/* CTA */}
+      <div id="section-cta">
       <CTABanner
         dark
         headline={ctaText.headline}
@@ -387,6 +389,7 @@ export default function BookingPage() {
         secondaryText={ctaText.secondary_text}
         secondaryHref={ctaText.secondary_href}
       />
+      </div>
     </>
   );
 }

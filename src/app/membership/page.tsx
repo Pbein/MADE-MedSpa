@@ -49,16 +49,19 @@ export default function MembershipPage() {
     >
       {isPreview && <PreviewBanner />}
       {isSectionVisible("hero") && (
+        <div id="section-hero">
         <PageHeaderCompact
           eyebrow={heroText.eyebrow}
           title={heroText.headline}
           description={heroText.subtitle}
           transparent
         />
+        </div>
       )}
 
       {/* Membership Tiers */}
       <section
+        id="section-tiers"
         ref={gridRef}
         className="pt-8 pb-32 md:pb-40"
       >
@@ -105,6 +108,7 @@ export default function MembershipPage() {
       </section>
 
       {isSectionVisible("cta") && (
+        <div id="section-cta">
         <CTABanner
           headline={ctaText.headline}
           subtitle={ctaText.subtitle}
@@ -114,6 +118,7 @@ export default function MembershipPage() {
           secondaryText={ctaText.secondary_text}
           secondaryHref={ctaText.secondary_href}
         />
+        </div>
       )}
     </main>
   );

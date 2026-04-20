@@ -124,15 +124,16 @@ export default function AboutPageClient({
   return (
     <>
       {/* HERO */}
-      {show("hero") && <PageHero
+      {show("hero") && <div id="section-hero"><PageHero
         eyebrow={heroText.eyebrow}
         headline={heroText.headline}
         subtitle={heroText.subtitle}
         backgroundImage={heroBgUrl}
-      />}
+      /></div>}
 
       {/* STORY — Asymmetric editorial layout */}
       <section
+        id="section-story"
         className="py-32 md:py-40 px-6"
         style={{ backgroundColor: "var(--color-surface-low)" }}
       >
@@ -222,6 +223,7 @@ export default function AboutPageClient({
 
       {/* EDITORIAL BREAK — Philosophy quote */}
       <section
+        id="section-editorial"
         className="py-32 md:py-40 px-6 overflow-hidden relative"
         style={{
           background: [
@@ -287,6 +289,7 @@ export default function AboutPageClient({
 
       {/* MISSION */}
       <section
+        id="section-mission"
         className="py-32 md:py-40 px-6"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
@@ -326,6 +329,7 @@ export default function AboutPageClient({
 
       {/* VALUES */}
       <section
+        id="section-values"
         className="py-32 md:py-40 px-6 relative overflow-hidden"
         style={{
           backgroundColor: "var(--color-surface-highest)",
@@ -422,6 +426,7 @@ export default function AboutPageClient({
 
       {/* TEAM */}
       <section
+        id="section-team"
         className="py-32 md:py-40 px-6"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
@@ -499,6 +504,7 @@ export default function AboutPageClient({
 
       {/* CTA */}
       {show("cta") && (
+        <div id="section-cta">
         <CTABanner
           dark
           headline={ctaText.headline}
@@ -508,6 +514,7 @@ export default function AboutPageClient({
           secondaryText={ctaText.secondary_text}
           secondaryHref={ctaText.secondary_href}
         />
+        </div>
       )}
     </>
   );

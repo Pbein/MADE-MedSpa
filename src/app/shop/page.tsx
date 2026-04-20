@@ -78,7 +78,7 @@ export default function ShopPage() {
       >
 
         {/* ═══ HEADER ═══ */}
-        <section className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
+        <section id="section-hero" className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
           <div className="mx-auto max-w-[1180px] text-center">
             <motion.p
               className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
@@ -249,7 +249,7 @@ export default function ShopPage() {
         )}
 
         {/* ═══ PRODUCT GRID ═══ */}
-        <section ref={gridRef} className="relative px-6 md:px-8 pb-24 md:pb-32">
+        <section id="section-grid" ref={gridRef} className="relative px-6 md:px-8 pb-24 md:pb-32">
           <div className="mx-auto max-w-[1180px]">
             {!products ? (
               <div className="flex justify-center py-20">
@@ -344,6 +344,7 @@ export default function ShopPage() {
       )}
 
       {isSectionVisible("cta") && (
+        <div id="section-cta">
         <CTABanner
           headline={ctaText.headline}
           subtitle={ctaText.subtitle}
@@ -353,6 +354,7 @@ export default function ShopPage() {
           secondaryText={ctaText.secondary_text}
           secondaryHref={ctaText.secondary_href}
         />
+        </div>
       )}
     </main>
   );

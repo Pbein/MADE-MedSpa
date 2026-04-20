@@ -87,12 +87,14 @@ export default function TestimonialsPage() {
       {/* Content */}
       <div className="relative z-10">
       {/* 1. COMPACT HERO */}
+      <div id="section-hero">
       <PageHeaderCompact
         eyebrow="Client Stories"
         title="Real Reviews"
         description="Every word is from a real client. No scripts, no edits — just honest experiences."
         transparent
       />
+      </div>
 
       {/* 2. FILTERS */}
       <section className="pb-8 px-6" style={{ backgroundColor: "transparent" }}>
@@ -158,7 +160,7 @@ export default function TestimonialsPage() {
       )}
 
       {/* 4. TESTIMONIALS — GROUPED BY CATEGORY (when "All") or FLAT LIST (when filtered) */}
-      <section className="py-16 md:py-20 px-6" style={{ backgroundColor: "rgba(255,255,255,0.4)" }}>
+      <section id="section-grid" className="py-16 md:py-20 px-6" style={{ backgroundColor: "rgba(255,255,255,0.4)" }}>
         <div className="mx-auto max-w-3xl">
           {!testimonials ? (
             <div className="flex justify-center py-16">
@@ -240,6 +242,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* 6. CTA — soft */}
+      <div id="section-cta">
       <CTABanner
         headline={ctaText.headline}
         subtitle={ctaText.subtitle}
@@ -248,6 +251,7 @@ export default function TestimonialsPage() {
         secondaryText={ctaText.secondary_text}
         secondaryHref={ctaText.secondary_href}
       />
+      </div>
       </div>
     </main>
   );

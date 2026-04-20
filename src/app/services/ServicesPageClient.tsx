@@ -51,12 +51,12 @@ export default function ServicesPageClient({
   return (
     <main>
       {/* Hero */}
-      {show("hero") && <PageHero
+      {show("hero") && <div id="section-hero"><PageHero
         eyebrow={heroText.eyebrow}
         headline={heroText.headline}
         subtitle={heroText.subtitle}
         backgroundImage={heroBgUrl}
-      />}
+      /></div>}
 
       {/* Filter Bar */}
       <section className="bg-[var(--color-surface-low)] py-8">
@@ -103,7 +103,7 @@ export default function ServicesPageClient({
       </section>
 
       {/* Services Grid */}
-      <section ref={gridRef} className="bg-[var(--color-surface)] py-32 md:py-40">
+      <section id="section-grid" ref={gridRef} className="bg-[var(--color-surface)] py-32 md:py-40">
         <div className="mx-auto max-w-7xl px-6">
           {services === undefined ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -145,6 +145,7 @@ export default function ServicesPageClient({
 
       {/* CTA */}
       {show("cta") && (
+        <div id="section-cta">
         <CTABanner
           dark
           headline={ctaText.headline}
@@ -152,6 +153,7 @@ export default function ServicesPageClient({
           ctaText={ctaText.cta_text}
           ctaHref={ctaText.cta_href}
         />
+        </div>
       )}
     </main>
   );

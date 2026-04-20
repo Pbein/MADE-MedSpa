@@ -119,11 +119,13 @@ export default function FAQPage() {
       )}
       {/* Compact Header */}
       {isSectionVisible("hero") && (
+        <div id="section-hero">
         <PageHeaderCompact
           eyebrow={heroText.eyebrow}
           title={heroText.headline}
           description={heroText.subtitle}
         />
+        </div>
       )}
 
       {/* Search + Filters (unified) */}
@@ -206,7 +208,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Accordion */}
-      <section className="bg-[var(--color-surface)] pt-8 pb-24 md:pb-32">
+      <section id="section-accordion" className="bg-[var(--color-surface)] pt-8 pb-24 md:pb-32">
         <div className="mx-auto max-w-3xl px-6">
           {faqs === undefined ? (
             <div className="space-y-6">
@@ -271,6 +273,7 @@ export default function FAQPage() {
 
       {/* CTA */}
       {isSectionVisible("cta") && (
+        <div id="section-cta">
         <CTABanner
           dark
           headline={ctaText.headline}
@@ -280,6 +283,7 @@ export default function FAQPage() {
           secondaryText={ctaText.secondary_text}
           secondaryHref={ctaText.secondary_href}
         />
+        </div>
       )}
     </main>
   );
