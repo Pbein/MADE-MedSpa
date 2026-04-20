@@ -85,51 +85,102 @@ function ColorPicker({
 
 // ── Inline Preview ──────────────────────────────────────────────────────────
 
-function SectionPreview({ pagePath }: { pagePath: string; sectionKey: string }) {
-  if (pagePath === "(global)") return null;
+function DesignPreview({
+  designStyle,
+  colors,
+  bgImage,
+  pagePath,
+}: {
+  designStyle: string;
+  colors: Record<string, string | undefined>;
+  bgImage: string;
+  pagePath: string;
+}) {
+  const preset = getPreset(designStyle);
+  const presetStyles = preset?.styles || {};
+
+  // Build combined preview styles
+  const previewStyle: React.CSSProperties = {
+    ...presetStyles,
+    padding: "1.5rem",
+    borderRadius: "0.375rem",
+    minHeight: 120,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "0.5rem",
+    transition: "all 0.3s ease",
+  };
+
+  if (colors.surface) previewStyle.backgroundColor = colors.surface;
+  if (colors.onSurface) previewStyle.color = colors.onSurface;
+
+  if (bgImage) {
+    previewStyle.backgroundImage = `url('${bgImage}')`;
+    previewStyle.backgroundSize = "cover";
+    previewStyle.backgroundPosition = "center";
+  }
+
+  const textColor = colors.onSurface || (preset?.lightText ? "#f6f1ea" : "#391e1e");
+  const accentColor = colors.secondary || "#84262c";
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
-      <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>
-        Page Preview
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.375rem" }}>
+        <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          Style Preview
+        </span>
+        {pagePath !== "(global)" && (
+          <a
+            href={pagePath}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: "0.625rem", color: "#6366f1", textDecoration: "none" }}
+          >
+            Open page &#8599;
+          </a>
+        )}
       </div>
-      <div style={{
-        position: "relative",
-        width: "100%",
-        height: 200,
-        overflow: "hidden",
-        borderTop: "1px solid #e5e7eb",
-        borderLeft: "1px solid #e5e7eb",
-        borderRight: "1px solid #e5e7eb",
-        borderBottom: "1px solid #e5e7eb",
-        borderRadius: "0.375rem",
-        backgroundColor: "#f9fafb",
-      }}>
-        <iframe
-          src={pagePath}
-          title="Page preview"
-          style={{
-            width: "400%",
-            height: "400%",
-            transform: "scale(0.25)",
-            transformOrigin: "top left",
-            border: "none",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.25rem" }}>
-        <p style={{ fontSize: "0.625rem", color: "#9ca3af", margin: 0 }}>
-          Save changes, then refresh to see updates.
-        </p>
-        <a
-          href={pagePath}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ fontSize: "0.625rem", color: "#6366f1", textDecoration: "none" }}
-        >
-          Open full page &#8599;
-        </a>
+      <div style={previewStyle}>
+        <span style={{
+          fontSize: "0.5rem",
+          fontWeight: 500,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          color: textColor,
+          opacity: 0.5,
+        }}>
+          Section Label
+        </span>
+        <span style={{
+          fontFamily: "Georgia, serif",
+          fontStyle: "italic",
+          fontSize: "1.25rem",
+          color: textColor,
+        }}>
+          Sample Headline Text
+        </span>
+        <span style={{
+          fontSize: "0.6875rem",
+          color: textColor,
+          opacity: 0.6,
+        }}>
+          This is how your section will look with the selected design.
+        </span>
+        <span style={{
+          display: "inline-block",
+          marginTop: "0.25rem",
+          padding: "0.3rem 1rem",
+          backgroundColor: accentColor,
+          color: "#fff",
+          fontSize: "0.6875rem",
+          fontFamily: "Georgia, serif",
+          fontStyle: "italic",
+          borderRadius: 0,
+        }}>
+          Button Preview
+        </span>
       </div>
     </div>
   );
@@ -485,8 +536,14 @@ export default function SectionDesignPanel({
             </div>
           </div>
 
-          {/* Inline Preview */}
-          <SectionPreview key={previewKey} pagePath={pagePath} sectionKey={sectionKey} />
+          {/* Style Preview */}
+          <DesignPreview
+            key={previewKey}
+            designStyle={designStyle}
+            colors={colors as Record<string, string | undefined>}
+            bgImage={bgImage}
+            pagePath={pagePath}
+          />
         </div>
       )}
     </div>
