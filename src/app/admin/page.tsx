@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const seedMemberships = useQuery(api.memberships.countSeed);
   const seedProducts = useQuery(api.shopProducts.countSeed);
   const newContacts = useQuery(api.contactSubmissions.countNew);
+  const testimonials = useQuery(api.testimonials.list);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -90,9 +91,8 @@ export default function AdminDashboard() {
           { label: "Products", value: products?.length ?? "--", color: "#0891b2", href: "/admin/shop" },
           { label: "Team", value: team?.length ?? "--", color: "#d97706", href: "/admin/team" },
           { label: "FAQs", value: faqs?.length ?? "--", color: "#059669", href: "/admin/faqs" },
-          { label: "Testimonials", value: "--", color: "#ec4899", href: "/admin/testimonials" },
+          { label: "Testimonials", value: testimonials?.length ?? "--", color: "#ec4899", href: "/admin/testimonials" },
           { label: "Contacts", value: contacts?.length ?? "--", color: "#0ea5e9", href: "/admin/contacts" },
-          { label: "New Leads", value: newContacts ?? "--", color: newContacts ? "#ef4444" : "#9ca3af", href: "/admin/contacts" },
         ].map((stat) => (
           <Link
             key={stat.label}
