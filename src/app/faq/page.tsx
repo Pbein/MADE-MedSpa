@@ -6,7 +6,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { motion } from "framer-motion";
 import Accordion from "@/components/ui/Accordion";
-import PageHero from "@/components/sections/PageHero";
+import PageHeaderCompact from "@/components/sections/PageHeaderCompact";
 import CTABanner from "@/components/sections/CTABanner";
 import { usePageSettings } from "@/hooks/usePageSettings";
 import { useSectionContent } from "@/hooks/useSectionContent";
@@ -80,7 +80,7 @@ export default function FAQPage() {
   const { data: heroText } = useSectionContent("section_faq_hero", {
     eyebrow: "Support",
     headline: "Frequently Asked Questions",
-    subtitle: "Find answers to common questions about our treatments, membership programs, and booking process.",
+    subtitle: "Find answers about treatments, booking, and aftercare.",
   });
   const { data: ctaText } = useSectionContent("section_faq_cta", {
     headline: "Still Have Questions?",
@@ -117,49 +117,69 @@ export default function FAQPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
-      {/* Hero */}
-      {isSectionVisible("hero") && <PageHero
-        dark
-        eyebrow={heroText.eyebrow}
-        headline={heroText.headline}
-        subtitle={heroText.subtitle}
-      >
-        {/* Search Input */}
-        <div className="max-w-md mx-auto">
-          <div className="relative">
+      {/* Compact Header */}
+      {isSectionVisible("hero") && (
+        <PageHeaderCompact
+          eyebrow={heroText.eyebrow}
+          title={heroText.headline}
+          description={heroText.subtitle}
+        />
+      )}
+
+      {/* Search + Filters (unified) */}
+      <section className="bg-[var(--color-surface)] pb-6">
+        <div className="mx-auto max-w-2xl px-6">
+          {/* Search Input */}
+          <motion.div
+            className="relative mb-5"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: editorialEase, delay: 0.2 }}
+          >
             <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-surface)] opacity-40"
-              width="18"
-              height="18"
+              className="absolute left-5 top-1/2 -translate-y-1/2"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              stroke="var(--color-on-surface-variant)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
+              aria-hidden="true"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input
               type="text"
-              placeholder="Search questions..."
+              placeholder="Search questions — e.g., How long do results last?"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full bg-transparent border border-[var(--color-surface)] border-opacity-20 text-[var(--color-surface)] placeholder:text-[var(--color-surface)] placeholder:opacity-40 pl-12 pr-4 py-3 label-micro tracking-wider focus:outline-none focus:border-opacity-60 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]"
+              className="w-full pl-14 pr-5 py-4 body-editorial text-base focus:outline-none transition-all duration-300"
+              style={{
+                backgroundColor: "var(--color-surface-low)",
+                border: "1px solid var(--color-outline-variant)",
+                borderRadius: "9999px",
+                color: "var(--color-on-surface)",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "var(--color-primary)";
+                e.currentTarget.style.backgroundColor = "var(--color-surface)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "var(--color-outline-variant)";
+                e.currentTarget.style.backgroundColor = "var(--color-surface-low)";
+              }}
             />
-          </div>
-        </div>
-      </PageHero>}
+          </motion.div>
 
-      {/* Category Pills */}
-      <section className="bg-[var(--color-surface)] py-8">
-        <div className="mx-auto max-w-7xl px-6">
+          {/* Category Pills */}
           <motion.div
             className="flex flex-wrap justify-center gap-2"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: editorialEase, delay: 0.55 }}
+            transition={{ duration: 0.6, ease: editorialEase, delay: 0.3 }}
           >
             {faqCategories.map((cat) => {
               const isActive = activeCategory === cat;
@@ -167,11 +187,15 @@ export default function FAQPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`label-micro px-5 py-2.5 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] border-b-2 ${
-                    isActive
-                      ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
-                      : "bg-transparent text-[var(--color-on-surface-variant)] border-transparent hover:border-[var(--color-on-surface-variant)]"
-                  }`}
+                  className="label-micro px-4 py-2 transition-all duration-300"
+                  style={{
+                    borderRadius: "9999px",
+                    border: "1px solid",
+                    borderColor: isActive ? "var(--color-primary)" : "var(--color-outline-variant)",
+                    backgroundColor: isActive ? "var(--color-primary)" : "transparent",
+                    color: isActive ? "var(--color-on-primary)" : "var(--color-on-surface-variant)",
+                    cursor: "pointer",
+                  }}
                 >
                   {cat}
                 </button>
@@ -182,7 +206,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Accordion */}
-      <section className="bg-[var(--color-surface)] py-32 md:py-40">
+      <section className="bg-[var(--color-surface)] pt-8 pb-24 md:pb-32">
         <div className="mx-auto max-w-3xl px-6">
           {faqs === undefined ? (
             <div className="space-y-6">
