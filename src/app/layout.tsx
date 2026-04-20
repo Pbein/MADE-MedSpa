@@ -7,6 +7,7 @@ import {
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import PublicShell from "@/components/layout/PublicShell";
+import { getSiteSettings } from "@/lib/siteSettings";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -31,11 +32,13 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const { business, ogDefault } = await getSiteSettings();
+  return {
   metadataBase: new URL("https://mademedspa.com"),
   title: {
-    default: "MADE Med Spa McLean, VA | Luxury Aesthetic Treatments",
-    template: "%s | MADE Med Spa McLean, VA",
+    default: `${business.name} McLean, VA | Luxury Aesthetic Treatments`,
+    template: `%s | ${business.name} McLean, VA`,
   },
   description:
     "Luxury aesthetic med spa in McLean, Virginia. MADE Med Spa offers Botox, dermal fillers, Sculptra, PRF, and advanced skin treatments with unhurried consultations and natural results.",
@@ -92,25 +95,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "MADE Med Spa",
-    title: "MADE Med Spa | Luxury Aesthetic Treatments in McLean, VA",
+    siteName: business.name,
+    title: `${business.name} | Luxury Aesthetic Treatments in McLean, VA`,
     description:
       "Luxury aesthetic med spa in McLean, Virginia. Natural results from a nurse injector who takes the time to get it right.",
     images: [
       {
-        url: "/og-image.png",
+        url: ogDefault.url,
         width: 1200,
         height: 630,
-        alt: "MADE Med Spa - Luxury Aesthetic Treatments in McLean, Virginia",
+        alt: `${business.name} - Luxury Aesthetic Treatments in McLean, Virginia`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MADE Med Spa | Luxury Aesthetic Treatments in McLean, VA",
+    title: `${business.name} | Luxury Aesthetic Treatments in McLean, VA`,
     description:
       "Luxury aesthetic med spa in McLean, Virginia. Natural results from a nurse injector who takes the time to get it right.",
-    images: ["/og-image.png"],
+    images: [ogDefault.url],
   },
   robots: {
     index: true,
@@ -123,13 +126,22 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-};
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { business, social, ogDefault } = await getSiteSettings();
+  const absoluteOgUrl = ogDefault.url.startsWith("http")
+    ? ogDefault.url
+    : `https://mademedspa.com${ogDefault.url}`;
+  const sameAs = [social.instagram, social.tiktok, social.facebook, social.youtube].filter(
+    (u) => u && u.trim()
+  );
+
   return (
     <html lang="en">
       <head>
@@ -139,20 +151,21 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "MedicalBusiness",
-              name: "MADE Med Spa",
+              name: business.name,
               url: "https://mademedspa.com",
               description:
                 "MADE Med Spa is McLean's destination for regenerative aesthetics. Personalized injectable, laser, and wellness treatments by a registered nurse. Safe for all skin tones.",
-              image: "https://mademedspa.com/og-image.png",
-              priceRange: "$$-$$$",
-              telephone: "",
-              email: "info@mademedspa.com",
+              image: absoluteOgUrl,
+              priceRange: business.priceRange,
+              telephone: business.phone || undefined,
+              email: business.email,
+              ...(sameAs.length > 0 ? { sameAs } : {}),
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "1311-A Dolley Madison Blvd, Suite 1B",
-                addressLocality: "McLean",
-                addressRegion: "VA",
-                postalCode: "22101",
+                streetAddress: business.streetAddress,
+                addressLocality: business.city,
+                addressRegion: business.state,
+                postalCode: business.postalCode,
                 addressCountry: "US",
               },
               geo: {

@@ -1,11 +1,14 @@
-import { Metadata } from "next";
+import { getPageMetadata } from "@/lib/siteSettings";
 
-export const metadata: Metadata = {
-  title: "Membership Plans",
-  description:
-    "Join a MADE Med Spa membership tier for priority booking, treatment credits, and exclusive discounts. Four tiers designed for every stage of your aesthetic journey.",
-  alternates: { canonical: "https://mademedspa.com/membership" },
-};
+export async function generateMetadata() {
+  return getPageMetadata({
+    pageKey: "membership",
+    path: "/membership",
+    defaultTitle: "Membership Plans",
+    defaultDescription:
+      "Join a MADE Med Spa membership tier for priority booking, treatment credits, and exclusive discounts. Four tiers designed for every stage of your aesthetic journey.",
+  });
+}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

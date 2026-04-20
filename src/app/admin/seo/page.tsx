@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useState, useCallback, useRef } from "react";
+import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { SETTINGS_KEYS, DEFAULT_OG } from "@/lib/siteSettings";
 
 // ── Page definitions with default SEO ────────────────────────────────────────
 
@@ -102,23 +103,28 @@ const labelStyle: React.CSSProperties = {
 
 // ── Single page SEO card ─────────────────────────────────────────────────────
 
-function SEOCard({ page }: { page: PageSEO }) {
+function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: string }) {
   const content = useQuery(api.siteContent.getByKey, {
     key: `seo_${page.key}`,
   });
   const upsert = useMutation(api.siteContent.upsert);
+  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
+  const convex = useConvex();
+  const ogInput = useRef<HTMLInputElement>(null);
 
   const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const seo = content?.metadata as
-    | { title?: string; description?: string; keywords?: string }
+    | { title?: string; description?: string; keywords?: string; og_image_url?: string }
     | undefined;
 
   const [title, setTitle] = useState(seo?.title || "");
   const [description, setDescription] = useState(seo?.description || "");
   const [keywords, setKeywords] = useState(seo?.keywords || "");
+  const [ogImageUrl, setOgImageUrl] = useState(seo?.og_image_url || "");
 
   // Sync from DB
   const contentKey = content?._id;
@@ -128,11 +134,33 @@ function SEOCard({ page }: { page: PageSEO }) {
     setTitle(seo?.title || "");
     setDescription(seo?.description || "");
     setKeywords(seo?.keywords || "");
+    setOgImageUrl(seo?.og_image_url || "");
   }
 
-  const hasCustom = title || description || keywords;
+  const hasCustom = title || description || keywords || ogImageUrl;
   const displayTitle = title || page.defaultTitle;
   const displayDesc = description || page.defaultDescription;
+  const displayOgUrl = ogImageUrl || siteDefaultOgUrl;
+
+  async function handleOgUpload(file: File) {
+    setUploading(true);
+    try {
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await result.json();
+      const cdnUrl = await convex.query(api.storage.getUrl, { storageId });
+      if (!cdnUrl) throw new Error("Upload failed");
+      setOgImageUrl(cdnUrl);
+    } catch {
+      alert("Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const handleSave = useCallback(async () => {
     setSaving(true);
@@ -143,6 +171,7 @@ function SEOCard({ page }: { page: PageSEO }) {
           title: title || undefined,
           description: description || undefined,
           keywords: keywords || undefined,
+          og_image_url: ogImageUrl || undefined,
         },
       });
       setSaved(true);
@@ -150,7 +179,7 @@ function SEOCard({ page }: { page: PageSEO }) {
     } finally {
       setSaving(false);
     }
-  }, [title, description, keywords, page.key, upsert]);
+  }, [title, description, keywords, ogImageUrl, page.key, upsert]);
 
   return (
     <div
@@ -234,8 +263,13 @@ function SEOCard({ page }: { page: PageSEO }) {
               Social Share Preview (Facebook / LinkedIn)
             </div>
             <div style={{ border: "1px solid #e5e7eb", borderRadius: "0.375rem", overflow: "hidden", maxWidth: 400 }}>
-              <div style={{ backgroundColor: "#e5e7eb", height: 100, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", color: "#9ca3af" }}>
-                OG Image (1200x630)
+              <div style={{ backgroundColor: "#e5e7eb", aspectRatio: "1.91 / 1", overflow: "hidden" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={displayOgUrl}
+                  alt="OG preview"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
               </div>
               <div style={{ padding: "0.75rem", backgroundColor: "#fff" }}>
                 <div style={{ fontSize: "0.6875rem", color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.03em" }}>
@@ -248,6 +282,9 @@ function SEOCard({ page }: { page: PageSEO }) {
                   {displayDesc.length > 100 ? displayDesc.slice(0, 97) + "..." : displayDesc}
                 </div>
               </div>
+            </div>
+            <div style={{ marginTop: 8, fontSize: "0.75rem", color: "#9ca3af" }}>
+              {ogImageUrl ? "Using page override" : "Using site default (change in Site Settings)"}
             </div>
           </div>
 
@@ -301,6 +338,63 @@ function SEOCard({ page }: { page: PageSEO }) {
                 style={inputStyle}
               />
             </div>
+
+            <div>
+              <label style={labelStyle}>
+                OG Image Override
+                <span style={{ color: "#9ca3af", fontWeight: 400 }}> (optional — falls back to site default)</span>
+              </label>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={() => ogInput.current?.click()}
+                  disabled={uploading}
+                  style={{
+                    padding: "0.4rem 0.9rem",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 6,
+                    backgroundColor: "#fff",
+                    color: "#111827",
+                    fontSize: "0.875rem",
+                    cursor: "pointer",
+                    opacity: uploading ? 0.6 : 1,
+                  }}
+                >
+                  {uploading ? "Uploading…" : ogImageUrl ? "Replace image" : "Upload override"}
+                </button>
+                {ogImageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setOgImageUrl("")}
+                    style={{
+                      padding: "0.4rem 0.9rem",
+                      border: "1px solid transparent",
+                      borderRadius: 6,
+                      backgroundColor: "transparent",
+                      color: "#6b7280",
+                      fontSize: "0.875rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Remove override
+                  </button>
+                )}
+                <span style={{ fontSize: "0.75rem", color: "#9ca3af", wordBreak: "break-all", flex: 1, minWidth: 0 }}>
+                  {ogImageUrl ? (ogImageUrl.length > 80 ? ogImageUrl.slice(0, 80) + "…" : ogImageUrl) : "No override set"}
+                </span>
+                <input
+                  ref={ogInput}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleOgUpload(f);
+                    e.target.value = "";
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Actions */}
@@ -335,6 +429,10 @@ function SEOCard({ page }: { page: PageSEO }) {
 // ── Main Page ───────────────────────────────────────────────────────────────
 
 export default function SEOAdmin() {
+  const ogDoc = useQuery(api.siteContent.getByKey, { key: SETTINGS_KEYS.og });
+  const siteDefaultOgUrl =
+    (ogDoc?.metadata as { url?: string } | undefined)?.url || DEFAULT_OG.url;
+
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <div style={{ marginBottom: "1.5rem" }}>
@@ -342,14 +440,14 @@ export default function SEOAdmin() {
           SEO Settings
         </h1>
         <p style={{ fontSize: "0.9375rem", color: "#6b7280", margin: 0 }}>
-          Edit page titles, meta descriptions, and keywords for search engine optimization.
-          Leave fields blank to use the defaults. Changes take effect after the next site build.
+          Edit page titles, meta descriptions, keywords, and optional per-page social share images.
+          Leave fields blank to inherit the site defaults (set under Site Settings).
         </p>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
         {PAGES.map((page) => (
-          <SEOCard key={page.key} page={page} />
+          <SEOCard key={page.key} page={page} siteDefaultOgUrl={siteDefaultOgUrl} />
         ))}
       </div>
     </div>
