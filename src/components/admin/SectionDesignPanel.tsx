@@ -22,6 +22,8 @@ interface SectionDesignPanelProps {
   pageKey: string;
   sectionKey: string;
   pagePath: string;
+  sectionLabel: string;
+  previewText: string;
 }
 
 // ── Preset color mappings (what each preset "means" for the color pickers) ──
@@ -90,28 +92,37 @@ function DesignPreview({
   colors,
   bgImage,
   pagePath,
+  sectionLabel,
 }: {
   designStyle: string;
   colors: Record<string, string | undefined>;
   bgImage: string;
   pagePath: string;
+  sectionLabel: string;
 }) {
   const preset = getPreset(designStyle);
   const presetStyles = preset?.styles || {};
+  const isCustomized = designStyle !== "default" || Object.keys(colors).some((k) => colors[k]) || bgImage;
 
   // Build combined preview styles
   const previewStyle: React.CSSProperties = {
     ...presetStyles,
-    padding: "1.5rem",
+    padding: "2rem 1.5rem",
     borderRadius: "0.375rem",
-    minHeight: 120,
+    minHeight: 140,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: "0.625rem",
     transition: "all 0.3s ease",
+    textAlign: "center",
   };
+
+  // Default to something visible if no preset
+  if (!previewStyle.background && !previewStyle.backgroundColor) {
+    previewStyle.backgroundColor = "#f6f1ea";
+  }
 
   if (colors.surface) previewStyle.backgroundColor = colors.surface;
   if (colors.onSurface) previewStyle.color = colors.onSurface;
@@ -124,63 +135,58 @@ function DesignPreview({
 
   const textColor = colors.onSurface || (preset?.lightText ? "#f6f1ea" : "#391e1e");
   const accentColor = colors.secondary || "#84262c";
+  const mutedColor = preset?.lightText ? "rgba(246,241,234,0.5)" : "rgba(57,30,30,0.4)";
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.375rem" }}>
         <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-          Style Preview
+          Style Preview {isCustomized ? "" : "(Default)"}
         </span>
         {pagePath !== "(global)" && (
-          <a
-            href={pagePath}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontSize: "0.625rem", color: "#6366f1", textDecoration: "none" }}
-          >
+          <a href={pagePath} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.625rem", color: "#6366f1", textDecoration: "none" }}>
             Open page &#8599;
           </a>
         )}
       </div>
       <div style={previewStyle}>
+        {/* Divider line like the real CTA */}
+        <div style={{ width: 32, height: 1, backgroundColor: mutedColor, marginBottom: "0.25rem" }} />
+
         <span style={{
-          fontSize: "0.5rem",
-          fontWeight: 500,
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          color: textColor,
-          opacity: 0.5,
-        }}>
-          Section Label
-        </span>
-        <span style={{
-          fontFamily: "Georgia, serif",
+          fontFamily: "Georgia, 'Cormorant Garamond', serif",
           fontStyle: "italic",
-          fontSize: "1.25rem",
+          fontSize: "1.125rem",
           color: textColor,
+          lineHeight: 1.3,
+          maxWidth: "80%",
         }}>
-          Sample Headline Text
+          {sectionLabel}
         </span>
-        <span style={{
-          fontSize: "0.6875rem",
-          color: textColor,
-          opacity: 0.6,
-        }}>
-          This is how your section will look with the selected design.
-        </span>
-        <span style={{
-          display: "inline-block",
-          marginTop: "0.25rem",
-          padding: "0.3rem 1rem",
-          backgroundColor: accentColor,
-          color: "#fff",
-          fontSize: "0.6875rem",
-          fontFamily: "Georgia, serif",
-          fontStyle: "italic",
-          borderRadius: 0,
-        }}>
-          Button Preview
-        </span>
+
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "0.25rem" }}>
+          <span style={{
+            display: "inline-block",
+            padding: "0.35rem 1rem",
+            backgroundColor: preset?.lightText ? "rgba(246,241,234,0.9)" : accentColor,
+            color: preset?.lightText ? "#391e1e" : "#fff",
+            fontSize: "0.625rem",
+            fontFamily: "Georgia, serif",
+            fontStyle: "italic",
+          }}>
+            Primary Action
+          </span>
+          <span style={{
+            fontSize: "0.5rem",
+            fontWeight: 500,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: textColor,
+            opacity: 0.5,
+          }}>
+            Secondary Link
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -192,6 +198,8 @@ export default function SectionDesignPanel({
   pageKey,
   sectionKey,
   pagePath,
+  sectionLabel,
+  previewText,
 }: SectionDesignPanelProps) {
   const pageSettings = useQuery(api.siteContent.getByKey, {
     key: `page_settings_${pageKey}`,
@@ -543,6 +551,7 @@ export default function SectionDesignPanel({
             colors={colors as Record<string, string | undefined>}
             bgImage={bgImage}
             pagePath={pagePath}
+            sectionLabel={previewText}
           />
         </div>
       )}
