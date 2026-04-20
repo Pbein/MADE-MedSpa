@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { useSearchParams } from "next/navigation";
 import { api } from "../../convex/_generated/api";
 import { CSSProperties, useMemo } from "react";
+import { getPresetStyles } from "@/lib/designPresets";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,6 +40,8 @@ export interface ResolvedPageSettings {
   styleOverrides: CSSProperties;
   /** Check if a section should be visible (defaults to true if not set) */
   isSectionVisible: (sectionKey: string) => boolean;
+  /** Get CSS styles for a specific section (preset + custom colors + bg image) */
+  getSectionDesign: (sectionKey: string) => CSSProperties;
   /** Hero text overrides (undefined = use default) */
   hero: PageHeroOverrides;
   /** Raw settings from DB (null if not yet loaded) */
@@ -183,11 +186,52 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
     const isLoading = !isPreview && content === undefined;
     const settings = previewSettings || (content?.metadata as PageSettings) || null;
 
+    // Helper to parse section config (handles both boolean and object formats)
+    const getSectionConfig = (sectionKey: string) => {
+      if (!settings?.sections) return null;
+      const val = settings.sections[sectionKey];
+      if (typeof val === "boolean") return { visible: val };
+      if (typeof val === "object" && val !== null) return val as Record<string, unknown>;
+      return null;
+    };
+
     return {
       styleOverrides: buildOverrides(settings?.colors),
       isSectionVisible: (sectionKey: string) => {
-        if (!settings?.sections) return true;
-        return settings.sections[sectionKey] !== false;
+        const config = getSectionConfig(sectionKey);
+        if (!config) return true;
+        return config.visible !== false;
+      },
+      getSectionDesign: (sectionKey: string) => {
+        const config = getSectionConfig(sectionKey);
+        if (!config) return {};
+
+        const result: CSSProperties = {};
+
+        // Apply preset styles first
+        const presetStyles = getPresetStyles(config.designStyle as string | undefined);
+        Object.assign(result, presetStyles);
+
+        // Apply custom colors (override preset)
+        const colors = config.colors as Record<string, string> | undefined;
+        if (colors?.surface) (result as Record<string, string>)["--color-surface"] = colors.surface;
+        if (colors?.onSurface) {
+          (result as Record<string, string>)["--color-on-surface"] = colors.onSurface;
+          (result as Record<string, string>)["--color-primary"] = colors.onSurface;
+          result.color = colors.onSurface;
+        }
+        if (colors?.secondary) (result as Record<string, string>)["--color-secondary"] = colors.secondary;
+
+        // Apply background image (on top of preset/color bg)
+        const bgImage = config.backgroundImage as string | undefined;
+        if (bgImage) {
+          result.backgroundImage = `url('${bgImage}')`;
+          result.backgroundSize = "cover";
+          result.backgroundPosition = "center";
+          result.backgroundRepeat = "no-repeat";
+        }
+
+        return result;
       },
       hero: settings?.hero || {},
       raw: settings,
