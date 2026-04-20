@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { useSearchParams } from "next/navigation";
 import { api } from "../../convex/_generated/api";
 import { CSSProperties, useMemo } from "react";
 import { getPresetStyles } from "@/lib/designPresets";
@@ -168,23 +167,10 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
   const content = useQuery(api.siteContent.getByKey, {
     key: `page_settings_${pageKey}`,
   });
-  const searchParams = useSearchParams();
-
   return useMemo(() => {
-    // Check for preview params (unsaved draft from admin)
-    const previewParam = searchParams.get("_preview");
-    let previewSettings: PageSettings | null = null;
-    if (previewParam) {
-      try {
-        previewSettings = JSON.parse(decodeURIComponent(previewParam));
-      } catch {
-        // Invalid preview param, ignore
-      }
-    }
-
-    const isPreview = previewSettings !== null;
-    const isLoading = !isPreview && content === undefined;
-    const settings = previewSettings || (content?.metadata as PageSettings) || null;
+    const isLoading = content === undefined;
+    const isPreview = false;
+    const settings = (content?.metadata as PageSettings) || null;
 
     // Helper to parse section config (handles both boolean and object formats)
     const getSectionConfig = (sectionKey: string) => {
@@ -241,5 +227,5 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
       isLoading,
       isPreview,
     };
-  }, [content, searchParams]);
+  }, [content]);
 }
