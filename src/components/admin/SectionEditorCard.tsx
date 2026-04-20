@@ -445,7 +445,8 @@ export default function SectionEditorCard({
               sectionKey={section.key}
               pagePath={pagePath}
               sectionLabel={section.label}
-              previewText={(draft[section.fields.find((f) => f.fieldKey === "headline")?.fieldKey || ""] as string) || (section.fields.find((f) => f.fieldKey === "headline")?.defaultValue as string) || section.label}
+              fieldValues={draft}
+              fieldDefinitions={section.fields}
             />
           )}
 

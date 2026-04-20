@@ -23,7 +23,8 @@ interface SectionDesignPanelProps {
   sectionKey: string;
   pagePath: string;
   sectionLabel: string;
-  previewText: string;
+  fieldValues: Record<string, unknown>;
+  fieldDefinitions: { fieldKey: string; defaultValue: string | string[] | Record<string, string>[]; type: string }[];
 }
 
 // ── Preset color mappings (what each preset "means" for the color pickers) ──
@@ -47,6 +48,22 @@ function getPresetColors(presetKey: string): { surface: string; onSurface: strin
 
 // ── Color Picker ─────────────────────────────────────────────────────────────
 
+// Brand palette swatches for quick selection
+const BRAND_SWATCHES = [
+  { color: "#391e1e", label: "Espresso" },
+  { color: "#84262c", label: "Blush" },
+  { color: "#838d60", label: "Matcha" },
+  { color: "#413e2a", label: "Olive" },
+  { color: "#e8e0d5", label: "Glaze" },
+  { color: "#f6f1ea", label: "Silk" },
+  { color: "#efe7df", label: "Powder" },
+  { color: "#d8c0bb", label: "Rose Dust" },
+  { color: "#dccfc4", label: "Petal" },
+  { color: "#c9aa96", label: "Warm Nude" },
+  { color: "#b7a39a", label: "Soft Taupe" },
+  { color: "#ffffff", label: "White" },
+];
+
 function ColorPicker({
   label,
   value,
@@ -59,28 +76,67 @@ function ColorPicker({
   onChange: (val: string | undefined) => void;
 }) {
   const display = value || defaultValue;
+  const [showSwatches, setShowSwatches] = useState(false);
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      <input
-        type="color"
-        value={display}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ width: 28, height: 28, border: "2px solid #e5e7eb", borderRadius: 4, cursor: "pointer", padding: 0, flexShrink: 0 }}
-      />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "0.6875rem", fontWeight: 500, color: "#374151" }}>{label}</div>
-        <div style={{ fontSize: "0.625rem", color: "#9ca3af", fontFamily: "monospace" }}>
-          {display}
-          {value && (
-            <button
-              onClick={() => onChange(undefined)}
-              style={{ marginLeft: 4, background: "none", border: "none", color: "#6366f1", fontSize: "0.625rem", cursor: "pointer", padding: 0 }}
-            >
-              reset
-            </button>
-          )}
-        </div>
+    <div>
+      <div style={{ fontSize: "0.6875rem", fontWeight: 500, color: "#374151", marginBottom: "0.25rem" }}>{label}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
+        <input
+          type="color"
+          value={display}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: 24, height: 24, border: "2px solid #e5e7eb", borderRadius: 3, cursor: "pointer", padding: 0, flexShrink: 0 }}
+        />
+        <input
+          type="text"
+          value={display}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (/^#[0-9a-fA-F]{0,6}$/.test(v)) onChange(v.length === 7 ? v : undefined);
+          }}
+          onBlur={(e) => {
+            const v = e.target.value;
+            if (/^#[0-9a-fA-F]{6}$/.test(v)) onChange(v);
+          }}
+          style={{ width: 70, fontSize: "0.625rem", fontFamily: "monospace", padding: "0.2rem 0.3rem", border: "1px solid #e5e7eb", borderRadius: 3, color: "#374151" }}
+        />
+        <button
+          onClick={() => setShowSwatches(!showSwatches)}
+          title="Brand colors"
+          style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 3, padding: "0.15rem 0.3rem", cursor: "pointer", fontSize: "0.5rem", color: "#6b7280" }}
+        >
+          &#9632;&#9632;
+        </button>
+        {value && (
+          <button
+            onClick={() => onChange(undefined)}
+            style={{ background: "none", border: "none", color: "#6366f1", fontSize: "0.5625rem", cursor: "pointer", padding: 0 }}
+          >
+            reset
+          </button>
+        )}
       </div>
+      {showSwatches && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: "0.375rem" }}>
+          {BRAND_SWATCHES.map((s) => (
+            <button
+              key={s.color}
+              title={s.label}
+              onClick={() => { onChange(s.color); setShowSwatches(false); }}
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 2,
+                border: display === s.color ? "2px solid #6366f1" : "1px solid rgba(0,0,0,0.15)",
+                backgroundColor: s.color,
+                cursor: "pointer",
+                padding: 0,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -93,20 +149,28 @@ function DesignPreview({
   bgImage,
   pagePath,
   sectionLabel,
+  ctaText,
+  secondaryText,
 }: {
   designStyle: string;
   colors: Record<string, string | undefined>;
   bgImage: string;
   pagePath: string;
   sectionLabel: string;
+  ctaText?: string;
+  secondaryText?: string;
 }) {
   const preset = getPreset(designStyle);
   const presetStyles = preset?.styles || {};
   const isCustomized = designStyle !== "default" || Object.keys(colors).some((k) => colors[k]) || bgImage;
 
-  // Build combined preview styles
+  // Build combined preview styles — only use `background`, never `backgroundColor`
+  // to avoid React's shorthand/non-shorthand conflict warning
+  let bgValue = presetStyles.background as string | undefined || presetStyles.backgroundColor as string | undefined || "#f6f1ea";
+  if (colors.surface) bgValue = colors.surface;
+
   const previewStyle: React.CSSProperties = {
-    ...presetStyles,
+    background: bgValue,
     padding: "2rem 1.5rem",
     borderRadius: "0.375rem",
     minHeight: 140,
@@ -117,15 +181,8 @@ function DesignPreview({
     gap: "0.625rem",
     transition: "all 0.3s ease",
     textAlign: "center",
+    color: colors.onSurface || (preset?.lightText ? "#f6f1ea" : "#391e1e"),
   };
-
-  // Default to something visible if no preset
-  if (!previewStyle.background && !previewStyle.backgroundColor) {
-    previewStyle.backgroundColor = "#f6f1ea";
-  }
-
-  if (colors.surface) previewStyle.backgroundColor = colors.surface;
-  if (colors.onSurface) previewStyle.color = colors.onSurface;
 
   if (bgImage) {
     previewStyle.backgroundImage = `url('${bgImage}')`;
@@ -165,27 +222,31 @@ function DesignPreview({
         </span>
 
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "0.25rem" }}>
-          <span style={{
-            display: "inline-block",
-            padding: "0.35rem 1rem",
-            backgroundColor: preset?.lightText ? "rgba(246,241,234,0.9)" : accentColor,
-            color: preset?.lightText ? "#391e1e" : "#fff",
-            fontSize: "0.625rem",
-            fontFamily: "Georgia, serif",
-            fontStyle: "italic",
-          }}>
-            Primary Action
-          </span>
-          <span style={{
-            fontSize: "0.5rem",
-            fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: textColor,
-            opacity: 0.5,
-          }}>
-            Secondary Link
-          </span>
+          {ctaText && (
+            <span style={{
+              display: "inline-block",
+              padding: "0.35rem 1rem",
+              backgroundColor: preset?.lightText ? "rgba(246,241,234,0.9)" : "#391e1e",
+              color: preset?.lightText ? "#391e1e" : "#f6f1ea",
+              fontSize: "0.625rem",
+              fontFamily: "Georgia, serif",
+              fontStyle: "italic",
+            }}>
+              {ctaText}
+            </span>
+          )}
+          {secondaryText && (
+            <span style={{
+              fontSize: "0.5rem",
+              fontWeight: 500,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: textColor,
+              opacity: 0.5,
+            }}>
+              {secondaryText}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -199,8 +260,16 @@ export default function SectionDesignPanel({
   sectionKey,
   pagePath,
   sectionLabel,
-  previewText,
+  fieldValues,
+  fieldDefinitions,
 }: SectionDesignPanelProps) {
+  // Helper to get field value with fallback to default
+  const getField = (key: string): string => {
+    const val = fieldValues[key];
+    if (typeof val === "string" && val) return val;
+    const def = fieldDefinitions.find((f) => f.fieldKey === key);
+    return typeof def?.defaultValue === "string" ? def.defaultValue : "";
+  };
   const pageSettings = useQuery(api.siteContent.getByKey, {
     key: `page_settings_${pageKey}`,
   });
@@ -551,7 +620,9 @@ export default function SectionDesignPanel({
             colors={colors as Record<string, string | undefined>}
             bgImage={bgImage}
             pagePath={pagePath}
-            sectionLabel={previewText}
+            sectionLabel={getField("headline") || sectionLabel}
+            ctaText={getField("cta_text")}
+            secondaryText={getField("secondary_text")}
           />
         </div>
       )}
