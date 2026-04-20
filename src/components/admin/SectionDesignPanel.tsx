@@ -144,7 +144,6 @@ function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: s
             transform: "scale(0.3)",
             transformOrigin: "top left",
             borderWidth: 0,
-            pointerEvents: "none",
           }}
         />
       </div>
