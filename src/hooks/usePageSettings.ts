@@ -221,6 +221,9 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
           result.color = colors.onSurface;
         }
         if (colors?.secondary) (result as Record<string, string>)["--color-secondary"] = colors.secondary;
+        if (colors?.buttonBg) (result as Record<string, string>)["--btn-bg"] = colors.buttonBg;
+        if (colors?.buttonText) (result as Record<string, string>)["--btn-text"] = colors.buttonText;
+        if (colors?.divider) (result as Record<string, string>)["--divider-color"] = colors.divider;
 
         // Apply background image (on top of preset/color bg)
         const bgImage = config.backgroundImage as string | undefined;
