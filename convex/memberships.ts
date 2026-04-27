@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertAdmin } from "./lib/auth";
 
 export const list = query({
   args: {},
@@ -31,6 +32,7 @@ export const create = mutation({
     sortOrder: v.number(),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     return await ctx.db.insert("memberships", {
       ...args,
       isActive: true,
@@ -52,6 +54,7 @@ export const update = mutation({
     sortOrder: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const { id, ...fields } = args;
     const updates: Record<string, unknown> = { isSeed: false };
     for (const [key, value] of Object.entries(fields)) {
@@ -67,6 +70,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("memberships") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -82,6 +86,7 @@ export const countSeed = query({
 export const toggleActive = mutation({
   args: { id: v.id("memberships") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const membership = await ctx.db.get(args.id);
     if (!membership) throw new Error("Membership not found");
     await ctx.db.patch(args.id, { isActive: !membership.isActive });

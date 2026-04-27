@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertAdmin } from "./lib/auth";
 
 export const getByKey = query({
   args: { key: v.string() },
@@ -53,6 +54,7 @@ export const upsert = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const { key, ...fields } = args;
     const existing = await ctx.db
       .query("siteContent")

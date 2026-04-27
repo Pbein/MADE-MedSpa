@@ -1,5 +1,6 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { assertAdmin } from "./lib/auth";
 
 export const list = query({
   args: {},
@@ -43,6 +44,7 @@ export const create = mutation({
     sortOrder: v.number(),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     return await ctx.db.insert("shopProducts", {
       ...args,
       isActive: true,
@@ -63,6 +65,7 @@ export const update = mutation({
     sortOrder: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const { id, ...fields } = args;
     const updates: Record<string, unknown> = { isSeed: false };
     for (const [key, value] of Object.entries(fields)) {
@@ -78,6 +81,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("shopProducts") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -93,8 +97,82 @@ export const countSeed = query({
 export const toggleActive = mutation({
   args: { id: v.id("shopProducts") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const product = await ctx.db.get(args.id);
     if (!product) throw new Error("Product not found");
     await ctx.db.patch(args.id, { isActive: !product.isActive });
+  },
+});
+
+// --- Pabau sync mutations (internal — invoked by convex/pabauSync.ts only) ---
+
+function inferProductCategory(pabauCategory: string | undefined): string {
+  const c = (pabauCategory ?? "").toLowerCase();
+  if (c.includes("skin") || c.includes("serum") || c.includes("cream")) return "Skincare";
+  if (c.includes("supp") || c.includes("vitamin")) return "Supplements";
+  if (c.includes("device") || c.includes("tool")) return "Tools";
+  return "Skincare";
+}
+
+export const listAllInternal = internalQuery({
+  args: {},
+  handler: async (ctx) => ctx.db.query("shopProducts").collect(),
+});
+
+export const upsertFromPabau = internalMutation({
+  args: {
+    pabauProductId: v.number(),
+    name: v.string(),
+    description: v.optional(v.string()),
+    price: v.optional(v.number()),
+    pabauCategory: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("shopProducts")
+      .withIndex("by_pabauProductId", (q) => q.eq("pabauProductId", args.pabauProductId))
+      .first();
+
+    const now = Date.now();
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        name: args.name,
+        description: args.description ?? existing.description,
+        price: args.price ?? existing.price,
+        pabauSyncedAt: now,
+        isActive: true,
+        isSeed: false,
+      });
+      return { id: existing._id, action: "updated" as const };
+    }
+
+    const all = await ctx.db.query("shopProducts").collect();
+    const maxOrder = all.reduce((m, p) => Math.max(m, p.sortOrder), 0);
+
+    const id = await ctx.db.insert("shopProducts", {
+      name: args.name,
+      description: args.description ?? args.name,
+      price: args.price ?? 0,
+      category: inferProductCategory(args.pabauCategory),
+      pabauProductId: args.pabauProductId,
+      pabauSyncedAt: now,
+      sortOrder: maxOrder + 1,
+      isActive: true,
+    });
+    return { id, action: "created" as const };
+  },
+});
+
+export const softDeleteByPabauId = internalMutation({
+  args: { pabauProductId: v.number() },
+  handler: async (ctx, { pabauProductId }) => {
+    const existing = await ctx.db
+      .query("shopProducts")
+      .withIndex("by_pabauProductId", (q) => q.eq("pabauProductId", pabauProductId))
+      .first();
+    if (!existing) return { removed: false };
+    if (!existing.isActive) return { removed: false };
+    await ctx.db.patch(existing._id, { isActive: false, pabauSyncedAt: Date.now() });
+    return { removed: true };
   },
 });
