@@ -16,7 +16,7 @@ const viewportOnce = { once: true, margin: "-50px" } as const;
 
 const BOOKING_URL =
   process.env.NEXT_PUBLIC_PABAU_BOOKING_URL ||
-  "https://partner.pabau.com/online-bookings/made-51g64";
+  "https://partner.pabau.com/online-bookings/made-med-spa";
 
 export default function ShopPage() {
   const products = useQuery(api.shopProducts.list);

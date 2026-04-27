@@ -18,7 +18,7 @@ Additional decisions made during planning:
 ## Pabau API Reference
 
 - Base URL: `https://api.oauth.pabau.com/{api_key}/`
-- Booking portal: `https://partner.pabau.com/online-bookings/made-51g64`
+- Booking portal: `https://partner.pabau.com/online-bookings/made-med-spa`
 - Working endpoints: `/services` (20 results), `/packages` (12 results), `/products` (0 results)
 - Each service includes a `booking_url` for deep-linking to that specific service
 - Rate limit: 25,000 calls/day
