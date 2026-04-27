@@ -121,6 +121,7 @@ export default function BookingPage() {
             muted
             playsInline
             preload="metadata"
+            poster="/images/booking-hero-poster.webp"
             onCanPlay={() => setVideoReady(true)}
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
             style={{ opacity: videoReady ? 1 : 0 }}

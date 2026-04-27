@@ -87,7 +87,8 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster={posterSrc}
             title="MADE Med Spa ambient background"
             width={1920}
             height={1080}

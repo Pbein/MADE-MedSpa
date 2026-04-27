@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Image from "next/image";
 import Link from "next/link";
 import CTABanner from "@/components/sections/CTABanner";
 import { motion, useInView } from "framer-motion";
@@ -62,7 +63,7 @@ export default function ShopPage() {
   const showFilters = isSectionVisible("filters") && hasProducts && categories.length > 2;
 
   return (
-    <main style={styleOverrides} className="min-h-screen text-[var(--color-espresso)]">
+    <div style={styleOverrides} className="min-h-screen text-[var(--color-espresso)]">
       {isPreview && <PreviewBanner />}
 
       {/* ═══ ATMOSPHERE WRAPPER — one continuous background ═══ */}
@@ -193,7 +194,13 @@ export default function ShopPage() {
                       style={{ background: "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)" }}
                     >
                       {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-[1.03]" />
+                        <Image
+                          src={product.imageUrl}
+                          alt={product.name}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 540px"
+                          className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+                        />
                       ) : (
                         <div className="flex h-full items-center justify-center">
                           <span className="font-headline italic text-5xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.25 }}>{product.name.charAt(0)}</span>
@@ -279,14 +286,20 @@ export default function ShopPage() {
                     }}
                   >
                     <div
-                      className="aspect-[4/5] overflow-hidden"
+                      className="relative aspect-[4/5] overflow-hidden"
                       style={{
                         background: product.imageUrl ? "var(--color-glaze)" : "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)",
                         borderRadius: "1rem 1rem 0 0",
                       }}
                     >
                       {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]" />
+                        <Image
+                          src={product.imageUrl}
+                          alt={product.name}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                          className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
+                        />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
                           <span className="font-headline italic text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}>{product.name.charAt(0)}</span>
@@ -356,6 +369,6 @@ export default function ShopPage() {
         />
         </div>
       )}
-    </main>
+    </div>
   );
 }
