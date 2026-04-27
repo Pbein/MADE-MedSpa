@@ -36,11 +36,13 @@ export default defineSchema({
     ),
     pabauServiceId: v.optional(v.number()),
     pabauBookingUrl: v.optional(v.string()),
+    pabauSyncedAt: v.optional(v.number()),
     isActive: v.boolean(),
     sortOrder: v.number(),
   })
     .index("by_slug", ["slug"])
-    .index("by_category", ["category"]),
+    .index("by_category", ["category"])
+    .index("by_pabauServiceId", ["pabauServiceId"]),
 
   // --- Contact / Lead Capture ---
   contactSubmissions: defineTable({
@@ -104,10 +106,14 @@ export default defineSchema({
     category: v.string(),
     imageUrl: v.optional(v.string()),
     pabauLink: v.optional(v.string()),
+    pabauProductId: v.optional(v.number()),
+    pabauSyncedAt: v.optional(v.number()),
     sortOrder: v.number(),
     isActive: v.boolean(),
     isSeed: v.optional(v.boolean()),
-  }).index("by_category", ["category"]),
+  })
+    .index("by_category", ["category"])
+    .index("by_pabauProductId", ["pabauProductId"]),
 
   // --- Site Content (CMS-lite) ---
   siteContent: defineTable({
@@ -119,10 +125,69 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_key", ["key"]),
 
-  // --- Newsletter ---
-  newsletterSubscribers: defineTable({
-    email: v.string(),
-    subscribedAt: v.number(),
-    isActive: v.boolean(),
-  }).index("by_email", ["email"]),
+  // --- Pabau API Usage Tracker ---
+  pabauApiUsage: defineTable({
+    date: v.string(),
+    method: v.union(
+      v.literal("GET"),
+      v.literal("POST"),
+      v.literal("PUT"),
+      v.literal("DELETE"),
+    ),
+    count: v.number(),
+    lastCallAt: v.number(),
+  }).index("by_date_method", ["date", "method"]),
+
+  // --- Pabau Reviews (mirror) ---
+  pabauReviews: defineTable({
+    pabauReviewId: v.string(),
+    name: v.string(),
+    quote: v.string(),
+    treatment: v.optional(v.string()),
+    rating: v.optional(v.number()),
+    pabauCreatedAt: v.number(),
+    pabauSyncedAt: v.number(),
+    isFeatured: v.boolean(),
+    displayOrder: v.number(),
+    isHidden: v.boolean(),
+  }).index("by_pabauReviewId", ["pabauReviewId"]),
+
+  // --- Pabau Webhook Events ---
+  pabauWebhookEvents: defineTable({
+    eventId: v.string(),
+    entityType: v.string(),
+    action: v.union(v.literal("create"), v.literal("update"), v.literal("delete")),
+    payload: v.any(),
+    receivedAt: v.number(),
+    processedAt: v.optional(v.number()),
+    status: v.union(
+      v.literal("received"),
+      v.literal("processed"),
+      v.literal("failed"),
+      v.literal("ignored"),
+    ),
+    errorMessage: v.optional(v.string()),
+    attempts: v.number(),
+  })
+    .index("by_eventId", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_entity", ["entityType"]),
+
+  // --- Pabau Activity Log ---
+  // Lightweight per-event log produced by the webhook handlers. Powers
+  // admin-dashboard rolling stats ("X new leads this week", etc.). Distinct
+  // from `pabauWebhookEvents` (raw event log) — this is the post-processed,
+  // structured view: one row per business-meaningful event with a small
+  // payload summary suitable for rendering directly in admin UI.
+  pabauActivityLog: defineTable({
+    entityType: v.string(),       // "client" | "lead" | "appointment" | "activity" | "invoice"
+    action: v.union(v.literal("create"), v.literal("update"), v.literal("delete")),
+    pabauEntityId: v.optional(v.string()),   // the Pabau-side entity ID extracted from payload
+    pabauEventId: v.string(),                // the dedup key from the event
+    occurredAt: v.number(),                  // timestamp from Pabau payload, or receivedAt fallback
+    payloadSummary: v.optional(v.any()),     // small subset of payload for admin display (name, email, etc.)
+    receivedAt: v.number(),
+  })
+    .index("by_entity_action", ["entityType", "action"])
+    .index("by_occurredAt", ["occurredAt"]),
 });

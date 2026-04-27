@@ -5,6 +5,8 @@ import { api } from "../../../convex/_generated/api";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
+import LocationMap from "@/components/sections/LocationMap";
+import AreasWeServe from "@/components/sections/AreasWeServe";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
@@ -172,8 +174,15 @@ export default function ContactPageClient() {
           {/* ── LEFT: Contact details (2/5) ── */}
           <motion.div variants={revealUp} className="lg:col-span-2">
             <span
-              className="label-micro block mb-5"
-              style={{ color: GLAZE }}
+              className="block mb-5"
+              style={{
+                color: ESPRESSO,
+                opacity: 0.75,
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+              }}
             >
               {bodyText.info_eyebrow}
             </span>
@@ -228,13 +237,17 @@ export default function ContactPageClient() {
                   Studio
                 </span>
                 <p
-                  className="body-editorial"
+                  className="body-editorial mb-4"
                   style={{ color: ESPRESSO }}
                 >
                   {info.addressLine1}
                   <br />
                   {info.addressLine2}
                 </p>
+                <LocationMap
+                  address={`${info.addressLine1}, ${info.addressLine2}`}
+                  height={240}
+                />
               </div>
 
               {/* Hours */}
@@ -291,8 +304,15 @@ export default function ContactPageClient() {
             style={{ borderColor: `${GLAZE}33` }}
           >
             <span
-              className="label-micro block mb-5"
-              style={{ color: GLAZE }}
+              className="block mb-5"
+              style={{
+                color: ESPRESSO,
+                opacity: 0.75,
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+              }}
             >
               {bodyText.form_eyebrow}
             </span>
@@ -313,6 +333,8 @@ export default function ContactPageClient() {
           </motion.div>
         </motion.div>
       </section>
+
+      <AreasWeServe />
     </>
   );
 }
