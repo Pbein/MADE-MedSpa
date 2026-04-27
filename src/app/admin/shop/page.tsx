@@ -35,6 +35,7 @@ function ProductForm({
   onDelete,
   saving,
   categories,
+  pabauSyncedAt,
 }: {
   initial: ProductFormData;
   onSave: (data: ProductFormData) => void;
@@ -42,6 +43,7 @@ function ProductForm({
   onDelete?: () => void;
   saving: boolean;
   categories: string[];
+  pabauSyncedAt?: number;
 }) {
   const [form, setForm] = useState<ProductFormData>(initial);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -52,6 +54,28 @@ function ProductForm({
       className="rounded-lg border p-4"
       style={{ borderColor: "#e5e7eb", backgroundColor: "#f9fafb" }}
     >
+      {pabauSyncedAt !== undefined && (
+        <div
+          style={{
+            backgroundColor: "#ede9fe",
+            border: "1px solid #ddd6fe",
+            color: "#5b21b6",
+            padding: "10px 14px",
+            borderRadius: 6,
+            fontSize: 13,
+            marginBottom: 16,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>Synced from Pabau.</strong> Edits to <em>name</em>, <em>price</em>, and
+          <em> description</em> will be overwritten on the next sync. Edit those in Pabau.
+          The site-only fields (image, category, sort order) below are safe to change.
+          <div style={{ fontSize: 11, marginTop: 4, opacity: 0.8 }}>
+            Last synced{" "}
+            {pabauSyncedAt ? new Date(pabauSyncedAt).toLocaleString() : "never"}
+          </div>
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-[13px] font-medium uppercase tracking-wider" style={{ color: "#111827" }}>
@@ -385,6 +409,7 @@ export default function AdminShopPage() {
                 onDelete={() => handleDelete(p._id)}
                 saving={saving}
                 categories={allCategories}
+                pabauSyncedAt={p.pabauProductId ? p.pabauSyncedAt : undefined}
               />
             ) : (
               <div
@@ -403,13 +428,34 @@ export default function AdminShopPage() {
                     />
                   )}
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-[15px] font-semibold" style={{ color: "#111827" }}>
                         {p.name}
                       </span>
                       <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-500">
                         {p.category}
                       </span>
+                      {p.pabauProductId && (
+                        <span
+                          title={
+                            p.pabauSyncedAt
+                              ? `Last synced ${new Date(p.pabauSyncedAt).toLocaleString()}`
+                              : "Synced from Pabau"
+                          }
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 600,
+                            padding: "2px 6px",
+                            borderRadius: 10,
+                            backgroundColor: "#ede9fe",
+                            color: "#6d28d9",
+                            textTransform: "uppercase",
+                            letterSpacing: 0.4,
+                          }}
+                        >
+                          Pabau
+                        </span>
+                      )}
                       {!p.isActive && (
                         <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-500">
                           Inactive

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default function AdminDashboard() {
   const services = useQuery(api.services.list);
@@ -16,6 +18,27 @@ export default function AdminDashboard() {
   const seedProducts = useQuery(api.shopProducts.countSeed);
   const newContacts = useQuery(api.contactSubmissions.countNew);
   const testimonials = useQuery(api.testimonials.list);
+
+  // Pabau weekly activity (powered by webhook handlers).
+  // Computed once per render; React Query treats the args as stable enough for
+  // these purposes — the rolling 7-day window only shifts when this component
+  // remounts, which is acceptable for a dashboard preview.
+  const weekAgo = useMemo(() => Date.now() - SEVEN_DAYS_MS, []);
+  const newLeadsThisWeek = useQuery(api.pabauActivityLog.countSinceByAction, {
+    entityType: "lead",
+    action: "create",
+    since: weekAgo,
+  });
+  const newClientsThisWeek = useQuery(api.pabauActivityLog.countSinceByAction, {
+    entityType: "client",
+    action: "create",
+    since: weekAgo,
+  });
+  const newAppointmentsThisWeek = useQuery(api.pabauActivityLog.countSinceByAction, {
+    entityType: "appointment",
+    action: "create",
+    since: weekAgo,
+  });
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -116,6 +139,43 @@ export default function AdminDashboard() {
           </Link>
         ))}
       </div>
+
+      {/* Pabau Activity (last 7 days) — populated by webhook handlers */}
+      <section style={{ marginBottom: 28 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginBottom: 12 }}>
+          Pabau Activity (last 7 days)
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isDesktop ? "repeat(3, 1fr)" : "repeat(3, 1fr)",
+            gap: 14,
+          }}
+        >
+          {[
+            { label: "New Leads", value: newLeadsThisWeek, color: "#0891b2" },
+            { label: "New Clients", value: newClientsThisWeek, color: "#7c3aed" },
+            { label: "New Bookings", value: newAppointmentsThisWeek, color: "#059669" },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              style={{
+                backgroundColor: "#fff",
+                borderRadius: 8,
+                padding: "16px 16px",
+                border: "1px solid #e5e7eb",
+              }}
+            >
+              <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.1, marginBottom: 2, color: stat.color }}>
+                {stat.value ?? "--"}
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: 0.5, textTransform: "uppercase" }}>
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Quick Actions */}
       <section style={{ marginBottom: 28 }}>

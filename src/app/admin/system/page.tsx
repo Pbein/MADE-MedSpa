@@ -442,7 +442,7 @@ export default function SystemAdmin() {
                 <ul style={{ fontSize: 13, color: color.textMuted, lineHeight: 1.7, paddingLeft: 18, margin: 0 }}>
                   <li>Public marketing site</li>
                   <li>Content management (copy, images)</li>
-                  <li>Lead capture (contact + newsletter)</li>
+                  <li>Lead capture (contact form)</li>
                   <li>Booking <em>entry point</em> (deep-links to Pabau)</li>
                 </ul>
               </Card>
