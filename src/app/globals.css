@@ -266,6 +266,13 @@ a {
   background-color: var(--color-blush);
 }
 
+.btn-primary:focus-visible,
+.btn-outline:focus-visible,
+.btn-light:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 3px;
+}
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -358,6 +365,29 @@ a {
 
 .input-editorial:focus {
   border-color: var(--color-primary);
+}
+
+.input-editorial:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 4px;
+  border-color: var(--color-primary);
+}
+
+/* Site-wide visible focus for keyboard users on links */
+a:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect prefers-reduced-motion: disable non-essential animation */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .input-editorial::placeholder {

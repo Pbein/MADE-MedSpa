@@ -31,6 +31,7 @@ function categorize(quote: string, treatment: string): Category {
 
 export default function TestimonialsPage() {
   const testimonials = useQuery(api.testimonials.list);
+  const pabauReviews = useQuery(api.pabauReviews.listVisible);
   const [activeFilter, setActiveFilter] = useState<Category>("All");
 
   const { data: ctaText } = useSectionContent("section_testimonials_cta", {
@@ -77,7 +78,7 @@ export default function TestimonialsPage() {
   }, [categorized, activeFilter, featured]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "var(--color-silk)" }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "var(--color-silk)" }}>
       {/* Editorial atmosphere layers */}
       <div className="pointer-events-none absolute inset-0 bg-editorial-base" />
       <div className="pointer-events-none absolute inset-0 bg-editorial-glow" />
@@ -228,6 +229,49 @@ export default function TestimonialsPage() {
         </div>
       </section>
 
+      {/* 4b. RECENT REVIEWS FROM PABAU — supplementary, only shown when reviews exist */}
+      {pabauReviews && pabauReviews.length > 0 && (
+        <section
+          id="section-pabau-reviews"
+          className="py-16 md:py-20 px-6"
+          style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
+        >
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-10">
+              <p className="label-micro" style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}>
+                Recent Reviews
+              </p>
+              <h2
+                className="font-headline italic text-2xl md:text-3xl mt-2"
+                style={{ color: "var(--color-primary)" }}
+              >
+                Fresh from our clients.
+              </h2>
+              <p
+                className="body-editorial mt-3 text-sm"
+                style={{ color: "var(--color-on-surface-variant)", opacity: 0.7 }}
+              >
+                Reviews submitted directly through our patient management system.
+              </p>
+            </div>
+            <div className="space-y-8">
+              {pabauReviews.map((r, i) => (
+                <TestimonialEntry
+                  key={r._id}
+                  testimonial={{
+                    _id: r._id,
+                    quote: r.quote,
+                    name: r.name,
+                    treatment: r.treatment ?? "",
+                  }}
+                  index={i}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 5. TRUST REINFORCEMENT */}
       <section className="py-12 md:py-16 px-6" style={{ backgroundColor: "rgba(255,255,255,0.35)" }}>
         <div className="mx-auto max-w-2xl text-center">
@@ -253,7 +297,7 @@ export default function TestimonialsPage() {
       />
       </div>
       </div>
-    </main>
+    </div>
   );
 }
 

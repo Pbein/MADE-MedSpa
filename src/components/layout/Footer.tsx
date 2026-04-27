@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import Image from "next/image";
+import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 interface BusinessInfoSocial {
@@ -53,6 +53,7 @@ const navLinks = [
 const legalLinks = [
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
+  { href: "/accessibility", label: "Accessibility" },
 ];
 
 const ESPRESSO = "#391e1e";
@@ -63,25 +64,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const businessInfoEntry = useQuery(api.siteContent.getByKey, { key: "business_info" });
   const info = (businessInfoEntry?.metadata as unknown as BusinessInfo) || DEFAULT_BUSINESS_INFO;
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const subscribe = useMutation(api.newsletter.subscribe);
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !email.includes("@")) return;
-
-    setStatus("loading");
-    try {
-      await subscribe({ email });
-      setStatus("success");
-      setEmail("");
-      setTimeout(() => setStatus("idle"), 3000);
-    } catch {
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 3000);
-    }
-  };
+  const logoDoc = useQuery(api.siteContent.getByKey, { key: "site_logo" });
+  const logoUrl = logoDoc?.imageUrl;
+  const logoAlt = logoDoc?.title ?? "MADE Med Spa";
 
   return (
     <footer
@@ -105,9 +90,30 @@ export default function Footer() {
             <Link
               href="/"
               className="font-headline italic text-4xl md:text-5xl tracking-tight transition-opacity duration-500 hover:opacity-80"
-              style={{ color: SILK }}
+              style={{
+                color: SILK,
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+              aria-label={logoAlt}
             >
-              MADE
+              {logoUrl ? (
+                <Image
+                  src={logoUrl}
+                  alt={logoAlt}
+                  width={180}
+                  height={60}
+                  style={{
+                    height: "60px",
+                    width: "auto",
+                    maxHeight: "60px",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                "MADE"
+              )}
             </Link>
             <p
               className="body-editorial mt-4 max-w-sm"
@@ -205,60 +211,14 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Col 4: Newsletter + Socials */}
+            {/* Col 4: Socials */}
             <div>
               <p
                 className="label-micro mb-6"
                 style={{ color: GLAZE }}
               >
-                Stay in the Know
+                Follow
               </p>
-              <form
-                onSubmit={handleNewsletterSubmit}
-                className="mb-8"
-              >
-                <div className="flex items-end gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email"
-                    aria-label="Email for newsletter"
-                    disabled={status === "loading"}
-                    className="flex-1 bg-transparent border-b py-2 text-sm outline-none transition-colors duration-500 placeholder:opacity-40"
-                    style={{
-                      borderColor: `${GLAZE}40`,
-                      color: SILK,
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = GLAZE)}
-                    onBlur={(e) => (e.target.style.borderColor = `${GLAZE}40`)}
-                  />
-                  <button
-                    type="submit"
-                    disabled={status === "loading"}
-                    className="label-micro shrink-0 pb-2 cursor-pointer transition-opacity duration-500 hover:opacity-100"
-                    style={{ color: GLAZE, opacity: 0.8 }}
-                  >
-                    {status === "loading"
-                      ? "..."
-                      : status === "success"
-                        ? "Joined"
-                        : "Subscribe"}
-                  </button>
-                </div>
-                {status === "success" && (
-                  <p className="label-micro mt-3" style={{ color: GLAZE }}>
-                    Welcome to the MADE family.
-                  </p>
-                )}
-                {status === "error" && (
-                  <p className="label-micro mt-3" style={{ color: "var(--color-secondary)" }}>
-                    Something went wrong. Please try again.
-                  </p>
-                )}
-              </form>
-
-              {/* Socials */}
               <div className="flex gap-6">
                 {info.socials.map((social) => (
                   <a

@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const primaryLinks = [
   { href: "/services", label: "Services" },
@@ -29,6 +32,9 @@ export default function Navigation() {
   const [exploreOpen, setExploreOpen] = useState(false);
   const exploreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevPathnameRef = useRef(pathname);
+  const logoDoc = useQuery(api.siteContent.getByKey, { key: "site_logo" });
+  const logoUrl = logoDoc?.imageUrl;
+  const logoAlt = logoDoc?.title ?? "MADE Med Spa";
 
   const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/testimonials", "/shop", "/membership", "/faq"]);
   const lightTextRoutes = new Set(["/", "/booking"]);
@@ -116,9 +122,29 @@ export default function Navigation() {
               color: useLightNavText
                 ? "var(--color-on-primary)"
                 : "var(--color-primary)",
+              display: "flex",
+              alignItems: "center",
             }}
+            aria-label={logoAlt}
           >
-            MADE
+            {logoUrl ? (
+              <Image
+                src={logoUrl}
+                alt={logoAlt}
+                width={120}
+                height={40}
+                priority
+                style={{
+                  height: "40px",
+                  width: "auto",
+                  maxHeight: "40px",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+              />
+            ) : (
+              "MADE"
+            )}
           </Link>
 
           <ul className="flex gap-10 items-center">
@@ -158,9 +184,33 @@ export default function Navigation() {
               onMouseLeave={() => {
                 exploreTimeoutRef.current = setTimeout(() => setExploreOpen(false), 200);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && exploreOpen) {
+                  setExploreOpen(false);
+                  const target = e.currentTarget.querySelector(
+                    "button",
+                  ) as HTMLButtonElement | null;
+                  target?.focus();
+                }
+              }}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setExploreOpen(false);
+                }
+              }}
             >
               <button
-                className="font-headline italic tracking-wide text-lg transition-all duration-500"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded={exploreOpen}
+                onClick={() => setExploreOpen((v) => !v)}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setExploreOpen(true);
+                  }
+                }}
+                className="font-headline italic tracking-wide text-lg transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-secondary)]"
                 style={{
                   color: useLightNavText
                     ? "var(--color-on-primary)"
@@ -252,9 +302,29 @@ export default function Navigation() {
             color: useLightNavText && !isScrolled
               ? "var(--color-on-primary)"
               : "var(--color-primary)",
+            display: "inline-flex",
+            alignItems: "center",
           }}
+          aria-label={logoAlt}
         >
-          MADE
+          {logoUrl ? (
+            <Image
+              src={logoUrl}
+              alt={logoAlt}
+              width={96}
+              height={32}
+              priority
+              style={{
+                height: "32px",
+                width: "auto",
+                maxHeight: "32px",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
+          ) : (
+            "MADE"
+          )}
         </Link>
       </div>
 

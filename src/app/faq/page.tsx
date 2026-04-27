@@ -109,7 +109,7 @@ export default function FAQPage() {
   }, [faqs]);
 
   return (
-    <main style={styleOverrides}>
+    <div style={styleOverrides}>
       {isPreview && <PreviewBanner />}
       {faqJsonLd && (
         <script
@@ -285,6 +285,6 @@ export default function FAQPage() {
         />
         </div>
       )}
-    </main>
+    </div>
   );
 }

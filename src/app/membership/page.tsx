@@ -37,7 +37,7 @@ export default function MembershipPage() {
   });
 
   return (
-    <main
+    <div
       style={{
         ...styleOverrides,
         backgroundColor: "#f0e8e1",
@@ -120,7 +120,7 @@ export default function MembershipPage() {
         />
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

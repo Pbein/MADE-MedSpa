@@ -49,7 +49,7 @@ export default function ServicesPageClient({
     }) ?? [];
 
   return (
-    <main>
+    <div>
       {/* Hero */}
       {show("hero") && <div id="section-hero"><PageHero
         eyebrow={heroText.eyebrow}
@@ -155,6 +155,6 @@ export default function ServicesPageClient({
         />
         </div>
       )}
-    </main>
+    </div>
   );
 }
