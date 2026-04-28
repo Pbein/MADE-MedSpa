@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
+import PreviewOverlay from "./PreviewOverlay";
 import { markNavigation } from "@/lib/navigation";
 
 export default function PublicShell({ children }: { children: React.ReactNode }) {
@@ -28,6 +29,7 @@ export default function PublicShell({ children }: { children: React.ReactNode })
         Skip to main content
       </a>
       <Navigation />
+      <PreviewOverlay />
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
         {children}
       </main>

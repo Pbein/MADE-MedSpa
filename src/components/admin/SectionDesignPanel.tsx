@@ -116,11 +116,37 @@ function ColorPicker({
 
 // ── Live Preview (iframe) ───────────────────────────────────────────────────
 
-function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: string }) {
+function LivePreview({
+  pagePath,
+  sectionKey,
+  previewOverrides,
+}: {
+  pagePath: string;
+  sectionKey: string;
+  previewOverrides: PreviewOverrides;
+}) {
   if (pagePath === "(global)") return null;
 
-  // Use hash to scroll iframe to the target section
-  const previewUrl = `${pagePath}#section-${sectionKey}`;
+  // Encode current in-memory overrides into a URL query so the page can apply
+  // them inline without saving. This makes the iframe update LIVE as the
+  // operator picks colors / fonts / etc.
+  const params = new URLSearchParams();
+  params.set("_previewSection", sectionKey);
+  if (previewOverrides.designStyle && previewOverrides.designStyle !== "default") {
+    params.set("_previewDesignStyle", previewOverrides.designStyle);
+  }
+  if (previewOverrides.fontPair && previewOverrides.fontPair !== "default") {
+    params.set("_previewFontPair", previewOverrides.fontPair);
+  }
+  if (previewOverrides.colors && Object.keys(previewOverrides.colors).length > 0) {
+    params.set("_previewColors", JSON.stringify(previewOverrides.colors));
+  }
+  if (previewOverrides.backgroundImage) {
+    params.set("_previewBg", previewOverrides.backgroundImage);
+  }
+
+  const qs = params.toString();
+  const previewUrl = `${pagePath}${qs ? "?" + qs : ""}#section-${sectionKey}`;
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
@@ -157,10 +183,17 @@ function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: s
         />
       </div>
       <p style={{ fontSize: "0.5625rem", color: "#9ca3af", marginTop: "0.25rem" }}>
-        Shows the actual live page. Save changes and refresh to see updates.
+        Updates as you pick. Click <strong>Save Design</strong> to keep your selections in the admin, then <strong>Save</strong> to publish to the live site.
       </p>
     </div>
   );
+}
+
+interface PreviewOverrides {
+  designStyle?: string;
+  fontPair?: string;
+  colors?: Record<string, string>;
+  backgroundImage?: string;
 }
 
 // ── Main Component ──────────────────────────────────────────────────────────
@@ -406,7 +439,12 @@ export default function SectionDesignPanel({
           </div>
 
           {/* Live Preview */}
-          <LivePreview key={previewKey} pagePath={pagePath} sectionKey={sectionKey} />
+          <LivePreview
+            key={previewKey}
+            pagePath={pagePath}
+            sectionKey={sectionKey}
+            previewOverrides={{ designStyle, fontPair, colors, backgroundImage: bgImage }}
+          />
         </div>
       )}
     </div>
