@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DESIGN_PRESETS, getPreset } from "@/lib/designPresets";
+import { getSectionDefaultColors } from "@/lib/sectionDefaults";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,10 +33,15 @@ interface SectionDesignPanelProps {
 
 // ── Preset color mappings ──────────────────────────────────────────────────
 
-function getPresetColors(presetKey: string) {
-  // Light surfaces use Espresso text + Blush accent.
-  // Dark surfaces (espresso, merlot, blush, matcha, olive) use Silk text.
-  const lightSurfaceDefaults = { surface: "#F7F6EB", onSurface: "#391E1E", secondary: "#84262C" };
+// When a preset is active, the preset's surface/text combo defines the swatch.
+// When designStyle is "default", we fall back to the SECTION's true defaults
+// from the section-defaults registry, so the picker matches what the live
+// site actually renders (e.g. home/hero defaults to espresso bg + cream text).
+function getPresetColors(
+  presetKey: string,
+  pageKey: string,
+  sectionKey: string
+) {
   if (presetKey === "espresso") return { surface: "#391E1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
   if (presetKey === "merlot")   return { surface: "#571A1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
   if (presetKey === "blush")    return { surface: "#84262C", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
@@ -43,7 +49,7 @@ function getPresetColors(presetKey: string) {
   if (presetKey === "olive")    return { surface: "#413E2A", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
   if (presetKey === "silk")     return { surface: "#F7F6EB", onSurface: "#391E1E", secondary: "#84262C" };
   if (presetKey === "glaze")    return { surface: "#E8E0D5", onSurface: "#391E1E", secondary: "#84262C" };
-  return lightSurfaceDefaults;
+  return getSectionDefaultColors(pageKey, sectionKey);
 }
 
 // ── Brand Swatches (MADE Branding spec palette) ─────────────────────────────
@@ -235,10 +241,10 @@ export default function SectionDesignPanel({
     if (presetKey === "default") {
       setColors({});
     } else {
-      const pc = getPresetColors(presetKey);
+      const pc = getPresetColors(presetKey, pageKey, sectionKey);
       setColors({ surface: pc.surface, onSurface: pc.onSurface, secondary: pc.secondary });
     }
-  }, []);
+  }, [pageKey, sectionKey]);
 
   const handleSave = useCallback(async () => {
     setSaving(true);
@@ -292,7 +298,7 @@ export default function SectionDesignPanel({
   }
 
   const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage;
-  const presetColors = getPresetColors(designStyle);
+  const presetColors = getPresetColors(designStyle, pageKey, sectionKey);
 
   const updateColor = (key: string) => (val: string | undefined) => {
     setColors((prev) => {

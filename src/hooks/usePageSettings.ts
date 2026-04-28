@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { CSSProperties, useMemo } from "react";
 import { getPresetStyles } from "@/lib/designPresets";
+import { getSectionDefaultStyles } from "@/lib/sectionDefaults";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -190,11 +191,17 @@ export function usePageSettings(pageKey: string): ResolvedPageSettings {
       },
       getSectionDesign: (sectionKey: string) => {
         const config = getSectionConfig(sectionKey);
-        if (!config) return {};
 
         const result: CSSProperties = {};
 
-        // Apply preset styles first
+        // 1. Section defaults (CSS vars from the registry — espresso bg /
+        //    cream text for sections like home/hero, booking/hero, etc.).
+        //    Always applied so rendered defaults match the admin picker.
+        Object.assign(result, getSectionDefaultStyles(pageKey, sectionKey));
+
+        if (!config) return result;
+
+        // 2. Preset styles — applied on top of defaults.
         const presetStyles = getPresetStyles(config.designStyle as string | undefined);
         Object.assign(result, presetStyles);
 

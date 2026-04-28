@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { getSectionDefaultStyles } from "./sectionDefaults";
 
 /**
  * Server-side helper: converts page settings metadata into CSS variable
@@ -88,14 +89,33 @@ export function getSectionColorOverrides(
 }
 
 /**
- * Server-side helper: get full section design (preset + colors + bg image).
- * Returns CSSProperties to spread onto a section wrapper div.
+ * Server-side helper: get full section design (defaults + preset + colors + bg image).
+ *
+ * Layered, last-write-wins:
+ *   1. Section defaults from sectionDefaults registry (e.g. home/hero defaults
+ *      to espresso bg + cream text — without this the picker would lie about
+ *      the section's actual rendered defaults).
+ *   2. Preset styles (single brand colors).
+ *   3. Per-color admin overrides.
+ *   4. Background image.
+ *
+ * pageKey is required so the registry lookup can find section-specific
+ * defaults (e.g. "home", "contact", "booking").
  */
 export function getSectionDesignServer(
   pageSettingsMetadata: Record<string, unknown> | null | undefined,
-  sectionKey: string
+  sectionKey: string,
+  pageKey?: string
 ): import("react").CSSProperties {
-  if (!pageSettingsMetadata) return {};
+  const result: Record<string, string> = {};
+
+  // 1. Section defaults — always applied so the rendered defaults match the
+  //    admin picker's swatches, even if no admin customization exists yet.
+  if (pageKey) {
+    Object.assign(result, getSectionDefaultStyles(pageKey, sectionKey));
+  }
+
+  if (!pageSettingsMetadata) return result as import("react").CSSProperties;
   const sections = (pageSettingsMetadata as {
     sections?: Record<string, boolean | {
       visible?: boolean;
@@ -104,33 +124,27 @@ export function getSectionDesignServer(
       backgroundImage?: string;
     }>;
   }).sections;
-  if (!sections) return {};
+  if (!sections) return result as import("react").CSSProperties;
 
   const config = sections[sectionKey];
-  if (!config || typeof config === "boolean") return {};
+  if (!config || typeof config === "boolean") return result as import("react").CSSProperties;
 
-  const result: Record<string, string> = {};
-
-  // Apply preset
+  // 2. Preset (brand-palette single colors).
   if (config.designStyle && config.designStyle !== "default") {
-    try {
-      // Dynamic import would be ideal but we're in a sync function
-      // Import the preset styles inline
-      const presetMap: Record<string, Record<string, string>> = {
-        "warm-silk": { background: "linear-gradient(180deg, #f6f1ea 0%, #efe7df 50%, #f6f1ea 100%)" },
-        "editorial-wash": { background: "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.35) 0%, transparent 50%), linear-gradient(180deg, #efe7df 0%, #e8ddd5 50%, #efe7df 100%)" },
-        "espresso-dark": { background: "linear-gradient(180deg, #391e1e 0%, #2d1515 50%, #391e1e 100%)", color: "#f6f1ea" },
-        "blush-accent": { background: "linear-gradient(180deg, #f2e8e5 0%, #ecddd8 50%, #f2e8e5 100%)" },
-        "glaze-neutral": { background: "linear-gradient(180deg, #ede5da 0%, #e8e0d5 50%, #ede5da 100%)" },
-        "powder-soft": { background: "#efe7df" },
-        "cream-glow": { background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 45%), #f3ece4" },
-      };
-      const preset = presetMap[config.designStyle];
-      if (preset) Object.assign(result, preset);
-    } catch { /* ignore */ }
+    const presetMap: Record<string, Record<string, string>> = {
+      silk:     { background: "#F7F6EB" },
+      glaze:    { background: "#E8E0D5" },
+      espresso: { background: "#391E1E", color: "#F7F6EB" },
+      merlot:   { background: "#571A1E", color: "#F7F6EB" },
+      blush:    { background: "#84262C", color: "#F7F6EB" },
+      matcha:   { background: "#838D60", color: "#F7F6EB" },
+      olive:    { background: "#413E2A", color: "#F7F6EB" },
+    };
+    const preset = presetMap[config.designStyle];
+    if (preset) Object.assign(result, preset);
   }
 
-  // Apply custom colors
+  // 3. Per-color overrides.
   if (config.colors) {
     if (config.colors.surface) result["--color-surface"] = config.colors.surface;
     if (config.colors.onSurface) {
@@ -144,7 +158,7 @@ export function getSectionDesignServer(
     if (config.colors.divider) result["--divider-color"] = config.colors.divider;
   }
 
-  // Apply background image
+  // 4. Background image.
   if (config.backgroundImage) {
     result.backgroundImage = `url('${config.backgroundImage}')`;
     result.backgroundSize = "cover";
