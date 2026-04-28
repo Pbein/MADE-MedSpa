@@ -85,14 +85,6 @@ export default function PreviewOverlay() {
       target.style.setProperty("background-repeat", "no-repeat");
     }
 
-    // Apply font pair class
-    const fontPair = params.get("_previewFontPair");
-    if (fontPair && fontPair !== "default") {
-      // Strip any existing font-pair-* classes first
-      const existing = Array.from(target.classList).filter((c) => c.startsWith("font-pair-"));
-      existing.forEach((c) => target.classList.remove(c));
-      target.classList.add(`font-pair-${fontPair}`);
-    }
   }, []);
 
   return null;

@@ -19,16 +19,7 @@ interface SectionDesignConfig {
   };
   backgroundImage?: string;
   designStyle?: string;
-  fontPair?: string;
 }
-
-const FONT_PAIRS: { key: string; label: string; sample: string }[] = [
-  { key: "default", label: "Default", sample: "Cormorant + Inter" },
-  { key: "editorial", label: "Editorial", sample: "Playfair + Inter" },
-  { key: "modern-sans", label: "Modern Sans", sample: "Manrope only" },
-  { key: "classic-serif", label: "Classic Serif", sample: "Cormorant only" },
-  { key: "bold-display", label: "Bold Display", sample: "DM Serif + Manrope" },
-];
 
 interface SectionDesignPanelProps {
   pageKey: string;
@@ -42,32 +33,30 @@ interface SectionDesignPanelProps {
 // ── Preset color mappings ──────────────────────────────────────────────────
 
 function getPresetColors(presetKey: string) {
-  const defaults = { surface: "#f6f1ea", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "espresso-dark") return { surface: "#391e1e", onSurface: "#f6f1ea", secondary: "#d8c0bb" };
-  if (presetKey === "blush-accent") return { surface: "#f2e8e5", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "glaze-neutral") return { surface: "#e8e0d5", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "powder-soft") return { surface: "#efe7df", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "warm-silk") return { surface: "#f6f1ea", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "editorial-wash") return { surface: "#efe7df", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "cream-glow") return { surface: "#f3ece4", onSurface: "#391e1e", secondary: "#84262c" };
-  return defaults;
+  // Light surfaces use Espresso text + Blush accent.
+  // Dark surfaces (espresso, merlot, blush, matcha, olive) use Silk text.
+  const lightSurfaceDefaults = { surface: "#F7F6EB", onSurface: "#391E1E", secondary: "#84262C" };
+  if (presetKey === "espresso") return { surface: "#391E1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "merlot")   return { surface: "#571A1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "blush")    return { surface: "#84262C", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "matcha")   return { surface: "#838D60", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "olive")    return { surface: "#413E2A", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "silk")     return { surface: "#F7F6EB", onSurface: "#391E1E", secondary: "#84262C" };
+  if (presetKey === "glaze")    return { surface: "#E8E0D5", onSurface: "#391E1E", secondary: "#84262C" };
+  return lightSurfaceDefaults;
 }
 
-// ── Brand Swatches ──────────────────────────────────────────────────────────
+// ── Brand Swatches (MADE Branding spec palette) ─────────────────────────────
 
 const BRAND_SWATCHES = [
-  { color: "#391e1e", label: "Espresso" },
-  { color: "#84262c", label: "Blush" },
-  { color: "#838d60", label: "Matcha" },
-  { color: "#413e2a", label: "Olive" },
-  { color: "#e8e0d5", label: "Glaze" },
-  { color: "#f6f1ea", label: "Silk" },
-  { color: "#efe7df", label: "Powder" },
-  { color: "#d8c0bb", label: "Rose Dust" },
-  { color: "#dccfc4", label: "Petal" },
-  { color: "#c9aa96", label: "Warm Nude" },
-  { color: "#b7a39a", label: "Soft Taupe" },
-  { color: "#ffffff", label: "White" },
+  { color: "#F7F6EB", label: "Silk" },
+  { color: "#E8E0D5", label: "Glaze" },
+  { color: "#84262C", label: "Blush" },
+  { color: "#571A1E", label: "Merlot" },
+  { color: "#391E1E", label: "Espresso" },
+  { color: "#838D60", label: "Matcha" },
+  { color: "#413E2A", label: "Olive" },
+  { color: "#FFFFFF", label: "White" },
 ];
 
 // ── Color Picker ────────────────────────────────────────────────────────────
@@ -135,9 +124,6 @@ function LivePreview({
   if (previewOverrides.designStyle && previewOverrides.designStyle !== "default") {
     params.set("_previewDesignStyle", previewOverrides.designStyle);
   }
-  if (previewOverrides.fontPair && previewOverrides.fontPair !== "default") {
-    params.set("_previewFontPair", previewOverrides.fontPair);
-  }
   if (previewOverrides.colors && Object.keys(previewOverrides.colors).length > 0) {
     params.set("_previewColors", JSON.stringify(previewOverrides.colors));
   }
@@ -191,7 +177,6 @@ function LivePreview({
 
 interface PreviewOverrides {
   designStyle?: string;
-  fontPair?: string;
   colors?: Record<string, string>;
   backgroundImage?: string;
 }
@@ -230,7 +215,6 @@ export default function SectionDesignPanel({
   const [designStyle, setDesignStyle] = useState(config.designStyle || "default");
   const [colors, setColors] = useState(config.colors || {});
   const [bgImage, setBgImage] = useState(config.backgroundImage || "");
-  const [fontPair, setFontPair] = useState(config.fontPair || "default");
 
   // Sync from DB
   const settingsId = pageSettings?._id;
@@ -244,7 +228,6 @@ export default function SectionDesignPanel({
     setDesignStyle(c.designStyle || "default");
     setColors(c.colors || {});
     setBgImage(c.backgroundImage || "");
-    setFontPair(c.fontPair || "default");
   }
 
   const handlePresetChange = useCallback((presetKey: string) => {
@@ -269,20 +252,18 @@ export default function SectionDesignPanel({
         designStyle: designStyle !== "default" ? designStyle : undefined,
         colors: Object.keys(colors).length > 0 ? colors : undefined,
         backgroundImage: bgImage || undefined,
-        fontPair: fontPair !== "default" ? fontPair : undefined,
       };
       await upsert({ key: `page_settings_${pageKey}`, metadata: { ...cur, sections: curSec } });
       setSaved(true);
       setPreviewKey((k) => k + 1);
       setTimeout(() => setSaved(false), 2000);
     } finally { setSaving(false); }
-  }, [pageKey, sectionKey, designStyle, colors, bgImage, fontPair, pageSettings, upsert]);
+  }, [pageKey, sectionKey, designStyle, colors, bgImage, pageSettings, upsert]);
 
   const handleReset = useCallback(async () => {
     setDesignStyle("default");
     setColors({});
     setBgImage("");
-    setFontPair("default");
     setSaving(true);
     try {
       const cur = (pageSettings?.metadata || {}) as Record<string, unknown>;
@@ -310,7 +291,7 @@ export default function SectionDesignPanel({
     finally { setUploading(false); }
   }
 
-  const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage || fontPair !== "default";
+  const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage;
   const presetColors = getPresetColors(designStyle);
 
   const updateColor = (key: string) => (val: string | undefined) => {
@@ -362,46 +343,6 @@ export default function SectionDesignPanel({
             </div>
           </div>
 
-          {/* Font Pair */}
-          <div style={{ marginBottom: "1rem" }}>
-            <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>Fonts</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
-              {FONT_PAIRS.map((p) => {
-                const isActive = fontPair === p.key;
-                return (
-                  <button
-                    key={p.key}
-                    onClick={() => setFontPair(p.key)}
-                    style={{
-                      padding: "0.4rem 0.7rem",
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      borderColor: isActive ? "#6366f1" : "#e5e7eb",
-                      borderRadius: "0.375rem",
-                      backgroundColor: isActive ? "#eef2ff" : "#fff",
-                      color: isActive ? "#4338ca" : "#374151",
-                      fontSize: "0.6875rem",
-                      fontWeight: isActive ? 600 : 500,
-                      cursor: "pointer",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: 2,
-                      textAlign: "left",
-                      minWidth: 110,
-                    }}
-                  >
-                    <span>{p.label}</span>
-                    <span style={{ fontSize: "0.5625rem", fontWeight: 400, color: "#9ca3af" }}>{p.sample}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <div style={{ fontSize: "0.5625rem", color: "#9ca3af", marginTop: "0.375rem" }}>
-              Per-section override. &ldquo;Default&rdquo; uses the site-wide pair.
-            </div>
-          </div>
-
           {/* Background Image */}
           <div style={{ marginBottom: "0.75rem" }}>
             <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>Background Image</div>
@@ -443,7 +384,7 @@ export default function SectionDesignPanel({
             key={previewKey}
             pagePath={pagePath}
             sectionKey={sectionKey}
-            previewOverrides={{ designStyle, fontPair, colors, backgroundImage: bgImage }}
+            previewOverrides={{ designStyle, colors, backgroundImage: bgImage }}
           />
         </div>
       )}

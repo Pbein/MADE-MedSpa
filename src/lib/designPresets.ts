@@ -3,6 +3,9 @@ import type { CSSProperties } from "react";
 // ── Design Presets ───────────────────────────────────────────────────────────
 // Curated CSS style sets that admins can apply to individual sections.
 // Each preset returns CSS properties applied to the section wrapper div.
+// Palette derives from the MADE Branding spec sheet:
+//   Silk #F7F6EB · Glaze #E8E0D5 · Blush #84262C · Merlot #571A1E
+//   Espresso #391E1E · Matcha #838D60 · Olive #413E2A
 
 export interface DesignPreset {
   key: string;
@@ -16,78 +19,77 @@ export interface DesignPreset {
   lightText?: boolean;
 }
 
+// Brand color tokens (kept here as literal hex for preset swatches and
+// gradient definitions — runtime UI should still prefer var() refs).
+const SILK = "#F7F6EB";
+const GLAZE = "#E8E0D5";
+const BLUSH = "#84262C";
+const MERLOT = "#571A1E";
+const ESPRESSO = "#391E1E";
+const MATCHA = "#838D60";
+const OLIVE = "#413E2A";
+
 export const DESIGN_PRESETS: DesignPreset[] = [
   {
     key: "default",
     name: "Default",
     description: "No custom styling — uses the page default",
-    swatch: "#f6f1ea",
+    swatch: SILK,
     styles: {},
   },
   {
-    key: "warm-silk",
-    name: "Warm Silk",
-    description: "Soft silk-to-powder gradient with gentle warmth",
-    swatch: "#f6f1ea",
-    styles: {
-      background: "linear-gradient(180deg, #f6f1ea 0%, #efe7df 50%, #f6f1ea 100%)",
-    },
+    key: "silk",
+    name: "Silk",
+    description: "Soft cream — primary page background",
+    swatch: SILK,
+    styles: { background: SILK },
   },
   {
-    key: "editorial-wash",
-    name: "Editorial Wash",
-    description: "Subtle center glow with warm vignette — editorial feel",
-    swatch: "#efe7df",
-    styles: {
-      background: "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.35) 0%, transparent 50%), linear-gradient(180deg, #efe7df 0%, #e8ddd5 50%, #efe7df 100%)",
-    },
+    key: "glaze",
+    name: "Glaze",
+    description: "Warm beige — grounded section contrast",
+    swatch: GLAZE,
+    styles: { background: GLAZE },
   },
   {
-    key: "espresso-dark",
-    name: "Espresso Dark",
-    description: "Rich dark espresso background with light text",
-    swatch: "#391e1e",
+    key: "espresso",
+    name: "Espresso",
+    description: "Deep brown — dark editorial section with cream text",
+    swatch: ESPRESSO,
     lightText: true,
-    styles: {
-      background: "linear-gradient(180deg, #391e1e 0%, #2d1515 50%, #391e1e 100%)",
-      color: "#f6f1ea",
-    },
+    styles: { background: ESPRESSO, color: SILK },
   },
   {
-    key: "blush-accent",
-    name: "Blush Accent",
-    description: "Soft rose-dust tinted surface — feminine warmth",
-    swatch: "#d8c0bb",
-    styles: {
-      background: "linear-gradient(180deg, #f2e8e5 0%, #ecddd8 50%, #f2e8e5 100%)",
-    },
+    key: "merlot",
+    name: "Merlot",
+    description: "Deep wine — luxe accent background with cream text",
+    swatch: MERLOT,
+    lightText: true,
+    styles: { background: MERLOT, color: SILK },
   },
   {
-    key: "glaze-neutral",
-    name: "Glaze Neutral",
-    description: "Warm glaze background — grounded and calm",
-    swatch: "#e8e0d5",
-    styles: {
-      background: "linear-gradient(180deg, #ede5da 0%, #e8e0d5 50%, #ede5da 100%)",
-    },
+    key: "blush",
+    name: "Blush",
+    description: "Brand red — bold accent background with cream text",
+    swatch: BLUSH,
+    lightText: true,
+    styles: { background: BLUSH, color: SILK },
   },
   {
-    key: "powder-soft",
-    name: "Powder Soft",
-    description: "Light powder tone — airy and minimal",
-    swatch: "#efe7df",
-    styles: {
-      background: "#efe7df",
-    },
+    key: "matcha",
+    name: "Matcha",
+    description: "Sage green — earthy accent with cream text",
+    swatch: MATCHA,
+    lightText: true,
+    styles: { background: MATCHA, color: SILK },
   },
   {
-    key: "cream-glow",
-    name: "Cream Glow",
-    description: "Warm cream with a soft center highlight",
-    swatch: "#f8f3ed",
-    styles: {
-      background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 45%), #f3ece4",
-    },
+    key: "olive",
+    name: "Olive",
+    description: "Deep olive — earthy dark with cream text",
+    swatch: OLIVE,
+    lightText: true,
+    styles: { background: OLIVE, color: SILK },
   },
 ];
 
