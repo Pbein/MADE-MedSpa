@@ -28,8 +28,6 @@ export default async function Home() {
     await Promise.all([
       fetchQuery(api.siteContent.getByKeys, {
         keys: [
-          "hero_video",
-          "hero_poster",
           "featured_service_image_1",
           "featured_service_image_2",
           "featured_service_image_3",
@@ -104,11 +102,7 @@ export default async function Home() {
         // design("hero") already merges section defaults from the registry
         // with any admin overrides — single source of truth.
         <div id="section-hero" style={design("hero")}>
-          <HeroSection
-            heroVideoUrl={content.hero_video?.imageUrl}
-            heroPosterUrl={content.hero_poster?.imageUrl}
-            sectionContent={heroContent}
-          />
+          <HeroSection sectionContent={heroContent} />
         </div>
       )}
 

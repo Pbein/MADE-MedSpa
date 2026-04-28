@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DESIGN_PRESETS, getPreset } from "@/lib/designPresets";
 import { getSectionDefaultColors } from "@/lib/sectionDefaults";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -194,8 +195,6 @@ export default function SectionDesignPanel({
 }: SectionDesignPanelProps) {
   const pageSettings = useQuery(api.siteContent.getByKey, { key: `page_settings_${pageKey}` });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -267,6 +266,7 @@ export default function SectionDesignPanel({
   }, [pageKey, sectionKey, designStyle, colors, bgImage, pageSettings, upsert]);
 
   const handleReset = useCallback(async () => {
+    const previousBg = bgImage;
     setDesignStyle("default");
     setColors({});
     setBgImage("");
@@ -278,21 +278,26 @@ export default function SectionDesignPanel({
         ? (curSec[sectionKey] as SectionDesignConfig) : {};
       curSec[sectionKey] = { visible: existing.visible !== false };
       await upsert({ key: `page_settings_${pageKey}`, metadata: { ...cur, sections: curSec } });
+      if (previousBg) deleteBlob(previousBg).catch(() => {});
       setSaved(true);
       setPreviewKey((k) => k + 1);
       setTimeout(() => setSaved(false), 2000);
     } finally { setSaving(false); }
-  }, [pageKey, sectionKey, pageSettings, upsert]);
+  }, [pageKey, sectionKey, pageSettings, upsert, bgImage]);
 
   async function handleBgUpload(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, { method: "POST", headers: { "Content-Type": file.type }, body: file });
-      const { storageId } = await result.json();
-      const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!storageUrl) throw new Error("Failed");
-      setBgImage(storageUrl);
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const url = await uploadBlob(file, {
+        prefix: "section-design",
+        filename: `${pageKey}-${sectionKey}-bg-${Date.now()}.${ext}`,
+      });
+      const previous = bgImage;
+      setBgImage(url);
+      if (previous && previous !== url) {
+        deleteBlob(previous).catch(() => {});
+      }
     } catch { alert("Upload failed."); }
     finally { setUploading(false); }
   }
@@ -358,7 +363,7 @@ export default function SectionDesignPanel({
                   <div style={{ width: 48, height: 32, borderRadius: 4, overflow: "hidden", borderWidth: 1, borderStyle: "solid", borderColor: "#e5e7eb", flexShrink: 0 }}>
                     <img src={bgImage} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  <button onClick={() => setBgImage("")} style={{ fontSize: "0.625rem", color: "#dc2626", background: "none", borderWidth: 0, cursor: "pointer", padding: 0 }}>Remove</button>
+                  <button onClick={() => { const prev = bgImage; setBgImage(""); if (prev) deleteBlob(prev).catch(() => {}); }} style={{ fontSize: "0.625rem", color: "#dc2626", background: "none", borderWidth: 0, cursor: "pointer", padding: 0 }}>Remove</button>
                 </>
               ) : (
                 <label style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "0.3rem 0.6rem", borderWidth: 1, borderStyle: "dashed", borderColor: "#d1d5db", borderRadius: "0.25rem", backgroundColor: "#f9fafb", fontSize: "0.625rem", cursor: uploading ? "wait" : "pointer", opacity: uploading ? 0.6 : 1 }}>

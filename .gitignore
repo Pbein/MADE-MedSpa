@@ -46,3 +46,5 @@ public/images/demo/
 # original (uncompressed) media — preserved locally, never committed
 media/originals/
 public/videos/*-original.mp4
+
+.vercel

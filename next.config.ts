@@ -25,6 +25,7 @@ const contentSecurityPolicy = [
 const nextConfig: NextConfig = {
   compress: true,
   images: {
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       {
         protocol: "https",
@@ -37,6 +38,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.convex.site",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
       },
     ],
   },

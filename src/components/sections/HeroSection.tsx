@@ -33,8 +33,8 @@ const lineVariants = {
   },
 };
 
-const DEFAULT_VIDEO = "/videos/hero.mp4";
-const DEFAULT_POSTER = "/images/hero-poster.webp";
+const HERO_VIDEO = "/videos/hero-v2.mp4";
+const HERO_POSTER = "/images/hero-poster-v2.webp";
 
 interface HeroSectionContent {
   eyebrow: string;
@@ -48,21 +48,15 @@ interface HeroSectionContent {
 }
 
 interface HeroSectionProps {
-  heroVideoUrl?: string;
-  heroPosterUrl?: string;
-  /** @deprecated Use sectionContent instead */
-  headlineOverride?: string;
-  /** @deprecated Use sectionContent instead */
-  subtitleOverride?: string;
   sectionContent?: HeroSectionContent;
 }
 
-export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverride, subtitleOverride, sectionContent }: HeroSectionProps) {
+export default function HeroSection({ sectionContent }: HeroSectionProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
-  const videoSrc = heroVideoUrl || DEFAULT_VIDEO;
-  const posterSrc = heroPosterUrl || DEFAULT_POSTER;
+  const videoSrc = HERO_VIDEO;
+  const posterSrc = HERO_POSTER;
 
   return (
     <section className="relative h-screen w-full flex flex-col overflow-hidden">

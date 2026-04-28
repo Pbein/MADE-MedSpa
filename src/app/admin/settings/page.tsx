@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, ReactNode } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
   SETTINGS_KEYS,
@@ -12,6 +12,7 @@ import {
   type SocialLinks,
   type OgImage,
 } from "@/lib/siteSettings";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 const SITE_LOGO_KEY = "site_logo";
 
@@ -186,8 +187,6 @@ function BusinessInfoCard() {
 function OgImageCard() {
   const doc = useQuery(api.siteContent.getByKey, { key: SETTINGS_KEYS.og });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const loaded = (doc?.metadata as OgImage | undefined) ?? null;
@@ -206,16 +205,12 @@ function OgImageCard() {
   async function handleFile(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "settings",
+        filename: `og-image-${Date.now()}.${ext}`,
       });
-      const { storageId } = await result.json();
-      const cdnUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!cdnUrl) throw new Error("Upload failed");
-      setUrl(cdnUrl);
+      setUrl(blobUrl);
     } catch {
       alert("Upload failed. Please try again.");
     } finally {
@@ -224,9 +219,13 @@ function OgImageCard() {
   }
 
   async function handleSave() {
+    const previous = loaded?.url;
     setSaving(true);
     try {
       await upsert({ key: SETTINGS_KEYS.og, metadata: { url } });
+      if (previous && previous !== url) {
+        deleteBlob(previous).catch(() => {});
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2200);
     } finally {
@@ -379,8 +378,6 @@ function SocialLinksCard() {
 function LogoCard() {
   const doc = useQuery(api.siteContent.getByKey, { key: SITE_LOGO_KEY });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const [url, setUrl] = useState<string>("");
@@ -400,16 +397,12 @@ function LogoCard() {
   async function handleFile(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "settings",
+        filename: `site-logo-${Date.now()}.${ext}`,
       });
-      const { storageId } = await result.json();
-      const cdnUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!cdnUrl) throw new Error("Upload failed");
-      setUrl(cdnUrl);
+      setUrl(blobUrl);
     } catch {
       alert("Upload failed. Please try again.");
     } finally {
@@ -418,13 +411,18 @@ function LogoCard() {
   }
 
   async function handleSave() {
+    const previous = doc?.imageUrl;
+    const nextUrl = url || undefined;
     setSaving(true);
     try {
       await upsert({
         key: SITE_LOGO_KEY,
-        imageUrl: url || undefined,
+        imageUrl: nextUrl,
         title: alt || undefined,
       });
+      if (previous && previous !== nextUrl) {
+        deleteBlob(previous).catch(() => {});
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2200);
     } finally {

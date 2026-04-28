@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useMutation, useConvex } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 interface ImageUploadProps {
   value: string;
@@ -10,6 +9,7 @@ interface ImageUploadProps {
   label?: string;
   accept?: string;
   aspect?: string;
+  prefix?: string;
 }
 
 export default function ImageUpload({
@@ -18,9 +18,8 @@ export default function ImageUpload({
   label = "Image",
   accept = "image/*",
   aspect = "4/3",
+  prefix = "uploads",
 }: ImageUploadProps) {
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -28,18 +27,13 @@ export default function ImageUpload({
   async function handleFile(file: File) {
     setUploading(true);
     setError("");
+    const previousUrl = value;
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!result.ok) throw new Error("Upload failed");
-      const { storageId } = await result.json();
-      const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!storageUrl) throw new Error("Failed to resolve storage URL");
-      onChange(storageUrl);
+      const url = await uploadBlob(file, { prefix });
+      onChange(url);
+      if (previousUrl) {
+        deleteBlob(previousUrl).catch(() => {});
+      }
     } catch {
       setError("Upload failed. Please try again.");
     } finally {
@@ -48,8 +42,12 @@ export default function ImageUpload({
   }
 
   function handleRemove() {
+    const previousUrl = value;
     onChange("");
     if (fileRef.current) fileRef.current.value = "";
+    if (previousUrl) {
+      deleteBlob(previousUrl).catch(() => {});
+    }
   }
 
   return (
@@ -72,6 +70,7 @@ export default function ImageUpload({
             border: "1px solid #e5e7eb",
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={value}
             alt="Preview"

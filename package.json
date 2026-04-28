@@ -10,11 +10,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "smoke": "node scripts/smoke-test.mjs"
+    "smoke": "node scripts/smoke-test.mjs",
+    "migrate:dry-run": "node --env-file=.env.local scripts/migrate-convex-to-blob.mjs",
+    "migrate:apply": "node --env-file=.env.local scripts/migrate-convex-to-blob.mjs --apply"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.3",
     "@clerk/nextjs": "^7.0.1",
+    "@vercel/blob": "^2.3.3",
     "clsx": "^2.1.1",
     "convex": "^1.32.0",
     "framer-motion": "^12.35.0",

@@ -23,7 +23,6 @@ import type * as seed from "../seed.js";
 import type * as services from "../services.js";
 import type * as shopProducts from "../shopProducts.js";
 import type * as siteContent from "../siteContent.js";
-import type * as storage from "../storage.js";
 import type * as teamMembers from "../teamMembers.js";
 import type * as testimonials from "../testimonials.js";
 import type * as users from "../users.js";
@@ -50,7 +49,6 @@ declare const fullApi: ApiFromModules<{
   services: typeof services;
   shopProducts: typeof shopProducts;
   siteContent: typeof siteContent;
-  storage: typeof storage;
   teamMembers: typeof teamMembers;
   testimonials: typeof testimonials;
   users: typeof users;

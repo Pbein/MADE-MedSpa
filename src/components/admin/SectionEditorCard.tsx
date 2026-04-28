@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import type { SectionDefinition } from "@/lib/sectionDefinitions";
 import SectionDesignPanel from "./SectionDesignPanel";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 
@@ -48,8 +49,6 @@ function MediaField({
 }) {
   const content = useQuery(api.siteContent.getByKey, { key: mediaKey });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const [uploading, setUploading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -78,19 +77,6 @@ function MediaField({
   }
 
   const currentUrl = content?.imageUrl || defaultUrl;
-
-  async function uploadBlob(blob: Blob): Promise<string> {
-    const url = await generateUploadUrl();
-    const result = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": blob.type },
-      body: blob,
-    });
-    const { storageId } = await result.json();
-    const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-    if (!storageUrl) throw new Error("Failed to resolve URL");
-    return storageUrl;
-  }
 
   function extractFirstFrame(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
@@ -131,15 +117,24 @@ function MediaField({
       return;
     }
     setUploading(true);
+    const previousUrl = content?.imageUrl;
     try {
-      const storageUrl = await uploadBlob(file);
-      await upsert({ key: mediaKey, imageUrl: storageUrl });
+      const ext = file.name.split(".").pop() || (type === "video" ? "mp4" : "jpg");
+      const filename = `${mediaKey}-${Date.now()}.${ext}`;
+      const url = await uploadBlob(file, { prefix: "site-content", filename });
+      await upsert({ key: mediaKey, imageUrl: url });
+      if (previousUrl) {
+        deleteBlob(previousUrl).catch(() => {});
+      }
 
       // Auto-generate poster from first frame when uploading hero video
       if (mediaKey === "hero_video" && file.type.startsWith("video/")) {
         try {
           const posterBlob = await extractFirstFrame(file);
-          const posterUrl = await uploadBlob(posterBlob);
+          const posterUrl = await uploadBlob(posterBlob, {
+            prefix: "site-content",
+            filename: `hero_poster-${Date.now()}.webp`,
+          });
           await upsert({ key: "hero_poster", imageUrl: posterUrl });
         } catch {
           // Poster generation is best-effort
