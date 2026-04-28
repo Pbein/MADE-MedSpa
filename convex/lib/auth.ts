@@ -40,6 +40,8 @@ export async function assertAdmin(ctx: QueryCtx | MutationCtx): Promise<void> {
 
   const allowlist = parseAllowlist();
   const email = identity.email?.toLowerCase().trim() ?? "";
+  const subject = identity.subject?.toLowerCase().trim() ?? "";
+  const tokenIdentifier = identity.tokenIdentifier?.toLowerCase().trim() ?? "";
 
   if (allowlist.length === 0) {
     if (!warnedEmpty) {
@@ -51,7 +53,30 @@ export async function assertAdmin(ctx: QueryCtx | MutationCtx): Promise<void> {
     return;
   }
 
-  if (!email || !allowlist.includes(email)) {
-    throw new Error("Unauthorized: not an admin");
+  // Match against email OR Clerk subject (user_xxx) OR tokenIdentifier — any of
+  // these can be added to ADMIN_EMAILS as a fallback when the Clerk JWT template
+  // doesn't include the email claim.
+  if (
+    (email && allowlist.includes(email)) ||
+    (subject && allowlist.includes(subject)) ||
+    (tokenIdentifier && allowlist.includes(tokenIdentifier))
+  ) {
+    return;
   }
+
+  // Diagnostic logging — visible in Convex dashboard logs. This makes the
+  // "I'm signed in but rejected" case actionable: operators can see what
+  // identifiers Clerk is actually sending, then add the right one to the
+  // allowlist (or fix their Clerk JWT template to include `email`).
+  console.warn(
+    "[convex/lib/auth] Rejected admin call. Identity available:",
+    JSON.stringify({
+      hasEmail: Boolean(identity.email),
+      email: identity.email,
+      subject: identity.subject,
+      tokenIdentifierStart: identity.tokenIdentifier?.slice(0, 60),
+      allowlistSize: allowlist.length,
+    }),
+  );
+  throw new Error("Unauthorized: not an admin");
 }
