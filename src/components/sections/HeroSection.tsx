@@ -69,7 +69,7 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
       {/* Background: Video with smooth fade-in */}
       <div
         className="absolute inset-0 z-0"
-        style={{ backgroundColor: "#391e1e" }}
+        style={{ backgroundColor: "var(--color-surface, #391e1e)" }}
       >
         {/* Poster image — always present, sits behind the video */}
         <Image
@@ -133,7 +133,7 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             variants={fadeUpVariants}
             className="label-micro block mb-4 md:mb-5"
             style={{
-              color: "#f7f6eb",
+              color: "var(--color-on-surface, #f7f6eb)",
               opacity: 0.8,
               textShadow: "0 1px 8px rgba(57,30,30,0.5)",
             }}
@@ -153,19 +153,19 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
           >
             <span
               className="block italic font-light text-3xl sm:text-4xl md:text-7xl lg:text-[6.5rem] leading-none"
-              style={{ color: "#f7f6eb", opacity: 0.9 }}
+              style={{ color: "var(--color-on-surface, #f7f6eb)", opacity: 0.9 }}
             >
               {sectionContent?.headline_1 || "Beauty,"}
             </span>
             <span
               className="block italic font-medium text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
-              style={{ color: "#f7f6eb", letterSpacing: "-0.035em" }}
+              style={{ color: "var(--color-on-surface, #f7f6eb)", letterSpacing: "-0.035em" }}
             >
               {sectionContent?.headline_2 || "Deeply Personal."}
             </span>
             <span
               className="block italic font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
-              style={{ color: "rgba(247,246,235,0.6)", letterSpacing: "0.01em" }}
+              style={{ color: "var(--color-on-surface-variant, rgba(247,246,235,0.6))", letterSpacing: "0.01em" }}
             >
               {sectionContent?.headline_3 || "Thoughtfully Designed."}
             </span>
@@ -185,7 +185,7 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
               href={sectionContent?.secondary_href || "/services"}
               className="link-ghost"
               style={{
-                color: "#f7f6eb",
+                color: "var(--color-on-surface, #f7f6eb)",
                 textShadow: "0 1px 6px rgba(57,30,30,0.4)",
               }}
             >
@@ -202,10 +202,16 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
         animate="visible"
         className="absolute bottom-12 right-12 flex flex-col items-center gap-4 origin-top hidden md:flex"
       >
-        <span className="label-micro" style={{ color: "#f7f6eb", opacity: 0.5 }}>
+        <span
+          className="label-micro"
+          style={{ color: "var(--color-on-surface, #f7f6eb)", opacity: 0.5 }}
+        >
           Scroll
         </span>
-        <div className="w-px h-16 bg-[#f7f6eb]/30" />
+        <div
+          className="w-px h-16"
+          style={{ backgroundColor: "var(--divider-color, #f7f6eb)", opacity: 0.3 }}
+        />
       </motion.div>
     </section>
   );

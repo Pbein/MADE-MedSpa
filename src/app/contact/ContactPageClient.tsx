@@ -10,9 +10,11 @@ import AreasWeServe from "@/components/sections/AreasWeServe";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
-const ESPRESSO = "#391e1e";
-const SILK = "#f6f1ea";
-const GLAZE = "#e8e0d5";
+// CSS-variable references with hex fallbacks. Lets the customize-design panel
+// override these tokens per-section while preserving the original look at default.
+const ESPRESSO = "var(--color-primary, #391e1e)";
+const SILK = "var(--color-surface, #f6f1ea)";
+const GLAZE = "var(--color-on-surface-variant, #e8e0d5)";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 

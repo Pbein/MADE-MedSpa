@@ -13,10 +13,22 @@ interface CTABannerProps {
   ctaHref: string;
   secondaryText?: string;
   secondaryHref?: string;
+  /**
+   * @deprecated Kept for backward-compat with existing call sites. Has no
+   * functional effect — colors come from CSS variables set by the section
+   * wrapper's customize-design overrides (or the defaults below).
+   */
   dark?: boolean;
   /** Use 'external' to open ctaHref in a new tab */
   ctaExternal?: boolean;
 }
+
+// Default colors (preserve previous look when no customize-design override is set):
+//   - background:  #f0ede4 (cream)
+//   - headline / body / divider: #391e1e (espresso)
+// These match the prior `dark={true}` defaults exactly.
+const DEFAULT_SURFACE = "#f0ede4";
+const DEFAULT_ON_SURFACE = "#391e1e";
 
 export default function CTABanner({
   headline,
@@ -25,7 +37,6 @@ export default function CTABanner({
   ctaHref,
   secondaryText,
   secondaryHref,
-  dark = true,
   ctaExternal = false,
 }: CTABannerProps) {
   const ref = useRef(null);
@@ -34,11 +45,11 @@ export default function CTABanner({
   return (
     <section
       ref={ref}
-      className={`py-40 md:py-52 text-center ${
-        dark
-          ? "bg-[#f0ede4] text-[#391e1e]"
-          : "bg-[var(--color-surface)] text-[var(--color-primary)]"
-      }`}
+      className="py-40 md:py-52 text-center"
+      style={{
+        backgroundColor: `var(--color-surface, ${DEFAULT_SURFACE})`,
+        color: `var(--color-primary, ${DEFAULT_ON_SURFACE})`,
+      }}
     >
       <div className="max-w-3xl mx-auto px-6">
         <motion.div
@@ -50,15 +61,13 @@ export default function CTABanner({
           <div
             className="mx-auto mb-10 h-px w-16 opacity-30"
             style={{
-              backgroundColor: dark
-                ? "#391e1e"
-                : "var(--color-outline-variant)",
+              backgroundColor: `var(--divider-color, ${DEFAULT_ON_SURFACE})`,
             }}
           />
 
           <h2
             className="headline-section text-4xl md:text-5xl italic mb-8"
-            style={{ color: dark ? "#391e1e" : "var(--color-primary)" }}
+            style={{ color: `var(--color-primary, ${DEFAULT_ON_SURFACE})` }}
           >
             {headline}
           </h2>
@@ -67,10 +76,8 @@ export default function CTABanner({
             <p
               className="body-editorial mb-12 max-w-xl"
               style={{
-                color: dark
-                  ? "#391e1e"
-                  : "var(--color-on-surface-variant)",
-                opacity: dark ? 0.6 : 0.8,
+                color: `var(--color-on-surface-variant, ${DEFAULT_ON_SURFACE})`,
+                opacity: 0.7,
               }}
             >
               {subtitle}
@@ -83,15 +90,12 @@ export default function CTABanner({
                 href={ctaHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={dark ? "btn-primary" : "btn-primary"}
+                className="btn-primary"
               >
                 {ctaText}
               </a>
             ) : (
-              <Link
-                href={ctaHref}
-                className={dark ? "btn-primary" : "btn-primary"}
-              >
+              <Link href={ctaHref} className="btn-primary">
                 {ctaText}
               </Link>
             )}
@@ -99,9 +103,8 @@ export default function CTABanner({
             {secondaryText && secondaryHref && (
               <Link
                 href={secondaryHref}
-                className={`link-ghost ${
-                  dark ? "text-[#391e1e]" : "text-[var(--color-primary)]"
-                }`}
+                className="link-ghost"
+                style={{ color: `var(--color-primary, ${DEFAULT_ON_SURFACE})` }}
               >
                 {secondaryText}
               </Link>
