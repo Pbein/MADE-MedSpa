@@ -18,7 +18,7 @@ export default function Error({
         <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[var(--color-chocolate)] mb-6">
           Something Went Wrong
         </h1>
-        <p className="font-[family-name:var(--font-cormorant)] text-lg text-stone-500 mb-10 leading-relaxed">
+        <p className="font-[family-name:var(--font-montserrat)] text-lg text-stone-500 mb-10 leading-relaxed">
           We apologize for the inconvenience. Please try again or return to the homepage.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

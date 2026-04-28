@@ -146,7 +146,7 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             variants={fadeUpVariants}
             className="max-w-5xl"
             style={{
-              fontFamily: "var(--font-cormorant)",
+              fontFamily: "var(--font-playfair)",
               letterSpacing: "-0.02em",
               textShadow: "0 2px 20px rgba(57,30,30,0.4)",
             }}
@@ -165,7 +165,11 @@ export default function HeroSection({ heroVideoUrl, heroPosterUrl, headlineOverr
             </span>
             <span
               className="block italic font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
-              style={{ color: "var(--color-on-surface-variant, rgba(247,246,235,0.6))", letterSpacing: "0.01em" }}
+              style={{
+                color: "var(--color-on-surface, #f7f6eb)",
+                opacity: 0.6,
+                letterSpacing: "0.01em",
+              }}
             >
               {sectionContent?.headline_3 || "Thoughtfully Designed."}
             </span>
