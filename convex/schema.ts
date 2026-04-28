@@ -173,6 +173,25 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_entity", ["entityType"]),
 
+  // --- Before & After Gallery (admin-managed) ---
+  // Each case = one transformation: before + after image, treatment, optional caption.
+  // Pabau has no public API for client photos, so this is fully admin-uploaded.
+  beforeAfterCases: defineTable({
+    title: v.string(),
+    treatment: v.string(),
+    beforeImageUrl: v.string(),
+    afterImageUrl: v.string(),
+    beforeAlt: v.optional(v.string()),
+    afterAlt: v.optional(v.string()),
+    caption: v.optional(v.string()),
+    displayOrder: v.number(),
+    isFeatured: v.boolean(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_treatment", ["treatment"])
+    .index("by_active_displayOrder", ["isActive", "displayOrder"]),
+
   // --- Pabau Activity Log ---
   // Lightweight per-event log produced by the webhook handlers. Powers
   // admin-dashboard rolling stats ("X new leads this week", etc.). Distinct

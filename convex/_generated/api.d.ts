@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as beforeAfter from "../beforeAfter.js";
 import type * as contactSubmissions from "../contactSubmissions.js";
 import type * as crons from "../crons.js";
 import type * as faqs from "../faqs.js";
@@ -34,6 +35,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  beforeAfter: typeof beforeAfter;
   contactSubmissions: typeof contactSubmissions;
   crons: typeof crons;
   faqs: typeof faqs;

@@ -79,6 +79,7 @@ export default function AdminLayout({
         { label: "Team", href: "/admin/team", icon: "T" },
         { label: "About", href: "/admin/pages/about", icon: "A" },
         { label: "FAQs", href: "/admin/faqs", icon: "F" },
+        { label: "Before & After", href: "/admin/before-and-after", icon: "B" },
         { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
         { label: "Pabau Reviews", href: "/admin/pabau-reviews", icon: "R" },
       ],
