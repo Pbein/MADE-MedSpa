@@ -149,10 +149,10 @@ export default function TestimonialsPage() {
             </blockquote>
             <div className="flex items-center gap-2">
               <div className="w-5 h-px" style={{ backgroundColor: "var(--color-outline-variant)" }} />
-              <span className="label-micro" style={{ color: "var(--color-on-surface-variant)", opacity: 0.5 }}>
+              <span className="label-micro" style={{ color: "var(--color-on-surface)" }}>
                 {featured.name}
               </span>
-              <span className="label-micro" style={{ color: "var(--color-secondary)", opacity: 0.4 }}>
+              <span className="label-micro" style={{ color: "var(--color-on-surface-variant)" }}>
                 {featured.treatment}
               </span>
             </div>
@@ -220,7 +220,7 @@ export default function TestimonialsPage() {
             >
               <p
                 className="body-editorial text-sm"
-                style={{ color: "var(--color-on-surface-variant)", opacity: 0.4 }}
+                style={{ color: "var(--color-on-surface-variant)" }}
               >
                 {testimonials.length} verified client reviews
               </p>
@@ -277,7 +277,7 @@ export default function TestimonialsPage() {
         <div className="mx-auto max-w-2xl text-center">
           <p
             className="font-headline italic text-base md:text-lg"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.55 }}
+            style={{ color: "var(--color-on-surface)" }}
           >
             No pressure. No overcorrection. No guessing.<br />
             Every treatment is intentional, informed, and tailored to you.
@@ -322,21 +322,21 @@ function TestimonialEntry({
     >
       <blockquote
         className="body-editorial text-base leading-relaxed mb-3"
-        style={{ color: "var(--color-on-surface)", opacity: 0.85 }}
+        style={{ color: "var(--color-on-surface)" }}
       >
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
       <div className="flex items-center gap-2">
         <span
           className="text-xs font-medium"
-          style={{ color: "var(--color-on-surface-variant)", opacity: 0.45 }}
+          style={{ color: "var(--color-on-surface)" }}
         >
           {testimonial.name}
         </span>
-        <span style={{ color: "var(--color-outline-variant)" }}>&middot;</span>
+        <span style={{ color: "var(--color-on-surface-variant)" }}>&middot;</span>
         <span
           className="text-xs"
-          style={{ color: "var(--color-secondary)", opacity: 0.4 }}
+          style={{ color: "var(--color-on-surface-variant)" }}
         >
           {testimonial.treatment}
         </span>
