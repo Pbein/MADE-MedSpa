@@ -99,7 +99,17 @@ export default async function Home() {
   return (
     <div style={styles}>
       {show("hero") && (
-        <div id="section-hero" style={design("hero")}>
+        // Hero sits on a dark video — set cream defaults via the wrapper so
+        // child elements inherit them. Admin customizations via design("hero")
+        // are merged AFTER and override the defaults.
+        <div
+          id="section-hero"
+          style={{
+            "--color-on-surface": "#f7f6eb",
+            "--color-on-surface-variant": "rgba(247,246,235,0.6)",
+            ...design("hero"),
+          } as React.CSSProperties}
+        >
           <HeroSection
             heroVideoUrl={content.hero_video?.imageUrl}
             heroPosterUrl={content.hero_poster?.imageUrl}
