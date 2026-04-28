@@ -184,9 +184,30 @@ function MediaSlotCard({
   const [urlValue, setUrlValue] = useState(currentUrl);
   const [uploading, setUploading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const displayUrl = currentUrl || slot.defaultUrl;
+
+  function validateFile(file: File): string | null {
+    if (slot.type === "video") {
+      const accepted = ["video/mp4", "video/webm"];
+      if (!accepted.includes(file.type)) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload an MP4 or WebM. To convert: HandBrake (free desktop app) or cloudconvert.com.`;
+      }
+      const MAX = 25 * 1024 * 1024;
+      if (file.size > MAX) {
+        return `Video is ${(file.size / 1024 / 1024).toFixed(1)} MB — please keep hero videos under 25 MB so the page loads quickly. Compress with HandBrake.`;
+      }
+    } else {
+      if (!file.type.startsWith("image/")) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload a JPG, PNG, or WebP image.`;
+      }
+    }
+    return null;
+  }
 
   async function uploadBlob(blob: Blob): Promise<string> {
     const uploadUrl = await generateUploadUrl();
@@ -235,6 +256,13 @@ function MediaSlotCard({
   }
 
   async function handleFileUpload(file: File) {
+    setUploadError(null);
+    const validationError = validateFile(file);
+    if (validationError) {
+      setUploadError(validationError);
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     setUploading(true);
     try {
       const convexUrl = await uploadBlob(file);
@@ -453,8 +481,27 @@ function MediaSlotCard({
               />
             </label>
             <p style={{ fontSize: "0.75rem", color: "#9ca3af", margin: "0.375rem 0 0 0" }}>
-              {slot.type === "video" ? "MP4 or WebM, ideally under 5 MB" : "JPG, PNG, or WebP"}
+              {slot.type === "video"
+                ? "MP4 or WebM only · max 25 MB · MOV/AVI not supported — convert with HandBrake or cloudconvert.com"
+                : "JPG, PNG, or WebP · max ~5 MB"}
             </p>
+            {uploadError && (
+              <div
+                role="alert"
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "#991b1b",
+                  backgroundColor: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "0.375rem",
+                  padding: "0.625rem 0.875rem",
+                  marginTop: "0.5rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                {uploadError}
+              </div>
+            )}
           </div>
 
           {/* Actions */}
