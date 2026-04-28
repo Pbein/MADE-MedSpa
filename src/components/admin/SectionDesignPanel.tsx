@@ -19,7 +19,16 @@ interface SectionDesignConfig {
   };
   backgroundImage?: string;
   designStyle?: string;
+  fontPair?: string;
 }
+
+const FONT_PAIRS: { key: string; label: string; sample: string }[] = [
+  { key: "default", label: "Default", sample: "Cormorant + Inter" },
+  { key: "editorial", label: "Editorial", sample: "Playfair + Inter" },
+  { key: "modern-sans", label: "Modern Sans", sample: "Manrope only" },
+  { key: "classic-serif", label: "Classic Serif", sample: "Cormorant only" },
+  { key: "bold-display", label: "Bold Display", sample: "DM Serif + Manrope" },
+];
 
 interface SectionDesignPanelProps {
   pageKey: string;
@@ -188,6 +197,7 @@ export default function SectionDesignPanel({
   const [designStyle, setDesignStyle] = useState(config.designStyle || "default");
   const [colors, setColors] = useState(config.colors || {});
   const [bgImage, setBgImage] = useState(config.backgroundImage || "");
+  const [fontPair, setFontPair] = useState(config.fontPair || "default");
 
   // Sync from DB
   const settingsId = pageSettings?._id;
@@ -201,6 +211,7 @@ export default function SectionDesignPanel({
     setDesignStyle(c.designStyle || "default");
     setColors(c.colors || {});
     setBgImage(c.backgroundImage || "");
+    setFontPair(c.fontPair || "default");
   }
 
   const handlePresetChange = useCallback((presetKey: string) => {
@@ -225,18 +236,20 @@ export default function SectionDesignPanel({
         designStyle: designStyle !== "default" ? designStyle : undefined,
         colors: Object.keys(colors).length > 0 ? colors : undefined,
         backgroundImage: bgImage || undefined,
+        fontPair: fontPair !== "default" ? fontPair : undefined,
       };
       await upsert({ key: `page_settings_${pageKey}`, metadata: { ...cur, sections: curSec } });
       setSaved(true);
       setPreviewKey((k) => k + 1);
       setTimeout(() => setSaved(false), 2000);
     } finally { setSaving(false); }
-  }, [pageKey, sectionKey, designStyle, colors, bgImage, pageSettings, upsert]);
+  }, [pageKey, sectionKey, designStyle, colors, bgImage, fontPair, pageSettings, upsert]);
 
   const handleReset = useCallback(async () => {
     setDesignStyle("default");
     setColors({});
     setBgImage("");
+    setFontPair("default");
     setSaving(true);
     try {
       const cur = (pageSettings?.metadata || {}) as Record<string, unknown>;
@@ -264,7 +277,7 @@ export default function SectionDesignPanel({
     finally { setUploading(false); }
   }
 
-  const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage;
+  const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage || fontPair !== "default";
   const presetColors = getPresetColors(designStyle);
 
   const updateColor = (key: string) => (val: string | undefined) => {
@@ -313,6 +326,46 @@ export default function SectionDesignPanel({
               <ColorPicker label="Button Color" value={colors.buttonBg} defaultValue="#391e1e" onChange={updateColor("buttonBg")} />
               <ColorPicker label="Button Text" value={colors.buttonText} defaultValue="#f6f1ea" onChange={updateColor("buttonText")} />
               <ColorPicker label="Divider Line" value={colors.divider} defaultValue="#d4c3c2" onChange={updateColor("divider")} />
+            </div>
+          </div>
+
+          {/* Font Pair */}
+          <div style={{ marginBottom: "1rem" }}>
+            <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem" }}>Fonts</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
+              {FONT_PAIRS.map((p) => {
+                const isActive = fontPair === p.key;
+                return (
+                  <button
+                    key={p.key}
+                    onClick={() => setFontPair(p.key)}
+                    style={{
+                      padding: "0.4rem 0.7rem",
+                      borderWidth: 1,
+                      borderStyle: "solid",
+                      borderColor: isActive ? "#6366f1" : "#e5e7eb",
+                      borderRadius: "0.375rem",
+                      backgroundColor: isActive ? "#eef2ff" : "#fff",
+                      color: isActive ? "#4338ca" : "#374151",
+                      fontSize: "0.6875rem",
+                      fontWeight: isActive ? 600 : 500,
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      gap: 2,
+                      textAlign: "left",
+                      minWidth: 110,
+                    }}
+                  >
+                    <span>{p.label}</span>
+                    <span style={{ fontSize: "0.5625rem", fontWeight: 400, color: "#9ca3af" }}>{p.sample}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div style={{ fontSize: "0.5625rem", color: "#9ca3af", marginTop: "0.375rem" }}>
+              Per-section override. &ldquo;Default&rdquo; uses the site-wide pair.
             </div>
           </div>
 

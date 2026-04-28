@@ -3,6 +3,8 @@ import {
   Playfair_Display,
   Cormorant_Garamond,
   Inter,
+  DM_Serif_Display,
+  Manrope,
 } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
@@ -27,6 +29,21 @@ const cormorant = Cormorant_Garamond({
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const dmSerifDisplay = DM_Serif_Display({
+  variable: "--font-dm-serif",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
@@ -224,7 +241,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} antialiased`}
+        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} ${dmSerifDisplay.variable} ${manrope.variable} antialiased`}
       >
         <ClerkProvider>
           <ConvexClientProvider>

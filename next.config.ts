@@ -9,6 +9,7 @@ const contentSecurityPolicy = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://clerk.com https://*.clerk.com https://challenges.cloudflare.com https://pabau.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https: http:",
+  "media-src 'self' blob: data: https://*.convex.cloud https://*.convex.site",
   "font-src 'self' data: https://fonts.gstatic.com",
   "frame-src 'self' https://partner.pabau.com https://pabau.com https://*.pabau.com https://*.google.com https://maps.google.com",
   "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud https://*.clerk.accounts.dev https://*.clerk.com https://api.oauth.pabau.com https://crm.pabau.com",
@@ -16,6 +17,9 @@ const contentSecurityPolicy = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self' https://crm.pabau.com",
+  // Allow same-origin framing (admin live preview); deny cross-origin via the
+  // empty list. This is the modern replacement for X-Frame-Options.
+  "frame-ancestors 'self'",
 ].join("; ");
 
 const nextConfig: NextConfig = {
@@ -52,7 +56,10 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains; preload",
           },
-          { key: "X-Frame-Options", value: "DENY" },
+          // SAMEORIGIN (not DENY) so the admin live-preview iframe works on
+          // the same domain. CSP frame-ancestors locks down cross-origin
+          // framing as the real defense.
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {

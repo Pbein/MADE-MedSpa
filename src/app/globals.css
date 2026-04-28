@@ -97,6 +97,36 @@
   --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
   --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
   --font-label: var(--font-inter), "Inter", "Manrope", sans-serif;
+}
+
+/* ---------------------------------------------------------------
+   Font-pair section overrides — admin can pick a fontPair per
+   section in the customize-design panel. The class is applied to
+   the section wrapper and cascades --font-headline / --font-body
+   to all descendants.
+   --------------------------------------------------------------- */
+.font-pair-default {
+  --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
+}
+.font-pair-editorial {
+  --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
+}
+.font-pair-modern-sans {
+  --font-headline: var(--font-manrope), "Manrope", "Inter", "Helvetica Neue", sans-serif;
+  --font-body: var(--font-manrope), "Manrope", "Inter", "Helvetica Neue", sans-serif;
+}
+.font-pair-classic-serif {
+  --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
+  --font-body: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
+}
+.font-pair-bold-display {
+  --font-headline: var(--font-dm-serif), "DM Serif Display", "Playfair Display", Georgia, serif;
+  --font-body: var(--font-manrope), "Manrope", "Inter", "Helvetica Neue", sans-serif;
+}
+
+:root {
 
   /* --- Spacing (luxury = breathing room) --- */
   --space-section: clamp(8rem, 6rem + 8vw, 12rem);

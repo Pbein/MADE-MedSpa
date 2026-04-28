@@ -154,3 +154,22 @@ export function getSectionDesignServer(
 
   return result as import("react").CSSProperties;
 }
+
+/**
+ * Server-side helper: get the fontPair class to apply to a section wrapper.
+ * Returns empty string if no override is set.
+ */
+export function getSectionFontClass(
+  pageSettingsMetadata: Record<string, unknown> | null | undefined,
+  sectionKey: string
+): string {
+  if (!pageSettingsMetadata) return "";
+  const sections = (pageSettingsMetadata as {
+    sections?: Record<string, boolean | { fontPair?: string }>;
+  }).sections;
+  if (!sections) return "";
+  const config = sections[sectionKey];
+  if (!config || typeof config === "boolean") return "";
+  if (!config.fontPair || config.fontPair === "default") return "";
+  return `font-pair-${config.fontPair}`;
+}
