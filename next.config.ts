@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Defensive: admins sometimes type "/book" instead of "/booking" in the
+      // page-editor button-link field. Make both work so a typo never 404s.
+      { source: "/book", destination: "/booking", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
