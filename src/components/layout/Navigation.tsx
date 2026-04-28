@@ -17,6 +17,7 @@ const primaryLinks = [
 
 const exploreLinks = [
   { href: "/testimonials", label: "Testimonials" },
+  { href: "/before-and-after", label: "Before & After" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
@@ -36,7 +37,7 @@ export default function Navigation() {
   const logoUrl = logoDoc?.imageUrl;
   const logoAlt = logoDoc?.title ?? "MADE Med Spa";
 
-  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/testimonials", "/shop", "/membership", "/faq"]);
+  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
   const lightTextRoutes = new Set(["/", "/booking"]);
   const isOverlayRoute = heroOverlayRoutes.has(pathname);
   const isHeroOverlay = isOverlayRoute && !isScrolled;

@@ -45,6 +45,7 @@ const navLinks = [
   { href: "/membership", label: "Membership" },
   { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
+  { href: "/before-and-after", label: "Before & After" },
   { href: "/faq", label: "FAQ" },
   { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
