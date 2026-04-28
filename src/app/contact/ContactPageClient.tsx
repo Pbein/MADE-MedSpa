@@ -5,12 +5,16 @@ import { api } from "../../../convex/_generated/api";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
+import LocationMap from "@/components/sections/LocationMap";
+import AreasWeServe from "@/components/sections/AreasWeServe";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
-const ESPRESSO = "#391e1e";
-const SILK = "#f6f1ea";
-const GLAZE = "#e8e0d5";
+// CSS-variable references with hex fallbacks. Lets the customize-design panel
+// override these tokens per-section while preserving the original look at default.
+const ESPRESSO = "var(--color-primary, #391e1e)";
+const SILK = "var(--color-surface, #f6f1ea)";
+const GLAZE = "var(--color-on-surface-variant, #e8e0d5)";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 
@@ -172,8 +176,15 @@ export default function ContactPageClient() {
           {/* ── LEFT: Contact details (2/5) ── */}
           <motion.div variants={revealUp} className="lg:col-span-2">
             <span
-              className="label-micro block mb-5"
-              style={{ color: GLAZE }}
+              className="block mb-5"
+              style={{
+                color: ESPRESSO,
+                opacity: 0.75,
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+              }}
             >
               {bodyText.info_eyebrow}
             </span>
@@ -228,13 +239,17 @@ export default function ContactPageClient() {
                   Studio
                 </span>
                 <p
-                  className="body-editorial"
+                  className="body-editorial mb-4"
                   style={{ color: ESPRESSO }}
                 >
                   {info.addressLine1}
                   <br />
                   {info.addressLine2}
                 </p>
+                <LocationMap
+                  address={`${info.addressLine1}, ${info.addressLine2}`}
+                  height={240}
+                />
               </div>
 
               {/* Hours */}
@@ -291,8 +306,15 @@ export default function ContactPageClient() {
             style={{ borderColor: `${GLAZE}33` }}
           >
             <span
-              className="label-micro block mb-5"
-              style={{ color: GLAZE }}
+              className="block mb-5"
+              style={{
+                color: ESPRESSO,
+                opacity: 0.75,
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+              }}
             >
               {bodyText.form_eyebrow}
             </span>
@@ -313,6 +335,8 @@ export default function ContactPageClient() {
           </motion.div>
         </motion.div>
       </section>
+
+      <AreasWeServe />
     </>
   );
 }

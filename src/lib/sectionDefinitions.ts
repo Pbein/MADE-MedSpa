@@ -753,20 +753,18 @@ export const FOOTER_DEFINITION: PageDefinition = {
   key: "footer",
   label: "Footer",
   path: "(global)",
-  description: "The site footer appears on every page. Includes business info, navigation links, hours, social links, and newsletter signup.",
+  description: "The site footer appears on every page. Includes business info, navigation links, hours, and social links.",
   sections: [
     {
       key: "footer",
       label: "Footer Content",
-      description: "Brand tagline, navigation labels, and newsletter text. Business info (address, hours, socials) is managed in Site Settings.",
+      description: "Brand tagline and navigation labels. Business info (address, hours, socials) is managed in Site Settings.",
       contentKey: "section_global_footer",
       fields: [
         { fieldKey: "tagline", label: "Tagline", type: "text", defaultValue: "Thoughtful aesthetic care. Natural results, on purpose." },
         { fieldKey: "nav_label", label: "Navigation Label", type: "text", defaultValue: "Navigate" },
         { fieldKey: "contact_label", label: "Contact Label", type: "text", defaultValue: "Contact" },
         { fieldKey: "hours_label", label: "Hours Label", type: "text", defaultValue: "Hours" },
-        { fieldKey: "newsletter_label", label: "Newsletter Label", type: "text", defaultValue: "Stay in the Know" },
-        { fieldKey: "subscribe_text", label: "Subscribe Button", type: "text", defaultValue: "Subscribe" },
       ],
       media: [],
       hasColorOverride: true,

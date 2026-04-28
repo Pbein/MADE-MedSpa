@@ -96,7 +96,9 @@ export default function EditorialBreak({
             <p
               className="font-headline italic font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-snug md:leading-[1.3]"
               style={{
-                color: isDark ? "#f7f6eb" : "var(--color-primary)",
+                color: isDark
+                  ? "var(--color-on-surface, #f7f6eb)"
+                  : "var(--color-primary, #391e1e)",
                 textWrap: "balance",
                 maxWidth: "44rem",
               } as React.CSSProperties}

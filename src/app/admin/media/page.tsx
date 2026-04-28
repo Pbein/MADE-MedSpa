@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Media slot definitions ──────────────────────────────────────────────────
 // Each slot maps to a siteContent key. The frontend reads these keys and
@@ -178,78 +179,51 @@ function MediaSlotCard({
   currentUrl: string;
   onSave: (key: string, url: string) => Promise<void>;
 }) {
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const [editing, setEditing] = useState(false);
   const [urlValue, setUrlValue] = useState(currentUrl);
   const [uploading, setUploading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const displayUrl = currentUrl || slot.defaultUrl;
 
-  async function uploadBlob(blob: Blob): Promise<string> {
-    const uploadUrl = await generateUploadUrl();
-    const result = await fetch(uploadUrl, {
-      method: "POST",
-      headers: { "Content-Type": blob.type },
-      body: blob,
-    });
-    const { storageId } = await result.json();
-    const convexUrl = await convex.query(api.storage.getUrl, { storageId });
-    if (!convexUrl) throw new Error("Failed to resolve storage URL");
-    return convexUrl;
-  }
-
-  function extractFirstFrame(file: File): Promise<Blob> {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement("video");
-      video.muted = true;
-      video.playsInline = true;
-      video.preload = "auto";
-      const objectUrl = URL.createObjectURL(file);
-      video.src = objectUrl;
-
-      video.addEventListener("seeked", () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext("2d")!.drawImage(video, 0, 0);
-        URL.revokeObjectURL(objectUrl);
-        canvas.toBlob(
-          (blob) => (blob ? resolve(blob) : reject(new Error("Frame capture failed"))),
-          "image/webp",
-          0.85
-        );
-      }, { once: true });
-
-      video.addEventListener("error", () => {
-        URL.revokeObjectURL(objectUrl);
-        reject(new Error("Could not load video"));
-      }, { once: true });
-
-      video.addEventListener("loadeddata", () => {
-        video.currentTime = 0.1;
-      }, { once: true });
-    });
+  function validateFile(file: File): string | null {
+    if (slot.type === "video") {
+      const accepted = ["video/mp4", "video/webm"];
+      if (!accepted.includes(file.type)) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload an MP4 or WebM. To convert: HandBrake (free desktop app) or cloudconvert.com.`;
+      }
+      const MAX = 25 * 1024 * 1024;
+      if (file.size > MAX) {
+        return `Video is ${(file.size / 1024 / 1024).toFixed(1)} MB — please keep hero videos under 25 MB so the page loads quickly. Compress with HandBrake.`;
+      }
+    } else {
+      if (!file.type.startsWith("image/")) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload a JPG, PNG, or WebP image.`;
+      }
+    }
+    return null;
   }
 
   async function handleFileUpload(file: File) {
+    setUploadError(null);
+    const validationError = validateFile(file);
+    if (validationError) {
+      setUploadError(validationError);
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     setUploading(true);
     try {
-      const convexUrl = await uploadBlob(file);
-      setUrlValue(convexUrl);
-
-      // Auto-generate poster from first frame when uploading a hero video
-      if (slot.key === "hero_video" && file.type.startsWith("video/")) {
-        try {
-          const posterBlob = await extractFirstFrame(file);
-          const posterUrl = await uploadBlob(posterBlob);
-          await onSave("hero_poster", posterUrl);
-        } catch {
-          // Poster generation is best-effort — video upload still succeeds
-        }
-      }
+      const ext = (file.name.split(".").pop() || (slot.type === "video" ? "mp4" : "img")).toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "site-content",
+        filename: `${slot.key}-${Date.now()}.${ext}`,
+      });
+      setUrlValue(blobUrl);
     } catch {
       alert("Upload failed. Please try again.");
     } finally {
@@ -258,7 +232,11 @@ function MediaSlotCard({
   }
 
   async function handleSave() {
+    const previous = currentUrl;
     await onSave(slot.key, urlValue);
+    if (previous && previous !== urlValue) {
+      deleteBlob(previous).catch(() => {});
+    }
     setEditing(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -453,8 +431,27 @@ function MediaSlotCard({
               />
             </label>
             <p style={{ fontSize: "0.75rem", color: "#9ca3af", margin: "0.375rem 0 0 0" }}>
-              {slot.type === "video" ? "MP4 or WebM, ideally under 5 MB" : "JPG, PNG, or WebP"}
+              {slot.type === "video"
+                ? "MP4 or WebM only · max 25 MB · MOV/AVI not supported — convert with HandBrake or cloudconvert.com"
+                : "JPG, PNG, or WebP · max ~5 MB"}
             </p>
+            {uploadError && (
+              <div
+                role="alert"
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "#991b1b",
+                  backgroundColor: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "0.375rem",
+                  padding: "0.625rem 0.875rem",
+                  marginTop: "0.5rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                {uploadError}
+              </div>
+            )}
           </div>
 
           {/* Actions */}
@@ -468,8 +465,10 @@ function MediaSlotCard({
             {currentUrl && (
               <button
                 onClick={async () => {
+                  const previous = currentUrl;
                   setUrlValue("");
                   await onSave(slot.key, "");
+                  if (previous) deleteBlob(previous).catch(() => {});
                   setEditing(false);
                   setSaved(true);
                   setTimeout(() => setSaved(false), 2000);
@@ -500,6 +499,96 @@ function MediaSlotCard({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Read-only card for media managed by the developer ──────────────────────
+
+function ReadOnlyMediaCard({ slot, message }: { slot: MediaSlot; message: string }) {
+  return (
+    <div
+      style={{
+        backgroundColor: "#fff",
+        border: "1px solid #e5e7eb",
+        borderRadius: "0.5rem",
+        padding: "1.25rem 1.5rem",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          marginBottom: "1rem",
+        }}
+      >
+        <div>
+          <span
+            style={{
+              display: "inline-flex",
+              padding: "0.125rem 0.5rem",
+              borderRadius: "9999px",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              backgroundColor: slot.type === "video" ? "#7c3aed" : "#6366f1",
+              color: "#fff",
+              marginBottom: "0.25rem",
+            }}
+          >
+            {slot.type === "video" ? "Video" : "Image"}
+          </span>
+          <h3
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 600,
+              color: "#111827",
+              margin: "0.25rem 0 0 0",
+            }}
+          >
+            {slot.label}
+          </h3>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              color: "#6b7280",
+              margin: "0.25rem 0 0 0",
+            }}
+          >
+            {slot.description}
+          </p>
+        </div>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "0.25rem 0.625rem",
+            borderRadius: 999,
+            fontSize: "0.75rem",
+            fontWeight: 500,
+            backgroundColor: "#f1f5f9",
+            color: "#475569",
+            border: "1px solid #e2e8f0",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Managed by developer
+        </span>
+      </div>
+
+      <div
+        style={{
+          padding: "0.875rem 1rem",
+          backgroundColor: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          borderRadius: "0.375rem",
+          fontSize: "0.875rem",
+          color: "#334155",
+          lineHeight: 1.55,
+        }}
+      >
+        {message}
+      </div>
     </div>
   );
 }
@@ -549,14 +638,25 @@ function SectionGroup({
         </p>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {slots.map((slot) => (
-          <MediaSlotCard
-            key={slot.key}
-            slot={slot}
-            currentUrl={mediaMap.get(slot.key) || ""}
-            onSave={onSave}
-          />
-        ))}
+        {slots.map((slot) => {
+          if (slot.key === "hero_video") {
+            return (
+              <ReadOnlyMediaCard
+                key={slot.key}
+                slot={slot}
+                message="The hero video lives in the site's source code so it loads quickly. Contact your developer to swap it out."
+              />
+            );
+          }
+          return (
+            <MediaSlotCard
+              key={slot.key}
+              slot={slot}
+              currentUrl={mediaMap.get(slot.key) || ""}
+              onSave={onSave}
+            />
+          );
+        })}
       </div>
     </div>
   );

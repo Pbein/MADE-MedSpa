@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { SETTINGS_KEYS, DEFAULT_OG } from "@/lib/siteSettings";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Page definitions with default SEO ────────────────────────────────────────
 
@@ -108,8 +109,6 @@ function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: 
     key: `seo_${page.key}`,
   });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const ogInput = useRef<HTMLInputElement>(null);
 
   const [expanded, setExpanded] = useState(false);
@@ -145,16 +144,12 @@ function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: 
   async function handleOgUpload(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "seo",
+        filename: `${page.key}-og-${Date.now()}.${ext}`,
       });
-      const { storageId } = await result.json();
-      const cdnUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!cdnUrl) throw new Error("Upload failed");
-      setOgImageUrl(cdnUrl);
+      setOgImageUrl(blobUrl);
     } catch {
       alert("Upload failed. Please try again.");
     } finally {
@@ -163,6 +158,7 @@ function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: 
   }
 
   const handleSave = useCallback(async () => {
+    const previousOg = seo?.og_image_url;
     setSaving(true);
     try {
       await upsert({
@@ -174,12 +170,15 @@ function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: 
           og_image_url: ogImageUrl || undefined,
         },
       });
+      if (previousOg && previousOg !== ogImageUrl) {
+        deleteBlob(previousOg).catch(() => {});
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } finally {
       setSaving(false);
     }
-  }, [title, description, keywords, ogImageUrl, page.key, upsert]);
+  }, [title, description, keywords, ogImageUrl, page.key, upsert, seo?.og_image_url]);
 
   return (
     <div

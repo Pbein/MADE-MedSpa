@@ -28,8 +28,6 @@ export default async function Home() {
     await Promise.all([
       fetchQuery(api.siteContent.getByKeys, {
         keys: [
-          "hero_video",
-          "hero_poster",
           "featured_service_image_1",
           "featured_service_image_2",
           "featured_service_image_3",
@@ -54,7 +52,9 @@ export default async function Home() {
   const meta = pageSettings?.metadata as Record<string, unknown> | undefined;
   const styles = buildStyleOverrides(meta);
   const show = (key: string) => isSectionVisible(meta, key);
-  const design = (key: string) => getSectionDesignServer(meta, key);
+  // Pass pageKey ("home") so the registry can supply per-section defaults
+  // (e.g. hero defaults to espresso bg + cream text on the home page).
+  const design = (key: string) => getSectionDesignServer(meta, key, "home");
 
   // Section content with defaults
   const heroContent = getSectionContent(sectionData.section_home_hero, {
@@ -99,12 +99,10 @@ export default async function Home() {
   return (
     <div style={styles}>
       {show("hero") && (
+        // design("hero") already merges section defaults from the registry
+        // with any admin overrides — single source of truth.
         <div id="section-hero" style={design("hero")}>
-          <HeroSection
-            heroVideoUrl={content.hero_video?.imageUrl}
-            heroPosterUrl={content.hero_poster?.imageUrl}
-            sectionContent={heroContent}
-          />
+          <HeroSection sectionContent={heroContent} />
         </div>
       )}
 

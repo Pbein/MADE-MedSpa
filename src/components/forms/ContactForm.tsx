@@ -1,33 +1,72 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+const TREATMENT_OPTIONS = [
+  "Just exploring",
+  "Botox / Tox",
+  "Filler",
+  "Skin Treatment",
+  "Laser",
+  "Membership",
+  "Other",
+];
+
+const FALLBACK_EMAIL =
+  process.env.NEXT_PUBLIC_FALLBACK_CONTACT_EMAIL ?? "hello@mademedspa.com";
+
 interface FormErrors {
   firstName?: string;
   lastName?: string;
   email?: string;
+  phone?: string;
   message?: string;
 }
 
-export default function ContactForm() {
-  const createSubmission = useMutation(api.contactSubmissions.create);
+function buildMailto(input: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  treatmentInterest: string;
+  message: string;
+}): string {
+  const subject = encodeURIComponent(
+    `Website inquiry from ${input.firstName} ${input.lastName}`,
+  );
+  const body = encodeURIComponent(
+    [
+      `Name: ${input.firstName} ${input.lastName}`,
+      `Email: ${input.email}`,
+      input.phone ? `Phone: ${input.phone}` : null,
+      input.treatmentInterest ? `Interest: ${input.treatmentInterest}` : null,
+      "",
+      input.message,
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  );
+  return `mailto:${FALLBACK_EMAIL}?subject=${subject}&body=${body}`;
+}
 
+export default function ContactForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [treatmentInterest, setTreatmentInterest] = useState("");
   const [message, setMessage] = useState("");
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [showFallback, setShowFallback] = useState(false);
 
   function validate(): FormErrors {
     const errs: FormErrors = {};
@@ -45,6 +84,7 @@ export default function ContactForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitError("");
+    setShowFallback(false);
 
     const errs = validate();
     setErrors(errs);
@@ -53,26 +93,55 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      await createSubmission({
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim() || undefined,
-        message: message.trim(),
-        source: "contact_page",
+      const res = await fetch("/api/pabau/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+          treatmentInterest: treatmentInterest || undefined,
+          message: message.trim(),
+          marketingConsent,
+          source: "contact_page",
+        }),
       });
 
-      setIsSuccess(true);
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
-      setErrors({});
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Something went wrong. Please try again.";
-      setSubmitError(errorMessage);
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+        fieldErrors?: Record<string, string>;
+      };
+
+      if (res.ok && data.success) {
+        setIsSuccess(true);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhone("");
+        setTreatmentInterest("");
+        setMessage("");
+        setMarketingConsent(false);
+        setErrors({});
+        return;
+      }
+
+      if (res.status === 400 && data.fieldErrors) {
+        setErrors(data.fieldErrors as FormErrors);
+        return;
+      }
+
+      setSubmitError(
+        data.error ??
+          "We couldn't send your message right now. You can email us directly instead.",
+      );
+      setShowFallback(true);
+    } catch {
+      setSubmitError(
+        "We couldn't reach our system. You can email us directly instead.",
+      );
+      setShowFallback(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -142,10 +211,16 @@ export default function ContactForm() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="Jane"
+            required
+            aria-required="true"
+            aria-invalid={errors.firstName ? "true" : undefined}
+            aria-describedby={errors.firstName ? "firstName-error" : undefined}
+            autoComplete="given-name"
             className="input-editorial w-full"
           />
           {errors.firstName && (
             <p
+              id="firstName-error"
               className="text-xs mt-2"
               style={{ color: "var(--color-secondary)" }}
             >
@@ -168,10 +243,16 @@ export default function ContactForm() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Doe"
+            required
+            aria-required="true"
+            aria-invalid={errors.lastName ? "true" : undefined}
+            aria-describedby={errors.lastName ? "lastName-error" : undefined}
+            autoComplete="family-name"
             className="input-editorial w-full"
           />
           {errors.lastName && (
             <p
+              id="lastName-error"
               className="text-xs mt-2"
               style={{ color: "var(--color-secondary)" }}
             >
@@ -196,10 +277,16 @@ export default function ContactForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="jane@example.com"
+          required
+          aria-required="true"
+          aria-invalid={errors.email ? "true" : undefined}
+          aria-describedby={errors.email ? "email-error" : undefined}
+          autoComplete="email"
           className="input-editorial w-full"
         />
         {errors.email && (
           <p
+            id="email-error"
             className="text-xs mt-2"
             style={{ color: "var(--color-secondary)" }}
           >
@@ -226,8 +313,46 @@ export default function ContactForm() {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="(555) 123-4567"
+          autoComplete="tel"
+          aria-invalid={errors.phone ? "true" : undefined}
+          aria-describedby={errors.phone ? "phone-error" : undefined}
           className="input-editorial w-full"
         />
+        {errors.phone && (
+          <p
+            className="text-xs mt-2"
+            style={{ color: "var(--color-secondary)" }}
+          >
+            {errors.phone}
+          </p>
+        )}
+      </div>
+
+      {/* Treatment interest dropdown */}
+      <div>
+        <label
+          htmlFor="treatmentInterest"
+          className="label-micro block mb-3"
+          style={{ color: "var(--color-on-surface-variant)" }}
+        >
+          What are you interested in?{" "}
+          <span className="normal-case tracking-normal opacity-50">
+            (optional)
+          </span>
+        </label>
+        <select
+          id="treatmentInterest"
+          value={treatmentInterest}
+          onChange={(e) => setTreatmentInterest(e.target.value)}
+          className="input-editorial w-full"
+        >
+          <option value="">Select one…</option>
+          {TREATMENT_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Message — full width textarea */}
@@ -258,11 +383,40 @@ export default function ContactForm() {
         )}
       </div>
 
+      {/* Marketing consent — opt-in */}
+      <label className="flex items-start gap-3 cursor-pointer text-sm">
+        <input
+          type="checkbox"
+          checked={marketingConsent}
+          onChange={(e) => setMarketingConsent(e.target.checked)}
+          className="mt-1"
+        />
+        <span style={{ color: "var(--color-on-surface-variant)" }}>
+          I'd like to receive occasional updates and offers from MADE Med Spa.
+        </span>
+      </label>
+
       {submitError && (
-        <div>
+        <div className="space-y-3">
           <p className="text-sm" style={{ color: "var(--color-secondary)" }}>
             {submitError}
           </p>
+          {showFallback && (
+            <a
+              href={buildMailto({
+                firstName,
+                lastName,
+                email,
+                phone,
+                treatmentInterest,
+                message,
+              })}
+              className="link-editorial inline-block"
+              style={{ color: "var(--color-secondary)" }}
+            >
+              Email us directly →
+            </a>
+          )}
         </div>
       )}
 
@@ -274,6 +428,18 @@ export default function ContactForm() {
       >
         {isSubmitting ? "Sending..." : "Send Message"}
       </button>
+
+      <p
+        className="text-xs leading-relaxed"
+        style={{ color: "var(--color-on-surface-variant)", opacity: 0.7 }}
+      >
+        By submitting, you agree to be contacted by MADE Med Spa. Your information
+        is handled in our secure CRM (Pabau). See our{" "}
+        <a href="/privacy" className="underline">
+          privacy policy
+        </a>
+        .
+      </p>
     </form>
   );
 }

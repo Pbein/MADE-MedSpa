@@ -336,7 +336,7 @@ export default function AboutPageClient({
         }}
       >
         {/* Background image — warm glaze-tinted editorial treatment */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
           <Image
             src="/images/values-bg.webp"
             alt=""
@@ -370,7 +370,7 @@ export default function AboutPageClient({
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="max-w-7xl mx-auto"
+          className="max-w-7xl mx-auto relative z-10"
         >
           <motion.div variants={revealUp} className="text-center mb-20">
             <span

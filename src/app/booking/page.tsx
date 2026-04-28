@@ -121,6 +121,7 @@ export default function BookingPage() {
             muted
             playsInline
             preload="metadata"
+            poster="/images/booking-hero-poster.webp"
             onCanPlay={() => setVideoReady(true)}
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
             style={{ opacity: videoReady ? 1 : 0 }}
@@ -182,15 +183,79 @@ export default function BookingPage() {
 
           <motion.div variants={revealUp} className="mt-10">
             <a
-              href={bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#section-book-now"
               className="btn-light inline-block"
             >
               {heroText.cta_text}
             </a>
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* INLINE BOOKING — Pabau iframe */}
+      <section
+        id="section-book-now"
+        className="relative py-20 md:py-28 px-4 md:px-6"
+        style={{ backgroundColor: "var(--color-surface)" }}
+      >
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center mb-10 md:mb-14">
+            <p
+              className="label-micro mb-3"
+              style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
+            >
+              Book Now
+            </p>
+            <h2
+              className="font-headline italic text-3xl md:text-4xl lg:text-5xl"
+              style={{ color: "var(--color-primary)" }}
+            >
+              Choose your service & time.
+            </h2>
+            <p
+              className="body-editorial mt-4 text-sm md:text-base max-w-2xl mx-auto"
+              style={{ color: "var(--color-on-surface-variant)", opacity: 0.8 }}
+            >
+              Browse available services and schedule your visit directly. Booking is
+              secured through our patient management system.
+            </p>
+          </div>
+          <div
+            className="overflow-hidden rounded-lg shadow-sm"
+            style={{
+              border: "1px solid var(--color-outline-variant)",
+              backgroundColor: "#fff",
+            }}
+          >
+            <iframe
+              src={bookingUrl}
+              title="Book your appointment with MADE Med Spa"
+              loading="lazy"
+              className="block w-full"
+              style={{
+                border: 0,
+                minHeight: "900px",
+                height: "clamp(900px, 90vh, 1200px)",
+              }}
+              allow="payment; clipboard-write"
+            />
+          </div>
+          <p
+            className="text-xs text-center mt-4"
+            style={{ color: "var(--color-on-surface-variant)", opacity: 0.55 }}
+          >
+            Trouble seeing the booking widget?{" "}
+            <a
+              href={bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-editorial"
+              style={{ color: "var(--color-secondary)" }}
+            >
+              Open booking in a new tab →
+            </a>
+          </p>
+        </div>
       </section>
 
       {/* WHAT TO EXPECT */}

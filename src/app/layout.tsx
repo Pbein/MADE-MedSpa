@@ -1,32 +1,32 @@
 import type { Metadata } from "next";
-import {
-  Playfair_Display,
-  Cormorant_Garamond,
-  Inter,
-} from "next/font/google";
+import { Playfair_Display, Jost, Montserrat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import PublicShell from "@/components/layout/PublicShell";
 import { getSiteSettings } from "@/lib/siteSettings";
 import "./globals.css";
 
+// Brand spec fonts (per MADE Branding spec sheet):
+// - H1 / page titles & accents: Playfair Display (regular + italic)
+// - H2 / H3 / labels / eyebrows: Jost (free Futura substitute)
+// - Body: Montserrat
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600"],
   style: ["normal", "italic"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const jost = Jost({
+  variable: "--font-jost",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
@@ -224,7 +224,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${playfair.variable} ${cormorant.variable} ${inter.variable} antialiased`}
+        className={`${playfair.variable} ${jost.variable} ${montserrat.variable} antialiased`}
       >
         <ClerkProvider>
           <ConvexClientProvider>

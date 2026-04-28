@@ -77,8 +77,11 @@ export default function AdminLayout({
         { label: "Memberships", href: "/admin/memberships", icon: "M" },
         { label: "Shop", href: "/admin/shop", icon: "P" },
         { label: "Team", href: "/admin/team", icon: "T" },
+        { label: "About", href: "/admin/pages/about", icon: "A" },
         { label: "FAQs", href: "/admin/faqs", icon: "F" },
+        { label: "Before & After", href: "/admin/before-and-after", icon: "B" },
         { label: "Testimonials", href: "/admin/testimonials", icon: "Q" },
+        { label: "Pabau Reviews", href: "/admin/pabau-reviews", icon: "R" },
       ],
     },
     {
@@ -88,6 +91,7 @@ export default function AdminLayout({
         { label: "SEO", href: "/admin/seo", icon: "\u2197" },
         { label: "Contacts", href: "/admin/contacts", icon: "C", badge: newContacts ?? 0 },
         { label: "Pabau Sync", href: "/admin/pabau", icon: "\u2194" },
+        { label: "Webhooks", href: "/admin/pabau/webhooks", icon: "\u2261" },
       ],
     },
     {
@@ -153,10 +157,14 @@ export default function AdminLayout({
                 <span style={sectionLabelStyle}>{section.title}</span>
               )}
               {section.items.map((item) => {
+                // "Edit Pages" (/admin/pages) should not light up when a more
+                // specific page editor (e.g. /admin/pages/about) is selected.
                 const isActive =
                   item.href === "/admin"
                     ? pathname === "/admin"
-                    : pathname.startsWith(item.href);
+                    : item.href === "/admin/pages"
+                      ? pathname === "/admin/pages"
+                      : pathname.startsWith(item.href);
 
                 return (
                   <Link

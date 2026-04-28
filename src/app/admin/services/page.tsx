@@ -45,12 +45,14 @@ function ServiceForm({
   onCancel,
   onDelete,
   saving,
+  pabauSyncedAt,
 }: {
   initial: ServiceFormData;
   onSave: (data: ServiceFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
   saving: boolean;
+  pabauSyncedAt?: number;
 }) {
   const [form, setForm] = useState<ServiceFormData>(initial);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -72,6 +74,31 @@ function ServiceForm({
         backgroundColor: "#f9fafb",
       }}
     >
+      {pabauSyncedAt !== undefined && (
+        <div
+          style={{
+            backgroundColor: "#ede9fe",
+            border: "1px solid #ddd6fe",
+            color: "#5b21b6",
+            padding: "10px 14px",
+            borderRadius: 6,
+            fontSize: 13,
+            marginBottom: 16,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>Synced from Pabau.</strong> Edits to <em>name</em>, <em>price</em>, and
+          <em> duration</em> will be overwritten on the next sync. Edit those in Pabau. The
+          fields below this banner (image, slug, descriptions, sort order) are
+          website-only and safe to change.
+          <div style={{ fontSize: 11, marginTop: 4, opacity: 0.8 }}>
+            Last synced{" "}
+            {pabauSyncedAt
+              ? new Date(pabauSyncedAt).toLocaleString()
+              : "never"}
+          </div>
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Name */}
         <div>
@@ -599,12 +626,35 @@ export default function AdminServicesPage() {
                     }}
                   >
                     <td className="px-4 py-3">
-                      <p
-                        className="text-[15px] font-medium"
-                        style={{ color: "#111827" }}
-                      >
-                        {service.name}
-                      </p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <p
+                          className="text-[15px] font-medium"
+                          style={{ color: "#111827", margin: 0 }}
+                        >
+                          {service.name}
+                        </p>
+                        {service.pabauServiceId && (
+                          <span
+                            title={
+                              service.pabauSyncedAt
+                                ? `Last synced ${new Date(service.pabauSyncedAt).toLocaleString()}`
+                                : "Synced from Pabau"
+                            }
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 600,
+                              padding: "2px 6px",
+                              borderRadius: 10,
+                              backgroundColor: "#ede9fe",
+                              color: "#6d28d9",
+                              textTransform: "uppercase",
+                              letterSpacing: 0.4,
+                            }}
+                          >
+                            Pabau
+                          </span>
+                        )}
+                      </div>
                       <p
                         className="mt-0.5 text-[13px] line-clamp-1 sm:hidden"
                         style={{ color: "#6b7280" }}
@@ -681,6 +731,9 @@ export default function AdminServicesPage() {
                           onCancel={() => setEditingId(null)}
                           onDelete={() => handleDelete(service._id)}
                           saving={saving}
+                          pabauSyncedAt={
+                            service.pabauServiceId ? service.pabauSyncedAt : undefined
+                          }
                         />
                       </td>
                     </tr>

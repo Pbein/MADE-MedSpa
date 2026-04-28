@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, ReactNode } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import {
   SETTINGS_KEYS,
@@ -12,6 +12,9 @@ import {
   type SocialLinks,
   type OgImage,
 } from "@/lib/siteSettings";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
+
+const SITE_LOGO_KEY = "site_logo";
 
 // ─── Styles ─────────────────────────────────────────────────────────────────
 
@@ -184,8 +187,6 @@ function BusinessInfoCard() {
 function OgImageCard() {
   const doc = useQuery(api.siteContent.getByKey, { key: SETTINGS_KEYS.og });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const loaded = (doc?.metadata as OgImage | undefined) ?? null;
@@ -204,16 +205,12 @@ function OgImageCard() {
   async function handleFile(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "settings",
+        filename: `og-image-${Date.now()}.${ext}`,
       });
-      const { storageId } = await result.json();
-      const cdnUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!cdnUrl) throw new Error("Upload failed");
-      setUrl(cdnUrl);
+      setUrl(blobUrl);
     } catch {
       alert("Upload failed. Please try again.");
     } finally {
@@ -222,9 +219,13 @@ function OgImageCard() {
   }
 
   async function handleSave() {
+    const previous = loaded?.url;
     setSaving(true);
     try {
       await upsert({ key: SETTINGS_KEYS.og, metadata: { url } });
+      if (previous && previous !== url) {
+        deleteBlob(previous).catch(() => {});
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2200);
     } finally {
@@ -372,6 +373,184 @@ function SocialLinksCard() {
   );
 }
 
+// ─── Logo card ─────────────────────────────────────────────────────────────
+
+function LogoCard() {
+  const doc = useQuery(api.siteContent.getByKey, { key: SITE_LOGO_KEY });
+  const upsert = useMutation(api.siteContent.upsert);
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  const [url, setUrl] = useState<string>("");
+  const [alt, setAlt] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [lastSyncId, setLastSyncId] = useState<string | null>(null);
+
+  const docId = doc?._id as string | undefined;
+  if (doc !== undefined && docId !== lastSyncId) {
+    setLastSyncId(docId ?? null);
+    setUrl(doc?.imageUrl ?? "");
+    setAlt(doc?.title ?? "");
+  }
+
+  async function handleFile(file: File) {
+    setUploading(true);
+    try {
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const blobUrl = await uploadBlob(file, {
+        prefix: "settings",
+        filename: `site-logo-${Date.now()}.${ext}`,
+      });
+      setUrl(blobUrl);
+    } catch {
+      alert("Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleSave() {
+    const previous = doc?.imageUrl;
+    const nextUrl = url || undefined;
+    setSaving(true);
+    try {
+      await upsert({
+        key: SITE_LOGO_KEY,
+        imageUrl: nextUrl,
+        title: alt || undefined,
+      });
+      if (previous && previous !== nextUrl) {
+        deleteBlob(previous).catch(() => {});
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2200);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function handleRemove() {
+    setUrl("");
+  }
+
+  return (
+    <SettingsCard
+      title="Logo"
+      description="Shown in the top-left of every page (and at the top of the footer). Falls back to the “MADE” wordmark when no logo is uploaded. Use a transparent PNG or SVG. Recommended height: 80–120px."
+      saved={saved}
+      saving={saving}
+      onSave={handleSave}
+    >
+      <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: 24, alignItems: "start" }}>
+        {/* Preview */}
+        <div style={{
+          width: "100%",
+          maxWidth: 240,
+          aspectRatio: "3 / 1",
+          backgroundColor: "#f1f5f9",
+          border: "1px solid #e2e8f0",
+          borderRadius: 8,
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 16,
+        }}>
+          {url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={url}
+              alt={alt || "Logo preview"}
+              style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+            />
+          ) : (
+            <div style={{ fontSize: 13, color: "#94a3b8" }}>No logo uploaded</div>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div>
+            <div style={{
+              display: "inline-block",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: url ? "#065f46" : "#64748b",
+              backgroundColor: url ? "#d1fae5" : "#f1f5f9",
+              padding: "3px 9px",
+              borderRadius: 4,
+              marginBottom: 10,
+            }}>
+              {url ? "Custom logo" : "Using MADE wordmark"}
+            </div>
+            {url && (
+              <div style={{ fontSize: 13, color: "#475569", wordBreak: "break-all", lineHeight: 1.5 }}>
+                {url}
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button onClick={() => fileInput.current?.click()} disabled={uploading} style={{
+              padding: "8px 16px",
+              border: "1px solid #e2e8f0",
+              borderRadius: 6,
+              backgroundColor: "#fff",
+              color: "#0f172a",
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: "pointer",
+              opacity: uploading ? 0.6 : 1,
+            }}>
+              {uploading ? "Uploading…" : url ? "Replace logo" : "Upload logo"}
+            </button>
+            {url && (
+              <button onClick={handleRemove} style={{
+                padding: "8px 16px",
+                border: "1px solid #fca5a5",
+                borderRadius: 6,
+                backgroundColor: "transparent",
+                color: "#dc2626",
+                fontSize: 14,
+                cursor: "pointer",
+              }}>Remove</button>
+            )}
+            <input
+              ref={fileInput}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleFile(f);
+                e.target.value = "";
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={label}>Alt text (for accessibility)</label>
+            <input
+              type="text"
+              value={alt}
+              onChange={(e) => setAlt(e.target.value)}
+              placeholder="MADE Med Spa"
+              style={input}
+            />
+          </div>
+
+          <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>
+            Tip: a transparent PNG works best so the logo blends with both the cream nav and the dark espresso footer. After uploading, click <strong>Save</strong> to publish.
+          </div>
+        </div>
+      </div>
+    </SettingsCard>
+  );
+}
+
 // ─── Main page ──────────────────────────────────────────────────────────────
 
 export default function SiteSettingsAdmin() {
@@ -390,6 +569,7 @@ export default function SiteSettingsAdmin() {
         </p>
       </header>
 
+      <LogoCard />
       <BusinessInfoCard />
       <OgImageCard />
       <SocialLinksCard />

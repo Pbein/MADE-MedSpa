@@ -15,7 +15,7 @@ const viewportOnce = { once: true, margin: "-50px" } as const;
 
 const BOOKING_URL =
   process.env.NEXT_PUBLIC_PABAU_BOOKING_URL ||
-  "https://partner.pabau.com/online-bookings/made-51g64";
+  "https://partner.pabau.com/online-bookings/made-med-spa";
 
 export default function MembershipPage() {
   const memberships = useQuery(api.memberships.list);
@@ -37,10 +37,10 @@ export default function MembershipPage() {
   });
 
   return (
-    <main
+    <div
       style={{
         ...styleOverrides,
-        backgroundColor: "#f0e8e1",
+        backgroundColor: "var(--color-surface, #f0e8e1)",
         backgroundImage: "url('/images/membership-atmosphere-bg.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center top",
@@ -120,7 +120,7 @@ export default function MembershipPage() {
         />
         </div>
       )}
-    </main>
+    </div>
   );
 }
 
@@ -174,7 +174,8 @@ function MembershipCard({
         <div
           className="text-center py-2"
           style={{
-            background: "linear-gradient(135deg, #391e1e 0%, #84262c 70%)",
+            background:
+              "linear-gradient(135deg, var(--color-primary, #391e1e) 0%, var(--color-secondary, #84262c) 70%)",
             color: "var(--color-on-primary)",
           }}
         >
@@ -259,8 +260,9 @@ function MembershipCard({
             cursor: "pointer",
             ...(tier.isFeatured
               ? {
-                  background: "linear-gradient(135deg, #391e1e 0%, #84262c 100%)",
-                  color: "var(--color-on-primary)",
+                  background:
+                    "linear-gradient(135deg, var(--btn-bg, #391e1e) 0%, var(--color-secondary, #84262c) 100%)",
+                  color: "var(--btn-text, #f6f1ea)",
                   border: "none",
                   boxShadow: "0 8px 20px rgba(57,30,30,0.2)",
                 }

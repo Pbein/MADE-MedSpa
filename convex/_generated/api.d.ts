@@ -8,15 +8,21 @@
  * @module
  */
 
+import type * as beforeAfter from "../beforeAfter.js";
 import type * as contactSubmissions from "../contactSubmissions.js";
+import type * as crons from "../crons.js";
 import type * as faqs from "../faqs.js";
+import type * as lib_auth from "../lib/auth.js";
 import type * as memberships from "../memberships.js";
-import type * as newsletter from "../newsletter.js";
+import type * as pabauActivityLog from "../pabauActivityLog.js";
+import type * as pabauApiUsage from "../pabauApiUsage.js";
+import type * as pabauReviews from "../pabauReviews.js";
+import type * as pabauSync from "../pabauSync.js";
+import type * as pabauWebhookEvents from "../pabauWebhookEvents.js";
 import type * as seed from "../seed.js";
 import type * as services from "../services.js";
 import type * as shopProducts from "../shopProducts.js";
 import type * as siteContent from "../siteContent.js";
-import type * as storage from "../storage.js";
 import type * as teamMembers from "../teamMembers.js";
 import type * as testimonials from "../testimonials.js";
 import type * as users from "../users.js";
@@ -28,15 +34,21 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  beforeAfter: typeof beforeAfter;
   contactSubmissions: typeof contactSubmissions;
+  crons: typeof crons;
   faqs: typeof faqs;
+  "lib/auth": typeof lib_auth;
   memberships: typeof memberships;
-  newsletter: typeof newsletter;
+  pabauActivityLog: typeof pabauActivityLog;
+  pabauApiUsage: typeof pabauApiUsage;
+  pabauReviews: typeof pabauReviews;
+  pabauSync: typeof pabauSync;
+  pabauWebhookEvents: typeof pabauWebhookEvents;
   seed: typeof seed;
   services: typeof services;
   shopProducts: typeof shopProducts;
   siteContent: typeof siteContent;
-  storage: typeof storage;
   teamMembers: typeof teamMembers;
   testimonials: typeof testimonials;
   users: typeof users;

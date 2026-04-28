@@ -10,7 +10,7 @@ export default function NotFound() {
         <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[var(--color-chocolate)] mb-6">
           Page Not Found
         </h1>
-        <p className="font-[family-name:var(--font-cormorant)] text-lg text-stone-500 mb-10 leading-relaxed">
+        <p className="font-[family-name:var(--font-montserrat)] text-lg text-stone-500 mb-10 leading-relaxed">
           The page you are looking for may have been moved, removed, or never existed.
         </p>
         <Link

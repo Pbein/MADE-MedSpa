@@ -93,10 +93,16 @@
   --shadow-made-lift: 0 18px 40px rgba(57, 30, 30, 0.12);
   --shadow-made-button: 0 8px 20px rgba(57, 30, 30, 0.18);
 
-  /* --- Typography --- */
-  --font-headline: var(--font-cormorant), "Cormorant Garamond", "Newsreader", Georgia, serif;
-  --font-body: var(--font-inter), "Inter", "Manrope", "Helvetica Neue", sans-serif;
-  --font-label: var(--font-inter), "Inter", "Manrope", sans-serif;
+  /* --- Typography (MADE Branding spec) --- */
+  /* H1 / page titles / italic accents: Playfair Display */
+  --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  /* Body: Montserrat */
+  --font-body: var(--font-montserrat), "Montserrat", "Inter", "Helvetica Neue", sans-serif;
+  /* Labels / H2 / H3 / eyebrows: Jost (free Futura substitute) */
+  --font-label: var(--font-jost), "Jost", "Futura", "Century Gothic", sans-serif;
+}
+
+:root {
 
   /* --- Spacing (luxury = breathing room) --- */
   --space-section: clamp(8rem, 6rem + 8vw, 12rem);
@@ -266,6 +272,13 @@ a {
   background-color: var(--color-blush);
 }
 
+.btn-primary:focus-visible,
+.btn-outline:focus-visible,
+.btn-light:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 3px;
+}
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -358,6 +371,29 @@ a {
 
 .input-editorial:focus {
   border-color: var(--color-primary);
+}
+
+.input-editorial:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 4px;
+  border-color: var(--color-primary);
+}
+
+/* Site-wide visible focus for keyboard users on links */
+a:focus-visible {
+  outline: 2px solid var(--color-blush);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect prefers-reduced-motion: disable non-essential animation */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .input-editorial::placeholder {

@@ -28,7 +28,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20, transition: { duration: 0.2 } }}
       transition={{ duration: 0.6, ease: luxuryEase }}
-      className="group bg-[var(--color-surface)] hover:bg-[#fcfbf4] transition-colors duration-700"
+      className="group bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover,#fcfbf4)] transition-colors duration-700"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <Link href={`/services/${service.slug}`} className="block">

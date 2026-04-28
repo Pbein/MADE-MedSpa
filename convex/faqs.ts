@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertAdmin } from "./lib/auth";
 
 
 export const listAll = query({
@@ -43,6 +44,7 @@ export const create = mutation({
     sortOrder: v.number(),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const id = await ctx.db.insert("faqs", {
       ...args,
       isActive: true,
@@ -61,6 +63,7 @@ export const update = mutation({
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const { id, ...fields } = args;
     const updates: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(fields)) {
@@ -76,6 +79,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("faqs") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -83,6 +87,7 @@ export const remove = mutation({
 export const toggleActive = mutation({
   args: { id: v.id("faqs") },
   handler: async (ctx, args) => {
+    await assertAdmin(ctx);
     const faq = await ctx.db.get(args.id);
     if (!faq) {
       throw new Error("FAQ not found");

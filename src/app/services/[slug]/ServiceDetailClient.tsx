@@ -36,18 +36,18 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
   // Loading state
   if (service === undefined) {
     return (
-      <main className="bg-[var(--color-surface)] min-h-screen flex items-center justify-center">
+      <div className="bg-[var(--color-surface)] min-h-screen flex items-center justify-center">
         <div className="animate-pulse">
           <span className="label-micro text-[var(--color-on-surface-variant)]">Loading...</span>
         </div>
-      </main>
+      </div>
     );
   }
 
   // Not found state
   if (service === null) {
     return (
-      <main className="bg-[var(--color-surface)] min-h-screen flex items-center justify-center">
+      <div className="bg-[var(--color-surface)] min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="headline-editorial">Service Not Found</h1>
           <p className="body-editorial mt-4 text-[var(--color-on-surface-variant)]">
@@ -57,12 +57,12 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
             View All Services
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main>
+    <div>
       {/* Breadcrumb */}
       <section className="bg-[var(--color-surface)] pt-32 pb-4">
         <div className="mx-auto max-w-7xl px-6">
@@ -261,6 +261,6 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           </div>
         </section>
       )}
-    </main>
+    </div>
   );
 }

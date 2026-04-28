@@ -19,6 +19,51 @@ Before starting, confirm you have:
 - [ ] Access to hosting platform (Vercel, etc.)
 - [ ] Domain `mademedspa.com` DNS access
 - [ ] Client has provided: phone number, booking URL (still pending)
+- [ ] Final list of admin email addresses (Karlyne + marketing team + dev) — see "Pre-cutover security setup" below
+
+---
+
+## Pre-cutover security setup (admin allowlist)
+
+`/admin` is gated by an email allowlist in `ADMIN_EMAILS`. Without this set in
+production, the deploy will fail at config-load time (`parseAdminEmails` throws
+when `NODE_ENV === "production"` and the var is empty). The allowlist must be
+populated in **both** environments before cutover:
+
+### 1. Vercel (Next.js middleware)
+Settings → Environment Variables → add for the **Production** scope:
+
+| Variable | Value |
+|---|---|
+| `ADMIN_EMAILS` | `karlyne@mademedspa.com,marketing@mademedspa.com,philip@…` (comma-separated, no spaces required) |
+
+Trigger a redeploy after setting so the new value is picked up.
+
+### 2. Convex production deployment (mutations)
+The Convex deployment has its own env store — Vercel env vars do **not** reach
+Convex. Set the same value there:
+
+```bash
+npx convex env set ADMIN_EMAILS "karlyne@mademedspa.com,marketing@mademedspa.com,philip@…" --prod
+```
+
+Verify:
+```bash
+npx convex env list --prod | grep ADMIN_EMAILS
+```
+
+### 3. Verification (post-deploy)
+- Sign in to `/admin` as a non-allowlisted Clerk user → expect HTTP 403.
+- Sign in as an allowlisted user → admin pages load, mutations succeed.
+- Public routes (`/`, `/services`, `/contact`) work without auth.
+- Browser devtools → Network: a non-allowlisted signed-in user calling an admin
+  mutation directly should see a Convex error `"Unauthorized: not an admin"`.
+
+### Adding/removing admins post-launch
+Update `ADMIN_EMAILS` in **both** Vercel and Convex (the values must match).
+Removed users keep their Clerk session token until it expires (typically <1 hr)
+but cannot perform new admin mutations once Convex is updated. For immediate
+revocation, also revoke the user's session in the Clerk dashboard.
 
 ---
 
@@ -96,6 +141,7 @@ Set ALL of these on your hosting platform (Vercel dashboard → Settings → Env
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `pk_test_...` | `pk_live_...` (from Step 2) |
 | `CLERK_SECRET_KEY` | `sk_test_...` | `sk_live_...` (from Step 2) |
 | `CLERK_FRONTEND_API_URL` | (may not be set) | From Clerk dashboard |
+| `ADMIN_EMAILS` | (optional locally) | **Required.** Comma-separated admin emails. Also set in Convex (see "Pre-cutover security setup"). |
 | `PABAU_API_KEY` | `98a9j6...` | Same (already prod) |
 | `NEXT_PUBLIC_PABAU_BOOKING_URL` | Current URL | Confirm with client |
 | `NEXT_PUBLIC_SITE_URL` | `https://mademedspa.com` | Same |
@@ -171,6 +217,62 @@ If using Vercel, the push to `main` automatically triggers a production build an
 3. Verify ownership (DNS TXT record or HTML meta tag)
 4. Submit sitemap: `https://mademedspa.com/sitemap.xml`
 5. Request indexing for the homepage
+
+---
+
+## Step 8: Security headers — enforce CSP after soak
+
+The site ships with explicit security headers configured in `next.config.ts`:
+
+- **Strict-Transport-Security** — forces HTTPS for 1 year, includes subdomains, preload-eligible
+- **X-Frame-Options: DENY** — blocks our pages from being framed elsewhere
+- **X-Content-Type-Options: nosniff** — disables MIME sniffing
+- **Referrer-Policy: strict-origin-when-cross-origin**
+- **Permissions-Policy** — disables camera/microphone/geolocation APIs
+- **Content-Security-Policy-Report-Only** — currently in **Report-Only mode** (logs violations to the browser console without blocking)
+
+### 8a. Verify with securityheaders.com
+
+1. After deploying, visit https://securityheaders.com/
+2. Enter `https://mademedspa.com` and scan
+3. Target rating: **A** (Report-Only mode) → **A+** after enforcement
+4. Scan should show all six headers present
+
+### 8b. Soak period — what to watch for (1 week)
+
+While `Content-Security-Policy-Report-Only` is active, open DevTools → Console on production pages and look for `[Report Only] Refused to load…` warnings. Expected sources of violations during soak:
+
+- **Clerk dev preview** — any leftover dev-mode Clerk endpoints (should be gone in prod, but flag if seen)
+- **Pabau widgets** — if the embedded packages widget loads from a host not yet allowlisted (currently `pabau.com` for scripts and `*.pabau.com` for frames)
+- **Third-party scripts added later** — see "Future surfaces" below
+- **Inline event handlers / new external scripts** the marketing team adds via the admin
+
+Log any violations you see. If they're legitimate (i.e., something we want to keep), add the host to the appropriate directive in `next.config.ts`. If they're noise (random extension probes, etc.), ignore.
+
+### 8c. Enforce CSP
+
+After 1 week of clean reports:
+
+1. In `next.config.ts`, change the header key from
+   `Content-Security-Policy-Report-Only` → `Content-Security-Policy`
+2. Re-deploy
+3. Re-scan on https://securityheaders.com/ — rating should bump to **A+**
+4. Smoke-test the booking iframe, admin login (Clerk), Convex realtime, and any contact-form post
+
+If anything breaks, revert the header key to Report-Only, fix the allowlist, and try again.
+
+### 8d. Future surfaces (when to update CSP)
+
+| When you add… | Add to which directive | Hostname(s) |
+|---|---|---|
+| Google Analytics 4 | `script-src`, `connect-src`, `img-src` | `https://*.googletagmanager.com`, `https://*.google-analytics.com`, `https://*.analytics.google.com` |
+| Google Tag Manager | `script-src`, `connect-src` | `https://*.googletagmanager.com` |
+| Meta Pixel / Facebook | `script-src`, `connect-src`, `img-src` | `https://connect.facebook.net`, `https://*.facebook.com` |
+| Hotjar / PostHog / Sentry | `script-src`, `connect-src` | Their respective CDN/ingest hosts |
+| New embedded video host | `frame-src` | e.g. `https://*.youtube.com`, `https://*.vimeo.com` |
+| Stripe (if added later) | `script-src`, `frame-src`, `connect-src` | `https://js.stripe.com`, `https://api.stripe.com` |
+
+Always re-test in Report-Only mode first when adding a new third-party.
 
 ---
 

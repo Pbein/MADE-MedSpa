@@ -1,8 +1,17 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+
+type SyncEntityType = "reviews" | "services" | "products" | "memberships";
+
+interface SyncResultMessage {
+  entity: SyncEntityType;
+  text: string;
+  isError: boolean;
+  at: number;
+}
 
 interface PabauService {
   id: number;
@@ -37,9 +46,88 @@ export default function AdminPabauPage() {
   const [importing, setImporting] = useState<Set<number>>(new Set());
   const [imported, setImported] = useState<Set<number>>(new Set());
 
+  const [syncingEntities, setSyncingEntities] = useState<Set<SyncEntityType>>(new Set());
+  const [cooldowns, setCooldowns] = useState<Record<SyncEntityType, number>>({
+    reviews: 0,
+    services: 0,
+    products: 0,
+    memberships: 0,
+  });
+  const [syncResults, setSyncResults] = useState<SyncResultMessage[]>([]);
+  const [now, setNow] = useState(Date.now());
+  const [leadSources, setLeadSources] = useState<Array<{ id: string | number; name: string; raw?: Record<string, unknown> }> | null>(null);
+  const [leadSourcesError, setLeadSourcesError] = useState<string | null>(null);
+  const [loadingLeadSources, setLoadingLeadSources] = useState(false);
+  const [leadSourcesPath, setLeadSourcesPath] = useState<string | null>(null);
+  const syncEntityAction = useAction(api.pabauSync.syncEntity);
+
+  async function fetchLeadSources() {
+    setLoadingLeadSources(true);
+    setLeadSourcesError(null);
+    try {
+      const res = await fetch("/api/pabau/lead-sources");
+      const data = (await res.json()) as {
+        ok: boolean;
+        leadSources?: Array<{ id: string | number; name: string; raw?: Record<string, unknown> }>;
+        pathTried?: string;
+        error?: string;
+      };
+      if (!data.ok) {
+        setLeadSourcesError(data.error ?? "Failed to fetch lead sources.");
+      } else {
+        setLeadSources(data.leadSources ?? []);
+        setLeadSourcesPath(data.pathTried ?? null);
+      }
+    } catch (err) {
+      setLeadSourcesError(err instanceof Error ? err.message : "Failed to fetch.");
+    } finally {
+      setLoadingLeadSources(false);
+    }
+  }
+
   const convexServices = useQuery(api.services.listAll);
   const createService = useMutation(api.services.create);
   const updateService = useMutation(api.services.update);
+  const health = useQuery(api.pabauApiUsage.syncHealth);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  async function handleManualSync(entity: SyncEntityType) {
+    if (syncingEntities.has(entity)) return;
+    if (cooldowns[entity] > Date.now()) return;
+
+    setSyncingEntities((prev) => new Set(prev).add(entity));
+    try {
+      const result = await syncEntityAction({ entityType: entity });
+      const summary = result.errors.length > 0
+        ? `Synced with ${result.errors.length} warnings — ${result.created} added, ${result.updated} updated, ${result.removed} removed`
+        : `Synced — ${result.created} added, ${result.updated} updated, ${result.removed} removed`;
+      setSyncResults((prev) => [
+        { entity, text: summary, isError: result.errors.length > 0, at: Date.now() },
+        ...prev.slice(0, 4),
+      ]);
+    } catch (err) {
+      setSyncResults((prev) => [
+        {
+          entity,
+          text: err instanceof Error ? err.message : "Sync failed.",
+          isError: true,
+          at: Date.now(),
+        },
+        ...prev.slice(0, 4),
+      ]);
+    } finally {
+      setSyncingEntities((prev) => {
+        const next = new Set(prev);
+        next.delete(entity);
+        return next;
+      });
+      setCooldowns((prev) => ({ ...prev, [entity]: Date.now() + 30_000 }));
+    }
+  }
 
   // Find which Pabau services are already linked in Convex
   const linkedPabauIds = useMemo(() => {
@@ -138,6 +226,217 @@ export default function AdminPabauPage() {
         <p className="text-[15px]" style={{ color: "#6b7280" }}>
           View services from Pabau and import them to the website. Imported services get Pabau&apos;s direct booking URL.
         </p>
+      </div>
+
+      {/* Sync health dashboard */}
+      {health && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <HealthCard
+            label="Services"
+            count={health.services.active}
+            lastSyncedAt={health.services.lastSyncedAt}
+            now={now}
+          />
+          <HealthCard
+            label="Products"
+            count={health.products.active}
+            lastSyncedAt={health.products.lastSyncedAt}
+            now={now}
+          />
+          <HealthCard
+            label="Reviews"
+            count={health.reviews.active}
+            lastSyncedAt={health.reviews.lastSyncedAt}
+            now={now}
+          />
+          <HealthCard
+            label="Webhook events"
+            count={health.webhooks.total}
+            lastSyncedAt={health.webhooks.lastReceivedAt}
+            now={now}
+            timestampLabel="Last received"
+          />
+          <div
+            style={{
+              backgroundColor: "#fff",
+              border: "1px solid #e5e7eb",
+              borderRadius: 8,
+              padding: 14,
+            }}
+          >
+            <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.5 }}>
+              Today&apos;s API usage
+            </div>
+            <div style={{ fontSize: 14, marginTop: 4, color: "#111827" }}>
+              <strong>{health.todayUsage.reads}</strong> reads ·{" "}
+              <strong>{health.todayUsage.writes}</strong> writes
+            </div>
+            <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>
+              Write cap: {health.todayUsage.writes}/{health.todayUsage.writeBudget}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lead source ID lookup */}
+      <div
+        style={{
+          backgroundColor: "#fff",
+          border: "1px solid #e5e7eb",
+          borderRadius: 8,
+          padding: 16,
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: 0 }}>
+            Lead Source IDs
+          </h2>
+          <button
+            onClick={fetchLeadSources}
+            disabled={loadingLeadSources}
+            style={{
+              padding: "6px 14px",
+              fontSize: 13,
+              borderRadius: 6,
+              border: "1px solid #d1d5db",
+              backgroundColor: "#fff",
+              cursor: loadingLeadSources ? "not-allowed" : "pointer",
+              fontWeight: 500,
+            }}
+          >
+            {loadingLeadSources ? "Loading…" : leadSources ? "Refresh" : "Look up IDs"}
+          </button>
+        </div>
+        <p style={{ fontSize: 12, color: "#6b7280", marginTop: 0, marginBottom: 12 }}>
+          Pabau hides the numeric ID for marketing sources in their UI. Click above to fetch the
+          ID for &ldquo;Official Website - MADE&rdquo; and copy it into the
+          <code style={{ marginLeft: 4, marginRight: 4, fontSize: 11, padding: "1px 4px", backgroundColor: "#f3f4f6", borderRadius: 3 }}>
+            PABAU_LEAD_SOURCE_ID
+          </code>
+          env var.
+        </p>
+        {leadSourcesError && (
+          <p style={{ fontSize: 12, color: "#991b1b", margin: 0 }}>{leadSourcesError}</p>
+        )}
+        {leadSources && leadSources.length === 0 && (
+          <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>No lead sources returned.</p>
+        )}
+        {leadSources && leadSourcesPath && (
+          <p style={{ fontSize: 11, color: "#9ca3af", margin: "0 0 8px 0", fontFamily: "monospace" }}>
+            via {leadSourcesPath}
+          </p>
+        )}
+        {leadSources && leadSources.length > 0 && (
+          <table style={{ width: "100%", fontSize: 13, borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                <th style={{ textAlign: "left", padding: "6px 0", fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.4 }}>
+                  ID
+                </th>
+                <th style={{ textAlign: "left", padding: "6px 0", fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.4 }}>
+                  Name
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {leadSources.map((ls) => (
+                <tr key={String(ls.id)} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                  <td style={{ padding: "6px 0", fontFamily: "monospace", fontSize: 13, verticalAlign: "top" }}>
+                    {String(ls.id)}
+                  </td>
+                  <td style={{ padding: "6px 0", color: "#374151", verticalAlign: "top" }}>
+                    {ls.name === "(no name)" && ls.raw ? (
+                      <details>
+                        <summary style={{ cursor: "pointer", color: "#9ca3af", fontSize: 12 }}>
+                          (no name field) — show raw
+                        </summary>
+                        <pre style={{ fontSize: 11, margin: "4px 0 0 0", padding: 8, backgroundColor: "#f3f4f6", borderRadius: 4, maxWidth: 600, overflow: "auto" }}>
+                          {JSON.stringify(ls.raw, null, 2)}
+                        </pre>
+                      </details>
+                    ) : (
+                      ls.name
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Manual sync panel */}
+      <div
+        style={{
+          backgroundColor: "#fff",
+          border: "1px solid #e5e7eb",
+          borderRadius: 8,
+          padding: 16,
+          marginBottom: 24,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: 0 }}>
+            Manual Sync
+          </h2>
+          <span style={{ fontSize: 12, color: "#6b7280" }}>
+            Auto-syncs every 15 min · click to force a sync now
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {(["reviews", "services", "products", "memberships"] as SyncEntityType[]).map((entity) => {
+            const isSyncing = syncingEntities.has(entity);
+            const cooldownRemaining = Math.max(0, Math.ceil((cooldowns[entity] - now) / 1000));
+            const disabled = isSyncing || cooldownRemaining > 0;
+            const label = entity.charAt(0).toUpperCase() + entity.slice(1);
+            return (
+              <button
+                key={entity}
+                onClick={() => handleManualSync(entity)}
+                disabled={disabled}
+                style={{
+                  padding: "6px 14px",
+                  fontSize: 13,
+                  borderRadius: 6,
+                  border: "1px solid #d1d5db",
+                  backgroundColor: disabled ? "#f3f4f6" : "#fff",
+                  color: disabled ? "#9ca3af" : "#111827",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  fontWeight: 500,
+                }}
+              >
+                {isSyncing
+                  ? `Syncing ${label}…`
+                  : cooldownRemaining > 0
+                    ? `${label} (wait ${cooldownRemaining}s)`
+                    : `Sync ${label}`}
+              </button>
+            );
+          })}
+        </div>
+        {syncResults.length > 0 && (
+          <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 4 }}>
+            {syncResults.map((msg, i) => (
+              <div
+                key={`${msg.at}-${i}`}
+                style={{
+                  fontSize: 12,
+                  color: msg.isError ? "#991b1b" : "#166534",
+                }}
+              >
+                <strong style={{ textTransform: "capitalize" }}>{msg.entity}:</strong> {msg.text}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* What to do in Pabau */}
@@ -302,6 +601,56 @@ export default function AdminPabauPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function relativeTime(timestamp: number, now: number): string {
+  if (!timestamp) return "never";
+  const diff = now - timestamp;
+  if (diff < 60_000) return "just now";
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  return `${Math.floor(diff / 86_400_000)}d ago`;
+}
+
+function HealthCard({
+  label,
+  count,
+  lastSyncedAt,
+  now,
+  timestampLabel = "Last synced",
+}: {
+  label: string;
+  count: number;
+  lastSyncedAt: number;
+  now: number;
+  timestampLabel?: string;
+}) {
+  const stale = lastSyncedAt && now - lastSyncedAt > 30 * 60_000;
+  const never = !lastSyncedAt;
+  return (
+    <div
+      style={{
+        backgroundColor: "#fff",
+        border: "1px solid #e5e7eb",
+        borderRadius: 8,
+        padding: 14,
+      }}
+    >
+      <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.5 }}>
+        {label}
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 600, marginTop: 4, color: "#111827" }}>{count}</div>
+      <div
+        style={{
+          fontSize: 11,
+          marginTop: 4,
+          color: never ? "#9ca3af" : stale ? "#b45309" : "#166534",
+        }}
+      >
+        {timestampLabel}: {relativeTime(lastSyncedAt, now)}
+      </div>
     </div>
   );
 }

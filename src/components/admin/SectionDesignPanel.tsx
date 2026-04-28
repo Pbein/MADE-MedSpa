@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DESIGN_PRESETS, getPreset } from "@/lib/designPresets";
+import { getSectionDefaultColors } from "@/lib/sectionDefaults";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,33 +34,36 @@ interface SectionDesignPanelProps {
 
 // ── Preset color mappings ──────────────────────────────────────────────────
 
-function getPresetColors(presetKey: string) {
-  const defaults = { surface: "#f6f1ea", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "espresso-dark") return { surface: "#391e1e", onSurface: "#f6f1ea", secondary: "#d8c0bb" };
-  if (presetKey === "blush-accent") return { surface: "#f2e8e5", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "glaze-neutral") return { surface: "#e8e0d5", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "powder-soft") return { surface: "#efe7df", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "warm-silk") return { surface: "#f6f1ea", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "editorial-wash") return { surface: "#efe7df", onSurface: "#391e1e", secondary: "#84262c" };
-  if (presetKey === "cream-glow") return { surface: "#f3ece4", onSurface: "#391e1e", secondary: "#84262c" };
-  return defaults;
+// When a preset is active, the preset's surface/text combo defines the swatch.
+// When designStyle is "default", we fall back to the SECTION's true defaults
+// from the section-defaults registry, so the picker matches what the live
+// site actually renders (e.g. home/hero defaults to espresso bg + cream text).
+function getPresetColors(
+  presetKey: string,
+  pageKey: string,
+  sectionKey: string
+) {
+  if (presetKey === "espresso") return { surface: "#391E1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "merlot")   return { surface: "#571A1E", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "blush")    return { surface: "#84262C", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "matcha")   return { surface: "#838D60", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "olive")    return { surface: "#413E2A", onSurface: "#F7F6EB", secondary: "#E8E0D5" };
+  if (presetKey === "silk")     return { surface: "#F7F6EB", onSurface: "#391E1E", secondary: "#84262C" };
+  if (presetKey === "glaze")    return { surface: "#E8E0D5", onSurface: "#391E1E", secondary: "#84262C" };
+  return getSectionDefaultColors(pageKey, sectionKey);
 }
 
-// ── Brand Swatches ──────────────────────────────────────────────────────────
+// ── Brand Swatches (MADE Branding spec palette) ─────────────────────────────
 
 const BRAND_SWATCHES = [
-  { color: "#391e1e", label: "Espresso" },
-  { color: "#84262c", label: "Blush" },
-  { color: "#838d60", label: "Matcha" },
-  { color: "#413e2a", label: "Olive" },
-  { color: "#e8e0d5", label: "Glaze" },
-  { color: "#f6f1ea", label: "Silk" },
-  { color: "#efe7df", label: "Powder" },
-  { color: "#d8c0bb", label: "Rose Dust" },
-  { color: "#dccfc4", label: "Petal" },
-  { color: "#c9aa96", label: "Warm Nude" },
-  { color: "#b7a39a", label: "Soft Taupe" },
-  { color: "#ffffff", label: "White" },
+  { color: "#F7F6EB", label: "Silk" },
+  { color: "#E8E0D5", label: "Glaze" },
+  { color: "#84262C", label: "Blush" },
+  { color: "#571A1E", label: "Merlot" },
+  { color: "#391E1E", label: "Espresso" },
+  { color: "#838D60", label: "Matcha" },
+  { color: "#413E2A", label: "Olive" },
+  { color: "#FFFFFF", label: "White" },
 ];
 
 // ── Color Picker ────────────────────────────────────────────────────────────
@@ -107,11 +112,34 @@ function ColorPicker({
 
 // ── Live Preview (iframe) ───────────────────────────────────────────────────
 
-function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: string }) {
+function LivePreview({
+  pagePath,
+  sectionKey,
+  previewOverrides,
+}: {
+  pagePath: string;
+  sectionKey: string;
+  previewOverrides: PreviewOverrides;
+}) {
   if (pagePath === "(global)") return null;
 
-  // Use hash to scroll iframe to the target section
-  const previewUrl = `${pagePath}#section-${sectionKey}`;
+  // Encode current in-memory overrides into a URL query so the page can apply
+  // them inline without saving. This makes the iframe update LIVE as the
+  // operator picks colors / fonts / etc.
+  const params = new URLSearchParams();
+  params.set("_previewSection", sectionKey);
+  if (previewOverrides.designStyle && previewOverrides.designStyle !== "default") {
+    params.set("_previewDesignStyle", previewOverrides.designStyle);
+  }
+  if (previewOverrides.colors && Object.keys(previewOverrides.colors).length > 0) {
+    params.set("_previewColors", JSON.stringify(previewOverrides.colors));
+  }
+  if (previewOverrides.backgroundImage) {
+    params.set("_previewBg", previewOverrides.backgroundImage);
+  }
+
+  const qs = params.toString();
+  const previewUrl = `${pagePath}${qs ? "?" + qs : ""}#section-${sectionKey}`;
 
   return (
     <div style={{ marginTop: "0.75rem" }}>
@@ -148,10 +176,16 @@ function LivePreview({ pagePath, sectionKey }: { pagePath: string; sectionKey: s
         />
       </div>
       <p style={{ fontSize: "0.5625rem", color: "#9ca3af", marginTop: "0.25rem" }}>
-        Shows the actual live page. Save changes and refresh to see updates.
+        Updates as you pick. Click <strong>Save Design</strong> to keep your selections in the admin, then <strong>Save</strong> to publish to the live site.
       </p>
     </div>
   );
+}
+
+interface PreviewOverrides {
+  designStyle?: string;
+  colors?: Record<string, string>;
+  backgroundImage?: string;
 }
 
 // ── Main Component ──────────────────────────────────────────────────────────
@@ -161,8 +195,6 @@ export default function SectionDesignPanel({
 }: SectionDesignPanelProps) {
   const pageSettings = useQuery(api.siteContent.getByKey, { key: `page_settings_${pageKey}` });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -208,10 +240,10 @@ export default function SectionDesignPanel({
     if (presetKey === "default") {
       setColors({});
     } else {
-      const pc = getPresetColors(presetKey);
+      const pc = getPresetColors(presetKey, pageKey, sectionKey);
       setColors({ surface: pc.surface, onSurface: pc.onSurface, secondary: pc.secondary });
     }
-  }, []);
+  }, [pageKey, sectionKey]);
 
   const handleSave = useCallback(async () => {
     setSaving(true);
@@ -234,6 +266,7 @@ export default function SectionDesignPanel({
   }, [pageKey, sectionKey, designStyle, colors, bgImage, pageSettings, upsert]);
 
   const handleReset = useCallback(async () => {
+    const previousBg = bgImage;
     setDesignStyle("default");
     setColors({});
     setBgImage("");
@@ -245,27 +278,32 @@ export default function SectionDesignPanel({
         ? (curSec[sectionKey] as SectionDesignConfig) : {};
       curSec[sectionKey] = { visible: existing.visible !== false };
       await upsert({ key: `page_settings_${pageKey}`, metadata: { ...cur, sections: curSec } });
+      if (previousBg) deleteBlob(previousBg).catch(() => {});
       setSaved(true);
       setPreviewKey((k) => k + 1);
       setTimeout(() => setSaved(false), 2000);
     } finally { setSaving(false); }
-  }, [pageKey, sectionKey, pageSettings, upsert]);
+  }, [pageKey, sectionKey, pageSettings, upsert, bgImage]);
 
   async function handleBgUpload(file: File) {
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const result = await fetch(uploadUrl, { method: "POST", headers: { "Content-Type": file.type }, body: file });
-      const { storageId } = await result.json();
-      const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-      if (!storageUrl) throw new Error("Failed");
-      setBgImage(storageUrl);
+      const ext = (file.name.split(".").pop() || "img").toLowerCase();
+      const url = await uploadBlob(file, {
+        prefix: "section-design",
+        filename: `${pageKey}-${sectionKey}-bg-${Date.now()}.${ext}`,
+      });
+      const previous = bgImage;
+      setBgImage(url);
+      if (previous && previous !== url) {
+        deleteBlob(previous).catch(() => {});
+      }
     } catch { alert("Upload failed."); }
     finally { setUploading(false); }
   }
 
   const hasCustomizations = designStyle !== "default" || Object.keys(colors).length > 0 || bgImage;
-  const presetColors = getPresetColors(designStyle);
+  const presetColors = getPresetColors(designStyle, pageKey, sectionKey);
 
   const updateColor = (key: string) => (val: string | undefined) => {
     setColors((prev) => {
@@ -325,7 +363,7 @@ export default function SectionDesignPanel({
                   <div style={{ width: 48, height: 32, borderRadius: 4, overflow: "hidden", borderWidth: 1, borderStyle: "solid", borderColor: "#e5e7eb", flexShrink: 0 }}>
                     <img src={bgImage} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  <button onClick={() => setBgImage("")} style={{ fontSize: "0.625rem", color: "#dc2626", background: "none", borderWidth: 0, cursor: "pointer", padding: 0 }}>Remove</button>
+                  <button onClick={() => { const prev = bgImage; setBgImage(""); if (prev) deleteBlob(prev).catch(() => {}); }} style={{ fontSize: "0.625rem", color: "#dc2626", background: "none", borderWidth: 0, cursor: "pointer", padding: 0 }}>Remove</button>
                 </>
               ) : (
                 <label style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "0.3rem 0.6rem", borderWidth: 1, borderStyle: "dashed", borderColor: "#d1d5db", borderRadius: "0.25rem", backgroundColor: "#f9fafb", fontSize: "0.625rem", cursor: uploading ? "wait" : "pointer", opacity: uploading ? 0.6 : 1 }}>
@@ -353,7 +391,12 @@ export default function SectionDesignPanel({
           </div>
 
           {/* Live Preview */}
-          <LivePreview key={previewKey} pagePath={pagePath} sectionKey={sectionKey} />
+          <LivePreview
+            key={previewKey}
+            pagePath={pagePath}
+            sectionKey={sectionKey}
+            previewOverrides={{ designStyle, colors, backgroundImage: bgImage }}
+          />
         </div>
       )}
     </div>

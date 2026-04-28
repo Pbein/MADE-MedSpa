@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import type { SectionDefinition } from "@/lib/sectionDefinitions";
 import SectionDesignPanel from "./SectionDesignPanel";
+import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 
@@ -48,26 +49,34 @@ function MediaField({
 }) {
   const content = useQuery(api.siteContent.getByKey, { key: mediaKey });
   const upsert = useMutation(api.siteContent.upsert);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const convex = useConvex();
   const [uploading, setUploading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const currentUrl = content?.imageUrl || defaultUrl;
+  const ACCEPTED_VIDEO_TYPES = ["video/mp4", "video/webm"];
+  const ACCEPTED_IMAGE_PREFIX = "image/";
 
-  async function uploadBlob(blob: Blob): Promise<string> {
-    const url = await generateUploadUrl();
-    const result = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": blob.type },
-      body: blob,
-    });
-    const { storageId } = await result.json();
-    const storageUrl = await convex.query(api.storage.getUrl, { storageId });
-    if (!storageUrl) throw new Error("Failed to resolve URL");
-    return storageUrl;
+  function validateFile(file: File): string | null {
+    if (type === "video") {
+      if (!ACCEPTED_VIDEO_TYPES.includes(file.type)) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload an MP4 or WebM. To convert: HandBrake (free desktop app) or cloudconvert.com.`;
+      }
+      const MAX_VIDEO_BYTES = 25 * 1024 * 1024;
+      if (file.size > MAX_VIDEO_BYTES) {
+        return `Video is ${(file.size / 1024 / 1024).toFixed(1)} MB — please keep hero videos under 25 MB so the page loads quickly. Compress with HandBrake or use a shorter clip.`;
+      }
+    } else {
+      if (!file.type.startsWith(ACCEPTED_IMAGE_PREFIX)) {
+        const ext = file.name.split(".").pop()?.toUpperCase() ?? "this format";
+        return `${ext} files aren't supported. Please upload a JPG, PNG, or WebP image.`;
+      }
+    }
+    return null;
   }
+
+  const currentUrl = content?.imageUrl || defaultUrl;
 
   function extractFirstFrame(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
@@ -100,16 +109,32 @@ function MediaField({
   }
 
   async function handleUpload(file: File) {
+    setUploadError(null);
+    const validationError = validateFile(file);
+    if (validationError) {
+      setUploadError(validationError);
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     setUploading(true);
+    const previousUrl = content?.imageUrl;
     try {
-      const storageUrl = await uploadBlob(file);
-      await upsert({ key: mediaKey, imageUrl: storageUrl });
+      const ext = file.name.split(".").pop() || (type === "video" ? "mp4" : "jpg");
+      const filename = `${mediaKey}-${Date.now()}.${ext}`;
+      const url = await uploadBlob(file, { prefix: "site-content", filename });
+      await upsert({ key: mediaKey, imageUrl: url });
+      if (previousUrl) {
+        deleteBlob(previousUrl).catch(() => {});
+      }
 
       // Auto-generate poster from first frame when uploading hero video
       if (mediaKey === "hero_video" && file.type.startsWith("video/")) {
         try {
           const posterBlob = await extractFirstFrame(file);
-          const posterUrl = await uploadBlob(posterBlob);
+          const posterUrl = await uploadBlob(posterBlob, {
+            prefix: "site-content",
+            filename: `hero_poster-${Date.now()}.webp`,
+          });
           await upsert({ key: "hero_poster", imageUrl: posterUrl });
         } catch {
           // Poster generation is best-effort
@@ -185,6 +210,28 @@ function MediaField({
             />
           </label>
           {saved && <span style={{ fontSize: "0.75rem", color: "#16a34a", marginLeft: 8 }}>Saved!</span>}
+          <div style={{ fontSize: "0.6875rem", color: "#6b7280", marginTop: "0.375rem", lineHeight: 1.4 }}>
+            {type === "video"
+              ? "MP4 or WebM only · max 25 MB · audio is muted on the site so audio in the file is fine but adds size"
+              : "JPG, PNG, or WebP · use Image instead of Video for static backgrounds"}
+          </div>
+          {uploadError && (
+            <div
+              role="alert"
+              style={{
+                fontSize: "0.75rem",
+                color: "#991b1b",
+                backgroundColor: "#fef2f2",
+                border: "1px solid #fecaca",
+                borderRadius: "0.375rem",
+                padding: "0.5rem 0.75rem",
+                marginTop: "0.5rem",
+                lineHeight: 1.5,
+              }}
+            >
+              {uploadError}
+            </div>
+          )}
         </div>
       </div>
     </div>
