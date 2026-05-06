@@ -4,15 +4,21 @@ import type { NextConfig } from "next";
 // After 1 week of soak in production with no breakage, switch the header
 // key below from "Content-Security-Policy-Report-Only" to
 // "Content-Security-Policy" to enforce. See docs/PRODUCTION-DEPLOYMENT.md.
+// Clerk hosts on a few origins:
+//   *.clerk.accounts.dev — dev/preview instance
+//   *.clerk.com          — Clerk's hosted assets + dashboard
+//   clerk.mademedspa.com / accounts.mademedspa.com — production custom domain
+// All three categories must be in script-src + connect-src; the account
+// portal (accounts.*) also needs frame-src for the hosted UI iframe.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://clerk.com https://*.clerk.com https://challenges.cloudflare.com https://pabau.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://clerk.com https://*.clerk.com https://clerk.mademedspa.com https://accounts.mademedspa.com https://challenges.cloudflare.com https://pabau.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https: http:",
   "media-src 'self' blob: data: https://*.convex.cloud https://*.convex.site",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "frame-src 'self' https://partner.pabau.com https://pabau.com https://*.pabau.com https://*.google.com https://maps.google.com",
-  "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud https://*.clerk.accounts.dev https://*.clerk.com https://api.oauth.pabau.com https://crm.pabau.com",
+  "frame-src 'self' https://accounts.mademedspa.com https://partner.pabau.com https://pabau.com https://*.pabau.com https://*.google.com https://maps.google.com",
+  "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud https://*.clerk.accounts.dev https://*.clerk.com https://clerk.mademedspa.com https://accounts.mademedspa.com https://api.oauth.pabau.com https://crm.pabau.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
