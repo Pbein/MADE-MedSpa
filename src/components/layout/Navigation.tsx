@@ -131,13 +131,13 @@ export default function Navigation() {
             <Image
               src={logoUrl ?? (useLightNavText && !isScrolled ? "/images/logo-white.svg" : "/images/logo-espresso.svg")}
               alt={logoAlt}
-              width={120}
-              height={40}
+              width={180}
+              height={60}
               priority
               style={{
-                height: "40px",
+                height: "56px",
                 width: "auto",
-                maxHeight: "40px",
+                maxHeight: "56px",
                 objectFit: "contain",
                 display: "block",
               }}
@@ -307,13 +307,13 @@ export default function Navigation() {
           <Image
             src={logoUrl ?? (useLightNavText && !isScrolled ? "/images/logo-white.svg" : "/images/logo-espresso.svg")}
             alt={logoAlt}
-            width={96}
-            height={32}
+            width={132}
+            height={44}
             priority
             style={{
-              height: "32px",
+              height: "44px",
               width: "auto",
-              maxHeight: "32px",
+              maxHeight: "44px",
               objectFit: "contain",
               display: "block",
             }}
