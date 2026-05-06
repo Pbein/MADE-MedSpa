@@ -228,10 +228,11 @@ export default function BookingPage() {
             }}
           >
             <iframe
+              id="pabau-iframe"
               src={bookingUrl}
               title="Book your appointment with MADE Med Spa"
               loading="lazy"
-              className="block w-full"
+              className="block w-full scroll-mt-24"
               style={{
                 border: 0,
                 minHeight: "900px",

@@ -128,24 +128,20 @@ export default function Navigation() {
             }}
             aria-label={logoAlt}
           >
-            {logoUrl ? (
-              <Image
-                src={logoUrl}
-                alt={logoAlt}
-                width={120}
-                height={40}
-                priority
-                style={{
-                  height: "40px",
-                  width: "auto",
-                  maxHeight: "40px",
-                  objectFit: "contain",
-                  display: "block",
-                }}
-              />
-            ) : (
-              "MADE"
-            )}
+            <Image
+              src={logoUrl ?? (useLightNavText && !isScrolled ? "/images/logo-white.svg" : "/images/logo-espresso.svg")}
+              alt={logoAlt}
+              width={120}
+              height={40}
+              priority
+              style={{
+                height: "40px",
+                width: "auto",
+                maxHeight: "40px",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
           </Link>
 
           <ul className="flex gap-10 items-center">
@@ -283,7 +279,7 @@ export default function Navigation() {
           </ul>
 
           <Link
-            href="/booking"
+            href="/booking#pabau-iframe"
             className="btn-primary"
             style={{ padding: "0.75rem 2rem", fontSize: "0.95rem" }}
           >
@@ -308,24 +304,20 @@ export default function Navigation() {
           }}
           aria-label={logoAlt}
         >
-          {logoUrl ? (
-            <Image
-              src={logoUrl}
-              alt={logoAlt}
-              width={96}
-              height={32}
-              priority
-              style={{
-                height: "32px",
-                width: "auto",
-                maxHeight: "32px",
-                objectFit: "contain",
-                display: "block",
-              }}
-            />
-          ) : (
-            "MADE"
-          )}
+          <Image
+            src={logoUrl ?? (useLightNavText && !isScrolled ? "/images/logo-white.svg" : "/images/logo-espresso.svg")}
+            alt={logoAlt}
+            width={96}
+            height={32}
+            priority
+            style={{
+              height: "32px",
+              width: "auto",
+              maxHeight: "32px",
+              objectFit: "contain",
+              display: "block",
+            }}
+          />
         </Link>
       </div>
 
@@ -493,7 +485,7 @@ export default function Navigation() {
                 }}
               >
                 <Link
-                  href="/booking"
+                  href="/booking#pabau-iframe"
                   onClick={handleMobileNavClick}
                   className="btn-primary w-full text-center"
                 >

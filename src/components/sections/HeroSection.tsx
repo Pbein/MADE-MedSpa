@@ -176,7 +176,7 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
             variants={fadeUpVariants}
             className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
           >
-            <Link href={sectionContent?.cta_href || "/booking"} className="btn-primary">
+            <Link href={sectionContent?.cta_href || "/booking#pabau-iframe"} className="btn-primary">
               {sectionContent?.cta_text || "Book Consultation"}
             </Link>
             <Link

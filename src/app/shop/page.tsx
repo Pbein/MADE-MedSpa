@@ -349,7 +349,7 @@ export default function ShopPage() {
             <p className="accent-quote text-lg md:text-xl mb-5" style={{ color: "var(--color-soft-taupe)" }}>
               Not sure which products are right for you?
             </p>
-            <Link href="/booking" className="link-editorial text-sm">
+            <Link href="/booking#pabau-iframe" className="link-editorial text-sm">
               Book a skincare consultation
             </Link>
           </div>
