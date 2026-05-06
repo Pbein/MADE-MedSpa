@@ -283,7 +283,7 @@ export default function Navigation() {
             className="btn-primary"
             style={{ padding: "0.75rem 2rem", fontSize: "0.95rem" }}
           >
-            Book Appointment
+            Book Consultation
           </Link>
         </div>
       </nav>

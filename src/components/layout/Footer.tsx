@@ -42,7 +42,7 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
 };
 
 const menuLinks = [
-  { href: "/booking#pabau-iframe", label: "Book Now" },
+  { href: "/booking#pabau-iframe", label: "Book Consultation" },
   { href: "/services", label: "Services" },
   { href: "/membership", label: "Membership" },
   { href: "/shop", label: "Shop" },
