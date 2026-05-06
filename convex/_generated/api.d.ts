@@ -20,6 +20,7 @@ import type * as pabauReviews from "../pabauReviews.js";
 import type * as pabauSync from "../pabauSync.js";
 import type * as pabauWebhookEvents from "../pabauWebhookEvents.js";
 import type * as seed from "../seed.js";
+import type * as serviceCategories from "../serviceCategories.js";
 import type * as services from "../services.js";
 import type * as shopProducts from "../shopProducts.js";
 import type * as siteContent from "../siteContent.js";
@@ -46,6 +47,7 @@ declare const fullApi: ApiFromModules<{
   pabauSync: typeof pabauSync;
   pabauWebhookEvents: typeof pabauWebhookEvents;
   seed: typeof seed;
+  serviceCategories: typeof serviceCategories;
   services: typeof services;
   shopProducts: typeof shopProducts;
   siteContent: typeof siteContent;

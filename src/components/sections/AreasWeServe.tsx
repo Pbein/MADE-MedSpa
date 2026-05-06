@@ -71,7 +71,7 @@ export default function AreasWeServe({
             {eyebrow}
           </p>
           <h2
-            className="font-headline italic text-3xl md:text-4xl lg:text-5xl mb-5"
+            className="headline-section text-2xl md:text-3xl lg:text-4xl mb-5"
             style={{ color: "var(--color-primary)" }}
           >
             {headline}

@@ -167,7 +167,8 @@ body {
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.75;
+  line-height: 1.8;
+  letter-spacing: 0;
   min-height: 100dvh;
   overflow-x: hidden;
 }
@@ -184,13 +185,34 @@ body::before {
   background-size: 200px 200px;
 }
 
-/* --- Headings: Editorial serif --- */
-h1, h2, h3, h4, h5, h6 {
+/* --- Headings: brand spec ---
+   H1  → Playfair Display, regular/medium, sentence case, NOT italic
+   H2/H3 → Futura (Jost substitute), ALL CAPS, letter-spacing 0.4em
+   Italics live ONLY on .accent-quote (testimonials/captions). */
+h1 {
   font-family: var(--font-headline);
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  color: var(--color-primary);
+}
+h2, h3 {
+  font-family: var(--font-label);
+  font-weight: 500;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  line-height: 1.2;
+  color: var(--color-primary);
+}
+h4, h5, h6 {
+  font-family: var(--font-label);
+  font-weight: 500;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  line-height: 1.2;
   color: var(--color-primary);
 }
 
@@ -223,29 +245,46 @@ a {
   line-height: 1;
 }
 
-/* Headline display — hero-scale */
+/* H1 — Hero & Page Titles
+   Playfair Display, regular/medium, sentence case, no italic. */
 .headline-editorial {
   font-family: var(--font-headline);
-  font-style: italic;
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 
-/* Section headline */
+/* H2 / H3 — Section Headers & Labels
+   Futura (Jost substitute), ALL CAPS, letter-spacing 0.4em. */
 .headline-section {
-  font-family: var(--font-headline);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.1;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  line-height: 1.2;
 }
 
-/* Body text */
+/* Body text — Montserrat, line-height 1.8, no letter-spacing. */
 .body-editorial {
   font-family: var(--font-body);
   font-size: 1rem;
+  font-weight: 400;
   line-height: 1.8;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
+}
+
+/* Accent / Captions — the ONLY place italics belong.
+   Use for testimonial quotes, pull-quotes, photo captions. */
+.accent-quote {
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.4;
 }
 
 /* ============================================
@@ -260,10 +299,12 @@ a {
   background-color: var(--btn-bg, var(--color-espresso));
   color: var(--btn-text, var(--color-on-primary));
   border: none;
-  font-family: var(--font-headline);
-  font-style: italic;
-  font-size: 1.125rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
   cursor: pointer;
   transition: background-color var(--duration-hover) var(--ease-editorial);
 }
@@ -287,10 +328,12 @@ a {
   background-color: transparent;
   color: var(--color-primary);
   border: 1px solid var(--color-outline-variant);
-  font-family: var(--font-headline);
-  font-style: italic;
-  font-size: 1.125rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
   cursor: pointer;
   transition: all var(--duration-hover) var(--ease-editorial);
 }
@@ -309,10 +352,12 @@ a {
   background-color: var(--btn-bg, var(--color-surface));
   color: var(--btn-text, var(--color-primary));
   border: none;
-  font-family: var(--font-headline);
-  font-style: italic;
-  font-size: 1.125rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
   cursor: pointer;
   transition: background-color var(--duration-hover) var(--ease-editorial);
 }
@@ -324,10 +369,12 @@ a {
 /* Underline link — editorial secondary action */
 .link-editorial {
   display: inline-block;
-  font-family: var(--font-headline);
-  font-style: italic;
-  font-size: 1.125rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
   color: var(--color-primary);
   border-bottom: 1px solid var(--divider-color, var(--color-secondary));
   padding-bottom: 0.5rem;
@@ -492,4 +539,65 @@ a:focus-visible {
   font-weight: 450;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Typography Spec Samples
+   These classes opt out of the admin-content
+   system-font reset so the spec page can render
+   real brand fonts for reference. They use
+   !important to defeat .admin-content *.
+   ============================================ */
+
+.spec-h1 {
+  font-family: var(--font-headline) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.05 !important;
+}
+
+.spec-h2 {
+  font-family: var(--font-label) !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4em !important;
+  line-height: 1.2 !important;
+}
+
+.spec-body {
+  font-family: var(--font-body) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.8 !important;
+}
+
+.spec-accent {
+  font-family: var(--font-headline) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.spec-label {
+  font-family: var(--font-label) !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.25em !important;
+  line-height: 1 !important;
+}
+
+/* Print: hide admin chrome, fit the spec to the page. */
+@media print {
+  aside, header { display: none !important; }
+  .admin-content { padding: 0 !important; }
+  .spec-no-print { display: none !important; }
+  .spec-page { page-break-after: always; }
 }

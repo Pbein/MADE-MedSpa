@@ -39,7 +39,7 @@ export default function Accordion({ items }: AccordionProps) {
               style={{ transition: "color 400ms ease" }}
             >
               <span
-                className="font-headline italic text-xl"
+                className="font-headline text-xl"
                 style={{ color: "var(--color-primary)" }}
               >
                 {item.question}

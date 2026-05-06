@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADE Med Spa &mdash; Launch Readiness &amp; Handoff</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --espresso: #3C2415;
+      --blush: #D4A59A;
+      --matcha: #8A9A6E;
+      --cream: #FAF6F1;
+      --warm-gray: #7A706A;
+      --light-border: #E8E0D8;
+      --soft-bg: #FFFFFF;
+      --amber: #C17B5A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      color: var(--espresso);
+      background: var(--cream);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ---------- Cover ---------- */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(160deg, var(--cream) 0%, #F3EDE6 100%);
+      page-break-after: always;
+    }
+
+    .cover-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .cover-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 3rem;
+    }
+
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--blush);
+      margin: 0 auto 3rem;
+    }
+
+    .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--espresso);
+      margin-bottom: 0.5rem;
+    }
+
+    .cover-subtitle {
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      max-width: 520px;
+      margin: 0 auto 4rem;
+    }
+
+    .cover-date {
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--light-border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+    }
+
+    /* ---------- Content ---------- */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem;
+      page-break-after: always;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    h2 + .section-line {
+      width: 40px;
+      height: 2px;
+      background: var(--blush);
+      margin-bottom: 1.75rem;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .lede {
+      font-size: 0.95rem;
+      color: var(--warm-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight {
+      background: var(--soft-bg);
+      border-left: 3px solid var(--blush);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong { font-weight: 500; }
+    .highlight.matcha { border-left-color: var(--matcha); }
+    .highlight.amber { border-left-color: var(--amber); }
+
+    /* Cards */
+    .card {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    .card-body {
+      font-size: 0.88rem;
+      color: var(--warm-gray);
+      line-height: 1.6;
+    }
+
+    .card-body p { margin-bottom: 0.5rem; }
+    .card-body p:last-child { margin-bottom: 0; }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .badge.done { background: rgba(138,154,110,0.2); color: #5A6B42; }
+    .badge.decision { background: rgba(212,165,154,0.25); color: #8B4D3E; }
+    .badge.post { background: rgba(60,36,21,0.08); color: var(--warm-gray); }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .checklist li {
+      padding: 0.55rem 0 0.55rem 2rem;
+      position: relative;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--light-border);
+    }
+
+    .checklist li:last-child { border-bottom: none; }
+
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--blush);
+      border-radius: 3px;
+      background: var(--cream);
+    }
+
+    .checklist li .meta {
+      font-size: 0.78rem;
+      color: var(--warm-gray);
+      margin-top: 0.15rem;
+      display: block;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--light-border);
+      font-weight: 500;
+      color: var(--warm-gray);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-border);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* Numbered steps */
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.5rem 0 0.75rem 2.5rem;
+      font-size: 0.9rem;
+      color: var(--espresso);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.4rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      background: var(--blush);
+      color: var(--soft-bg);
+      font-size: 0.78rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps li .step-meta {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      margin-top: 0.2rem;
+    }
+
+    /* Pricing block */
+    .price-card {
+      background: linear-gradient(160deg, var(--soft-bg) 0%, #FBF7F2 100%);
+      border: 1px solid var(--light-border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin: 1rem 0;
+    }
+
+    .price-card .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .price-card .amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: 0.4rem;
+    }
+
+    .price-card .amount small {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--warm-gray);
+      letter-spacing: 0;
+    }
+
+    .price-card .desc {
+      font-size: 0.85rem;
+      color: var(--warm-gray);
+      line-height: 1.6;
+    }
+
+    /* Sign block */
+    .sign-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .sign-line {
+      border-top: 1px solid var(--espresso);
+      padding-top: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--warm-gray);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    .doc-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--warm-gray);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--light-border);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .doc-footer strong {
+      font-weight: 500;
+      color: var(--espresso);
+    }
+
+    @media print {
+      body { background: white; font-size: 13px; }
+      .cover { min-height: auto; padding: 4in 2rem 3in; }
+      .page { padding: 2rem 0; }
+      .card, .price-card { break-inside: avoid; }
+    }
+
+    @media (max-width: 600px) {
+      .cover-logo { font-size: 2.5rem; }
+      .page { padding: 2.5rem 1.5rem; }
+      .sign-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== COVER ========== -->
+  <div class="cover">
+    <div class="cover-logo">MADE</div>
+    <div class="cover-tagline">Med Spa</div>
+    <div class="cover-divider"></div>
+    <div class="cover-title">Launch Readiness &amp; Handoff</div>
+    <div class="cover-subtitle">
+      A walkthrough of where the site is today, the decisions in front of us,
+      and the plan for what happens after May&nbsp;1.
+    </div>
+    <div class="cover-date">April 29, 2026 &bull; Pre-Launch Meeting</div>
+    <div class="cover-badge">For Karlyne &bull; Prepared by Philip</div>
+  </div>
+
+  <!-- ========== SECTION 1: WHERE WE ARE ========== -->
+  <div class="page">
+    <h2>Where We Are</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      The site is built, deployed, and ready for May&nbsp;1. The structure is solid,
+      the design is set, and the admin panel gives you control over the content that
+      changes day-to-day. This meeting is about closing the loop on the few things
+      that still need your input &mdash; and getting clear on what happens after launch.
+    </p>
+
+    <h3>Built &amp; Launching May 1</h3>
+    <ul class="checklist">
+      <li>Homepage with hero video, services, memberships, testimonials, FAQ
+        <span class="meta">Editable through the admin panel</span></li>
+      <li>About page with your bio, story, and values
+        <span class="meta">Headshot live, bio loaded, brand voice applied</span></li>
+      <li>Services page synced from Pabau (Aerolase NeoHair) plus admin-editable services
+        <span class="meta">Pricing &amp; descriptions update from Pabau or admin panel</span></li>
+      <li>Membership page with the four tiers (In The Making, Well Made, Made For You, The Reserve)</li>
+      <li>Shop page wired to admin uploads
+        <span class="meta">Products, photos, and pricing managed by you</span></li>
+      <li>Booking page integrated with Pabau</li>
+      <li>Admin panel at <strong>mademedspa.com/admin</strong> with role-based access</li>
+      <li>Mobile-responsive across every page</li>
+      <li>Hosting, CDN, and SSL configured and stable</li>
+    </ul>
+
+    <div class="highlight matcha">
+      <strong>Bottom line:</strong> the site is in good shape. The questions for tonight
+      aren&rsquo;t &ldquo;is it ready?&rdquo; &mdash; they&rsquo;re &ldquo;which polish items
+      do we ship before May&nbsp;1, and what&rsquo;s the plan for the rest?&rdquo;
+    </div>
+  </div>
+
+  <!-- ========== SECTION 2: WALKTHROUGH ========== -->
+  <div class="page">
+    <h2>Page-by-Page Walkthrough</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      We&rsquo;ll go through each page together. Note any changes you want, and
+      we&rsquo;ll sort each one into <em>before launch</em> or <em>post-launch</em>
+      based on scope.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>What to look at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Home</strong></td>
+          <td>Hero video, headline copy, sections order, FAQ accuracy</td>
+        </tr>
+        <tr>
+          <td><strong>About</strong></td>
+          <td>Bio, headshot, brand voice, values section</td>
+        </tr>
+        <tr>
+          <td><strong>Services</strong></td>
+          <td>Which services show, pricing, descriptions, images</td>
+        </tr>
+        <tr>
+          <td><strong>Membership</strong></td>
+          <td>Four tiers, pricing, &ldquo;Most Popular&rdquo; badge, button destinations</td>
+        </tr>
+        <tr>
+          <td><strong>Shop</strong></td>
+          <td>Products, image quality, descriptions, pricing</td>
+        </tr>
+        <tr>
+          <td><strong>Booking</strong></td>
+          <td>How the Pabau widget feels, services list, flow</td>
+        </tr>
+        <tr>
+          <td><strong>Footer</strong></td>
+          <td>Address, phone, hours, social links, legal pages</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>Ground rule for tonight:</strong> any change request gets noted, not
+      promised. We sort scope after the walkthrough so neither of us commits to something
+      that breaks the May&nbsp;1 launch.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: OPEN DECISIONS ========== -->
+  <div class="page">
+    <h2>Open Decisions <span class="badge decision">Need Your Input</span></h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      Three things that need a call from you before we lock the launch.
+    </p>
+
+    <div class="card">
+      <div class="card-title">1. Booking experience</div>
+      <div class="card-body">
+        <p>
+          The Pabau booking widget is functional and secure, but it has its own look
+          that doesn&rsquo;t fully match the site. For May&nbsp;1, the recommendation is
+          to ship as-is &mdash; appointments work, payments work, calendars sync.
+        </p>
+        <p>
+          A custom booking flow (services list with imagery → tap to open Pabau on the
+          right service) is the &ldquo;barbershop-style&rdquo; experience. It&rsquo;s a
+          real build, not a polish job. Best handled as a Phase&nbsp;2 project after launch.
+        </p>
+        <p><strong>Decision:</strong> ship Pabau widget as-is for May&nbsp;1?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Shop platform</div>
+      <div class="card-body">
+        <p>
+          Pabau doesn&rsquo;t handle full e-commerce checkout the way we&rsquo;d hoped.
+          Right now the shop page is &ldquo;inquire&rdquo;-style &mdash; clients see the
+          product and reach out. That works for May&nbsp;1.
+        </p>
+        <p>
+          To accept card payments online for products, the realistic path is Shopify
+          (or Shopify Lite at $9/mo) integrated with the existing site. That&rsquo;s a
+          separate build with its own scope and cost.
+        </p>
+        <p><strong>Decision:</strong> launch with inquire-style shop, revisit Shopify integration later?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Hero &amp; section background images</div>
+      <div class="card-body">
+        <p>
+          On <em>/services</em> and <em>/about</em>, the background images load over the
+          network from storage &mdash; you may notice a brief flash before they settle.
+          That&rsquo;s because they&rsquo;re admin-swappable.
+        </p>
+        <p>
+          If you&rsquo;re happy with the current backgrounds, we can &ldquo;bake them in&rdquo;
+          to the site code. Trade-off: instant load, no flash, lower bandwidth bill &mdash;
+          but you can&rsquo;t swap them yourself anymore (we&rsquo;d swap on request).
+        </p>
+        <p><strong>Decision:</strong> bake in the current backgrounds, or keep them admin-swappable?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 4: ACCOUNT OWNERSHIP ========== -->
+  <div class="page">
+    <h2>Account &amp; Ownership Transfer</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      The goal: you own everything. The website, the code, the hosting, the database,
+      the domain. The site keeps running whether or not I&rsquo;m involved day-to-day.
+    </p>
+
+    <h3>What needs to be in your name</h3>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Purpose</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>GoDaddy</strong></td>
+          <td>Domain (mademedspa.com)</td>
+          <td>Already yours</td>
+        </tr>
+        <tr>
+          <td><strong>Vercel Pro</strong></td>
+          <td>Site hosting &amp; CDN</td>
+          <td>$20/mo</td>
+        </tr>
+        <tr>
+          <td><strong>Convex</strong></td>
+          <td>Database (services, content, admin)</td>
+          <td>Free tier (target)</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub</strong></td>
+          <td>The website&rsquo;s code</td>
+          <td>Free</td>
+        </tr>
+        <tr>
+          <td><strong>Pabau</strong></td>
+          <td>Booking &amp; EMR</td>
+          <td>Already yours</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Transfer plan (week of May 5)</h3>
+    <ol class="steps">
+      <li>You create accounts: Vercel, Convex, GitHub
+        <span class="step-meta">~15 min &mdash; we can do it together on a screen-share</span></li>
+      <li>I transfer the GitHub repo to your account
+        <span class="step-meta">Code becomes yours; I keep collaborator access for support</span></li>
+      <li>I re-deploy the site under your Vercel project
+        <span class="step-meta">No downtime &mdash; DNS stays pointed at mademedspa.com</span></li>
+      <li>I migrate the Convex database to your deployment
+        <span class="step-meta">All admin data, services, content moves over</span></li>
+      <li>You add billing methods to Vercel
+        <span class="step-meta">Cancels my Vercel/Convex spend</span></li>
+      <li>We confirm the site is fully operational under your accounts
+        <span class="step-meta">Smoke test: edit a service, upload an image, place a test booking</span></li>
+    </ol>
+
+    <div class="highlight amber">
+      <strong>Why we wait until after launch:</strong> transferring infrastructure 48 hours
+      before going live is risky. We let the site run stable for a few days, then move
+      ownership while traffic is light and any hiccup is recoverable.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 5: ADMIN GUIDE ========== -->
+  <div class="page">
+    <h2>Getting the Most Out of the Site</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      The site looks great when it&rsquo;s fed great content. Here are the specs that
+      keep everything looking sharp as you upload.
+    </p>
+
+    <h3>Image specs by section</h3>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Where</th>
+          <th>Recommended size</th>
+          <th>Format</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Service photos</td>
+          <td>1600 &times; 1000 px</td>
+          <td>JPG / WebP</td>
+        </tr>
+        <tr>
+          <td>Shop product photos</td>
+          <td>1200 &times; 1200 px (square)</td>
+          <td>JPG / PNG, neutral background</td>
+        </tr>
+        <tr>
+          <td>Team headshots</td>
+          <td>900 &times; 1200 px (vertical)</td>
+          <td>JPG, professional lighting</td>
+        </tr>
+        <tr>
+          <td>Testimonial avatars</td>
+          <td>400 &times; 400 px (square)</td>
+          <td>JPG / PNG</td>
+        </tr>
+        <tr>
+          <td>Section backgrounds</td>
+          <td>2400 &times; 1600 px</td>
+          <td>JPG, under 500 KB</td>
+        </tr>
+        <tr>
+          <td>Social share image (OG)</td>
+          <td>1200 &times; 630 px (exact)</td>
+          <td>JPG / PNG</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Content rules of thumb</h3>
+    <ul class="checklist">
+      <li>Keep shop product descriptions under ~250 characters
+        <span class="meta">Longer descriptions stretch the cards out of proportion</span></li>
+      <li>Use consistent product photo backgrounds (all white, or all neutral)
+        <span class="meta">Mixed backgrounds make the shop look uneven</span></li>
+      <li>Compress photos before uploading &mdash; use TinyPNG or Squoosh
+        <span class="meta">Big files slow page load and chew bandwidth</span></li>
+      <li>Use real client first names on testimonials when you have permission
+        <span class="meta">&ldquo;Sarah M.&rdquo; outperforms &ldquo;Verified Client&rdquo;</span></li>
+      <li>Update Pabau as your source of truth, then sync to the site
+        <span class="meta">Avoids the data living in two places that disagree</span></li>
+    </ul>
+
+    <div class="highlight matcha">
+      <strong>Need a refresher later?</strong> The admin panel has tooltips on each
+      upload field. We&rsquo;ll also do a 60-minute training session post-launch where
+      you walk through every admin page while I&rsquo;m on call.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 6: LAUNCH SCOPE ========== -->
+  <div class="page">
+    <h2>What Ships May 1 (and What Doesn&rsquo;t)</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      Clear lines on what&rsquo;s in the launch package vs. what becomes post-launch work.
+    </p>
+
+    <h3>In the launch (the $1,500 build) <span class="badge done">Done</span></h3>
+    <ul class="checklist">
+      <li>Full site build: Home, About, Services, Membership, Shop, Booking, Contact</li>
+      <li>Admin panel for content management</li>
+      <li>Pabau integration (services sync, booking widget)</li>
+      <li>Mobile responsiveness across all pages</li>
+      <li>Hosting, deployment, SSL, performance setup</li>
+      <li>Brand styling: typography, palette, imagery</li>
+      <li>Initial content load (services, memberships, FAQ, testimonials)</li>
+    </ul>
+
+    <h3>Not in the launch <span class="badge post">Post-Launch</span></h3>
+    <ul class="checklist">
+      <li>Custom booking experience (services-list → Pabau deeplinks)
+        <span class="meta">A real second build, not a polish job</span></li>
+      <li>Shopify integration for product checkout
+        <span class="meta">Separate platform, separate scope</span></li>
+      <li>Legal pages (Privacy, Terms, HIPAA disclosures)
+        <span class="meta">Best handled by a healthcare attorney &mdash; we publish what you provide</span></li>
+      <li>Google Business Profile setup &amp; SEO optimization
+        <span class="meta">Marketing layer, not core build</span></li>
+      <li>Content rewrites once you have professional photography
+        <span class="meta">Image swaps are fast; full content reworks are scope</span></li>
+      <li>Ongoing image swaps, copy edits, new sections
+        <span class="meta">Anything you can&rsquo;t do yourself in admin</span></li>
+    </ul>
+  </div>
+
+  <!-- ========== SECTION 7: POST-LAUNCH RATES ========== -->
+  <div class="page">
+    <h2>After May 1 &mdash; How We Work Together</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      I want this site to keep being great for you long after launch. Here&rsquo;s how
+      ongoing work is structured so we&rsquo;re both clear and there are no surprises.
+    </p>
+
+    <h3>Two ways forward</h3>
+
+    <div class="price-card">
+      <div class="label">Option A &mdash; Ad-Hoc Hourly</div>
+      <div class="amount">$XX <small>/ hour</small></div>
+      <div class="desc">
+        For one-off requests, small fixes, or new features. We agree on scope and an
+        estimate before any work starts. You only pay for what you ask for.
+      </div>
+    </div>
+
+    <div class="price-card">
+      <div class="label">Option B &mdash; Monthly Maintenance Retainer</div>
+      <div class="amount">$XXX <small>/ month</small></div>
+      <div class="desc">
+        Includes a set number of hours each month for content updates, small tweaks,
+        bug fixes, and being on-call if something breaks. Anything beyond the included
+        hours falls back to the hourly rate. Cancel anytime.
+      </div>
+    </div>
+
+    <h3>What counts as post-launch work</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>How it&rsquo;s handled</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>New page or section</td>
+          <td>Hourly &mdash; estimate first</td>
+        </tr>
+        <tr>
+          <td>New feature (e.g. Shopify integration)</td>
+          <td>Project quote, agreed up front</td>
+        </tr>
+        <tr>
+          <td>Bug fix or site outage</td>
+          <td>Retainer (priority) or hourly</td>
+        </tr>
+        <tr>
+          <td>Image swap, copy edit, color tweak</td>
+          <td>Retainer or hourly &mdash; usually quick</td>
+        </tr>
+        <tr>
+          <td>Things you can do in admin</td>
+          <td>Free &mdash; that&rsquo;s what admin is for</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>The rates above are placeholders</strong> &mdash; we&rsquo;ll lock the
+      numbers tonight together. The structure is what matters: clear scope, no surprise
+      bills, and you stay in control of what gets built.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 8: NEXT 7 DAYS ========== -->
+  <div class="page">
+    <h2>The Next 7 Days</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      A clear timeline so we both know what&rsquo;s happening when.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>When</th>
+          <th>What</th>
+          <th>Who</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tonight</strong></td>
+          <td>Walkthrough, decisions on open items, agree on post-launch terms</td>
+          <td>Both</td>
+        </tr>
+        <tr>
+          <td><strong>Wed Apr 30</strong></td>
+          <td>Apply walkthrough decisions: shop card polish, image bake-in (if chosen), final QA</td>
+          <td>Philip</td>
+        </tr>
+        <tr>
+          <td><strong>Wed Apr 30</strong></td>
+          <td>Send any updated photos, copy edits, or service tweaks</td>
+          <td>Karlyne</td>
+        </tr>
+        <tr>
+          <td><strong>Thu May 1</strong></td>
+          <td>Launch &mdash; site goes public, share announcement</td>
+          <td>Both</td>
+        </tr>
+        <tr>
+          <td><strong>Fri May 2 &ndash; Sun May 4</strong></td>
+          <td>Soak period &mdash; monitor for issues, no big changes</td>
+          <td>Philip on-call</td>
+        </tr>
+        <tr>
+          <td><strong>Mon May 5 &ndash; Fri May 9</strong></td>
+          <td>Account ownership transfer (Vercel, Convex, GitHub)</td>
+          <td>Both, screen-share</td>
+        </tr>
+        <tr>
+          <td><strong>Week of May 12</strong></td>
+          <td>60-min admin training session, hand off documentation</td>
+          <td>Both</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight matcha">
+      <strong>After May 12,</strong> the site is fully yours: code, hosting, database,
+      admin. Day-to-day content is in your hands. For anything beyond admin, we work
+      together under the hourly or retainer structure on the previous page.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 9: SIGN OFF ========== -->
+  <div class="page">
+    <h2>Aligned and Ready</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      A short sign-off to capture what we agreed to tonight. Not a contract &mdash;
+      just a shared understanding so neither of us has to remember it from memory.
+    </p>
+
+    <h3>Tonight we agreed</h3>
+    <ul class="checklist">
+      <li>Site launches Thursday, May&nbsp;1, 2026</li>
+      <li>Pabau booking widget ships as-is for launch
+        <span class="meta">Custom booking experience: post-launch, hourly</span></li>
+      <li>Shop launches as inquire-style; Shopify revisited later</li>
+      <li>Hero/section backgrounds: ___________________
+        <span class="meta">(baked in / kept admin-swappable)</span></li>
+      <li>Account ownership transfer: week of May&nbsp;5</li>
+      <li>Post-launch rate: $___ / hour or $___ / month retainer</li>
+      <li>Training session: scheduled for week of May&nbsp;12</li>
+    </ul>
+
+    <h3>Outstanding items from Karlyne</h3>
+    <ul class="checklist">
+      <li>______________________________________________</li>
+      <li>______________________________________________</li>
+      <li>______________________________________________</li>
+    </ul>
+
+    <div class="sign-row">
+      <div>
+        <div style="height: 3rem;"></div>
+        <div class="sign-line">Karlyne &mdash; MADE Med Spa</div>
+      </div>
+      <div>
+        <div style="height: 3rem;"></div>
+        <div class="sign-line">Philip &mdash; Developer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="doc-footer">
+    <p><strong>MADE Med Spa</strong> &mdash; Launch Readiness &amp; Handoff</p>
+    <p>April 29, 2026 &bull; Pre-Launch Meeting</p>
+    <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--blush);">&#9672; &nbsp; Custom-built with care &nbsp; &#9672;</p>
+  </div>
+
+</body>
+</html>

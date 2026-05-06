@@ -94,7 +94,7 @@ export default function EditorialBreak({
 
             {/* Quote */}
             <p
-              className="font-headline italic font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-snug md:leading-[1.3]"
+              className="accent-quote font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-snug md:leading-[1.3]"
               style={{
                 color: isDark
                   ? "var(--color-on-surface, #f7f6eb)"

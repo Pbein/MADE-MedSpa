@@ -166,7 +166,7 @@ export default function BeforeAfterPage() {
                       )}
                     </div>
                     <h3
-                      className="font-headline italic text-xl md:text-2xl"
+                      className="headline-section text-base md:text-lg"
                       style={{ color: "var(--color-primary)" }}
                     >
                       {c.title}

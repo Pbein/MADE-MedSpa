@@ -90,7 +90,7 @@ export default function Footer() {
           <div className="mb-20 md:mb-24">
             <Link
               href="/"
-              className="font-headline italic text-4xl md:text-5xl tracking-tight transition-opacity duration-500 hover:opacity-80"
+              className="font-headline text-4xl md:text-5xl tracking-tight transition-opacity duration-500 hover:opacity-80"
               style={{
                 color: SILK,
                 display: "inline-flex",
@@ -140,7 +140,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="font-headline italic text-lg transition-opacity duration-500 hover:opacity-100"
+                      className="font-headline text-lg transition-opacity duration-500 hover:opacity-100"
                       style={{ color: SILK, opacity: 0.7 }}
                     >
                       {link.label}
@@ -161,7 +161,7 @@ export default function Footer() {
               <div className="space-y-4">
                 <a
                   href={info.phoneHref}
-                  className="font-headline italic text-lg block transition-opacity duration-500 hover:opacity-100"
+                  className="font-headline text-lg block transition-opacity duration-500 hover:opacity-100"
                   style={{ color: SILK, opacity: 0.7 }}
                 >
                   {info.phone}

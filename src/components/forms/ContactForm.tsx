@@ -169,7 +169,7 @@ export default function ContactForm() {
         </div>
 
         <h3
-          className="font-headline italic text-3xl md:text-4xl mb-4"
+          className="headline-section text-2xl md:text-3xl mb-4"
           style={{ color: "var(--color-primary)" }}
         >
           Thank You

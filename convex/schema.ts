@@ -22,6 +22,8 @@ export default defineSchema({
     shortDescription: v.string(),
     fullDescription: v.string(),
     category: v.string(),
+    // When true, Pabau sync will not overwrite the admin-chosen category.
+    categoryLocked: v.optional(v.boolean()),
     duration: v.optional(v.string()),
     priceRange: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
@@ -43,6 +45,22 @@ export default defineSchema({
     .index("by_slug", ["slug"])
     .index("by_category", ["category"])
     .index("by_pabauServiceId", ["pabauServiceId"]),
+
+  // --- Service Categories (admin-managed) ---
+  // Drives the /services filter and the admin services dropdown. Each category
+  // owns a list of pabauKeywords used by inferCategory() at sync time, so adding
+  // a new category + keyword in admin makes Pabau services auto-bucket on the
+  // next sync without a code change.
+  serviceCategories: defineTable({
+    name: v.string(),                     // Display label, e.g. "Injectables"
+    slug: v.string(),                     // Stable id used for service.category match
+    sortOrder: v.number(),
+    isActive: v.boolean(),
+    pabauKeywords: v.array(v.string()),   // lowercase substrings; first match wins by sortOrder
+    isDefault: v.optional(v.boolean()),   // fallback bucket when no keyword matches
+  })
+    .index("by_slug", ["slug"])
+    .index("by_active_sortOrder", ["isActive", "sortOrder"]),
 
   // --- Contact / Lead Capture ---
   contactSubmissions: defineTable({

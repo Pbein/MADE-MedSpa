@@ -207,7 +207,7 @@ export default function BookingPage() {
               Book Now
             </p>
             <h2
-              className="font-headline italic text-3xl md:text-4xl lg:text-5xl"
+              className="headline-section text-2xl md:text-3xl lg:text-4xl"
               style={{ color: "var(--color-primary)" }}
             >
               Choose your service & time.
@@ -343,7 +343,7 @@ export default function BookingPage() {
                 <div className="label-micro text-[var(--color-secondary)] mb-4">
                   {step.number}
                 </div>
-                <h3 className="font-headline italic text-2xl text-[var(--color-on-surface)] mb-4">
+                <h3 className="headline-section text-xl text-[var(--color-on-surface)] mb-4">
                   {step.title}
                 </h3>
                 <p className="body-editorial text-[var(--color-on-surface-variant)]">

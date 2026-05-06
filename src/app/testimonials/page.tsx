@@ -140,7 +140,7 @@ export default function TestimonialsPage() {
             transition={{ duration: 0.8, ease: luxuryEase }}
           >
             <blockquote
-              className="font-headline italic text-xl md:text-2xl lg:text-3xl leading-snug mb-6"
+              className="accent-quote text-xl md:text-2xl lg:text-3xl leading-snug mb-6"
               style={{ color: "var(--color-primary)" }}
             >
               &ldquo;{featured.quote.length > 200
@@ -178,7 +178,7 @@ export default function TestimonialsPage() {
                   <div key={category} className="mb-14">
                     {/* Category heading */}
                     <h2
-                      className="font-headline italic text-lg md:text-xl mb-8"
+                      className="headline-section text-sm md:text-base mb-8"
                       style={{ color: "var(--color-primary)", opacity: 0.7 }}
                     >
                       {category}
@@ -242,7 +242,7 @@ export default function TestimonialsPage() {
                 Recent Reviews
               </p>
               <h2
-                className="font-headline italic text-2xl md:text-3xl mt-2"
+                className="headline-section text-xl md:text-2xl mt-2"
                 style={{ color: "var(--color-primary)" }}
               >
                 Fresh from our clients.
@@ -276,7 +276,7 @@ export default function TestimonialsPage() {
       <section className="py-12 md:py-16 px-6" style={{ backgroundColor: "rgba(255,255,255,0.35)" }}>
         <div className="mx-auto max-w-2xl text-center">
           <p
-            className="font-headline italic text-base md:text-lg"
+            className="accent-quote text-base md:text-lg"
             style={{ color: "var(--color-on-surface)" }}
           >
             No pressure. No overcorrection. No guessing.<br />

@@ -196,7 +196,7 @@ export default function FeaturedServices({ services, featuredImageUrls, sectionC
                         </p>
 
                         <h3
-                          className="font-headline text-2xl md:text-3xl italic mb-4"
+                          className="headline-section text-xl md:text-2xl mb-4"
                           style={{ color: "var(--color-primary)" }}
                         >
                           {service.name}

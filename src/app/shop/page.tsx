@@ -100,7 +100,7 @@ export default function ShopPage() {
             >
               Curated skincare we trust
               <br />
-              <span className="font-light italic">in every treatment.</span>
+              <span className="font-light">in every treatment.</span>
             </motion.h1>
 
             <motion.p
@@ -203,7 +203,7 @@ export default function ShopPage() {
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center">
-                          <span className="font-headline italic text-5xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.25 }}>{product.name.charAt(0)}</span>
+                          <span className="font-headline text-5xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.25 }}>{product.name.charAt(0)}</span>
                         </div>
                       )}
                     </div>
@@ -243,7 +243,7 @@ export default function ShopPage() {
         {hasProducts && activeCategory === "All" && (
           <div className="relative px-6 md:px-8 py-8">
             <motion.p
-              className="mx-auto max-w-[1180px] text-center text-lg italic text-[var(--color-soft-taupe)]"
+              className="accent-quote mx-auto max-w-[1180px] text-center text-lg text-[var(--color-soft-taupe)]"
               style={{ opacity: 0.7 }}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.7 }}
@@ -264,11 +264,11 @@ export default function ShopPage() {
               </div>
             ) : products.length === 0 ? (
               <motion.div className="text-center py-20 max-w-lg mx-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewportOnce} transition={{ duration: 0.8, ease: luxuryEase }}>
-                <p className="font-headline italic text-2xl mb-5" style={{ color: "var(--color-espresso)" }}>Coming Soon</p>
+                <p className="headline-section text-xl mb-5" style={{ color: "var(--color-espresso)" }}>Coming Soon</p>
                 <p className="text-sm" style={{ color: "var(--color-soft-taupe)" }}>Our curated collection is being carefully selected.</p>
               </motion.div>
             ) : gridProducts.length === 0 && activeCategory !== "All" ? (
-              <p className="font-headline italic text-lg text-center py-16" style={{ color: "var(--color-soft-taupe)", opacity: 0.6 }}>No products in this category yet.</p>
+              <p className="body-editorial text-lg text-center py-16" style={{ color: "var(--color-soft-taupe)", opacity: 0.6 }}>No products in this category yet.</p>
             ) : gridProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                 {gridProducts.map((product, i) => (
@@ -302,7 +302,7 @@ export default function ShopPage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <span className="font-headline italic text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}>{product.name.charAt(0)}</span>
+                          <span className="font-headline text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}>{product.name.charAt(0)}</span>
                         </div>
                       )}
                     </div>
@@ -346,7 +346,7 @@ export default function ShopPage() {
       {hasProducts && (
         <section className="py-14 px-6" style={{ backgroundColor: "var(--color-powder)" }}>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-headline italic text-lg md:text-xl mb-5" style={{ color: "var(--color-soft-taupe)" }}>
+            <p className="accent-quote text-lg md:text-xl mb-5" style={{ color: "var(--color-soft-taupe)" }}>
               Not sure which products are right for you?
             </p>
             <Link href="/booking" className="link-editorial text-sm">
