@@ -51,7 +51,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </span>
 
           {/* Title */}
-          <h3 className="font-headline text-2xl italic mb-4 text-[var(--color-primary)]">
+          <h3 className="headline-section text-xl mb-4 text-[var(--color-primary)]">
             {service.name}
           </h3>
 

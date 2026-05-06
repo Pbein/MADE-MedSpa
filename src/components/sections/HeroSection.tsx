@@ -146,19 +146,19 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
             }}
           >
             <span
-              className="block italic font-light text-3xl sm:text-4xl md:text-7xl lg:text-[6.5rem] leading-none"
+              className="block font-light text-3xl sm:text-4xl md:text-7xl lg:text-[6.5rem] leading-none"
               style={{ color: "var(--color-on-surface, #f7f6eb)", opacity: 0.9 }}
             >
               {sectionContent?.headline_1 || "Beauty,"}
             </span>
             <span
-              className="block italic font-medium text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
+              className="block font-medium text-4xl sm:text-5xl md:text-7xl lg:text-[7rem] leading-none mt-2 md:mt-3"
               style={{ color: "var(--color-on-surface, #f7f6eb)", letterSpacing: "-0.035em" }}
             >
               {sectionContent?.headline_2 || "Deeply Personal."}
             </span>
             <span
-              className="block italic font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
+              className="block font-light text-2xl sm:text-3xl md:text-6xl lg:text-[5.5rem] leading-none mt-3 md:mt-4"
               style={{
                 color: "var(--color-on-surface, #f7f6eb)",
                 opacity: 0.6,

@@ -76,7 +76,7 @@ export default function MembershipPage() {
             </div>
           ) : memberships.length === 0 ? (
             <div className="text-center py-20">
-              <p className="font-headline italic text-2xl mb-4" style={{ color: "var(--color-primary)" }}>
+              <p className="headline-section text-xl mb-4" style={{ color: "var(--color-primary)" }}>
                 Coming Soon
               </p>
               <p className="body-editorial" style={{ color: "var(--color-on-surface-variant)" }}>
@@ -188,8 +188,8 @@ function MembershipCard({
       <div className={`flex flex-col flex-1 ${tier.isFeatured ? "p-7 lg:p-8" : "p-7"}`}>
         {/* Tier name */}
         <h3
-          className="font-headline italic text-base mb-5"
-          style={{ color: "rgba(57,30,30,0.65)", fontWeight: 300 }}
+          className="headline-section text-xl md:text-2xl mb-5"
+          style={{ color: "var(--color-primary)", fontWeight: 600 }}
         >
           {tier.name}
         </h3>
@@ -253,10 +253,12 @@ function MembershipCard({
             alignItems: "center",
             justifyContent: "center",
             padding: "0.875rem 1.5rem",
-            fontFamily: "var(--font-headline)",
-            fontStyle: "italic",
-            fontSize: "1rem",
-            letterSpacing: "0.02em",
+            fontFamily: "var(--font-label)",
+            fontStyle: "normal",
+            fontSize: "0.875rem",
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "0.25em",
             cursor: "pointer",
             ...(tier.isFeatured
               ? {

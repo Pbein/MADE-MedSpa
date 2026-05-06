@@ -206,7 +206,7 @@ export default function ContactPageClient() {
                 </span>
                 <a
                   href={info.phoneHref}
-                  className="font-headline italic text-2xl md:text-3xl block transition-opacity duration-500 hover:opacity-60"
+                  className="font-headline text-2xl md:text-3xl block transition-opacity duration-500 hover:opacity-60"
                   style={{ color: ESPRESSO }}
                 >
                   {info.phone}
@@ -223,7 +223,7 @@ export default function ContactPageClient() {
                 </span>
                 <a
                   href={info.emailHref}
-                  className="font-headline italic text-xl md:text-2xl block transition-opacity duration-500 hover:opacity-60 break-all"
+                  className="font-headline text-xl md:text-2xl block transition-opacity duration-500 hover:opacity-60 break-all"
                   style={{ color: ESPRESSO }}
                 >
                   {info.email}

@@ -152,7 +152,7 @@ export default function TestimonialSection({ testimonials: propTestimonials, tes
                   className="text-center"
                 >
                   <blockquote
-                    className="font-headline italic font-light text-2xl sm:text-3xl md:text-4xl leading-relaxed md:leading-relaxed"
+                    className="accent-quote font-light text-2xl sm:text-3xl md:text-4xl leading-relaxed md:leading-relaxed"
                     style={{
                       color: "var(--color-primary)",
                       textWrap: "balance",

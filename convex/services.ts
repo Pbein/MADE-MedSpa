@@ -1,6 +1,7 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 import { assertAdmin } from "./lib/auth";
+import type { Doc } from "./_generated/dataModel";
 
 export const list = query({
   args: {},
@@ -81,6 +82,7 @@ export const update = mutation({
     shortDescription: v.optional(v.string()),
     fullDescription: v.optional(v.string()),
     category: v.optional(v.string()),
+    categoryLocked: v.optional(v.boolean()),
     duration: v.optional(v.string()),
     priceRange: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
@@ -100,6 +102,10 @@ export const update = mutation({
       if (value !== undefined) {
         updates[key] = value;
       }
+    }
+    // Admin edited the category? Lock it so the next Pabau sync respects it.
+    if (fields.category !== undefined && fields.categoryLocked === undefined) {
+      updates.categoryLocked = true;
     }
     await ctx.db.patch(id, updates);
     return id;
@@ -135,14 +141,23 @@ function slugify(name: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-function inferCategory(pabauCategory: string | undefined): string {
+// Maps a free-text Pabau category string to one of the admin-managed
+// categories by keyword match. The admin can edit `pabauKeywords` per
+// category in /admin/categories — no code change needed to retag.
+// First active category whose keyword list matches wins (sortOrder order).
+// Falls back to the category flagged isDefault, or "Body" if none.
+function inferCategory(
+  pabauCategory: string | undefined,
+  categories: Doc<"serviceCategories">[],
+): string {
   const c = (pabauCategory ?? "").toLowerCase();
-  if (c.includes("inject") || c.includes("filler") || c.includes("botox") || c.includes("tox"))
-    return "Injectables";
-  if (c.includes("skin") || c.includes("acne") || c.includes("rejuvenation") || c.includes("peel"))
-    return "Skin";
-  if (c.includes("wellness") || c.includes("iv") || c.includes("vitamin")) return "Wellness";
-  return "Body";
+  for (const cat of categories) {
+    if (cat.pabauKeywords.some((kw) => kw && c.includes(kw))) {
+      return cat.name;
+    }
+  }
+  const fallback = categories.find((cat) => cat.isDefault);
+  return fallback?.name ?? "Body";
 }
 
 export const listAllInternal = internalQuery({
@@ -166,13 +181,24 @@ export const upsertFromPabau = internalMutation({
       .withIndex("by_pabauServiceId", (q) => q.eq("pabauServiceId", args.pabauServiceId))
       .first();
 
+    const allCats = await ctx.db.query("serviceCategories").collect();
+    const activeCats = allCats
+      .filter((c) => c.isActive)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+
     const now = Date.now();
     if (existing) {
+      // Respect admin-locked category overrides; otherwise re-infer from Pabau.
+      const nextCategory = existing.categoryLocked
+        ? existing.category
+        : inferCategory(args.pabauCategory, activeCats);
+
       await ctx.db.patch(existing._id, {
         name: args.name,
         shortDescription:
           args.description?.slice(0, 200) ?? existing.shortDescription,
         fullDescription: args.description ?? existing.fullDescription,
+        category: nextCategory,
         duration: args.duration ?? existing.duration,
         priceRange: args.priceRange ?? existing.priceRange,
         pabauBookingUrl: args.bookingUrl ?? existing.pabauBookingUrl,
@@ -190,7 +216,8 @@ export const upsertFromPabau = internalMutation({
       slug: slugify(args.name) || `service-${args.pabauServiceId}`,
       shortDescription: args.description?.slice(0, 200) ?? args.name,
       fullDescription: args.description ?? args.name,
-      category: inferCategory(args.pabauCategory),
+      category: inferCategory(args.pabauCategory, activeCats),
+      categoryLocked: false,
       duration: args.duration,
       priceRange: args.priceRange,
       pabauServiceId: args.pabauServiceId,

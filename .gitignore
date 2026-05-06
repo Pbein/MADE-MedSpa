@@ -43,6 +43,9 @@ next-env.d.ts
 # raw demo images (only optimized versions are needed)
 public/images/demo/
 
+# Brand reference assets (large PDFs + source files kept local only)
+/assets/
+
 # original (uncompressed) media — preserved locally, never committed
 media/originals/
 public/videos/*-original.mp4

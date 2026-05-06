@@ -66,7 +66,7 @@ export default function CTABanner({
           />
 
           <h2
-            className="headline-section text-4xl md:text-5xl italic mb-8"
+            className="headline-section text-3xl md:text-4xl mb-8"
             style={{ color: `var(--color-primary, ${DEFAULT_ON_SURFACE})` }}
           >
             {headline}

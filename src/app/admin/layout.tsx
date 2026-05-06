@@ -74,6 +74,7 @@ export default function AdminLayout({
       title: "Manage",
       items: [
         { label: "Services", href: "/admin/services", icon: "S" },
+        { label: "Categories", href: "/admin/categories", icon: "▢" },
         { label: "Memberships", href: "/admin/memberships", icon: "M" },
         { label: "Shop", href: "/admin/shop", icon: "P" },
         { label: "Team", href: "/admin/team", icon: "T" },
@@ -98,6 +99,7 @@ export default function AdminLayout({
       title: "Settings",
       items: [
         { label: "Site Settings", href: "/admin/settings", icon: "\u2699" },
+        { label: "Typography Spec", href: "/admin/typography-spec", icon: "Aa" },
         { label: "System & Guide", href: "/admin/system", icon: "\u2630" },
       ],
     },

@@ -397,7 +397,7 @@ export default function AboutPageClient({
                   {value.number}
                 </div>
                 <h3
-                  className="font-headline italic text-2xl mb-4"
+                  className="headline-section text-xl mb-4"
                   style={{ color: "var(--color-primary)" }}
                 >
                   {value.title}

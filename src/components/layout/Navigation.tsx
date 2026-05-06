@@ -118,7 +118,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center px-12 py-8">
           <Link
             href="/"
-            className="font-headline italic text-2xl tracking-tight transition-colors duration-500"
+            className="font-headline text-2xl tracking-tight transition-colors duration-500"
             style={{
               color: useLightNavText
                 ? "var(--color-on-primary)"
@@ -155,7 +155,7 @@ export default function Navigation() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="font-headline italic tracking-wide text-lg transition-all duration-500"
+                    className="font-headline tracking-wide text-lg transition-all duration-500"
                     style={{
                       color: useLightNavText
                         ? "var(--color-on-primary)"
@@ -211,7 +211,7 @@ export default function Navigation() {
                     setExploreOpen(true);
                   }
                 }}
-                className="font-headline italic tracking-wide text-lg transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-secondary)]"
+                className="font-headline tracking-wide text-lg transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-secondary)]"
                 style={{
                   color: useLightNavText
                     ? "var(--color-on-primary)"
@@ -262,7 +262,7 @@ export default function Navigation() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="font-headline italic tracking-wide transition-all duration-300"
+                        className="font-headline tracking-wide transition-all duration-300"
                         style={{
                           display: "block",
                           padding: "0.6rem 1.5rem",
@@ -298,7 +298,7 @@ export default function Navigation() {
       <div className="lg:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-100px" }}>
         <Link
           href="/"
-          className="font-headline italic text-2xl tracking-tight"
+          className="font-headline text-2xl tracking-tight"
           style={{
             color: useLightNavText && !isScrolled
               ? "var(--color-on-primary)"
@@ -444,7 +444,7 @@ export default function Navigation() {
                   <Link
                     href="/"
                     onClick={handleMobileNavClick}
-                    className="font-headline italic text-3xl tracking-tight transition-opacity duration-500"
+                    className="font-headline text-3xl tracking-tight transition-opacity duration-500"
                     style={{
                       color: "var(--color-primary)",
                       opacity: pathname === "/" ? 1 : 0.5,
@@ -469,7 +469,7 @@ export default function Navigation() {
                       <Link
                         href={link.href}
                         onClick={handleMobileNavClick}
-                        className="font-headline italic text-3xl tracking-tight transition-opacity duration-500"
+                        className="font-headline text-3xl tracking-tight transition-opacity duration-500"
                         style={{
                           color: "var(--color-primary)",
                           opacity: isActive ? 1 : 0.5,

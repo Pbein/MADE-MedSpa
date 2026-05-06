@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADE Med Spa &mdash; Getting Found on Google</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --espresso: #3C2415;
+      --blush: #D4A59A;
+      --matcha: #8A9A6E;
+      --cream: #FAF6F1;
+      --warm-gray: #7A706A;
+      --light-border: #E8E0D8;
+      --soft-bg: #FFFFFF;
+      --amber: #C17B5A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      color: var(--espresso);
+      background: var(--cream);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* Cover */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(160deg, var(--cream) 0%, #F3EDE6 100%);
+      page-break-after: always;
+    }
+
+    .cover-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--espresso);
+      margin-bottom: 0.25rem;
+    }
+
+    .cover-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 3rem;
+    }
+
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--blush);
+      margin: 0 auto 3rem;
+    }
+
+    .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--espresso);
+      margin-bottom: 0.5rem;
+      max-width: 540px;
+    }
+
+    .cover-subtitle {
+      font-size: 0.92rem;
+      color: var(--warm-gray);
+      max-width: 540px;
+      margin: 0 auto 4rem;
+    }
+
+    .cover-date {
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--light-border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+    }
+
+    /* Content */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem;
+      page-break-after: always;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    h2 + .section-line {
+      width: 40px;
+      height: 2px;
+      background: var(--blush);
+      margin-bottom: 1.75rem;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .lede {
+      font-size: 0.95rem;
+      color: var(--warm-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight {
+      background: var(--soft-bg);
+      border-left: 3px solid var(--blush);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .highlight strong { font-weight: 500; }
+    .highlight.matcha { border-left-color: var(--matcha); }
+    .highlight.amber { border-left-color: var(--amber); }
+
+    /* Cards */
+    .card {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--espresso);
+      margin-bottom: 0.35rem;
+    }
+
+    .card-body {
+      font-size: 0.88rem;
+      color: var(--warm-gray);
+      line-height: 1.6;
+    }
+
+    .card-body p { margin-bottom: 0.5rem; }
+    .card-body p:last-child { margin-bottom: 0; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .badge.priority { background: rgba(212,165,154,0.25); color: #8B4D3E; }
+    .badge.foundation { background: rgba(138,154,110,0.2); color: #5A6B42; }
+    .badge.bonus { background: rgba(60,36,21,0.08); color: var(--warm-gray); }
+
+    /* Keyword chips */
+    .keyword-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .kw-chip {
+      background: var(--soft-bg);
+      border: 1px solid var(--light-border);
+      border-radius: 6px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.82rem;
+      color: var(--espresso);
+    }
+
+    .kw-chip .label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 0.15rem;
+    }
+
+    .kw-chip strong {
+      font-weight: 500;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.85rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--light-border);
+      font-weight: 500;
+      color: var(--warm-gray);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-border);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .checklist li {
+      padding: 0.55rem 0 0.55rem 2rem;
+      position: relative;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--light-border);
+    }
+
+    .checklist li:last-child { border-bottom: none; }
+
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--blush);
+      border-radius: 3px;
+      background: var(--cream);
+    }
+
+    .checklist li .meta {
+      font-size: 0.78rem;
+      color: var(--warm-gray);
+      margin-top: 0.15rem;
+      display: block;
+    }
+
+    /* Numbered steps */
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.5rem 0 0.85rem 2.5rem;
+      font-size: 0.9rem;
+      color: var(--espresso);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.4rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      background: var(--blush);
+      color: var(--soft-bg);
+      font-size: 0.78rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps li .step-meta {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--warm-gray);
+      margin-top: 0.2rem;
+    }
+
+    /* Example block */
+    .example {
+      background: #FBF7F2;
+      border: 1px dashed var(--light-border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      color: var(--espresso);
+    }
+
+    .example .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 0.4rem;
+    }
+
+    .example code {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      color: var(--espresso);
+      background: rgba(212,165,154,0.15);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+
+    /* Footer */
+    .doc-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--warm-gray);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--light-border);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .doc-footer strong {
+      font-weight: 500;
+      color: var(--espresso);
+    }
+
+    @media print {
+      body { background: white; font-size: 13px; }
+      .cover { min-height: auto; padding: 4in 2rem 3in; }
+      .page { padding: 2rem 0; }
+      .card, .kw-chip, .example { break-inside: avoid; }
+    }
+
+    @media (max-width: 600px) {
+      .cover-logo { font-size: 2.5rem; }
+      .page { padding: 2.5rem 1.5rem; }
+      .keyword-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== COVER ========== -->
+  <div class="cover">
+    <div class="cover-logo">MADE</div>
+    <div class="cover-tagline">Med Spa</div>
+    <div class="cover-divider"></div>
+    <div class="cover-title">Getting Found on Google</div>
+    <div class="cover-subtitle">
+      A practical guide to local SEO for a new med spa in McLean. The things you can
+      do yourself, the things that actually move the needle, and the things to skip.
+    </div>
+    <div class="cover-date">April 2026</div>
+    <div class="cover-badge">For Karlyne &bull; No marketing jargon</div>
+  </div>
+
+  <!-- ========== SECTION 1: HOW THIS WORKS ========== -->
+  <div class="page">
+    <h2>How Google Decides Who Shows Up</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      When someone in McLean types <em>&ldquo;botox near me&rdquo;</em> into Google, three
+      things decide whether MADE shows up: <strong>relevance</strong>, <strong>distance</strong>,
+      and <strong>prominence</strong>. You can&rsquo;t change distance &mdash; but the other
+      two are entirely in your hands.
+    </p>
+
+    <div class="card">
+      <div class="card-title">Relevance</div>
+      <div class="card-body">
+        Does your site clearly mention the service the person searched for? If your
+        Botox page just says &ldquo;neurotoxin&rdquo; in clinical language, Google may not
+        connect it to the word &ldquo;Botox.&rdquo; If your site never mentions McLean,
+        Tysons, or Vienna by name, Google won&rsquo;t know you serve those areas.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Distance</div>
+      <div class="card-body">
+        Google measures how far you are from the searcher. McLean (22101 / 22102) is your
+        anchor. You&rsquo;ll naturally rank best for searches happening close to your address.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Prominence</div>
+      <div class="card-body">
+        How well-known and trusted you are online. Reviews, mentions on other websites,
+        social media presence, photos uploaded to Google &mdash; all of these tell Google
+        &ldquo;this is a real, busy, trusted business.&rdquo;
+      </div>
+    </div>
+
+    <div class="highlight matcha">
+      <strong>The headline:</strong> as a brand-new business, you start with zero
+      prominence. The next 6 months are about building it. Everything in this doc
+      points toward that.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 2: GOOGLE BUSINESS PROFILE ========== -->
+  <div class="page">
+    <h2>Google Business Profile <span class="badge priority">Do This First</span></h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      This is the single most important thing on this list. Your Google Business Profile
+      (GBP) controls whether you appear in the &ldquo;map pack&rdquo; &mdash; the three
+      results with photos and pins that show up at the top of any local search. For
+      med spas, the map pack drives more bookings than the regular search results below it.
+    </p>
+
+    <h3>Set it up properly</h3>
+    <ol class="steps">
+      <li>Go to <strong>google.com/business</strong> and claim &ldquo;MADE Med Spa&rdquo;
+        <span class="step-meta">If a placeholder listing already exists, claim it. Don&rsquo;t create a duplicate.</span></li>
+      <li>Use your exact business name, address, and phone &mdash; spelled identically to the website
+        <span class="step-meta">Even &ldquo;Suite&rdquo; vs &ldquo;Ste&rdquo; matters. Google notices.</span></li>
+      <li>Pick the right primary category: <strong>Medical Spa</strong>
+        <span class="step-meta">Then add secondary categories: Skin Care Clinic, Laser Hair Removal Service, Wellness Center</span></li>
+      <li>Add every service you offer, with prices where possible
+        <span class="step-meta">Pull straight from your service menu &mdash; Botox, fillers, Aerolase, microneedling, etc.</span></li>
+      <li>Write a compelling business description (~750 characters)
+        <span class="step-meta">Mention McLean, the surrounding areas, your nurse credentials, and that you treat all skin types</span></li>
+      <li>Set your hours (must match the website)</li>
+      <li>Upload 15+ photos: storefront, lobby, treatment rooms, your headshot, products
+        <span class="step-meta">Add new photos every 1&ndash;2 weeks. Google rewards active profiles.</span></li>
+    </ol>
+
+    <h3>Then keep it alive</h3>
+    <ul class="checklist">
+      <li>Post a Google Business update once a week
+        <span class="meta">A new product, a special, an educational tip &mdash; anything counts</span></li>
+      <li>Respond to every review within 48 hours
+        <span class="meta">Both 5-star and any negative ones. Google watches response rate.</span></li>
+      <li>Add new photos regularly
+        <span class="meta">Behind-the-scenes, treatment room, before-and-after (with consent)</span></li>
+      <li>Ask every happy client to leave a Google review
+        <span class="meta">Reviews are the #2 ranking factor after the profile itself</span></li>
+    </ul>
+
+    <div class="highlight">
+      <strong>Quick win:</strong> after each new client visit, text them a direct link to
+      leave a Google review. Your goal for month one is 10+ reviews. Most local searches
+      show businesses with 4.5+ stars and 25+ reviews above businesses with fewer.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: KEYWORDS YOU SHOULD TARGET ========== -->
+  <div class="page">
+    <h2>Keywords You Should Target</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      These are the actual phrases people type into Google when looking for what you offer.
+      You don&rsquo;t need to rank for all of them &mdash; you need to rank for the right
+      ones. Below: the searches that fit MADE specifically, organized by intent.
+    </p>
+
+    <h3>Tier 1 &mdash; High-Value Local Service Searches</h3>
+    <p style="font-size: 0.85rem; color: var(--warm-gray); margin-bottom: 0.5rem;">
+      These are the bread-and-butter searches that drive bookings. Start here.
+    </p>
+
+    <div class="keyword-grid">
+      <div class="kw-chip"><span class="label">Injectables</span><strong>botox mclean</strong> &middot; botox tysons &middot; botox arlington va</div>
+      <div class="kw-chip"><span class="label">Injectables</span><strong>lip filler mclean</strong> &middot; dermal fillers tysons</div>
+      <div class="kw-chip"><span class="label">Injectables</span><strong>sculptra northern virginia</strong> &middot; jawline filler mclean</div>
+      <div class="kw-chip"><span class="label">Skin</span><strong>microneedling mclean</strong> &middot; rf microneedling tysons</div>
+      <div class="kw-chip"><span class="label">Skin</span><strong>hydrafacial mclean</strong> &middot; medical facial tysons</div>
+      <div class="kw-chip"><span class="label">Skin</span><strong>chemical peel mclean va</strong></div>
+      <div class="kw-chip"><span class="label">Laser</span><strong>laser hair removal mclean</strong></div>
+      <div class="kw-chip"><span class="label">Laser</span><strong>aerolase mclean</strong> &middot; neoclear acne treatment</div>
+      <div class="kw-chip"><span class="label">Wellness</span><strong>iv therapy mclean</strong> &middot; iv drip tysons</div>
+      <div class="kw-chip"><span class="label">Wellness</span><strong>semaglutide mclean</strong> &middot; weight loss injection nova</div>
+      <div class="kw-chip"><span class="label">Local intent</span><strong>med spa near me</strong> (when in McLean)</div>
+      <div class="kw-chip"><span class="label">Local intent</span><strong>med spa mclean va</strong></div>
+    </div>
+
+    <h3>Tier 2 &mdash; Differentiation Keywords (Your Edge)</h3>
+    <p style="font-size: 0.85rem; color: var(--warm-gray); margin-bottom: 0.5rem;">
+      What makes MADE different is your edge. Aerolase is one of the few lasers genuinely
+      safe for all skin tones. That&rsquo;s a huge SEO opportunity.
+    </p>
+
+    <div class="keyword-grid">
+      <div class="kw-chip"><span class="label">Skin tone</span><strong>laser hair removal dark skin mclean</strong></div>
+      <div class="kw-chip"><span class="label">Skin tone</span><strong>melasma treatment northern virginia</strong></div>
+      <div class="kw-chip"><span class="label">Skin tone</span><strong>hyperpigmentation treatment for women of color</strong></div>
+      <div class="kw-chip"><span class="label">Skin tone</span><strong>safe laser for black skin virginia</strong></div>
+      <div class="kw-chip"><span class="label">Niche</span><strong>razor bumps treatment mclean</strong></div>
+      <div class="kw-chip"><span class="label">Niche</span><strong>black-owned med spa northern virginia</strong></div>
+      <div class="kw-chip"><span class="label">Practitioner</span><strong>nurse injector mclean</strong></div>
+      <div class="kw-chip"><span class="label">Practitioner</span><strong>female injector tysons</strong></div>
+    </div>
+
+    <h3>Tier 3 &mdash; Educational Long-Tail Searches</h3>
+    <p style="font-size: 0.85rem; color: var(--warm-gray); margin-bottom: 0.5rem;">
+      People asking questions before they book. These are great for FAQ content on the site.
+    </p>
+
+    <div class="keyword-grid">
+      <div class="kw-chip">how much does botox cost in northern virginia</div>
+      <div class="kw-chip">is aerolase safe for dark skin</div>
+      <div class="kw-chip">what&rsquo;s the difference between prp and prf</div>
+      <div class="kw-chip">how long do lip fillers last</div>
+      <div class="kw-chip">does microneedling work on acne scars</div>
+      <div class="kw-chip">best treatment for melasma on black skin</div>
+    </div>
+
+    <div class="highlight matcha">
+      <strong>How to use this list:</strong> on every service page in your admin panel,
+      make sure the page mentions the service AND the location naturally in the description.
+      Not stuffed &mdash; written. &ldquo;Our Botox treatments in McLean are designed for...&rdquo;
+      reads better than &ldquo;Botox McLean Botox Tysons Botox Arlington.&rdquo;
+    </div>
+  </div>
+
+  <!-- ========== SECTION 4: ON-PAGE WINS ========== -->
+  <div class="page">
+    <h2>On-Page Wins You Control in Admin <span class="badge foundation">Foundation</span></h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      Every page on the site has fields you can edit through your admin panel. Filling
+      these out properly is one of the highest-leverage SEO moves you have.
+    </p>
+
+    <h3>Page titles &amp; meta descriptions</h3>
+    <p>
+      The page title is what shows up as the blue link in Google search results. The meta
+      description is the gray text underneath it. These are your billboard. Write them
+      to <em>sell the click</em>.
+    </p>
+
+    <div class="example">
+      <div class="label">&times; Generic</div>
+      Title: <code>Services | MADE Med Spa</code><br>
+      Description: <code>Welcome to our services page.</code>
+    </div>
+
+    <div class="example">
+      <div class="label">&check; Specific &amp; clickable</div>
+      Title: <code>Botox &amp; Fillers in McLean, VA | MADE Med Spa</code><br>
+      Description: <code>Natural-looking Botox, fillers, and skin treatments in McLean. Nurse-led, all skin tones welcome. Book your consultation today.</code>
+    </div>
+
+    <h3>Image alt text</h3>
+    <p>
+      Every photo you upload should have descriptive alt text. Google can&rsquo;t see images
+      &mdash; it reads alt text. It&rsquo;s also how visually impaired clients use the site.
+    </p>
+
+    <div class="example">
+      <div class="label">&times; Skip alt or use the filename</div>
+      <code>IMG_4837.jpg</code> &nbsp;or&nbsp; <code>(blank)</code>
+    </div>
+
+    <div class="example">
+      <div class="label">&check; Descriptive</div>
+      <code>Aerolase laser hair removal treatment at MADE Med Spa in McLean</code>
+    </div>
+
+    <h3>Service descriptions</h3>
+    <p>
+      Your service descriptions in admin do double duty &mdash; they&rsquo;re for clients
+      and for Google. Aim for 150&ndash;300 words per service. Mention the treatment name,
+      a related synonym, and a location reference at least once.
+    </p>
+
+    <h3>Mention your service area in copy</h3>
+    <p>
+      The footer of the site, the about page, and the contact page are great places to
+      naturally name the areas you serve.
+    </p>
+
+    <div class="example">
+      <div class="label">Example footer line</div>
+      <code>Proudly serving McLean, Tysons, Vienna, Arlington, Falls Church, Great Falls,
+      and the greater Northern Virginia area.</code>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 5: REVIEWS & CITATIONS ========== -->
+  <div class="page">
+    <h2>Reviews &amp; Listings</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      After your Google Business Profile, reviews and consistent listings across the web
+      are the next biggest ranking factor for local search. Both compound over time.
+    </p>
+
+    <h3>Reviews: build a flywheel</h3>
+    <ul class="checklist">
+      <li>Text every happy client a direct review link within 24 hours of their visit
+        <span class="meta">Strike while the experience is fresh. Same-day works best.</span></li>
+      <li>Use a short, friendly script &mdash; not corporate
+        <span class="meta">&ldquo;Hi Sarah! So glad you came in today. If you have a moment, a quick Google review means the world to a small business like ours: [link]&rdquo;</span></li>
+      <li>Respond to every review &mdash; positive and negative
+        <span class="meta">Thank positives by name. Respond to negatives professionally without defensiveness.</span></li>
+      <li>Spread reviews across platforms: Google first, then Yelp, then RealSelf
+        <span class="meta">Don&rsquo;t ask 50 people for Yelp reviews in a week &mdash; Yelp filters those</span></li>
+    </ul>
+
+    <h3>Listings to claim (in this order)</h3>
+    <p>
+      A &ldquo;citation&rdquo; is a mention of your business name, address, and phone on
+      another website. They tell Google your business is real and consistent. The directories
+      below carry the most weight for med spas specifically.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Directory</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Google Business Profile</strong></td>
+          <td>The single most important listing on the web</td>
+        </tr>
+        <tr>
+          <td><strong>Yelp</strong></td>
+          <td>Second most-trafficked review site for local services</td>
+        </tr>
+        <tr>
+          <td><strong>RealSelf</strong></td>
+          <td>The major aesthetic-specific review platform &mdash; clients research here</td>
+        </tr>
+        <tr>
+          <td><strong>Healthgrades</strong></td>
+          <td>Health-adjacent authority signal for nurse-led practices</td>
+        </tr>
+        <tr>
+          <td><strong>Apple Maps / Apple Business Connect</strong></td>
+          <td>Owns Siri, iPhone Maps, and a third of mobile search</td>
+        </tr>
+        <tr>
+          <td><strong>Bing Places</strong></td>
+          <td>Smaller traffic, but free and 5 minutes to set up</td>
+        </tr>
+        <tr>
+          <td><strong>Nextdoor (Business)</strong></td>
+          <td>Hyper-local; McLean residents heavily use Nextdoor</td>
+        </tr>
+        <tr>
+          <td><strong>Facebook Business</strong></td>
+          <td>Citation value plus a place to run ads later</td>
+        </tr>
+        <tr>
+          <td><strong>American Med Spa Association directory</strong></td>
+          <td>Industry-specific authority signal</td>
+        </tr>
+        <tr>
+          <td><strong>McLean / Tysons Chamber of Commerce</strong></td>
+          <td>Local link &amp; networking; counts as a high-trust citation</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight amber">
+      <strong>Critical rule &mdash; NAP consistency.</strong> Your business <em>Name</em>,
+      <em>Address</em>, and <em>Phone</em> must be spelled identically everywhere. Even
+      &ldquo;Suite 200&rdquo; vs &ldquo;Ste 200&rdquo; counts as a mismatch. Decide on the
+      official version once, then use it on every directory.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 6: INSTAGRAM & PERSONAL BRAND ========== -->
+  <div class="page">
+    <h2>Turning @nursekarlyne Into Site Traffic</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      Your Instagram presence is already growing. Here&rsquo;s how to point that audience
+      &mdash; and the SEO benefit it creates &mdash; back at the website.
+    </p>
+
+    <h3>Quick wins on the Instagram side</h3>
+    <ul class="checklist">
+      <li>Set the bio link to <strong>mademedspa.com</strong> (or a specific page)
+        <span class="meta">Use a tool like Linktree or Beacons to host multiple destinations &mdash; book, services, shop</span></li>
+      <li>Mention &ldquo;McLean&rdquo; or &ldquo;Northern Virginia&rdquo; in your bio
+        <span class="meta">Helps people in your area find you on Instagram itself</span></li>
+      <li>Tag <strong>@mademedspa</strong> (the business account) in every personal post
+        <span class="meta">Two accounts feed each other; followers find both</span></li>
+      <li>End educational reels/posts with &ldquo;Book at mademedspa.com&rdquo;
+        <span class="meta">Most viewers won&rsquo;t click the bio &mdash; they need a verbal CTA</span></li>
+    </ul>
+
+    <h3>Why this helps your SEO (the indirect win)</h3>
+    <p>
+      Instagram links don&rsquo;t directly pass &ldquo;link juice&rdquo; the way a backlink
+      from a news site would. But Instagram still helps in two big ways:
+    </p>
+    <ul class="checklist">
+      <li>It drives <strong>branded searches</strong> &mdash; people Googling &ldquo;Nurse Karlyne&rdquo;
+        or &ldquo;MADE Med Spa McLean&rdquo;
+        <span class="meta">Branded search volume is one of the strongest signals Google uses to evaluate prominence</span></li>
+      <li>It builds <strong>credentialed personal authority</strong> &mdash; you on camera,
+        explaining treatments, with BSN/RN behind your name
+        <span class="meta">For health/medical content, Google heavily favors verifiable practitioner expertise</span></li>
+    </ul>
+
+    <h3>Content that works double duty</h3>
+    <p>
+      The educational content you&rsquo;re already making for Instagram is gold for the
+      website too. Consider:
+    </p>
+    <ul class="checklist">
+      <li>Pinning your top 5 educational reels to your IG profile
+        <span class="meta">First impression matters &mdash; new visitors see &ldquo;expert&rdquo;</span></li>
+      <li>Embedding selected reels on relevant service pages
+        <span class="meta">Adds depth and dwell time, both ranking signals</span></li>
+      <li>Repurposing a reel transcript as an FAQ answer on the site
+        <span class="meta">Same content, two places, both work for you</span></li>
+    </ul>
+  </div>
+
+  <!-- ========== SECTION 7: BLOG VS NO BLOG ========== -->
+  <div class="page">
+    <h2>Do You Need a Blog?</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      Short answer: not really, and we&rsquo;re not building one. Here&rsquo;s why &mdash;
+      and what to do instead.
+    </p>
+
+    <h3>Why we&rsquo;re skipping a blog</h3>
+    <p>
+      A blog only works if you publish good content consistently &mdash; minimum twice a
+      month, every month, for a year before SEO results kick in. That&rsquo;s a part-time
+      job. Most med spa blogs end up with three abandoned posts from launch and look worse
+      than no blog at all.
+    </p>
+
+    <h3>What we&rsquo;re doing instead</h3>
+
+    <div class="card">
+      <div class="card-title">Rich service pages</div>
+      <div class="card-body">
+        Each major service page on the site is structured like a mini-article: the
+        treatment, who it&rsquo;s for, what to expect, common questions. Google rewards
+        depth on service pages even more than on blog posts, because they show clear
+        commercial intent.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">A robust FAQ section</div>
+      <div class="card-body">
+        Every question a client has ever asked you in person is a question someone is
+        Googling. Add them all to the FAQ section &mdash; this is admin-editable, takes
+        2 minutes per question, and ranks for the &ldquo;Tier 3&rdquo; long-tail searches
+        on the keyword page.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Real client photos &amp; testimonials</div>
+      <div class="card-body">
+        Original images and authentic testimonials on the site are stronger SEO signals
+        than any blog post. They prove this is an active, real practice. Add new ones
+        as you collect them.
+      </div>
+    </div>
+
+    <div class="highlight matcha">
+      <strong>If you ever change your mind on a blog,</strong> we can add one. But the
+      bar should be: you&rsquo;re willing to commit to one post a week for at least
+      6 months. Anything less and we&rsquo;re wasting effort.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 8: BACKLINKS ========== -->
+  <div class="page">
+    <h2>Earning Backlinks (Without an Agency)</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      A &ldquo;backlink&rdquo; is when another website links to yours. Google treats these
+      like votes of confidence &mdash; the more reputable sites that link to MADE, the more
+      Google trusts you. You don&rsquo;t need 100. You need 10&ndash;20 good ones.
+    </p>
+
+    <h3>Easy first backlinks (do these in month one)</h3>
+    <ul class="checklist">
+      <li>McLean Chamber of Commerce membership listing</li>
+      <li>Tysons Regional Chamber listing</li>
+      <li>Aerolase&rsquo;s &ldquo;find a provider&rdquo; directory
+        <span class="meta">Email Aerolase &mdash; manufacturers usually love listing their providers</span></li>
+      <li>SkinPen, Galderma, Allergan, Merz provider directories
+        <span class="meta">Same as above &mdash; most product brands maintain these</span></li>
+      <li>Yelp, RealSelf, Healthgrades profile links (count as citations and backlinks)</li>
+      <li>Your LinkedIn personal page linking to mademedspa.com</li>
+      <li>Local business directories: Northern Virginia Magazine&rsquo;s online directory, Washingtonian&rsquo;s health directory</li>
+    </ul>
+
+    <h3>Higher-effort backlinks (months 2&ndash;6)</h3>
+    <ul class="checklist">
+      <li>Cross-promote with complementary local businesses
+        <span class="meta">Hair salons, dermatologists, plastic surgeons, fitness studios, wedding planners. Mutual referral page = mutual backlinks.</span></li>
+      <li>Get featured in a local lifestyle blog or podcast
+        <span class="meta">McLean Today, Northern Virginia Magazine online, local women-in-business features</span></li>
+      <li>Speak at a local event or chamber meeting
+        <span class="meta">Event recap posts almost always link back to speakers</span></li>
+      <li>Sponsor or donate to a local charity event
+        <span class="meta">Sponsor list pages typically include a backlink</span></li>
+      <li>Pitch yourself for &ldquo;black-owned business&rdquo; or &ldquo;women-owned business&rdquo; features
+        <span class="meta">Local DEI directories actively seek listings &mdash; you fit the profile</span></li>
+    </ul>
+
+    <div class="highlight">
+      <strong>What to ignore:</strong> any agency emailing you offering &ldquo;100 backlinks
+      for $200.&rdquo; They&rsquo;re scams &mdash; spammy backlinks now actively <em>hurt</em>
+      rankings. Quality over quantity, every time.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 9: 90-DAY PLAN ========== -->
+  <div class="page">
+    <h2>Your First 90 Days</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      A realistic, prioritized rollout. Don&rsquo;t try to do everything in week one.
+    </p>
+
+    <h3>Days 1&ndash;7 &mdash; Foundation</h3>
+    <ul class="checklist">
+      <li>Claim &amp; fully complete your Google Business Profile</li>
+      <li>Submit Yelp, Apple Maps, Bing Places, Facebook Business listings</li>
+      <li>Add Google Analytics &amp; Google Search Console to the website
+        <span class="meta">We&rsquo;ll set these up together &mdash; takes ~15 minutes</span></li>
+      <li>Update Instagram bio with website link &amp; McLean location</li>
+      <li>Edit footer copy to name your service areas</li>
+    </ul>
+
+    <h3>Days 8&ndash;30 &mdash; Reviews &amp; service pages</h3>
+    <ul class="checklist">
+      <li>Set up an automated text-message review request after every appointment</li>
+      <li>Aim for 10+ Google reviews in the first month</li>
+      <li>Edit the page title &amp; meta description on every page using the formula in this doc</li>
+      <li>Write 150&ndash;300 word descriptions for your top 8 services
+        <span class="meta">Botox, fillers, microneedling, laser hair removal, hydrafacial, IV therapy, GLP-1, Aerolase</span></li>
+      <li>Add 10+ FAQs based on real client questions</li>
+      <li>Submit your business to RealSelf, Healthgrades, Nextdoor</li>
+    </ul>
+
+    <h3>Days 31&ndash;90 &mdash; Build authority</h3>
+    <ul class="checklist">
+      <li>Post on Google Business Profile weekly</li>
+      <li>Continue review flywheel &mdash; goal: 30+ Google reviews by day 90</li>
+      <li>Email manufacturers (Aerolase, Galderma, Allergan) to be added to provider directories</li>
+      <li>Join McLean &amp; Tysons Chamber of Commerce</li>
+      <li>Pitch one local feature (Northern Virginia Magazine, McLean Today, etc.)</li>
+      <li>Cross-promote with one local complementary business</li>
+      <li>Add 2&ndash;3 client testimonials (with permission) to the testimonials section</li>
+    </ul>
+
+    <div class="highlight matcha">
+      <strong>Reality check on timing:</strong> SEO is a 6&ndash;12 month game. You won&rsquo;t
+      rank #1 for &ldquo;botox mclean&rdquo; in week three &mdash; that spot belongs to a
+      business with five years of reviews. But by month 6, with consistent execution of
+      this plan, you&rsquo;ll be in the conversation.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 10: METRICS ========== -->
+  <div class="page">
+    <h2>How to Tell If It&rsquo;s Working</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      A few simple things to watch. Don&rsquo;t obsess over rankings &mdash; obsess over
+      these.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Where to find it</th>
+          <th>Target by month 6</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Google Business Profile views</td>
+          <td>Inside your GBP dashboard</td>
+          <td>1,500+ / month</td>
+        </tr>
+        <tr>
+          <td>&ldquo;Direction requests&rdquo; from GBP</td>
+          <td>GBP dashboard</td>
+          <td>30+ / month</td>
+        </tr>
+        <tr>
+          <td>&ldquo;Phone calls&rdquo; from GBP</td>
+          <td>GBP dashboard</td>
+          <td>20+ / month</td>
+        </tr>
+        <tr>
+          <td>Google reviews (count + avg rating)</td>
+          <td>Your GBP listing</td>
+          <td>30+ reviews, 4.8+ stars</td>
+        </tr>
+        <tr>
+          <td>Website visits from organic search</td>
+          <td>Google Analytics</td>
+          <td>500+ / month</td>
+        </tr>
+        <tr>
+          <td>Bookings sourced from website</td>
+          <td>Pabau / your booking system</td>
+          <td>Trending up month-over-month</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>The only metric that pays bills is bookings.</strong> Rankings and traffic
+      are leading indicators &mdash; but if visits are growing and bookings aren&rsquo;t,
+      the issue isn&rsquo;t SEO, it&rsquo;s the booking page experience or the offer. Watch
+      both.
+    </div>
+  </div>
+
+  <!-- ========== SECTION 11: SUMMARY ========== -->
+  <div class="page">
+    <h2>If You Only Do Five Things</h2>
+    <div class="section-line"></div>
+
+    <p class="lede">
+      The prioritized short list. If life gets busy and you can only manage five, do these.
+    </p>
+
+    <ol class="steps">
+      <li><strong>Claim and obsess over your Google Business Profile.</strong>
+        <span class="step-meta">Photos, posts, reviews, responses. Weekly attention.</span></li>
+      <li><strong>Build a Google review flywheel from day one.</strong>
+        <span class="step-meta">Text every happy client a review link within 24 hours of their visit.</span></li>
+      <li><strong>Write real, specific service descriptions on the website.</strong>
+        <span class="step-meta">Mention treatment + location. 150+ words per service.</span></li>
+      <li><strong>Get on the major directories: Yelp, RealSelf, Healthgrades, Apple Maps, Bing.</strong>
+        <span class="step-meta">Identical name, address, phone everywhere. One afternoon.</span></li>
+      <li><strong>Use Instagram to drive branded search.</strong>
+        <span class="step-meta">Bio link to website. Verbal CTA in every educational reel. Tag the business account.</span></li>
+    </ol>
+
+    <div class="highlight matcha">
+      <strong>Final note.</strong> The med spas that win at local SEO aren&rsquo;t the
+      ones with the slickest websites or the biggest agency budgets &mdash; they&rsquo;re
+      the ones who consistently do the basics for 12 months. You have the credentials, the
+      service menu, and the personal brand to win this. The site is the foundation.
+      Everything else is execution.
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="doc-footer">
+    <p><strong>MADE Med Spa</strong> &mdash; Getting Found on Google</p>
+    <p>April 2026 &bull; Local SEO Guide for a New Med Spa in McLean</p>
+    <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--blush);">&#9672; &nbsp; Custom-built with care &nbsp; &#9672;</p>
+  </div>
+
+</body>
+</html>

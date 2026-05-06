@@ -9,7 +9,6 @@ import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
-const categories = ["All", "Injectables", "Skin", "Body", "Wellness"];
 const editorialEase = [0.2, 0, 0, 1] as const;
 
 export default function ServicesPageClient({
@@ -33,6 +32,8 @@ export default function ServicesPageClient({
     cta_href: "/booking",
   });
   const services = useQuery(api.services.list);
+  const dbCategories = useQuery(api.serviceCategories.listActive);
+  const categories = ["All", ...(dbCategories?.map((c) => c.name) ?? [])];
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const gridRef = useRef<HTMLDivElement>(null);

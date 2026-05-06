@@ -23,14 +23,12 @@ const emptyForm: ServiceFormData = {
   slug: "",
   shortDescription: "",
   fullDescription: "",
-  category: "Injectables",
+  category: "",
   duration: "",
   priceRange: "",
   imageUrl: "",
   sortOrder: 0,
 };
-
-const categories = ["Injectables", "Skin", "Body", "Wellness"];
 
 function generateSlug(name: string): string {
   return name
@@ -41,6 +39,7 @@ function generateSlug(name: string): string {
 
 function ServiceForm({
   initial,
+  categories,
   onSave,
   onCancel,
   onDelete,
@@ -48,6 +47,7 @@ function ServiceForm({
   pabauSyncedAt,
 }: {
   initial: ServiceFormData;
+  categories: string[];
   onSave: (data: ServiceFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
@@ -153,6 +153,10 @@ function ServiceForm({
             className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
             style={{ borderColor: "#e5e7eb" }}
           >
+            {form.category && !categories.includes(form.category) && (
+              <option value={form.category}>{form.category} (legacy)</option>
+            )}
+            {!form.category && <option value="">Select a category…</option>}
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
@@ -344,6 +348,7 @@ function ServiceForm({
 
 export default function AdminServicesPage() {
   const services = useQuery(api.services.listAll);
+  const dbCategories = useQuery(api.serviceCategories.listAll);
   const createService = useMutation(api.services.create);
   const updateService = useMutation(api.services.update);
   const removeService = useMutation(api.services.remove);
@@ -355,10 +360,22 @@ export default function AdminServicesPage() {
   const [editingId, setEditingId] = useState<Id<"services"> | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // Categories shown in the form's dropdown — admin-managed list, not derived
+  // from existing services (so a brand-new category is selectable immediately).
+  const formCategories = useMemo(
+    () => (dbCategories ?? []).filter((c) => c.isActive).map((c) => c.name),
+    [dbCategories],
+  );
+
+  // Filter chips: union of admin categories + any legacy categories still
+  // present on services that aren't in the table (so nothing disappears).
   const activeCats = useMemo(() => {
-    if (!services) return [];
-    return Array.from(new Set(services.map((s) => s.category))).sort();
-  }, [services]);
+    const fromDb = formCategories;
+    const fromServices = services
+      ? Array.from(new Set(services.map((s) => s.category))).filter(Boolean)
+      : [];
+    return Array.from(new Set([...fromDb, ...fromServices]));
+  }, [services, formCategories]);
 
   const filtered = useMemo(() => {
     if (!services) return [];
@@ -487,7 +504,12 @@ export default function AdminServicesPage() {
             New Service
           </h2>
           <ServiceForm
-            initial={{ ...emptyForm, sortOrder: nextSortOrder }}
+            initial={{
+              ...emptyForm,
+              sortOrder: nextSortOrder,
+              category: formCategories[0] ?? "",
+            }}
+            categories={formCategories}
             onSave={handleCreate}
             onCancel={() => setShowCreateForm(false)}
             saving={saving}
@@ -727,6 +749,7 @@ export default function AdminServicesPage() {
                             imageUrl: service.imageUrl || "",
                             sortOrder: service.sortOrder,
                           }}
+                          categories={formCategories}
                           onSave={(data) => handleUpdate(service._id, data)}
                           onCancel={() => setEditingId(null)}
                           onDelete={() => handleDelete(service._id)}
