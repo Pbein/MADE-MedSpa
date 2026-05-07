@@ -36,25 +36,12 @@ export default function ShopPage() {
     return products.filter((p) => p.category === activeCategory);
   }, [products, activeCategory]);
 
-  // Featured: top 2 by price
-  const featured = useMemo(() => {
-    if (!products || products.length < 3) return [];
-    return [...products].sort((a, b) => b.price - a.price).slice(0, 2);
-  }, [products]);
-
-  // Grid: everything except featured when "All"
-  const gridProducts = useMemo(() => {
-    if (activeCategory !== "All") return filteredProducts;
-    const ids = new Set(featured.map((f) => f._id));
-    return filteredProducts.filter((p) => !ids.has(p._id));
-  }, [filteredProducts, featured, activeCategory]);
-
   const { styleOverrides, isSectionVisible, isPreview } = usePageSettings("shop");
   const { data: ctaText } = useSectionContent("section_shop_cta", {
     headline: "Not sure what you need?",
     subtitle: "Book a skincare consultation. Nurse Karlyne will recommend the right products for your skin.",
     cta_text: "Book Consultation",
-    cta_href: "/booking",
+    cta_href: "/booking#pabau-iframe",
     secondary_text: "Contact Us",
     secondary_href: "/contact",
   });
@@ -80,7 +67,7 @@ export default function ShopPage() {
 
         {/* ═══ HEADER ═══ */}
         <section id="section-hero" className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
-          <div className="mx-auto max-w-[1180px] text-center">
+          <div className="mx-auto max-w-[1280px] text-center">
             <motion.p
               className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
               style={{ letterSpacing: "0.12em" }}
@@ -151,99 +138,11 @@ export default function ShopPage() {
           </div>
         </section>
 
-        {/* ═══ FEATURED — Provider Favorites ═══ */}
-        {featured.length > 0 && activeCategory === "All" && (
-          <section className="relative px-6 md:px-8 pt-8 pb-6">
-            <div className="mx-auto max-w-[1180px]">
-              <motion.p
-                className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
-                style={{ letterSpacing: "0.12em" }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={viewportOnce}
-                transition={{ duration: 0.6, ease: luxuryEase }}
-              >
-                Provider Favorites
-              </motion.p>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                {featured.map((product, i) => (
-                  <motion.a
-                    key={product._id}
-                    href={product.pabauLink || BOOKING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group overflow-hidden transition-all duration-300 hover:-translate-y-1"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={viewportOnce}
-                    transition={{ duration: 0.7, ease: luxuryEase, delay: i * 0.1 }}
-                    style={{
-                      background: "var(--gradient-shop-surface)",
-                      border: "1px solid var(--border-soft)",
-                      borderRadius: "1rem",
-                      boxShadow: "var(--shadow-made-soft)",
-                      backdropFilter: "blur(2px)",
-                      display: "grid",
-                      gridTemplateColumns: "0.95fr 1.25fr",
-                    }}
-                  >
-                    {/* Image */}
-                    <div
-                      className="relative min-h-[280px] md:min-h-[320px]"
-                      style={{ background: "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)" }}
-                    >
-                      {product.imageUrl ? (
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.name}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 540px"
-                          className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center">
-                          <span className="font-headline text-5xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.25 }}>{product.name.charAt(0)}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex flex-col justify-between p-6 md:p-8">
-                      <div>
-                        <p className="mb-4 text-[11px] uppercase text-[var(--color-soft-taupe)]" style={{ letterSpacing: "0.12em" }}>
-                          {product.category}
-                        </p>
-                        <h3 className="font-headline text-[1.75rem] md:text-[2rem] leading-[1.05] text-[var(--color-espresso)]" style={{ letterSpacing: "-0.02em" }}>
-                          {product.name}
-                        </h3>
-                        <p className="mt-4 text-[15px] leading-7 text-[var(--color-soft-taupe)]">
-                          {product.description}
-                        </p>
-                      </div>
-
-                      <div className="mt-8 flex items-end justify-between gap-6">
-                        <span className="font-headline text-[2rem] leading-none text-[var(--color-espresso)]">
-                          ${product.price.toFixed(0)}
-                        </span>
-                        <span className="inline-flex items-center gap-3 text-[12px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1" style={{ letterSpacing: "0.12em" }}>
-                          {product.pabauLink ? "Shop Now" : "Inquire"}
-                          <span className="h-px w-6 bg-current" />
-                        </span>
-                      </div>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* ═══ EDITORIAL LINE ═══ */}
-        {hasProducts && activeCategory === "All" && (
-          <div className="relative px-6 md:px-8 py-8">
+        {hasProducts && (
+          <div className="relative px-6 md:px-8 pt-2 pb-6">
             <motion.p
-              className="accent-quote mx-auto max-w-[1180px] text-center text-lg text-[var(--color-soft-taupe)]"
+              className="accent-quote mx-auto max-w-[1280px] text-center text-base md:text-lg text-[var(--color-soft-taupe)]"
               style={{ opacity: 0.7 }}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.7 }}
@@ -255,41 +154,62 @@ export default function ShopPage() {
           </div>
         )}
 
-        {/* ═══ PRODUCT GRID ═══ */}
+        {/* ═══ PRODUCT GRID — 2 / 3 / 4 columns ═══ */}
         <section id="section-grid" ref={gridRef} className="relative px-6 md:px-8 pb-24 md:pb-32">
-          <div className="mx-auto max-w-[1180px]">
+          <div className="mx-auto max-w-[1280px]">
             {!products ? (
               <div className="flex justify-center py-20">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" style={{ borderColor: "var(--color-outline-variant)" }} />
               </div>
             ) : products.length === 0 ? (
-              <motion.div className="text-center py-20 max-w-lg mx-auto" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewportOnce} transition={{ duration: 0.8, ease: luxuryEase }}>
-                <p className="headline-section text-xl mb-5" style={{ color: "var(--color-espresso)" }}>Coming Soon</p>
-                <p className="text-sm" style={{ color: "var(--color-soft-taupe)" }}>Our curated collection is being carefully selected.</p>
+              <motion.div
+                className="text-center py-20 max-w-lg mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportOnce}
+                transition={{ duration: 0.8, ease: luxuryEase }}
+              >
+                <p className="headline-section text-xl mb-5" style={{ color: "var(--color-espresso)" }}>
+                  Coming Soon
+                </p>
+                <p className="text-sm" style={{ color: "var(--color-soft-taupe)" }}>
+                  Our curated collection is being carefully selected.
+                </p>
               </motion.div>
-            ) : gridProducts.length === 0 && activeCategory !== "All" ? (
-              <p className="body-editorial text-lg text-center py-16" style={{ color: "var(--color-soft-taupe)", opacity: 0.6 }}>No products in this category yet.</p>
-            ) : gridProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                {gridProducts.map((product, i) => (
-                  <motion.div
+            ) : filteredProducts.length === 0 ? (
+              <p className="body-editorial text-lg text-center py-16" style={{ color: "var(--color-soft-taupe)", opacity: 0.6 }}>
+                No products in this category yet.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 lg:gap-8">
+                {filteredProducts.map((product, i) => (
+                  <motion.a
                     key={product._id}
+                    href={product.pabauLink || BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${product.pabauLink ? "Shop" : "Inquire about"} ${product.name}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, ease: luxuryEase, delay: i * 0.06 }}
-                    className="group overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                    transition={{ duration: 0.6, ease: luxuryEase, delay: i * 0.04 }}
+                    className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blush)] focus-visible:ring-offset-2"
                     style={{
-                      background: "rgba(255,255,255,0.5)",
+                      background: "rgba(255,255,255,0.55)",
                       border: "1px solid var(--border-soft)",
-                      borderRadius: "1rem",
+                      borderRadius: "0.875rem",
                       boxShadow: "var(--shadow-made-soft)",
+                      backdropFilter: "blur(2px)",
                     }}
                   >
+                    {/* Square 1:1 image — matches the 1200×1200 spec we
+                        gave the client. object-contain so square uploads
+                        with neutral backgrounds aren't cropped further. */}
                     <div
-                      className="relative aspect-[4/5] overflow-hidden"
+                      className="relative w-full aspect-square overflow-hidden"
                       style={{
-                        background: product.imageUrl ? "var(--color-glaze)" : "linear-gradient(180deg, var(--color-powder) 0%, var(--color-glaze) 100%)",
-                        borderRadius: "1rem 1rem 0 0",
+                        background:
+                          "linear-gradient(180deg, #f7f1ea 0%, #efe7df 100%)",
+                        borderRadius: "0.875rem 0.875rem 0 0",
                       }}
                     >
                       {product.imageUrl ? (
@@ -297,47 +217,67 @@ export default function ShopPage() {
                           src={product.imageUrl}
                           alt={product.name}
                           fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-                          className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                          className="object-contain transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
+                          style={{ padding: "12%" }}
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <span className="font-headline text-4xl" style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}>{product.name.charAt(0)}</span>
+                          <span
+                            className="font-headline text-4xl md:text-5xl"
+                            style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}
+                          >
+                            {product.name.charAt(0)}
+                          </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="p-6">
-                      <p className="mb-3 text-[11px] uppercase text-[var(--color-soft-taupe)]" style={{ letterSpacing: "0.12em", opacity: 0.7 }}>
-                        {product.category}
-                      </p>
-                      <h3 className="font-headline text-[1.5rem] md:text-[1.75rem] leading-[1.05] text-[var(--color-espresso)]" style={{ letterSpacing: "-0.02em" }}>
-                        {product.name}
-                      </h3>
-                      <p className="mt-3 text-[15px] leading-7 text-[var(--color-soft-taupe)] line-clamp-2">
-                        {product.description}
-                      </p>
+                    {/* Info */}
+                    <div className="flex flex-1 flex-col justify-between gap-4 p-4 md:p-5">
+                      <div>
+                        <p
+                          className="mb-2 text-[10px] md:text-[11px] uppercase text-[var(--color-soft-taupe)]"
+                          style={{ letterSpacing: "0.14em", opacity: 0.75 }}
+                        >
+                          {product.category}
+                        </p>
+                        <h3
+                          className="font-headline text-base md:text-lg leading-tight text-[var(--color-espresso)]"
+                          style={{ letterSpacing: "-0.01em" }}
+                        >
+                          {product.name}
+                        </h3>
+                        {/* Description — hidden on mobile to keep cards compact;
+                            shown clamped to 2 lines on tablet+ where we have room. */}
+                        <p
+                          className="mt-2 hidden md:block text-[13px] leading-snug text-[var(--color-soft-taupe)] line-clamp-2"
+                          style={{ opacity: 0.85 }}
+                        >
+                          {product.description}
+                        </p>
+                      </div>
 
-                      <div className="mt-6 flex items-end justify-between gap-4 border-t pt-5" style={{ borderColor: "var(--border-soft)" }}>
-                        <span className="font-headline text-[1.75rem] leading-none text-[var(--color-espresso)]">
+                      <div
+                        className="flex items-end justify-between gap-3 pt-3 border-t"
+                        style={{ borderColor: "var(--border-soft)" }}
+                      >
+                        <span className="font-headline text-lg md:text-xl leading-none text-[var(--color-espresso)]">
                           ${product.price.toFixed(0)}
                         </span>
-                        <a
-                          href={product.pabauLink || BOOKING_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-3 text-[12px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1"
-                          style={{ letterSpacing: "0.12em" }}
+                        <span
+                          className="inline-flex items-center gap-2 text-[10px] md:text-[11px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1"
+                          style={{ letterSpacing: "0.14em" }}
                         >
                           {product.pabauLink ? "Shop" : "Inquire"}
-                          <span className="h-px w-6 bg-current" />
-                        </a>
+                          <span className="h-px w-4 md:w-5 bg-current" />
+                        </span>
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.a>
                 ))}
               </div>
-            ) : null}
+            )}
           </div>
         </section>
       </div>
@@ -358,15 +298,15 @@ export default function ShopPage() {
 
       {isSectionVisible("cta") && (
         <div id="section-cta">
-        <CTABanner
-          headline={ctaText.headline}
-          subtitle={ctaText.subtitle}
-          ctaText={ctaText.cta_text}
-          ctaHref={ctaText.cta_href || BOOKING_URL}
-          ctaExternal={!ctaText.cta_href}
-          secondaryText={ctaText.secondary_text}
-          secondaryHref={ctaText.secondary_href}
-        />
+          <CTABanner
+            headline={ctaText.headline}
+            subtitle={ctaText.subtitle}
+            ctaText={ctaText.cta_text}
+            ctaHref={ctaText.cta_href || BOOKING_URL}
+            ctaExternal={!ctaText.cta_href}
+            secondaryText={ctaText.secondary_text}
+            secondaryHref={ctaText.secondary_href}
+          />
         </div>
       )}
     </div>

@@ -13,10 +13,10 @@ import type { NextConfig } from "next";
 const contentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://clerk.com https://*.clerk.com https://clerk.mademedspa.com https://accounts.mademedspa.com https://challenges.cloudflare.com https://pabau.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com",
   "img-src 'self' data: blob: https: http:",
   "media-src 'self' blob: data: https://*.convex.cloud https://*.convex.site",
-  "font-src 'self' data: https://fonts.gstatic.com",
+  "font-src 'self' data: https://fonts.gstatic.com https://fonts.cdnfonts.com",
   "frame-src 'self' https://accounts.mademedspa.com https://partner.pabau.com https://pabau.com https://*.pabau.com https://*.google.com https://maps.google.com",
   "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud https://*.clerk.accounts.dev https://*.clerk.com https://clerk.mademedspa.com https://accounts.mademedspa.com https://api.oauth.pabau.com https://crm.pabau.com",
   "worker-src 'self' blob:",

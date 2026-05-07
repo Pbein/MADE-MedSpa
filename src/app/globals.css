@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Glacial Indifference — client-preferred Futura substitute. Loaded from
+   cdnfonts.com for now; migrate to self-hosted next/font/local once we
+   confirm she's keeping it. Falls back to Jost (already loaded via
+   next/font/google) if the CDN request fails. */
+@import url('https://fonts.cdnfonts.com/css/glacial-indifference-2');
+
 /* ============================================
    MADE Med Spa — Editorial Design System
    Derived from Google Stitch "Refined Med Spa"
@@ -98,8 +104,10 @@
   --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
   /* Body: Montserrat */
   --font-body: var(--font-montserrat), "Montserrat", "Inter", "Helvetica Neue", sans-serif;
-  /* Labels / H2 / H3 / eyebrows: Jost (free Futura substitute) */
-  --font-label: var(--font-jost), "Jost", "Futura", "Century Gothic", sans-serif;
+  /* Labels / H2 / H3 / eyebrows: Glacial Indifference (client preference,
+     a free geometric Futura-like sans). Falls back to Jost (already loaded
+     via next/font) if the CDN font fails, then to system geometric sans. */
+  --font-label: "Glacial Indifference", var(--font-jost), "Jost", "Futura", "Century Gothic", sans-serif;
 }
 
 :root {
