@@ -174,6 +174,7 @@ function ProductForm({
             value={form.imageUrl}
             onChange={(url) => setForm({ ...form, imageUrl: url })}
             aspect="1/1"
+            purpose="product"
           />
         </div>
 

@@ -100,6 +100,7 @@ function CaseForm({
             value={form.beforeImageUrl}
             onChange={(url) => setForm({ ...form, beforeImageUrl: url })}
             aspect="4/5"
+            purpose="service"
           />
           <input
             type="text"
@@ -116,6 +117,7 @@ function CaseForm({
             value={form.afterImageUrl}
             onChange={(url) => setForm({ ...form, afterImageUrl: url })}
             aspect="4/5"
+            purpose="service"
           />
           <input
             type="text"

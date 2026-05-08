@@ -292,6 +292,7 @@ export default function SectionDesignPanel({
       const url = await uploadBlob(file, {
         prefix: "section-design",
         filename: `${pageKey}-${sectionKey}-bg-${Date.now()}.${ext}`,
+        purpose: "background",
       });
       const previous = bgImage;
       setBgImage(url);

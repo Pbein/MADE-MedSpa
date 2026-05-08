@@ -99,6 +99,7 @@ function TeamMemberForm({
             value={form.imageUrl}
             onChange={(url) => setForm({ ...form, imageUrl: url })}
             aspect="3/4"
+            purpose="headshot"
           />
         </div>
         <div>

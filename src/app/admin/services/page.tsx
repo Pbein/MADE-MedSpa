@@ -227,6 +227,7 @@ function ServiceForm({
             value={form.imageUrl}
             onChange={(url) => setForm({ ...form, imageUrl: url })}
             aspect="4/5"
+            purpose="service"
           />
         </div>
 

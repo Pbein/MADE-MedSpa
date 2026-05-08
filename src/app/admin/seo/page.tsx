@@ -148,6 +148,7 @@ function SEOCard({ page, siteDefaultOgUrl }: { page: PageSEO; siteDefaultOgUrl: 
       const blobUrl = await uploadBlob(file, {
         prefix: "seo",
         filename: `${page.key}-og-${Date.now()}.${ext}`,
+        purpose: "og",
       });
       setOgImageUrl(blobUrl);
     } catch {

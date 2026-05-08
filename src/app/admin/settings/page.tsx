@@ -209,6 +209,7 @@ function OgImageCard() {
       const blobUrl = await uploadBlob(file, {
         prefix: "settings",
         filename: `og-image-${Date.now()}.${ext}`,
+        purpose: "og",
       });
       setUrl(blobUrl);
     } catch {
@@ -401,6 +402,7 @@ function LogoCard() {
       const blobUrl = await uploadBlob(file, {
         prefix: "settings",
         filename: `site-logo-${Date.now()}.${ext}`,
+        purpose: "logo",
       });
       setUrl(blobUrl);
     } catch {

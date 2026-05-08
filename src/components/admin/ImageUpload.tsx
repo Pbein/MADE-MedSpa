@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { uploadBlob, deleteBlob } from "@/lib/admin/blobUpload";
+import { uploadBlob, deleteBlob, type UploadPurpose } from "@/lib/admin/blobUpload";
 
 interface ImageUploadProps {
   value: string;
@@ -10,6 +10,12 @@ interface ImageUploadProps {
   accept?: string;
   aspect?: string;
   prefix?: string;
+  /**
+   * Drives client-side compression. Defaults to "general" — but parent
+   * forms should pass the actual purpose (product / service / headshot /
+   * etc.) so we resize + compress to the right spec before upload.
+   */
+  purpose?: UploadPurpose;
 }
 
 export default function ImageUpload({
@@ -19,6 +25,7 @@ export default function ImageUpload({
   accept = "image/*",
   aspect = "4/3",
   prefix = "uploads",
+  purpose = "general",
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +36,7 @@ export default function ImageUpload({
     setError("");
     const previousUrl = value;
     try {
-      const url = await uploadBlob(file, { prefix });
+      const url = await uploadBlob(file, { prefix, purpose });
       onChange(url);
       if (previousUrl) {
         deleteBlob(previousUrl).catch(() => {});
