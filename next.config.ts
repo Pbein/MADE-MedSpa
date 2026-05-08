@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
   compress: true,
   images: {
     minimumCacheTTL: 2592000,
+    // Skip the local dev server's image-optimization proxy in development.
+    // Karlyne's full-size product photos (multi-MB JPGs) were timing out the
+    // dev pipeline ("upstream image response timed out"). With unoptimized
+    // in dev, the browser fetches directly from Vercel Blob — instant.
+    // Production is unchanged: Vercel's edge optimizer still does its job.
+    unoptimized: process.env.NODE_ENV === "development",
     remotePatterns: [
       {
         protocol: "https",
