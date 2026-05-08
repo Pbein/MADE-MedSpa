@@ -318,7 +318,7 @@ export default function AboutPageClient({
 
           <motion.p
             variants={revealUp}
-            className="body-editorial"
+            className="body-editorial text-lg md:text-xl"
             style={{ color: "var(--color-on-surface-variant)" }}
           >
             {mission?.body ||
@@ -454,51 +454,114 @@ export default function AboutPageClient({
             </motion.h2>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12"
-          >
-            {teamMembers.map((member, i) => (
-              <motion.div key={member.name} variants={revealUp}>
-                <div className="overflow-hidden mb-6 relative aspect-[3/4]">
+          {/* Adaptive team layout:
+              1 person  → editorial spotlight (image left, big bio right)
+              2 people  → 2-up centered, generous breathing room
+              3 people  → 3-up centered
+              4+ people → 4-column grid (original layout) */}
+          {teamMembers.length === 1 ? (
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center"
+            >
+              <motion.div
+                variants={revealLeft}
+                className="md:col-span-5"
+              >
+                <div className="overflow-hidden relative aspect-[4/5]">
                   <Image
-                    src={member.imageUrl || TEAM_IMAGES[i] || "/images/placeholder-team.svg"}
-                    alt={member.name}
+                    src={teamMembers[0].imageUrl || TEAM_IMAGES[0] || "/images/placeholder-team.svg"}
+                    alt={teamMembers[0].name}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 768px) 100vw, 42vw"
                     className="object-cover image-editorial"
                     style={{
-                      boxShadow: "8px 8px 30px rgba(32,10,10,0.06)",
+                      boxShadow: "12px 12px 40px rgba(32,10,10,0.08)",
                     }}
                   />
                 </div>
-
-                <div>
-                  <h3
-                    className="label-micro text-sm mb-1"
-                    style={{ color: "var(--color-primary)" }}
-                  >
-                    {member.name}
-                  </h3>
-                  <p
-                    className="text-sm mb-3"
-                    style={{ color: "var(--color-on-surface-variant)" }}
-                  >
-                    {member.title}
-                  </p>
-                  <p
-                    className="body-editorial text-sm"
-                    style={{ color: "var(--color-on-surface-variant)" }}
-                  >
-                    {member.bio}
-                  </p>
-                </div>
               </motion.div>
-            ))}
-          </motion.div>
+
+              <motion.div
+                variants={revealRight}
+                className="md:col-span-7"
+              >
+                <p
+                  className="label-micro mb-4"
+                  style={{ color: "var(--color-secondary)" }}
+                >
+                  {teamMembers[0].title}
+                </p>
+                <h3
+                  className="font-headline text-3xl md:text-5xl lg:text-6xl mb-6"
+                  style={{ color: "var(--color-primary)", letterSpacing: "-0.01em", lineHeight: 1.05 }}
+                >
+                  {teamMembers[0].name}
+                </h3>
+                <p
+                  className="body-editorial text-base md:text-lg"
+                  style={{ color: "var(--color-on-surface-variant)" }}
+                >
+                  {teamMembers[0].bio}
+                </p>
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className={
+                teamMembers.length === 2
+                  ? "max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-12 lg:gap-16"
+                  : teamMembers.length === 3
+                    ? "max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 lg:gap-12"
+                    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12"
+              }
+            >
+              {teamMembers.map((member, i) => (
+                <motion.div key={member.name} variants={revealUp}>
+                  <div className="overflow-hidden mb-6 relative aspect-[3/4]">
+                    <Image
+                      src={member.imageUrl || TEAM_IMAGES[i] || "/images/placeholder-team.svg"}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover image-editorial"
+                      style={{
+                        boxShadow: "8px 8px 30px rgba(32,10,10,0.06)",
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <h3
+                      className="label-micro text-sm mb-1"
+                      style={{ color: "var(--color-primary)" }}
+                    >
+                      {member.name}
+                    </h3>
+                    <p
+                      className="text-sm mb-3"
+                      style={{ color: "var(--color-on-surface-variant)" }}
+                    >
+                      {member.title}
+                    </p>
+                    <p
+                      className="body-editorial text-sm"
+                      style={{ color: "var(--color-on-surface-variant)" }}
+                    >
+                      {member.bio}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </section>
 

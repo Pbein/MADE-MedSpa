@@ -20,6 +20,35 @@ export const listAll = query({
   },
 });
 
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+// Looks up a product by either its Convex _id or a name-derived slug.
+// Lets product detail pages use pretty URLs (/shop/epicutis-lipid-serum)
+// without requiring a schema migration to add a slug field. Slugs are
+// generated on the fly from product.name.
+export const getBySlugOrId = query({
+  args: { slugOrId: v.string() },
+  handler: async (ctx, args) => {
+    // First try treating it as an _id.
+    const normalizedId = ctx.db.normalizeId("shopProducts", args.slugOrId);
+    if (normalizedId) {
+      const byId = await ctx.db.get(normalizedId);
+      if (byId?.isActive) return byId;
+    }
+
+    // Fallback: scan active products and match against slugified name.
+    const all = await ctx.db.query("shopProducts").collect();
+    return (
+      all.find((p) => p.isActive && slugify(p.name) === args.slugOrId) ?? null
+    );
+  },
+});
+
 export const listByCategory = query({
   args: { category: v.string() },
   handler: async (ctx, args) => {

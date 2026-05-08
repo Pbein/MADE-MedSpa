@@ -182,100 +182,100 @@ export default function ShopPage() {
               </p>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 lg:gap-8">
-                {filteredProducts.map((product, i) => (
-                  <motion.a
-                    key={product._id}
-                    href={product.pabauLink || BOOKING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${product.pabauLink ? "Shop" : "Inquire about"} ${product.name}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, ease: luxuryEase, delay: i * 0.04 }}
-                    className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blush)] focus-visible:ring-offset-2"
-                    style={{
-                      background: "rgba(255,255,255,0.55)",
-                      border: "1px solid var(--border-soft)",
-                      borderRadius: "0.875rem",
-                      boxShadow: "var(--shadow-made-soft)",
-                      backdropFilter: "blur(2px)",
-                    }}
-                  >
-                    {/* Square 1:1 image — matches the 1200×1200 spec we
-                        gave the client. object-contain so square uploads
-                        with neutral backgrounds aren't cropped further. */}
-                    <div
-                      className="relative w-full aspect-square overflow-hidden"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, #f7f1ea 0%, #efe7df 100%)",
-                        borderRadius: "0.875rem 0.875rem 0 0",
-                      }}
+                {filteredProducts.map((product, i) => {
+                  const slug = product.name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/(^-|-$)/g, "") || product._id;
+                  return (
+                    <motion.div
+                      key={product._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.6, ease: luxuryEase, delay: i * 0.04 }}
                     >
-                      {product.imageUrl ? (
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.name}
-                          fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                          className="object-contain transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
-                          style={{ padding: "12%" }}
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <span
-                            className="font-headline text-4xl md:text-5xl"
-                            style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}
-                          >
-                            {product.name.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex flex-1 flex-col justify-between gap-4 p-4 md:p-5">
-                      <div>
-                        <p
-                          className="mb-2 text-[10px] md:text-[11px] uppercase text-[var(--color-soft-taupe)]"
-                          style={{ letterSpacing: "0.14em", opacity: 0.75 }}
-                        >
-                          {product.category}
-                        </p>
-                        <h3
-                          className="font-headline text-base md:text-lg leading-tight text-[var(--color-espresso)]"
-                          style={{ letterSpacing: "-0.01em" }}
-                        >
-                          {product.name}
-                        </h3>
-                        {/* Description — hidden on mobile to keep cards compact;
-                            shown clamped to 2 lines on tablet+ where we have room. */}
-                        <p
-                          className="mt-2 hidden md:block text-[13px] leading-snug text-[var(--color-soft-taupe)] line-clamp-2"
-                          style={{ opacity: 0.85 }}
-                        >
-                          {product.description}
-                        </p>
-                      </div>
-
-                      <div
-                        className="flex items-end justify-between gap-3 pt-3 border-t"
-                        style={{ borderColor: "var(--border-soft)" }}
+                      <Link
+                        href={`/shop/${slug}`}
+                        aria-label={`View ${product.name}`}
+                        className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blush)] focus-visible:ring-offset-2"
+                        style={{
+                          background: "rgba(255,255,255,0.55)",
+                          border: "1px solid var(--border-soft)",
+                          borderRadius: "0.875rem",
+                          boxShadow: "var(--shadow-made-soft)",
+                          backdropFilter: "blur(2px)",
+                          height: "100%",
+                        }}
                       >
-                        <span className="font-headline text-lg md:text-xl leading-none text-[var(--color-espresso)]">
-                          ${product.price.toFixed(0)}
-                        </span>
-                        <span
-                          className="inline-flex items-center gap-2 text-[10px] md:text-[11px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1"
-                          style={{ letterSpacing: "0.14em" }}
+                        {/* Square 1:1 image — matches the 1200×1200 spec. */}
+                        <div
+                          className="relative w-full aspect-square overflow-hidden"
+                          style={{
+                            background:
+                              "linear-gradient(180deg, #f7f1ea 0%, #efe7df 100%)",
+                            borderRadius: "0.875rem 0.875rem 0 0",
+                          }}
                         >
-                          {product.pabauLink ? "Shop" : "Inquire"}
-                          <span className="h-px w-4 md:w-5 bg-current" />
-                        </span>
-                      </div>
-                    </div>
-                  </motion.a>
-                ))}
+                          {product.imageUrl ? (
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                              className="object-contain transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
+                              style={{ padding: "12%" }}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center">
+                              <span
+                                className="font-headline text-4xl md:text-5xl"
+                                style={{ color: "var(--color-soft-taupe)", opacity: 0.2 }}
+                              >
+                                {product.name.charAt(0)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Card meta — minimal: category, name, price + arrow.
+                            Description lives on the detail page (cleaner cards,
+                            standard ecommerce pattern). */}
+                        <div className="flex flex-1 flex-col justify-between gap-3 p-4 md:p-5">
+                          <div>
+                            <p
+                              className="mb-2 text-[10px] md:text-[11px] uppercase text-[var(--color-soft-taupe)]"
+                              style={{ letterSpacing: "0.14em", opacity: 0.75 }}
+                            >
+                              {product.category}
+                            </p>
+                            <h3
+                              className="font-headline text-base md:text-lg leading-tight text-[var(--color-espresso)]"
+                              style={{ letterSpacing: "-0.01em" }}
+                            >
+                              {product.name}
+                            </h3>
+                          </div>
+
+                          <div
+                            className="flex items-end justify-between gap-3 pt-3 border-t"
+                            style={{ borderColor: "var(--border-soft)" }}
+                          >
+                            <span className="font-headline text-lg md:text-xl leading-none text-[var(--color-espresso)]">
+                              ${product.price.toFixed(0)}
+                            </span>
+                            <span
+                              className="inline-flex items-center gap-2 text-[10px] md:text-[11px] font-medium uppercase text-[var(--color-espresso)] transition-transform duration-300 group-hover:translate-x-1"
+                              style={{ letterSpacing: "0.14em" }}
+                            >
+                              View
+                              <span className="h-px w-4 md:w-5 bg-current" />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </div>
