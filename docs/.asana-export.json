@@ -1,0 +1,650 @@
+[
+  {
+    "gid": "1214325279966299",
+    "name": "[P1 Performance] Revisit hero video serving — Convex storage stutters under load",
+    "due_on": null,
+    "notes": "**Status as of 2026-04-27:** observed mild lag/stutter on the hero background video on both localhost and live mademedspa.com after uploading via /admin/media. Currently 'seems OK' but flagged to revisit — likely to get worse with real visitor traffic.\n\n**Root cause:** files uploaded via /admin/media land in Convex storage (`<deployment>.convex.cloud/api/storage/<id>`). Convex storage:\n- Is a single-region origin server (not edge-cached)\n- Has limited HTTP range-request optimization\n- Was designed for admin file uploads / gallery photos / profile images, not hot-loop streaming media\n\nVercel's `public/videos/` static files are served via Vercel's global edge CDN with full range support — buttery smooth playback.\n\n**Three options (in order of effort):**\n\n**A. Static deploy** — keep hero as `public/videos/hero.mp4`, dev swaps it via commit. Removes self-service for Karlyne.\n\n**B. Vercel-edge proxy route** — build `/api/media/[key]` that fetches from Convex and streams with `Cache-Control: public, max-age=31536000, immutable, s-maxage=31536000` + proper `Accept-Ranges: bytes` headers. Vercel edge caches the response after first hit. Karlyne keeps self-service uploads. ~1 hour. Cache invalidation when she swaps videos requires a cache-key bump.\n\n**C. Real video CDN (Mux, Cloudinary, Bunny)** — transcoded + adaptive bitrate + global edge. ~2-3 hours integration + monthly cost ($10-30/mo). Overkill for a single hero video.\n\n**Recommendation:** \n- Pre-launch: stay with current Convex storage approach since it 'seems OK' and we don't want to change too much during launch crunch\n- Week 1 post-launch: monitor Lighthouse / Real User Monitoring for video stalling. If real visitors see stutter, ship Option B (proxy route).\n\n**Diagnostic to run when revisiting:**\n1. DevTools Network tab on mademedspa.com\n2. Find hero video request — confirm URL hostname (Convex vs Vercel)\n3. Check response headers: `Accept-Ranges`, `Cache-Control`\n4. Check Lighthouse: Largest Contentful Paint, Total Blocking Time scores\n5. Test on slow 3G throttle in DevTools — if it stutters there, real visitors on cellular will too\n\nFile when revisiting: src/components/sections/HeroSection.tsx + new src/app/api/media/[key]/route.ts (Option B)",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325279966299"
+  },
+  {
+    "gid": "1214325285122612",
+    "name": "[P0 LAUNCH-CRITICAL] Switch Vercel from pk_test_ to pk_live_ Clerk keys before launch",
+    "due_on": null,
+    "notes": "Live mademedspa.com is currently running with **Clerk development keys** (pk_test_ / sk_test_). Browser console shows the warning every page load:\n\n> Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production.\n\n**Why this matters at launch:**\n- Clerk dev instances cap at low MAU (typically ~100 active users)\n- Rate limits on sign-ins/sign-ups are aggressive\n- Sessions can be invalidated unexpectedly\n- The `convex` JWT template we just created lives in the **Development** Clerk instance — it will NOT carry over to the Production Clerk instance. Same for users (Karlyne's account doesn't exist on Clerk prod yet).\n\n**Cutover steps (already in PRODUCTION-DEPLOYMENT.md Step 2 but elevating priority):**\n\n1. Clerk dashboard → switch to **Production instance** (top-right toggle Development → Production)\n2. Configure → API Keys → copy `pk_live_...` and `sk_live_...`\n3. Create the **`convex` JWT template** in Production instance (same setup as Development — see separate task)\n4. Configure → Domains → add `mademedspa.com` and `www.mademedspa.com`\n5. Configure → User & Authentication → set sign-up mode to Restricted (separate task)\n6. **Invite Karlyne** to Production via email invitation\n7. **Update Vercel env vars** — NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, CLERK_FRONTEND_API_URL all to prod values\n8. **Update Convex prod env** — npx convex env set CLERK_FRONTEND_API_URL \"https://...\" --prod\n9. Redeploy Vercel (push or click Redeploy) so new keys take effect\n10. Verify in incognito: sign-in works, /admin loads for Karlyne, /admin doesn't load for non-allowlisted users (403)\n\n**Without this step at launch:** the dev Clerk instance will get rate-limited as soon as a few real clients try to sign up via the contact form (which uses Clerk indirectly through Convex auth)... actually no, contact form doesn't use Clerk. But /admin will. And depending on how many marketing team members Karlyne adds, dev MAU cap could hit fast.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325285122612"
+  },
+  {
+    "gid": "1214325279388844",
+    "name": "[P0 Lessons] Document Clerk JWT template requirement in onboarding docs",
+    "due_on": null,
+    "notes": "Critical lesson learned 2026-04-27: the Clerk-Convex auth chain was completely broken until we manually created a JWT template named `convex` in Clerk dashboard.\n\n**Without this template:**\n- ConvexProviderWithClerk silently fails to fetch a JWT for Convex calls\n- Every Convex mutation receives an unauthenticated request\n- ctx.auth.getUserIdentity() returns null\n- The Apr-19 main code was effectively allowing **anonymous writes to siteContent.upsert and any other admin mutation** — anyone in the world with the Convex URL could have edited the CMS without being signed in\n\nThe `assertAdmin` gate added this session is what surfaced this hole. Pre-launch, both must be in place: assertAdmin (code) + the convex JWT template (Clerk dashboard config).\n\n**Update docs/PRODUCTION-DEPLOYMENT.md Step 2 (Clerk Production Keys):**\n\nAdd a new substep 2.4 BEFORE 'Configure production domain':\n\n```\n### 2.4 Create the 'convex' JWT template (REQUIRED — silent auth failure without this)\n\n1. Configure → JWT Templates → + New Template\n2. Select 'Convex' from the Template preset dropdown\n3. Name: `convex` (lowercase, exact — must match applicationID in convex/auth.config.ts)\n4. Issuer + JWKS Endpoint: pre-filled, leave as is\n5. Claims: pre-filled with aud, email, email_verified, etc. — leave as is\n6. Click Save\n7. Verify: try any admin mutation — should succeed instead of returning 'Unauthorized: not an admin'\n```\n\nAlso add to Pre-Flight Checklist:\n- [ ] Clerk Production instance has 'convex' JWT template created\n\nWhy this is bigger than just our project: Convex+Clerk integration documentation assumes you've configured this template, but doesn't make it a hard prerequisite check. For ANY future Convex+Clerk client, the lesson stands: create the JWT template explicitly during Clerk setup, never assume it exists.\n\n~10 min doc update.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325279388844"
+  },
+  {
+    "gid": "1214325279393033",
+    "name": "[P0 Personal — Philip] Fix /admin/pages/home Primary Button Link from `/book` to `/booking`",
+    "due_on": null,
+    "notes": "Live site mademedspa.com/ has a 404 on `/book` because the home hero CTA's Primary Button Link in Convex siteContent is `/book` (typo) instead of `/booking`.\n\nAdmin uploads/saves work now (the JWT template fix unblocked everything). 30-second fix:\n\n1. Sign in to mademedspa.com/admin\n2. Go to Edit Pages → Home\n3. Find the Hero section\n4. Change Primary Button Link from `/book` → `/booking`\n5. Save\n\nVerify: refresh mademedspa.com/, click 'Book Your Appointment' — should go to /booking instead of 404.\n\nAlso added a permanent /book → /booking redirect to next.config.ts (commit 0d29ab5) as defense against future typos. But that redirect only takes effect after the feature branch deploys to prod — the manual admin fix unblocks it immediately.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325279393033"
+  },
+  {
+    "gid": "1214325278455578",
+    "name": "🚨 [P0 LAUNCH-BLOCKING] Create 'convex' JWT template in Clerk PRODUCTION instance",
+    "due_on": null,
+    "notes": "**Lesson learned 2026-04-27:** The Clerk-Convex auth chain was completely broken in the dev instance until we created a JWT template named 'convex' in Clerk Dashboard → Configure → JWT Templates. Without this template:\n- Clerk's `useAuth()` doesn't issue a JWT for Convex calls\n- Convex receives unauthenticated requests\n- `ctx.auth.getUserIdentity()` returns null\n- `assertAdmin` rejects every admin write\n\n**The Apr-19 main code 'worked' only because no mutation actually checked auth — anyone in the world with the Convex URL could write to siteContent.upsert without being signed in.** That's a serious pre-launch security hole that's now closed by `assertAdmin`, but only if the JWT template exists.\n\n**Production cutover step (must happen during Step 2 of PRODUCTION-DEPLOYMENT.md):**\n\n1. Switch Clerk to **Production instance** (separate from Development — has its own dashboard view)\n2. Configure → JWT Templates → **+ New Template** → select **Convex** preset\n3. Name: `convex` (lowercase, exact)\n4. Template preset: **Convex**\n5. Issuer + JWKS Endpoint: pre-filled — leave as is\n6. Claims: pre-filled with `aud: \"convex\"`, `email`, `email_verified`, etc. — leave as is\n7. Click **Save**\n\n**Then verify** by:\n- Setting CLERK_FRONTEND_API_URL on Convex prod (matches the prod Clerk frontend URL)\n- Setting ADMIN_EMAILS on Convex prod\n- Signing in as an admin in production\n- Trying any admin write — should succeed\n\n**Without this step, prod launch will hit the EXACT same 'Unauthorized: not an admin' error and Karlyne will be locked out of admin entirely.**\n\nVerification commands:\n```bash\nnpx convex env set CLERK_FRONTEND_API_URL \"https://<prod-frontend>.clerk.com\" --prod\nnpx convex env set ADMIN_EMAILS \"karlyne08@gmail.com,philipbein10697@gmail.com\" --prod\n```\n\n(Production Clerk frontend URL will be different from dev's `major-mallard-1.clerk.accounts.dev` — get it from Clerk prod dashboard's API Keys section.)",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325278455578"
+  },
+  {
+    "gid": "1214325004443930",
+    "name": "[P0 Operational] Plan ownership transfer to Karlyne (post-launch, 2-4 weeks after live)",
+    "due_on": null,
+    "notes": "Vision: Karlyne ends up owning ALL infrastructure/credentials so Philip can step away cleanly.\n\nCurrent ownership state (everything is on Philip's accounts):\n- GitHub repo: github.com/Pbein/MADE-MedSpa\n- Convex deployment: dev:energized-akita-520 (Philip's Convex team)\n- Vercel project: under Philip's Vercel account\n- Clerk app: KarklyneMedSpa under Philip's Clerk workspace\n- Domain DNS: ??? (verify who registered mademedspa.com)\n- Pabau API key: ✅ already Karlyne's\n\n**Transfer plan (do 2-4 weeks AFTER launch is stable, not before):**\n\nWhy not before: Philip knows the system, Karlyne doesn't — if anything breaks during transfer, having Philip own the platforms means quick fixes. Also avoids transferring during launch chaos.\n\n**Order matters — do roughly this sequence:**\n\n1. **Confirm domain ownership.** Who registered mademedspa.com? If it's Philip, transfer at registrar (Namecheap/GoDaddy/etc. — usually a 'push to another account' or 'change registrant' flow). Karlyne needs an account on the same registrar OR plan a registrar-to-registrar transfer.\n\n2. **GitHub repo:**\n   - Karlyne creates a github account (if she doesn't have one)\n   - Settings → Transfer ownership → enter her username\n   - She accepts the transfer\n   - URL changes from Pbein/ to her-username/MADE-MedSpa\n   - Update Vercel git integration (auto-reconnects but verify)\n\n3. **Vercel project:**\n   - Vercel → project Settings → Transfer Project → to her account/team\n   - Or: add her as Owner, then she removes Philip\n   - Domain stays mapped\n\n4. **Convex deployment:**\n   - Convex dashboard → add Karlyne as Team Owner\n   - Once she has access and confirms it works, Philip leaves the team\n   - Both dev and prod deployments transfer with the team\n   - All env vars (including PABAU_API_KEY, ADMIN_EMAILS) stay\n\n5. **Clerk app:**\n   - Clerk → Workspace → add Karlyne as Owner\n   - Transfer org ownership to her\n   - Once verified, Philip leaves\n\n6. **Rotate webhook secrets after transfer** (defensive):\n   - Generate new PABAU_WEBHOOK_SECRET\n   - Update Vercel env + Convex env\n   - Update Pabau webhook config\n   - Confirms no shared secrets remain on Philip's side\n\n7. **Documentation handoff:**\n   - docs/PRODUCTION-DEPLOYMENT.md is current\n   - docs/pabau-integration.md is current\n   - Add a new docs/CREDENTIALS-OWNERSHIP.md listing what's where, billing contacts per platform, how to add team members, how to remove a developer\n\n**Cost considerations:**\n- Convex Free tier: 1M function calls/mo — should be plenty\n- Vercel Hobby: free, but may need Pro ($20/mo) for production-grade analytics\n- Clerk: free up to 10k MAU\n- Pabau: already her existing subscription\n\nMake sure she's on the right paid tier of each before transfer (or budget for it) so the transfer doesn't break a feature that requires a paid plan.\n\n**Triggering this:** 2-4 weeks after launch, OR when Karlyne brings up wanting full ownership. File a maintenance-agreement task too — even after transfer, Karlyne may want Philip on retainer for periodic updates.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325004443930"
+  },
+  {
+    "gid": "1214325019467229",
+    "name": "[P1 Future-paid] Build admin self-service: 'Manage Admins' page",
+    "due_on": null,
+    "notes": "Goal: Karlyne (and any super-admin) can add/remove admins from the website UI without touching env vars or running CLI commands.\n\n**Architecture:**\n\n1. New Convex table `admins`:\n   - email (string, indexed)\n   - clerkUserId (optional string — set when they accept the invitation and sign in)\n   - role: 'admin' | 'super-admin'\n   - addedBy (email or userId of inviter)\n   - addedAt (timestamp)\n   - lastActiveAt (timestamp, updated on each authenticated call)\n   - revokedAt (timestamp, optional — soft delete)\n   - notes (optional, free text)\n\n2. Migrate `assertAdmin` logic:\n   - Currently reads `process.env.ADMIN_EMAILS`\n   - Change to: query the `admins` table for matching email/userId, check role/revoked\n   - Keep env var as a 'bootstrap allowlist' fallback for when the table is empty (so you don't lock yourself out)\n\n3. New page `/admin/team-access`:\n   - Lists all current admins (email, role, last active, revoke button)\n   - 'Invite admin' form: enter email, choose role (admin/super-admin)\n   - On submit: creates Clerk invitation + inserts row in `admins` table\n   - Only super-admins can invite/revoke; regular admins can view but not change\n\n4. Clerk integration:\n   - Use Clerk's invitation API to send the actual invite email\n   - Webhook on `invitation.accepted` fires → we update the `admins` row with their clerkUserId\n\n5. Revocation flow:\n   - Soft-delete in `admins` table (set revokedAt)\n   - Optionally call Clerk to revoke their active session (immediate boot-out)\n\n**Bootstrap process:**\n- First super-admin is hardcoded via env (you, initially — then transferred to Karlyne)\n- That super-admin invites Karlyne, who becomes a second super-admin\n- Karlyne invites her marketing team as regular admins\n- You can be removed once Karlyne is set up\n\n**Not launch-critical.** Current env var allowlist works for 2 people. File when Karlyne wants to add her marketing team — that's the trigger.\n\nEstimated: ~1 full day of work. Not in $1500 launch flat-rate — belongs to post-launch paid update agreement.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325019467229"
+  },
+  {
+    "gid": "1214324999939663",
+    "name": "[P0 Security] Lock Clerk to Restricted signup mode (no public signups)",
+    "due_on": "2026-04-30",
+    "notes": "Currently the Clerk app is in Public signup mode — anyone can create an account on KarklyneMedSpa even though only Karlyne + Philip should ever access /admin. The email allowlist blocks them at 403 once they try to navigate to /admin, but the random Clerk account still exists.\n\nFix: Clerk dashboard → Configure → User & Authentication → Sign-up modes → Restricted.\n\nWith Restricted:\n- New users can ONLY sign up if explicitly invited via Clerk's invitation system\n- Karlyne + Philip are already signed in — not affected\n- If marketing team adds a new admin, send them a Clerk invitation, they sign up via the invitation link\n\nWhy: defense-in-depth. The email allowlist is still in place (and should stay) — this just adds a gate at signup so random users don't even create accounts.\n\nNote: do this BEFORE production cutover, since Clerk's prod environment is a separate config and the same setting needs to be applied there too.\n\nFilter for unwanted accounts already in dev: Clerk dashboard → Users → review the list. Currently shows 2 users (Karlyne, Philip). If random users appear later, deletable from dashboard.\n\n~5 min, no code change.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214324999939663"
+  },
+  {
+    "gid": "1214325064566836",
+    "name": "[P0 Process] Document the 'shared dev Convex powers production' gotcha + checklist",
+    "due_on": null,
+    "notes": "Lesson from this session: production mademedspa.com Vercel deploy uses the dev:energized-akita-520 Convex deployment because Convex prod hasn't been created yet. This means:\n\n- Schema changes pushed via `npx convex codegen` are LIVE on prod immediately\n- Mutations added to dev Convex affect prod traffic\n- Security gates added to mutations affect prod even without deploying Next.js\n\nWhat almost happened: Worker A's assertAdmin gate went live on dev Convex when we ran codegen, BEFORE the matching Next.js middleware was deployed. If a real visitor tried to do something admin (which they couldn't, since they aren't signed in), it would have failed silently. More concerning: the original Apr-19 prod main code calls api.contactSubmissions.create on form submit, and we deleted that mutation — if we'd been less careful, prod form submissions would have started failing the moment the mutation was removed from Convex.\n\n(We didn't delete contactSubmissions for this exact reason.)\n\nUpdate docs/PRODUCTION-DEPLOYMENT.md with a new section at the top:\n\n'Shared Convex deployment hazard: until Convex prod is created in Step 1, EVERY change pushed to Convex dev is live on production mademedspa.com. Before any of these:\n- Adding/removing mutations\n- Renaming schema fields\n- Changing auth gates on existing mutations\n- Running migrations\n...verify the change is compatible with the currently-deployed Apr-19 main, OR coordinate with a same-day Next.js deploy.'\n\nAlso add to Pre-Flight Checklist:\n- [ ] Convex production deployment created (cuts the dev=prod link)\n\n~15 min doc update. Do this as part of the deployment-runbook task already in Asana.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325064566836"
+  },
+  {
+    "gid": "1214325003608970",
+    "name": "[P0 Auth] Update Clerk JWT template to include email claim (long-term proper fix)",
+    "due_on": null,
+    "notes": "Lesson from this session: Convex's assertAdmin couldn't read identity.email because Clerk's default 'convex' JWT template only includes the audience claim. We worked around this by also accepting Clerk user IDs (subject) in the allowlist — but the proper fix is having email in the JWT.\n\nSteps in Clerk dashboard:\n1. Configure → JWT Templates → 'convex' template\n2. Edit the Claims JSON — currently:\n   {\n     \"aud\": \"convex\"\n   }\n3. Change to:\n   {\n     \"aud\": \"convex\",\n     \"email\": \"{{user.primary_email_address.email_address}}\"\n   }\n4. Save\n5. Force re-sign-in (sign out + back in) to get a fresh JWT with the email claim\n\nVerify: hit any admin mutation — the Convex logs will show identity.email is now populated.\n\nAfter this lands, ADMIN_EMAILS can drop the user_xxx entries and just be emails. But the user_xxx fallback in assertAdmin stays as defense-in-depth.\n\nNote: must also be applied to the production Clerk environment (separate JWT template config) during prod cutover.\n\n~5 min.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325003608970"
+  },
+  {
+    "gid": "1214325063438746",
+    "name": "[P0 Pabau] Verify packages widget + Book Now button work with new slug `made-med-spa`",
+    "due_on": null,
+    "notes": "Follow-up after Pabau fixed the booking slug (2026-04-27). The widget URLs the client texted earlier referenced the OLD slug `made-51g64`. Confirm both still work — or are now broken — with the new slug.\n\n**Test in incognito:**\n\n1. Book Now button widget:\n   https://pabau.com/widgets/online-bookings/book-now-button.js?company_slug=made-med-spa\n   - Should return JS that renders a Book Now button\n   - When clicked, deep-links should now resolve (not 'account doesn't exist')\n\n2. Packages widget:\n   https://pabau.com/widgets/pabau-packages.js?slug=made-med-spa\n   - Should return JS that renders membership packages\n   - Empty state acceptable IF Karlyne hasn't created any packages with sold_online=1 yet\n\n3. Direct booking URL (already verified):\n   https://partner.pabau.com/online-bookings/made-med-spa\n   - Confirmed working by Karlyne 2026-04-27 ✅\n\n**If widgets are broken with new slug:** ask Pabau support to rename the widget-side slug too. The widget host (pabau.com) and the portal host (partner.pabau.com) may have separate slug records that need mapping.\n\n**If widgets work:** unblocks the existing tasks for booking iframe embed and broken-purchase-links fix — those previously couldn't be tested.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063438746"
+  },
+  {
+    "gid": "1214325063391573",
+    "name": "[P0 Discovery] Get logo PNG from Karlyne",
+    "due_on": null,
+    "notes": "Blocking the logo upload feature we built (admin /admin/settings).\n\nAsk Karlyne for:\n- PNG with transparent background\n- 2x resolution preferred (e.g., 600x200 or higher)\n- Mid-tone palette ideally (the nav has both light and dark backgrounds across pages — a single logo color won't look great on both)\n\nIf she has only a colored logo (espresso/dark logo on light bg, or white/cream logo on dark bg):\n- Get whichever color matches the cream/silk nav (most common state)\n- Flag that we may need a 2-variant solution post-launch (light + dark version) — already noted in launch task list as future-paid follow-up\n\nOnce received: drop file in /admin/settings logo card and verify nav + footer render correctly.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063391573"
+  },
+  {
+    "gid": "1214325063243726",
+    "name": "[P1 Personal — Philip] Get logo file from Karlyne + upload via /admin/settings",
+    "due_on": null,
+    "notes": "Pre-launch personal action item.\n\nAsk her for:\n- PNG with transparent background (most flexible across nav backgrounds)\n- Higher resolution preferred (600x200+ is fine, 1200x400 better)\n\nWhen received:\n1. Upload via /admin/settings → Logo card\n2. Verify it renders in nav (max-height 40px desktop, 32px mobile) and footer (max-height 60px)\n3. Check both light-bg pages (/, /services) and dark-bg states (hero overlays)\n\nIf the single logo color doesn't work on both light + dark backgrounds:\n- Use whichever looks best in the most-visited state\n- File a follow-up for 2-variant logo support (already in Asana as P3 future-paid)",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063243726"
+  },
+  {
+    "gid": "1214324998780064",
+    "name": "[P0 Personal — Philip] Update Karlyne's email reference everywhere it was assumed wrong",
+    "due_on": null,
+    "notes": "Confirmed via Clerk dashboard 2026-04-27: Karlyne's actual email is `karlyne08@gmail.com` (NOT `karlyne@mademedspa.com` which was assumed in earlier docs).\n\nUpdated this session:\n- Convex dev ADMIN_EMAILS: ✅ set with correct value\n- .env.local ADMIN_EMAILS: ✅ set with correct value\n\nStill needs review:\n- docs/PRODUCTION-DEPLOYMENT.md — the assumed `karlyne@mademedspa.com` example value in the ADMIN_EMAILS table row. Replace with placeholder like `<her-email>@gmail.com` or just `<karlyne-clerk-email>` to avoid hardcoding.\n- Any email templates we drafted (the support ticket email mentioned this domain)\n- Auto-memory entries about Karlyne (if any reference an email)\n\nWhen production cutover happens:\n- Vercel ADMIN_EMAILS = philipbein10697@gmail.com,karlyne08@gmail.com\n- Convex prod ADMIN_EMAILS = same\n\nIf she ever creates a karlyne@mademedspa.com email and signs into Clerk with that instead of karlyne08@gmail.com, both her old + new emails should be in the allowlist during the transition.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214324998780064"
+  },
+  {
+    "gid": "1214325063072794",
+    "name": "[P0 Process] Add 'Convex env vars set first' to deployment runbook checklist",
+    "due_on": null,
+    "notes": "Lesson from this session: Worker A's `assertAdmin` mutations went live on Convex dev when codegen ran, but ADMIN_EMAILS wasn't set yet → every admin write rejected. Karlyne (or anyone signing in) would have hit this in production if we'd cut over without setting the env var first.\n\nUpdate docs/PRODUCTION-DEPLOYMENT.md to make this airtight:\n\n1. **Reorder Step 1 (Convex Production Deployment):** before running `npx convex deploy --prod`, run `npx convex env set ADMIN_EMAILS \"...\" --prod` AND any other env vars Convex needs (PABAU_API_KEY, PABAU_API_BASE_URL, etc.)\n2. **Add to Pre-Flight Checklist:** \"Confirmed all required Convex env vars staged\"\n3. **Add to Step 6 Smoke Test:** \"Sign in as allowlisted user → try one admin write (e.g., toggle a service active) → verify it succeeds\"\n\nAlso add at the top: a list of Convex env vars that must be set BEFORE deploy:\n- ADMIN_EMAILS\n- PABAU_API_KEY\n- PABAU_API_BASE_URL (if overriding)\n\n~15 min doc update.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063072794"
+  },
+  {
+    "gid": "1214325002687455",
+    "name": "[P0 Personal — Philip] Test lead 3029083 cleanup confirmation",
+    "due_on": null,
+    "notes": "Verify the test lead `SMOKETEST DELETE-ME` (lead_id 3029083) created by Worker G during smoke-test development is deleted from Pabau Leads list.\n\nIf still there: delete it manually. If gone: mark this task complete.\n\nWhile in Pabau, also delete any other lead test data created during this session's testing (e.g., 'Jane Doe' / 'TEST Philip' leads from contact form testing).\n\n~2 min.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325002687455"
+  },
+  {
+    "gid": "1214324998996569",
+    "name": "[P0 Personal — Philip] Run the Tier 1-6 test plan on dev now",
+    "due_on": null,
+    "notes": "Test plan from prior message in this session. Booking is now unblocked (slug fixed). Run through these on localhost (npm run dev) before merging to main:\n\n**Tier 1 — Smoke (5 min):**\n- Localhost loads, all public pages render, /accessibility footer link works, /admin loads + Pabau Sync works\n\n**Tier 2 — Booking + CTAs (10 min) [NEWLY UNBLOCKED]:**\n- Home Book CTA → /booking → Pabau loads with services\n- /booking page Book CTA → Pabau loads\n- Membership tier 'Get Started' → Pabau loads (each tier)\n- Service detail page Book CTA → Pabau loads\n- Footer + nav Book buttons → Pabau loads\n\n**Tier 3 — Pabau lead pipeline (5 min):**\n- /contact form submits → lead arrives in Pabau Leads\n- Eyebrow labels readable, map renders, Get Directions works\n- Form validation rejects empty/invalid input\n- DELETE the test lead from Pabau when done\n\n**Tier 4 — Admin tooling (5 min):**\n- /admin loads with Pabau Activity stats section\n- /admin/pabau Look up IDs returns 2 marketing source IDs\n- /admin/pabau Manual Sync buttons work\n- /admin/settings logo upload → logo replaces 'MADE' in nav\n- /admin/pages/about loads via top-level nav link\n\n**Tier 5 — A11y + smoke (3 min):**\n- Tab through home → skip link visible, focus rings on all interactive\n- Explore dropdown opens via keyboard, closes on Escape\n- npm run smoke -- http://localhost:3000 → 10 PASSes (delete the test lead it creates)\n\n**Tier 6 — Visual + mobile (5 min):**\n- DevTools iPhone viewport — home, services, contact, booking reflow\n- Hamburger nav works\n- Lighthouse on / → Performance ≥80, Accessibility ≥90\n\n**Anything fails → send symptom + console output, do NOT debug yourself.**\n\nApprox 30 min total. Should result in a 'feature branch is ready to merge to main' verdict.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214324998996569"
+  },
+  {
+    "gid": "1214325063226774",
+    "name": "[P0 Vercel cutover] Update NEXT_PUBLIC_PABAU_BOOKING_URL on Vercel to new slug",
+    "due_on": null,
+    "notes": "Current Vercel value is stale: `https://partner.pabau.com/online-bookings/made-51g64`\n\nUpdate to: `https://partner.pabau.com/online-bookings/made-med-spa`\n\nLocations:\n- Vercel → Settings → Environment Variables → Production scope\n- Vercel → Settings → Environment Variables → Preview scope (if used for preview deploys)\n\nAfter setting, trigger a redeploy (push or click Redeploy) so the new value is picked up.\n\nNote: this matters now because production mademedspa.com Vercel deploy still serves the Apr-19 code which references that env var directly via `process.env.NEXT_PUBLIC_PABAU_BOOKING_URL`. Until our feature branch is merged AND the env var is updated, prod Book CTAs are broken.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063226774"
+  },
+  {
+    "gid": "1214325063081169",
+    "name": "[P1 UX audit] Audit all file upload surfaces for type validation messaging",
+    "due_on": null,
+    "notes": "Lesson learned from MOV upload silent failure (2026-04-27). Fixed:\n- src/components/admin/SectionEditorCard.tsx (page editors)\n- src/app/admin/media/page.tsx (global media slots)\n\nStill need to audit:\n- src/components/admin/ImageUpload.tsx (used in service edit, team edit, FAQ, etc.)\n- src/app/admin/seo/page.tsx (OG image upload)\n- src/components/admin/SectionDesignPanel.tsx (background image upload)\n- src/app/admin/settings/page.tsx (logo upload — just used, may already be OK)\n- Any image upload in /admin/team, /admin/services individual page\n\n**Pattern to apply:**\n1. Validate file.type before upload — reject anything outside image/* (or specific list)\n2. Show always-visible help text under upload button: \"JPG, PNG, or WebP only · max ~5 MB\"\n3. On rejection, show inline error with role=alert: \"<EXT> files aren't supported. Please upload a JPG/PNG/WebP.\"\n4. Hard size limit (e.g., 10 MB for images, 25 MB for video) with friendly compress-tool suggestion\n\n~30 min total — mostly copy-paste of the validation function from SectionEditorCard.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063081169"
+  },
+  {
+    "gid": "1214325063087457",
+    "name": "[P1 Lessons doc] Document Pabau onboarding gotcha for future client work",
+    "due_on": null,
+    "notes": "Lesson worth preserving for future Pabau-using clients: auto-generated-looking slugs (e.g., `made-51g64` with random suffix) are usually onboarding placeholder slugs that haven't been finalized. Pabau's admin dashboard will show them as the 'public booking URL' even when they don't actually map to a real public portal.\n\n**Day-1 checklist for any Pabau client:**\n1. Open the public booking URL displayed in Promote tab IN INCOGNITO (not signed in) — verify it loads\n2. If it returns 'account doesn't exist' — the slug is unmapped. Open a Pabau support ticket with diagnostic info (the GraphQL widget script will load valid JS even when the portal page doesn't, which is a smoking gun for Pabau support)\n3. If it loads but is empty — verify services are marked 'bookable online'\n4. Check the slug in the URL bar of the Promote-tab-shown URL. If it's `clinic-name-randomhash`, it's likely a placeholder. Real clinic slugs are usually clean (`clinic-name`).\n\nFile location: append to docs/pabau-integration.md under a new 'Onboarding gotchas' section.\n\n~15 min, low priority but worth doing while it's fresh.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214325063087457"
+  },
+  {
+    "gid": "1214287199221844",
+    "name": "[P1 Followup] Convex production data cleanup for newsletterSubscribers table",
+    "due_on": null,
+    "notes": "Worker F removed newsletterSubscribers from convex/schema.ts but Convex doesn't auto-drop the table data when the schema definition is removed. Once we deploy to prod, the operator must manually purge the rows.\n\nProcedure (post-deploy, before launch):\n1. Temporarily re-add newsletterSubscribers schema definition (so Convex queries work)\n2. Add convex/cleanup.ts with an internalMutation `dropNewsletterSubscribers` that paginates and deletes\n3. Run: npx convex run cleanup:dropNewsletterSubscribers --prod\n4. Verify: npx convex data --prod | grep newsletterSubscribers (no rows)\n5. Remove the temporarily-re-added schema definition + cleanup.ts\n6. Redeploy\n\nAlternative: npx convex import --replace newsletterSubscribers '[]' (empty data)\n\nLow-risk task — table is unused, no live data ever flowed in. Do as part of the production cutover step.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214287199221844"
+  },
+  {
+    "gid": "1214287202813797",
+    "name": "[P1 Followup] Make smoke-test probe 9 (real lead creation) opt-in",
+    "due_on": null,
+    "notes": "Current state: scripts/smoke-test.mjs probe 9 creates a real Pabau lead on every run. Already created lead_id 3029083 during initial verification.\n\nProblem: every CI run pollutes Pabau CRM and triggers Karlyne's lead-handling automations (notification emails, marketing assignment, etc.).\n\nFix: gate probe 9 behind a CLI flag.\n\n```\nnode scripts/smoke-test.mjs https://mademedspa.com           # default: read-only, skips probe 9\nnode scripts/smoke-test.mjs https://mademedspa.com --write   # includes probe 9\n```\n\nAlso: print clearer warning at script start when --write is enabled. Add a follow-up confirmation prompt unless --yes is also passed.\n\n~30 min change. Do before any CI integration of smoke test.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214287202813797"
+  },
+  {
+    "gid": "1214287178540677",
+    "name": "[P0 Cleanup] Delete test lead from Pabau (lead_id 3029083, name SMOKETEST DELETE-ME)",
+    "due_on": null,
+    "notes": "Worker G's smoke-test script ran during build verification and inadvertently created a real lead in Pabau:\n- Lead ID: 3029083\n- Name: SMOKETEST DELETE-ME\n- Email: smoketest@example.com\n- Phone: 555-0100\n- Source: Official Website - MADE\n\nDelete it from Pabau Leads list. ~30 seconds.\n\nFollow-up considerations for the smoke test (separate tasks worth filing):\n1. Gate probe 9 (real lead creation) behind --include-write-probes flag so npm run smoke is read-only by default\n2. Add Pabau-side filter that auto-archives leads where firstName='SMOKETEST'\n3. Long-term: extend /api/pabau/leads route to accept dryRun:true flag that validates without persisting\n\nRecommend (1) before any CI integration of smoke test.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214287178540677"
+  },
+  {
+    "gid": "1214286174668629",
+    "name": "[P3 Future-paid] Admin font-size override controls per section",
+    "due_on": null,
+    "notes": "Client request 2026-04-26: ability to change font size from /admin/pages customize design.\n\n**Recommend pushing back on this for launch.** Reasons:\n\n1. **Risk of layout breakage.** The site uses a tight typography scale (label-micro, body-editorial, headline-editorial, hero-display, etc.) with sizes tuned per breakpoint. A global 'make everything 1.2x bigger' control will overflow buttons, break grid columns, push images below the fold, etc. Fixing every collision is unbounded work.\n\n2. **Per-section size sliders** would be safer but require auditing every component for size-tolerance. Each section might support a single size knob (small/default/large) with clamps to prevent wreckage. ~2-3 days to implement properly.\n\n3. **Better interpretation of her ask:** she's likely noticing specific text that feels too small (like the contact eyebrow we just fixed at her ask). Each instance is a 5-min code fix. Building a global knob is the wrong solution.\n\n**Recommended response to her:**\n'For launch I'd rather adjust specific text where you're noticing readability issues — just point me at what feels off and I'll fix it in 5 minutes. A global size control is risky to ship without breaking layouts. Once we're live and you see real friction, we can scope a per-section size control as a post-launch paid update if it's still a need.'\n\n**Decision:** Park as P3 future-paid update. Direct her current feedback to specific size-fix tasks instead.\n\nRelated: contact eyebrow size already fixed at her last ask — model for how to handle these one-offs.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214286174668629"
+  },
+  {
+    "gid": "1214286169839279",
+    "name": "[P1 Feature] Replace 'MADE' nav text with logo image",
+    "due_on": null,
+    "notes": "Client request 2026-04-26: replace the 'MADE' wordmark in the top-left of the nav with her logo image. Admin should be able to swap it via /admin (presumably under Site Settings or Edit Pages → global).\n\n**Implementation:**\n1. Add `logoUrl` field to siteContent.business_info (already a v.any() metadata field, just store it there) OR add a dedicated siteContent key 'site_logo' with imageUrl\n2. Admin UI: add to /admin/settings (Site Settings) since the logo is global, not page-specific. Reuse existing ImageUpload component\n3. Update src/components/layout/Navigation.tsx:\n   - Replace the 'MADE' <span> with <Image src={logoUrl} alt='MADE Med Spa' /> when logoUrl is set\n   - Fall back to 'MADE' wordmark if no logoUrl (so the site never has an empty nav)\n   - Constrain height (e.g., max 40px) and use Next.js <Image> with priority for LCP\n4. Same logic for footer if she wants the logo there too — confirm with her\n5. Get the logo file from her in PNG with transparent background, ideally at 2x resolution (e.g., 600x200) for retina\n\n**Estimate:** ~1 hour including the admin upload + responsive sizing tweaks.\n\n**Acceptance:** Admin uploads a logo PNG via /admin/settings, refreshes site, logo appears in nav top-left replacing 'MADE'. Changing back to no-logo restores 'MADE' wordmark.\n\nViable for launch. Recommend pairing with content-fill task.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214286169839279"
+  },
+  {
+    "gid": "1214286158339001",
+    "name": "[P3 Future-paid] Admin font picker in Edit Pages customize design",
+    "due_on": null,
+    "notes": "Client request 2026-04-26: ability to change font from /admin/pages customize design.\n\n**Recommend pushing back on this for launch.** Reasons:\n\n1. **Fonts are brand identity, not a runtime knob.** The editorial 'Stitch' design (espresso/blush palette + serif headlines + sans body) is intentional and tuned. Swapping fonts at runtime breaks the carefully-chosen pairings, line-heights, letter-spacing, and weight choices. The site's premium feel comes from font discipline.\n\n2. **Truly arbitrary font input is risky** (admin types 'Bangers' → site looks like a circus). A curated picker with 4-6 options is safer but still risks brand drift.\n\n3. **Scope** — implementing this properly requires:\n   - next/font dynamic loading (Next 16 has constraints here)\n   - Persisting choice in siteContent\n   - Re-applying typography scale per font (each font has different optical sizing)\n   - Testing every typography utility class against each font option\n   - Falling back gracefully if font load fails\n   ~1-2 days of work properly done. Not in $1500 launch flat-rate.\n\n**Better alternatives to suggest to her:**\n- If she has a specific font in mind, swap it once at the next maintenance update (paid)\n- If she's seeing readability issues with current fonts, audit specific instances — we just fixed the contact eyebrow at her ask\n- If she wants flexibility to A/B test fonts post-launch, file a paid update agreement\n\n**Decision:** Park as P3 future-paid update. If she insists for launch, push back politely and offer to swap one font once she's chosen.\n\n**If pursued later:** would expose font choice in /admin/settings (not /admin/pages customize design — fonts are global, not per-page).",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214286158339001"
+  },
+  {
+    "gid": "1214280614161460",
+    "name": "[P0] Comprehensive CTA + link audit — every clickable on the site",
+    "due_on": null,
+    "notes": "Once the booking URL is resolved, walk every page and confirm every clickable goes somewhere working. Catch the long tail of broken links before launch.\n\nFile a follow-up task per broken link. Do this ON STAGING (not prod) right after deploy.\n\nCheck per page:\n\n**Home (/):**\n- Hero CTA → booking? confirm working\n- Hero secondary 'Explore Services' → /services\n- Featured services 'View All' → /services\n- About 'Discover Our Method' → /about\n- Testimonial section CTA\n- Bottom CTA banner buttons\n\n**Services (/services + /services/[slug]):**\n- Each service card 'View' → /services/[slug]\n- Each service detail page 'Book' → specific Pabau URL working?\n- 'Back to all services'\n- Bottom CTA\n\n**Membership (/membership):**\n- Each tier 'Get Started' → packages widget or specific URL working?\n- Bottom CTA\n\n**Shop (/shop):**\n- Each product 'Inquire' or 'Buy' → working?\n- Empty state coherent?\n\n**Testimonials (/testimonials):**\n- Filter chips work\n- Bottom CTA\n\n**FAQ (/faq):**\n- Search works\n- Category filters work\n- Bottom CTA\n\n**Contact (/contact):**\n- Form submit works (already verified)\n- Map embed loads\n- 'Get Directions' opens native maps\n- Phone tel: links\n- Email mailto: links\n- Social media links open correct profiles\n\n**About (/about):**\n- Team images load\n- CTA at bottom\n\n**Booking (/booking):**\n- Iframe loads (or redirect goes to working URL)\n- Editorial content renders\n\n**Footer (every page):**\n- Phone, email, address\n- Social icons (Instagram, Facebook, TikTok)\n- Privacy policy, terms\n- Site map links\n\n**Nav (every page):**\n- All top-level links\n- Explore dropdown\n- Book Appointment button\n- Hamburger menu (mobile)\n\n**Admin (/admin and subroutes):**\n- All sidebar links work\n- Each page renders without console errors\n\nFile each break as a separate task. Should be ~30 min of click-through if everything works.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280614161460"
+  },
+  {
+    "gid": "1214280508417776",
+    "name": "🟢 START HERE — Tomorrow's session brief (read first)",
+    "due_on": null,
+    "notes": "🚨 NEW #1 PRIORITY (added 2026-04-26): Pabau booking domain returns 'This account doesn't exist' — every Book/Get Started CTA on the site is broken. RESOLVE THIS FIRST. See task '🚨 [P0 BLOCKER] Resolve Pabau booking domain'. Until fixed, the booking iframe quick-win, the membership widget, every service Book button, and the production cutover are all blocked.\n\nLikely fix: 30-min Pabau config (enable online booking + identify correct URL host). Until verified, don't sink time into anything booking-adjacent.\n\nREADY TO START (no blockers, suggested order of leverage):\n\n1. 🚨 RESOLVE PABAU BOOKING DOMAIN — do this first thing, confirm with client + Pabau support if needed\n2. Vitest scaffolding — unblocks all 3 test suites + smoke-test script. ~30 min. Can do in parallel with #1 while waiting on client.\n3. Admin email allowlist — security gate that blocks production cutover. Critical.\n4. Security headers (CSP, HSTS, X-Frame-Options) — includes Pabau iframe in frame-src; pairs with booking iframe task once domain is resolved.\n5. About admin top-level nav — 15 min, addresses client's confusion.\n6. Newsletter cleanup — drop orphan table, ~15 min.\n7. /contact eyebrow visual confirm — already coded, just needs eyeball check.\n8. Sanity-check 'Look up IDs' — 1-min sanity check.\n9. Convex PITR check — 30 min, paranoid pre-deploy backup layer.\n\nBLOCKED BY BOOKING DOMAIN RESOLUTION:\n- Booking iframe embed\n- Fix broken purchase links (membership widget, service deep-links)\n- Push deploy (because broken-links task is a deploy dependency)\n- Therefore: every post-deploy task too (env vars, register webhook, click-test, soak, etc.)\n\nIN OTHER WORDS: tomorrow's session has two tracks running in parallel:\nTRACK A (fix booking domain): coordinate with client, possibly Pabau support. ~30-90 min depending on response time.\nTRACK B (parallel work that doesn't depend on booking): testing scaffolding, security work, admin quick wins, content fill, cleanup. Stack these so we're not idle while client fixes Pabau.\n\nASYNC / BLOCKED BY CLIENT:\n- Apply final design spec — client delivers 2026-04-27, do Day 4 (04-29)\n- About section clarification — await client reply\n- Cross-check services xlsx — ready any time\n- Fill client data — needs her launch-info values\n- 🚨 Pabau booking domain — needs her in Pabau settings\n\nMORNING RITUAL:\n1. Open this task, glance at READY list\n2. 🚨 First thing: send client the booking-domain blocker, ask her to check Pabau Online Booking is enabled\n3. While she investigates, work TRACK B tasks\n4. Open /admin/pabau on prod (once deployed), check sync health + webhook log for overnight failures\n5. Pull latest from main, run `npm run dev`\n\nDO NOT TOUCH YET:\nAnything P3 (in-site booking, intake forms), backlog (honeypot, double-submit), or post-launch (real webhook handlers, geo SEO depth, before-after page, ADA statement, performance audit, branded map, retry automation). All P0/P1 must clear first.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280508417776"
+  },
+  {
+    "gid": "1214280463023564",
+    "name": "[P2 Backlog] Lead form double-submit protection (idempotency)",
+    "due_on": null,
+    "notes": "Edge case: visitor double-clicks Submit on /contact — currently each click sends a separate POST to /api/pabau/leads, potentially creating two leads in Pabau.\n\nFix: idempotency key in the lead route.\n- Generate a random key client-side, attach to request as X-Idempotency-Key header\n- Server caches the {key → result} in memory for 60s\n- Repeat submissions within window return the cached result instead of re-POSTing to Pabau\n\nAlternative simpler approach: disable submit button immediately on click (not just isSubmitting) and don't re-enable until response. Less robust but no infra change.\n\nLow priority — not currently happening in the wild. Backlog.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280463023564"
+  },
+  {
+    "gid": "1214280788102707",
+    "name": "[P2 Cleanup] Remove orphan newsletterSubscribers table + related code",
+    "due_on": null,
+    "notes": "AI added a `newsletterSubscribers` Convex table during scaffolding but client never asked for a newsletter and has no plans to do one. Orphan code should be removed before launch.\n\nSteps:\n1. Drop newsletterSubscribers from convex/schema.ts\n2. Delete convex/newsletter.ts (subscribe, list mutations/queries)\n3. Search for any UI components that reference the newsletter (footer signup form, /newsletter page, etc.) and remove them\n4. Run `npx convex dev` to confirm clean migration\n5. Type check + grep to ensure no orphan references\n\nIf she ever wants a newsletter post-launch, recreate then — cheap to do.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280788102707"
+  },
+  {
+    "gid": "1214280462877877",
+    "name": "[P3 Future-paid] Pre-treatment intake / 'Are you a candidate?' qualifier form",
+    "due_on": null,
+    "notes": "Idea banked from launch-week scope discussion. NOT included in $1500 launch flat-rate — belongs to future paid update agreement.\n\nConcept: visitor lands on a service page (e.g., Botox) and sees a quick qualifier form ('Are you 18+? Pregnant? On blood thinners? What's your goal?') before being routed to either:\n- Book Now (qualifies)\n- Contact for consult (needs review)\n- Disqualified message (e.g., not safe for treatment)\n\nValue: filters bookings to better-qualified leads, reduces no-shows, sets client expectations. Pabau likely has intake forms via their Forms feature — could be either embedded Pabau form or our own that pushes to Pabau as a custom field.\n\nDo NOT pursue without explicit client request + paid scope agreement. Filed for visibility only.\n\nRelated: client memory says retainer/maintenance agreement is post-launch scope.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280462877877"
+  },
+  {
+    "gid": "1214280788228681",
+    "name": "[P2 Backlog] Spam protection on contact form (honeypot field)",
+    "due_on": null,
+    "notes": "Currently /api/pabau/leads has IP rate-limit (5/min) + Zod validation but no bot-specific defense. If MADE gets crawled by spam bots, junk leads will pollute Pabau.\n\nMinimum (zero-friction, blocks ~95% of bots): hidden honeypot input field.\n- Add <input name='website_url' style='display:none' tabIndex={-1} autoComplete='off' /> to ContactForm\n- Server: if request body contains a non-empty website_url, silently reject as spam (return 200 success without forwarding to Pabau)\n- Bots fill all fields including hidden ones; humans don't\n\nIf bot traffic grows: upgrade to Cloudflare Turnstile (Google reCAPTCHA alternative, no privacy concerns).\n\nNot currently a problem. Backlog — ship if Pabau leads get noisy post-launch.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280788228681"
+  },
+  {
+    "gid": "1214280462552436",
+    "name": "[P1 Operational] Define post-launch maintenance + paid update offering",
+    "due_on": null,
+    "notes": "Memory: client agreed to flat $1500 for site launch. Anything beyond launch (e.g., new pages, in-site booking, intake forms, blog, gift cards integration) needs a paid maintenance/update agreement.\n\nDeliverable: a short doc (or email template) outlining:\n- Hourly rate or per-feature pricing for post-launch updates\n- Monthly maintenance retainer option (X hours/mo for site upkeep, content edits, light feature work, monitoring)\n- What's covered free post-launch (e.g., 30-day bug-fix window for bugs in scope)\n- What requires new agreement (new features, content overhauls, integrations)\n\nWhy this matters now: client has already mentioned wanting in-site booking and before/after — those are post-launch features. Lock in pricing expectations before she asks for them so the conversation isn't awkward.\n\nDeliver: written one-pager to client during/right after launch handoff.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280462552436"
+  },
+  {
+    "gid": "1214280365422462",
+    "name": "[P3 Booking] Full in-site booking flow via Pabau API (POST-LAUNCH)",
+    "due_on": null,
+    "notes": "Client's actual request: replicate the contact-form pattern but for booking — visitor fills form on our site, we POST to Pabau which creates the appointment.\n\nDO NOT BUILD PRE-LAUNCH. This is a 1–2 week project with significant complexity:\n\n**Why it's hard:**\n1. Need to fetch available time slots via Pabau API (per-service, per-staff, per-day) — async, possibly slow\n2. Need to fetch service durations + prices to render the picker\n3. Need to handle calendar conflicts gracefully (slot just got taken between view + submit)\n4. Booking with deposits requires payment integration (Stripe — Pabau likely doesn't expose payment via API)\n5. Confirmation emails — does Pabau auto-send when API creates an appointment, or do we need to trigger?\n6. Cancellation/reschedule URLs in confirmation emails\n7. Real-time slot availability ideally requires WebSocket-style updates or aggressive polling\n8. Mobile UX of a calendar/time picker that doesn't suck\n\n**Endpoints we'd need:**\n- GET /services (have it)\n- GET /staff or /users (need to find)\n- GET /availability or /open-slots (need to find — might not exist, might require staff calendar diff)\n- POST /appointments/create (likely exists, we know `Appointments` is a webhook entity)\n- Webhooks for appointment.create (have it)\n\n**Recommended sequencing:**\nA) Quick-win iframe embed (separate task) — ship that for launch\nB) Post-launch month 1: scope this properly with client. Confirm:\n   - Is the iframe insufficient? Why?\n   - Does she want deposits/payments at booking?\n   - Multi-staff or single (Karlyne)? If single, simpler.\nC) If approved: design the picker + time-slot fetcher + create the form + scope tests\n\nNot a launch blocker. Filed for tracking only.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280365422462"
+  },
+  {
+    "gid": "1214280508053687",
+    "name": "[P1 UX] Add 'About' as top-level admin nav item (discoverability fix)",
+    "due_on": null,
+    "notes": "Likely root cause of client's 'admin portal is missing about section' comment: the About editor is nested under Edit Pages and isn't visible at a glance.\n\nQuick fix: add a top-level 'About' link in src/app/admin/layout.tsx sidebar that deep-links to /admin/pages/about.\n\nWhile we're there, audit all top-level nav links for discoverability:\n- Currently: Dashboard, Manage (Services/Memberships/Shop/Team/FAQs/Testimonials/Pabau Reviews), Website (Edit Pages, SEO, Contacts, Pabau Sync, Webhooks), Settings\n- 'Edit Pages' as a top-level link is opaque — a marketing person doesn't know that's where /about lives\n\nProposed: under 'Manage', add direct deep-links for each page:\n- About → /admin/pages/about\n- Home → /admin/pages/home\n- Contact → /admin/pages/contact (etc.)\n\nOr keep flat list of MANAGE items but rename 'Edit Pages' to 'Page Content' with a help-tooltip.\n\nFile: src/app/admin/layout.tsx (~15 min change). Can land alongside the discoverability discussion task.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280508053687"
+  },
+  {
+    "gid": "1214280461861421",
+    "name": "[P0 Discuss] Clarify admin About section claim with client",
+    "due_on": null,
+    "notes": "Client said admin portal 'is missing the about section.' VERIFIED: the About editor exists at /admin/pages/about with full section editing (hero, story, mission, values, team, CTA). It's nested under 'Edit Pages' → click the About card.\n\nAction:\n1. Send her a short Loom or screenshot showing where it is (under Edit Pages → About)\n2. Ask her to clarify what specifically she expected to see — possible interpretations:\n   - She didn't find it (discoverability issue → rename or surface better)\n   - She wanted About as a top-level sidebar item (5-min change)\n   - She wanted a SPECIFIC sub-thing (Karlyne's bio? team management? mission statement?) and didn't realize that's what 'About' covers\n   - She wanted a different entirely-new page (e.g., 'About Karlyne' separate from 'About MADE')\n\nDo NOT spend dev time building until clarified — high chance it's a 5-min discoverability tweak, not a missing feature.\n\n**If discoverability:** Add 'About' as a top-level sidebar link (alongside Services, Memberships) that deep-links to /admin/pages/about. ~15 min.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280461861421"
+  },
+  {
+    "gid": "1214280495545292",
+    "name": "[P0 Backups] Confirm Convex PITR + content export script",
+    "due_on": null,
+    "notes": "If something nukes admin content (bad migration, accidental delete), we need recovery.\n\n1. **Convex Point-in-Time Recovery:**\n  - Check if PITR is enabled for the prod deployment (Convex dashboard → Settings)\n  - If not on a paid plan, upgrade to enable (probably required for this client)\n  - Document recovery procedure in docs/PRODUCTION-DEPLOYMENT.md (how to restore to a timestamp)\n\n2. **Admin content export script** (scripts/export-admin-content.mjs):\n  - Export all admin-managed Convex tables to JSON: services, faqs, teamMembers, testimonials, memberships, shopProducts, siteContent\n  - Save to docs/backups/<date>.json\n  - Run weekly via GitHub Actions cron (or as a Convex scheduled action that emails the file)\n  - Manual run before any risky migration\n\nNot covered by Convex PITR: admin content edits she's made — those ARE in Convex so PITR covers it. But having a flat JSON export is a paranoid second layer.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495545292"
+  },
+  {
+    "gid": "1214280461163326",
+    "name": "[P0 Testing] Critical-path tests: Pabau webhook receiver",
+    "due_on": null,
+    "notes": "Webhooks are the engine for keeping site data in sync. If signature verification breaks or idempotency fails, we either accept forged events or double-process real ones.\n\nTests required:\n\n1. verifyPabauUrlToken:\n  - Returns ok=false when token missing\n  - Returns ok=false when token length differs from secret (defeats length-comparison side-channel)\n  - Returns ok=true when constant-time match\n  - Returns ok=false when token byte differs (timing-safe)\n\n2. normalizeAction in /api/pabau/webhooks/[token]/route.ts:\n  - 'created' → 'create'\n  - 'updated' → 'update'\n  - 'deleted' → 'delete'\n  - 'won' / 'lost' / 'reopen' → 'update'\n  - 'canceled' / 'reschedule' / 'blockout_canceled' → 'update'\n  - undefined → null\n  - All variants preserve original action in result.original\n\n3. pickEntityType:\n  - 'booking' → 'appointment'\n  - 'client' / 'lead' / 'appointment' / 'activity' / 'invoice' pass through unchanged\n\n4. Webhook route handler (with mocked Convex client):\n  - 401 on bad token\n  - 200 + duplicate=true on repeated event_id\n  - 200 + processed=true on first delivery\n  - 400 on missing event_id / entity_type / action\n\nFiles: tests/lib/pabau/verify-webhook.test.ts, tests/api/webhook-route.test.ts",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280461163326"
+  },
+  {
+    "gid": "1214293375911781",
+    "name": "[P0 Pre-launch] Schema validation + OG preview check",
+    "due_on": null,
+    "notes": "Validate structured data is parseable by Google before launch. Bad schema = no rich results.\n\nSteps:\n1. Run https://search.google.com/test/rich-results against the production URL once cutover is done. Check:\n  - LocalBusiness / MedicalBusiness schema in src/app/layout.tsx renders correctly with geo coords + areaServed cities\n  - FAQ schema on /faq page renders\n  - No errors or warnings\n\n2. Run https://www.opengraph.xyz/ against / and /services and /contact. Confirm:\n  - OG image renders (mademedspa.com OG image, not placeholder)\n  - Title and description match the page\n  - Twitter Card preview looks right\n\n3. Verify sitemap.xml at /sitemap.xml lists all public pages (services subpages, etc.)\n4. Verify robots.txt at /robots.txt does NOT block production paths\n\nFile fixes as follow-ups.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214293375911781"
+  },
+  {
+    "gid": "1214280364745246",
+    "name": "[P0 Cutover] Verify SSL + redirects post-deploy",
+    "due_on": null,
+    "notes": "After production cutover (separate task), validate the domain side:\n\n- HTTPS enforced on https://mademedspa.com (curl http://mademedspa.com → 301 to https)\n- www → apex redirect: https://www.mademedspa.com → https://mademedspa.com\n- SSL cert valid + auto-renewing (Vercel handles this; verify cert chain on https://www.ssllabs.com/ssltest/, target A+)\n- No mixed-content warnings (all images/scripts loaded over https)\n- All sitemap URLs use https + apex domain\n- Canonical URLs (in <head>) point to apex https\n\nAlso:\n- Email DNS records (SPF, DKIM, DMARC) present if she sends email from @mademedspa.com\n- DNS records documented somewhere safe (1Password / handoff doc) so client can transfer if registrar moves",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364745246"
+  },
+  {
+    "gid": "1214280364745320",
+    "name": "[P0 Security] Add security headers (CSP, HSTS, X-Frame-Options)",
+    "due_on": null,
+    "notes": "Currently the site relies on Vercel/Next defaults. Add explicit security headers for production.\n\nIn next.config.ts (under headers()):\n- Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n- X-Frame-Options: DENY (or SAMEORIGIN if we ever embed our own)\n- X-Content-Type-Options: nosniff\n- Referrer-Policy: strict-origin-when-cross-origin\n- Permissions-Policy: camera=(), microphone=(), geolocation=() — disable APIs we don't use\n- Content-Security-Policy: start in report-only mode for 1 week, then enforce\n  - Allow: self, Convex domains, Clerk domains, Google Maps embed, Pabau iframe (for booking)\n  - This is the trickiest one — start permissive then tighten\n\nAlso audit:\n- No secrets accidentally exposed under NEXT_PUBLIC_* prefix (grep public env vars)\n- No console.log statements logging sensitive request bodies\n\nVerify with https://securityheaders.com/ — target A+ rating.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364745320"
+  },
+  {
+    "gid": "1214280364743060",
+    "name": "[P1 Compliance] ADA accessibility statement page",
+    "due_on": null,
+    "notes": "Med spas have been targets of ADA Title III lawsuits in the US. Industry baseline:\n\n1. **Accessibility statement page** at /accessibility:\n  - Commit to WCAG 2.1 AA conformance\n  - Contact email for accessibility issues (use info@mademedspa.com or dedicated alias)\n  - Brief description of accessibility features (keyboard nav, alt text, etc.)\n  - Last reviewed date\n\n2. **Footer link** to /accessibility (small, alongside privacy/terms)\n\n3. **One-time WCAG AA audit** as part of the Lighthouse a11y pass — fix any failures.\n\n4. **Skip-to-main-content link** (currently missing — keyboard users hit nav on every page).\n\nCookie banner: SKIP. US med spa, no PII collection beyond form (which has explicit consent). EU traffic negligible. Document this decision in privacy policy.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364743060"
+  },
+  {
+    "gid": "1214280507360889",
+    "name": "[P0 Handoff] Admin walkthrough video + /admin/system guide update",
+    "due_on": null,
+    "notes": "Marketing team needs to be self-sufficient. Two deliverables:\n\n1. **Walkthrough video** (5-10 min screen recording):\n  - How to edit a service (and which fields are Pabau-locked vs site-only)\n  - How to feature/hide a Pabau review\n  - How to check sync health on /admin/pabau\n  - What to do if /admin/pabau/webhooks shows failures\n  - How to update /privacy or /terms text via /admin/pages\n  - Where leads now live (Pabau, not /admin/contacts after E1 cleanup)\n\n2. **/admin/system guide page update** (src/app/admin/system/page.tsx):\n  - Replace any 'edit services here' copy with 'services live in Pabau'\n  - Add troubleshooting tree: 'service not showing? → check webhook log → check sync timestamp → click Sync now'\n  - Link to the walkthrough video (host on YouTube unlisted or Loom)\n  - Document Pabau env vars (so future devs know what to set)\n\nDeliverable: client + marketing team can articulate where each content type lives without asking us.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280507360889"
+  },
+  {
+    "gid": "1214280495547643",
+    "name": "[P0 Testing] Set up Vitest + test scaffolding",
+    "due_on": null,
+    "notes": "We have zero automated tests. Set up the minimum repeatable harness so the critical-path tests below have somewhere to live.\n\nSteps:\n- Install vitest + @vitest/ui + happy-dom (lightweight DOM env)\n- Add `test`, `test:watch`, `test:ui` scripts to package.json\n- Create vitest.config.ts with path aliases matching tsconfig (@/lib, @/components)\n- Create tests/ directory with subfolders: tests/lib/pabau, tests/api, tests/components\n- Add .github/workflows/test.yml (or skip if not using GH Actions yet) — at minimum, add a 'pretest' lint step\n- Add convex-test for Convex query/mutation tests if it's worth it (otherwise skip — Convex internal logic is mostly thin)\n\nDeliverable: `npm run test` passes a single trivial smoke test.\n\nDecision: Vitest preferred over Jest because Next 16 + Turbopack + native ESM.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495547643"
+  },
+  {
+    "gid": "1214280482923925",
+    "name": "[P0 Testing] Critical-path tests: Pabau lead pipeline",
+    "due_on": null,
+    "notes": "The lead form is the single most important conversion surface. If it breaks silently, leads vanish.\n\nTests required:\n\n1. validateLeadInput (src/lib/pabau/schemas/lead.ts):\n  - Rejects missing firstName/lastName/email/message\n  - Rejects invalid email\n  - Rejects oversized message (>5000 chars)\n  - Trims and normalizes (email lowercased, phone trimmed)\n  - Marketing consent default = false when omitted\n\n2. leadInputToPabauPayload:\n  - Maps treatment_interest to custom_fields\n  - Sends lead_source as numeric value (not string)\n  - Sets all six aliases (lead_source, lead_source_id, marketing_source, etc.)\n\n3. /api/pabau/leads route handler (mock fetch):\n  - 200 + lead_id on success\n  - 400 + fieldErrors on validation failure\n  - 502 on Pabau 4xx\n  - 503 on circuit breaker open\n  - 429 from same IP after 5 submissions in 1 min (rate-limit test)\n  - In dev mode, _debug field present in error responses\n\n4. ContactForm component (with @testing-library/react):\n  - Renders all fields\n  - Submit with empty fields → field-level errors shown\n  - Submit success → 'Thank You' state\n  - Submit failure → mailto fallback button visible with prefilled body\n\nFiles: tests/lib/pabau/lead-schema.test.ts, tests/api/leads.test.ts, tests/components/ContactForm.test.tsx",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280482923925"
+  },
+  {
+    "gid": "1214280461255804",
+    "name": "[P0 Monitoring] Error tracking setup (Sentry or Vercel)",
+    "due_on": null,
+    "notes": "Currently we'd never know if production is throwing errors. Pick one:\n\n**Option A — Sentry (recommended):**\n- @sentry/nextjs SDK\n- Free tier: 5k errors/mo, plenty for a low-traffic med spa\n- Source maps uploaded on build\n- Captures Convex action errors, API route errors, client-side errors\n- Email/Slack alerts on new error types\n\n**Option B — Vercel Observability (built-in):**\n- Already enabled if on Pro plan\n- Less detail but zero setup\n- Decent for getting started\n\nMinimum acceptance: an artificially-thrown error in /api/pabau/leads is visible in the dashboard within 1 minute, with stack trace.\n\nAlso wire alerting:\n- Slack/email on any 5xx in /api/pabau/* routes (the Pabau pipe is the riskiest surface)\n- Daily digest of error volume",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280461255804"
+  },
+  {
+    "gid": "1214280507240927",
+    "name": "[P0 Pre-launch] Mobile + cross-browser QA pass",
+    "due_on": null,
+    "notes": "Test the full user flow on real devices/browsers — not just Chrome desktop. Med spa clientele skews iPhone Safari + older Android. Catches issues automated tests can't.\n\nDevices/browsers minimum:\n- iPhone Safari (latest iOS)\n- iPhone Safari (1 version older)\n- Android Chrome\n- Desktop Safari (macOS)\n- Desktop Firefox\n- Desktop Edge\n\nFlows on each:\n- Home → nav, video plays, CTAs tappable\n- Contact form → fill + submit (use a unique test name like 'QA-Safari-iPhone' so we can identify in Pabau)\n- Booking CTA → Pabau loads in new tab\n- Map embed → tap 'Get Directions' → opens native maps app\n- Hamburger nav (mobile) → opens, all links work\n\nBugs file as separate tasks tagged [P0 QA].",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280507240927"
+  },
+  {
+    "gid": "1214280495547577",
+    "name": "[P1 Monitoring] Uptime + Pabau usage threshold alerts",
+    "due_on": null,
+    "notes": "Two separate alerts:\n\n1. **Uptime monitoring** (UptimeRobot free tier):\n  - Monitor https://mademedspa.com/ every 5 min\n  - Monitor https://mademedspa.com/api/pabau/lead-sources every 15 min (validates Pabau env vars + reachability — but doesn't burn quota)\n  - Email + SMS alert on 2 consecutive failures\n\n2. **Pabau usage threshold** (custom — Convex scheduled action):\n  - Daily at 9am, query api.pabauApiUsage.todaysUsage\n  - If writes > 7000 (70% of 10k cap) OR reads anomalously high (>5000), send Slack/email\n  - Code lives in convex/pabauUsageAlert.ts (new) + cron entry\n\nThis catches the silent runaway: a bug that double-fires writes won't show in error tracking but will burn the daily cap and start failing real lead pushes.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495547577"
+  },
+  {
+    "gid": "1214280507169811",
+    "name": "[P0 Testing] Smoke-test script for post-deploy validation",
+    "due_on": null,
+    "notes": "After every production deploy, run this single command to verify the integration is alive. Prevents silent prod regressions.\n\nDeliverable: scripts/smoke-test.mjs that does (against production URL):\n- GET / → 200\n- GET /contact → 200, page contains 'Tell us a little about you'\n- GET /api/pabau/lead-sources → 200 ok=true (auth env vars set in prod)\n- POST /api/pabau/leads with deliberately invalid payload → 400 fieldErrors\n- POST /api/pabau/webhooks/<wrong-token> → 401\n- POST /api/pabau/webhooks/<correct-token> with valid test event → 200, eventId in response\n- GET /admin/pabau/webhooks (after Clerk auth) → page contains the test event\n\nUsage: `node scripts/smoke-test.mjs https://mademedspa.com`\n\nAdd to package.json as `npm run smoke`. Run after every prod deploy.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280507169811"
+  },
+  {
+    "gid": "1214280507327807",
+    "name": "[P1 Analytics] GA4 + Search Console + Bing Webmaster",
+    "due_on": null,
+    "notes": "Per docs/PRODUCTION-DEPLOYMENT.md these are post-launch tasks. Schedule for launch day + 1.\n\n1. **Google Analytics 4:**\n  - Create GA4 property\n  - Get measurement ID, paste into NEXT_PUBLIC_GA_MEASUREMENT_ID\n  - Wire via Next.js Script component (next/script with afterInteractive strategy)\n  - Add a 'lead_form_submit' GA event when ContactForm posts successfully → set as a conversion in GA\n  - Verify with GA realtime view: visit /, see yourself land\n\n2. **Google Search Console:**\n  - Add property: https://mademedspa.com\n  - Verify ownership via DNS TXT record (preferred — survives redeploys)\n  - Submit sitemap: https://mademedspa.com/sitemap.xml\n  - Request indexing for / and /services and /membership\n  - Set up Email alerts for crawl errors\n\n3. **Bing Webmaster Tools:**\n  - Same as GSC but for Bing. ~10% of US search.\n  - Import GSC verification (Bing supports this).\n\nOnce GA is wired, owner has data on what's converting. Set up weekly metrics review.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280507327807"
+  },
+  {
+    "gid": "1214280482475599",
+    "name": "[P1 Performance] Media + image weight audit",
+    "due_on": null,
+    "notes": "Current media folder contains uncompressed assets that will hurt Core Web Vitals:\n\n- media/hero.mp4 (likely several MB)\n- media/veo_Video_20260411_154435.mp4 (likely large)\n- public/videos/hero-original.mp4, faq-hero-original.mp4\n- media/Background Images/*.png (unknown size)\n\nActions:\n- Compress hero video: ffmpeg -i hero.mp4 -vcodec h264 -acodec aac -b:v 1.5M -movflags +faststart hero-web.mp4 (target <2MB for LCP)\n- Generate WebP/AVIF for all PNGs in media/\n- Verify <Image> from next/image used everywhere a static asset renders (not <img>)\n- Add poster attribute to all <video> tags so non-autoplay devices show a still\n- Verify hero video is loaded with `preload=metadata` not `auto`\n- Consider extracting one hero frame as the LCP image, lazy-load the video on a delay\n\nTarget: under 1.5s LCP on mid-tier mobile.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280482475599"
+  },
+  {
+    "gid": "1214280507361018",
+    "name": "[P0 Pre-launch] Lighthouse + Core Web Vitals + a11y audit",
+    "due_on": null,
+    "notes": "Run Lighthouse against production for /, /services, /membership, /shop, /testimonials, /contact, /faq. Target: 90+ on Performance, 95+ on Accessibility, 100 on SEO and Best Practices. Capture initial scores as baseline.\n\nMust-fix issues before launch:\n- Accessibility violations (color contrast on the espresso/blush combos, button labels, image alt text, form label associations)\n- Largest Contentful Paint > 2.5s on mobile (likely the hero video)\n- Cumulative Layout Shift > 0.1 (motion/framer animations can cause this)\n\nNice-to-fix:\n- Total bundle size warnings\n- Unused JavaScript (likely framer-motion if used sparingly)\n\nFile a follow-up task per failure that can't be fixed in this pass.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280507361018"
+  },
+  {
+    "gid": "1214280460967058",
+    "name": "Push working branch to git + deploy to Vercel",
+    "due_on": null,
+    "notes": "Suggested commit message:\nfeat: pabau lead push live, webhook receiver + polling sync, geo SEO section\n\nIncludes:\n- Pabau lead create endpoint wired (/leads/create)\n- Webhook receiver with URL-token auth\n- 15-min polling cron for services/products/reviews\n- AreasWeServe section + LocationMap on /contact\n- Admin sync health dashboard, lead source lookup, webhook log\n- Pabau Reviews curation page (separate from curated testimonials)",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280460967058"
+  },
+  {
+    "gid": "1214280364464888",
+    "name": "Sanity-check 'Look up IDs' at /admin/pabau",
+    "due_on": null,
+    "notes": "Should fetch via /marketing-sources and return:\n  - 250892\n  - 250922 → Official Website - MADE\n\nIf this breaks, the lead push will lose its source tag.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364464888"
+  },
+  {
+    "gid": "1214280495361898",
+    "name": "Verify /contact eyebrow labels readable on localhost",
+    "due_on": null,
+    "notes": "REACH OUT and SEND A MESSAGE labels were tiny grey label-micro. Bumped to 15px, weight 600, dark espresso at 75% opacity. Reload /contact and confirm they read at a glance.\n\nFile: src/app/contact/ContactPageClient.tsx",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495361898"
+  },
+  {
+    "gid": "1214280364456324",
+    "name": "1-week production soak — monitor /admin/pabau/webhooks daily",
+    "due_on": "2026-05-02",
+    "notes": "Watch for failed webhook events, sync errors, or 429 rate limits.\n\nDaily checklist:\n- Open /admin/pabau → check sync health cards (any stale/never timestamps in red?)\n- Open /admin/pabau/webhooks → any failed events? Re-queue if so\n- Check /admin/pabau usage panel → are we approaching write cap?\n\nSoak ends one week after first successful production lead.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364456324"
+  },
+  {
+    "gid": "1214280495335741",
+    "name": "Confirm Vercel env vars match local",
+    "due_on": null,
+    "notes": "Required in Vercel (Production + Preview):\n\n**Pabau (UPDATED with new slug):**\n- PABAU_API_KEY = (existing — confirm still set)\n- PABAU_COMPANY_ID = 16557\n- PABAU_WEBHOOK_SECRET = e3e39d77436ac71eb2bd064a07cdb204f6eb801ca457cd6ba3658c1ab900f28b\n- PABAU_LEAD_SOURCE_ID = 250922\n- **NEXT_PUBLIC_PABAU_BOOKING_URL = https://partner.pabau.com/online-bookings/made-med-spa** ← NEW SLUG, current Vercel value is stale (made-51g64)\n\n**Admin allowlist (NEW — added this session, currently missing in Vercel):**\n- ADMIN_EMAILS = philipbein10697@gmail.com,karlyne08@gmail.com\n  (Without this set in production, Next.js middleware will throw at config-load. Both Vercel AND Convex prod need the same value — see PRODUCTION-DEPLOYMENT.md)\n\n**Convex (when prod Convex deployment is created):**\n- CONVEX_DEPLOYMENT = prod:xxx\n- NEXT_PUBLIC_CONVEX_URL = https://xxx.convex.cloud\n- NEXT_PUBLIC_CONVEX_SITE_URL = https://xxx.convex.site\n- Plus: npx convex env set ADMIN_EMAILS \"...\" --prod (Convex env is independent of Vercel)\n- Plus: npx convex env set PABAU_API_KEY \"...\" --prod (Convex env is independent — required for cron sync actions)\n- Plus: npx convex env set PABAU_API_BASE_URL --prod (if overriding default)\n\n**Clerk:**\n- NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = pk_live_...\n- CLERK_SECRET_KEY = sk_live_...\n- CLERK_FRONTEND_API_URL = (from Clerk dashboard)\n\nVercel only picks up env changes on a new build — push a commit or click Redeploy after setting.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495335741"
+  },
+  {
+    "gid": "1214280482459644",
+    "name": "After soak: drop contactSubmissions table + retire /admin/contacts",
+    "due_on": null,
+    "notes": "Deferred E1 cleanup from pabau-integration-plan.md.\n\nSteps (only after 1-week soak passes):\n1. Export current contactSubmissions to CSV (one-off script)\n2. Remove /admin/contacts route and sidebar link\n3. Remove dashboard 'X new contacts' alert\n4. Drop contactSubmissions from convex/schema.ts\n5. Delete convex/contactSubmissions.ts\n6. Verify build + Convex deploy clean",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280482459644"
+  },
+  {
+    "gid": "1214280364553720",
+    "name": "Trigger Pabau webhook tests (3 webhooks)",
+    "due_on": null,
+    "notes": "In Pabau Developer Hub → Webhooks → click Test on each of the 3 webhooks (client / lead / booking).\n\nVerify on production /admin/pabau/webhooks:\n- All three events appear within seconds\n- Status shows 'processed' or 'ignored' (both confirm pipe works)\n- 'failed' = check Vercel logs",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280364553720"
+  },
+  {
+    "gid": "1214280495361830",
+    "name": "Submit test lead from production URL",
+    "due_on": null,
+    "notes": "Submit form on https://mademedspa.com/contact with a recognizable test name.\n\nVerify in Pabau → Leads:\n- Lead appears with name/email/phone\n- Lead Source column = 'Official Website - MADE'\n- Pipeline stage = 'New Lead'",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280495361830"
+  },
+  {
+    "gid": "1214280208324763",
+    "name": "[P0 Content] Fill remaining client data in admin (address, hours, phone, socials, headshot, service images)",
+    "due_on": null,
+    "notes": "Launch-info doc has all values, just needs paste:\n- Footer phone is empty (seed.ts:663-664 has phone: '' / phoneHref: '') — confirm number with client and seed\n- Real headshot for Karlyne (currently no imageUrl on team member)\n- Real images on services (most have no imageUrl)\n- Verify Instagram + TikTok URLs in business_info siteContent are correct\n- Confirm address: 1311-A Dolley Madison Blvd, Suite 1B, McLean, VA 22101",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208324763"
+  },
+  {
+    "gid": "1214280208462082",
+    "name": "[Discuss] Clarify marketing team's SEO controls scope",
+    "due_on": null,
+    "notes": "Stakeholder memory says marketing team needs SEO controls. /admin/seo exists but worth confirming with client what 'controls' means:\n- Per-page meta tags?\n- Sitemap exclusions?\n- Structured-data overrides?\n- All of the above?\n\nBlocks: design of /admin/seo enhancements.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208462082"
+  },
+  {
+    "gid": "1214280233925067",
+    "name": "[P0] Production cutover — Convex + Clerk + Vercel env",
+    "due_on": null,
+    "notes": "Site is live on mademedspa.com but pointed at dev:energized-akita-520 Convex and pk_test Clerk keys. Real visitors are hitting dev infra; arbitrary signups via dev Clerk = compounds the admin-allowlist hole.\n\nFollow docs/PRODUCTION-DEPLOYMENT.md Steps 1–5. Add a step the runbook misses: export current dev Convex data first (services edits, siteContent, business_info) so seeding prod doesn't lose what's already in dev.\n\nDO NOT deploy until: Pabau env vars resolved (lead source ID, webhook secret), admin allowlist shipped, _generated/api.d.ts + schema.ts + services.ts + shopProducts.ts changes committed.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233925067"
+  },
+  {
+    "gid": "1214280237972025",
+    "name": "[P2] Branded map embed (Mapbox or styled Google Maps)",
+    "due_on": null,
+    "notes": "If client wants brand-matching colors instead of default Google embed for the LocationMap component.\n\nFile: src/components/sections/LocationMap.tsx\n\nNice-to-have when there's runway.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280237972025"
+  },
+  {
+    "gid": "1214280208484819",
+    "name": "[Discuss] Define webhook activity scope beyond logging",
+    "due_on": null,
+    "notes": "Currently we log all webhook events but only act on services/products/reviews via polling. If client wants any Pabau-driven action on the site (e.g., 'show appointment count this week' on dashboard), define that scope before building.\n\nRelated to: real handlers for client/lead/appointment task.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208484819"
+  },
+  {
+    "gid": "1214280233955475",
+    "name": "[P1] Soak verification + cleanup phase (E1 + E5.6)",
+    "due_on": null,
+    "notes": "After 1 week of stable production:\n- Drop contactSubmissions Convex table (E1.2)\n- Retire /admin/contacts page + sidebar link (E1.1)\n- Delete unused testimonials archive code (E5.6 — old `testimonials` table)\n- Remove api.contactSubmissions.countNew query from admin layout\n\nDo NOT do this pre-launch — keep the old paths active as fallback.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233955475"
+  },
+  {
+    "gid": "1214280101887709",
+    "name": "[P1 SEO] Geo SEO content depth — per-city pages or richer single page",
+    "due_on": null,
+    "notes": "Client wanted 'Areas We Serve' primarily for SEO. Current state: section + LocalBusiness schema. To actually rank for 'botox in Tysons', we need either:\n- Separate /areas-we-serve/tysons page per city, OR\n- Richer single page with city-specific service breakdowns\n\n~half day. Coordinate with marketing team on which target cities.\n\nDeferred to post-launch (week 1).",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280101887709"
+  },
+  {
+    "gid": "1214280208484890",
+    "name": "[P0 Compliance] Update privacy policy with Pabau processor disclosure",
+    "due_on": null,
+    "notes": "Per pabau-integration-plan.md S2.6, paste this paragraph into Convex siteContent.privacy_policy via /admin/pages:\n\n'When you submit a form on our website, your information is transmitted directly to our patient management system (Pabau) where it is securely stored and managed by MADE Med Spa staff. We do not retain a separate copy on our website.'\n\nCurrent privacy policy already mentions Pabau as third-party processor — confirm this paragraph is additive or replaces the existing Pabau line, then have client approve.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208484890"
+  },
+  {
+    "gid": "1214280233933379",
+    "name": "[P0 Pabau] End-to-end smoke test integration on staging",
+    "due_on": null,
+    "notes": "After PABAU_LEAD_SOURCE_ID is confirmed (250922 == 'Official Website - MADE'):\n- Submit a real form on staging, verify lead arrives in Pabau with right source ID\n- Trigger a Pabau webhook test for client/lead/booking, verify each lands in /admin/pabau/webhooks as 'processed'\n- Submit form with PABAU_API_KEY unset → mailto fallback button appears with prefilled body\n- Hit /api/pabau/leads 6× from one IP → 6th returns 429\n\n~30 min total.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233933379"
+  },
+  {
+    "gid": "1214280101887195",
+    "name": "[P0 Security] Add admin email allowlist in middleware + Convex mutations",
+    "due_on": null,
+    "notes": "Currently src/middleware.ts only calls auth.protect() — any signed-in Clerk user can access /admin. The admin layout has no role check, and the users table has a `role` field that nothing reads.\n\nFix:\n- Add ADMIN_EMAILS env var (comma-separated)\n- In middleware, after auth.protect(), pull session claim email and 403/redirect if not in list\n- Mirror the same allowlist check at the top of every Convex mutation that writes admin-managed data (services, memberships, shopProducts, siteContent, etc.) — middleware does not run on Convex calls\n\nVerify: sign in with a non-allowlisted gmail → bounced from /admin and Convex mutations reject.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280101887195"
+  },
+  {
+    "gid": "1214280233976754",
+    "name": "[P2] Webhook retry queue automation",
+    "due_on": null,
+    "notes": "Currently failed webhooks need manual replay from /admin/pabau/webhooks. Could auto-retry with exponential backoff.\n\nNice-to-have when there's runway.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233976754"
+  },
+  {
+    "gid": "1214280277994424",
+    "name": "[Discuss] Confirm Reviews vs Testimonials display strategy with client",
+    "due_on": null,
+    "notes": "Current model: curated marketing testimonials primary, Pabau 'Recent Reviews' supplementary. Confirm with client this is what she wants — she might prefer:\n- Merge them into one feed\n- Style Pabau reviews differently\n- Remove curated and go all-Pabau\n\nBlocks: any further work on /testimonials page.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280277994424"
+  },
+  {
+    "gid": "1214280233808926",
+    "name": "[P1] Implement real handlers for client.create / lead.create webhooks",
+    "due_on": null,
+    "notes": "Currently client/lead/appointment/activity/invoice handlers are stubs that log + return 200 (src/lib/pabau/webhookHandlers/index.ts).\n\nReal handlers would power admin dashboard stats:\n- 'X new leads this week'\n- 'X new clients this month'\n- 'X bookings this week'\n\nDeferred to post-launch (week 1).",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233808926"
+  },
+  {
+    "gid": "1214280208484986",
+    "name": "[P0] User-flow click-test on production (smoke test)",
+    "due_on": null,
+    "notes": "Document and walk through these flows after prod cutover. Minimum:\n- Home → every nav link loads\n- Home → 'Book consultation' → Pabau booking page loads with services visible\n- Membership → each tier 'Get Started' → goes somewhere coherent\n- Services → individual service page → 'Book' CTA → Pabau\n- Shop → product → 'Shop' / 'Inquire' → coherent destination\n- Footer → phone (works), email (mailto opens), Instagram, TikTok\n- Contact form → submit valid → 'Thank you'; submit with no Pabau key → mailto fallback\n- /privacy, /terms, /faq, /about, /testimonials render\n- 404 on a bad URL renders a real 404 page\n\nFile every issue as a follow-up task.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208484986"
+  },
+  {
+    "gid": "1214280278169433",
+    "name": "[P0 Pabau] Fix broken purchase links — use Pabau widgets/booking URLs (CLIENT-PROVIDED)",
+    "due_on": null,
+    "notes": "Membership tiers + shop products fall back to NEXT_PUBLIC_PABAU_BOOKING_URL (consultation page) which causes 'this account doesn't exist' errors when clicked. Most services also have unset pabauBookingUrl.\n\n**UPDATE 2026-04-26:** Client provided two embed assets:\n\n1. **Booking iframe:** https://partner.pabau.com/online-bookings/made-51g64\n2. **Packages widget (script):**\n<div class=\"pabauPackages\" style=\"width:100%\">\n  <script src=\"https://pabau.com/widgets/pabau-packages.js?slug=made-51g64\"></script>\n</div>\n\n**New approach per asset:**\n\n**Memberships (/membership):** the packages widget IS the answer. Embed it on the membership page. Each tier 'Get Started' click is now handled inside the widget by Pabau. No need to set pabauLink per tier individually. Confirm with client which packages render in the widget vs which are standalone services.\n\n**Services:** services that are bookable should deep-link directly to https://partner.pabau.com/online-bookings/made-51g64?service=<id> (verify service deep-link format works). For services not bookable online, route to /contact?interest=<service-name> and capture as a lead.\n\n**Shop products:** still need correct purchase URLs from client. Pabau may not have a shop equivalent — likely she sells products in-clinic only and the website should show 'Inquire' or 'Available in studio'. Confirm with client.\n\n**Tasks:**\n1. Embed packages widget on /membership page (replace tier cards with widget, OR keep cards as marketing + add widget below for actual purchase)\n2. Confirm service deep-link URL format (booking URL with ?service=ID query param? Or per-service slug?)\n3. Get shop product strategy from client (in-clinic only vs Pabau e-commerce)\n4. Verify booking URL `made-51g64` is the right slug for both contexts (booking page + packages widget agree)\n5. Ship E-commerce-style copy: 'Inquire' for inquiry-only items, 'Book Now' for online-bookable, 'Available in Studio' for in-clinic-only",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280278169433"
+  },
+  {
+    "gid": "1214280208314444",
+    "name": "[P2 Pabau] Reviews enrichment — fetch full payload via /reviews/{id}",
+    "due_on": null,
+    "notes": "If Pabau reviews list endpoint comes back without rating/treatment fields, fetch full payload via /reviews/{id} per review rather than just the list response.\n\nNice-to-have when there's runway.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280208314444"
+  },
+  {
+    "gid": "1214280278198290",
+    "name": "[P0 Design] Apply final design spec from client (delivered 2026-04-27)",
+    "due_on": null,
+    "notes": "Client receives final design spec (fonts, colors, etc.) from design team on 2026-04-27 and forwards to us. Most of the site already uses CSS custom properties (--color-espresso, --color-blush, etc.), so this should be a config change in src/app/globals.css + Tailwind theme + font swaps in layout.tsx — not page-by-page rewrites.\n\nAllocate Day 4 (2026-04-29) to apply changes once spec is in hand. Triage any structural changes vs token swaps.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280278198290"
+  },
+  {
+    "gid": "1214280237583227",
+    "name": "[P0] Cross-check site services against MADE Med Spa Services.xlsx",
+    "due_on": null,
+    "notes": "Client provided docs/Client Returned/MADE Med Spa Services.xlsx showing which services should be bookable online vs hidden from the site. Audit current services list against that sheet:\n- Hide services flagged as not-online-bookable (set isActive=false or add a `showOnSite` flag)\n- Confirm online-bookable services have a working pabauBookingUrl\n- Reconcile any service in Pabau missing from the site (or vice versa)\n\nCoordinate with Pabau sync — ideally services sync from Pabau and the spreadsheet just informs which to hide.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280237583227"
+  },
+  {
+    "gid": "1214280233701926",
+    "name": "[P1] Areas We Serve content review",
+    "due_on": null,
+    "notes": "Default copy I wrote for the Areas We Serve section is generic. Have client tweak per-city blurbs to be authentic to MADE's positioning.\n\nFile: src/components/sections/AreasWeServe.tsx",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280233701926"
+  },
+  {
+    "gid": "1214280237657556",
+    "name": "[P2] Service-page lead form variants with source tagging",
+    "due_on": null,
+    "notes": "Sticky 'Request a consultation' CTA on each service page that posts to /api/pabau/leads with a different source tag per page, so client can see in Pabau which page converted each lead.\n\nNice-to-have when there's runway.",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280237657556"
+  },
+  {
+    "gid": "1214280277482789",
+    "name": "[P0 Pabau] Register live webhook URL in Pabau, retire dev secret",
+    "due_on": null,
+    "notes": "Webhook URL currently points at mademedspa.com which isn't fully cut over yet. After prod deploy:\n- Register https://mademedspa.com/api/pabau/webhooks in Pabau dashboard with PABAU_WEBHOOK_SECRET\n- Send test event from Pabau, verify it lands in /admin/pabau/webhooks as 'processed'\n- Retire the dev webhook secret to prevent stale dev events from leaking into prod",
+    "section": "Planning",
+    "url": "https://app.asana.com/1/1214276089451690/project/1214280233661496/task/1214280277482789"
+  }
+]
