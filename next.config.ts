@@ -62,6 +62,9 @@ const nextConfig: NextConfig = {
       // Defensive: admins sometimes type "/book" instead of "/booking" in the
       // page-editor button-link field. Make both work so a typo never 404s.
       { source: "/book", destination: "/booking", permanent: true },
+      // Same defense: route is /membership (singular). Catch the common
+      // plural form so /memberships hits the right page instead of 404.
+      { source: "/memberships", destination: "/membership", permanent: true },
     ];
   },
   async headers() {
