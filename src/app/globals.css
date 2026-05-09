@@ -16,6 +16,7 @@
 :root {
   /* ═══ Core Brand Palette ═══ */
   --color-espresso: #391e1e;
+  --color-burgundy: #5b2729;  /* wine bridge between espresso + blush — used for primary button hover so it darkens-into-wine instead of jumping to brick red */
   --color-blush: #84262c;
   --color-matcha: #838d60;
   --color-olive: #413e2a;
@@ -319,7 +320,7 @@ a {
 }
 
 .btn-primary:hover {
-  background-color: var(--color-blush);
+  background-color: var(--color-burgundy);
 }
 
 .btn-primary:focus-visible,
