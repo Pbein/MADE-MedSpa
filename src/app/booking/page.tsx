@@ -68,6 +68,7 @@ const cancellationPolicy = {
 
 export default function BookingPage() {
   const [videoReady, setVideoReady] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const { data: heroText } = useSectionContent("section_booking_hero", {
     eyebrow: "Book Online",
     headline: "Schedule Your Visit",
@@ -198,7 +199,13 @@ export default function BookingPage() {
         className="relative py-20 md:py-28 px-4 md:px-6"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
-        <div className="mx-auto max-w-5xl">
+        {/* Preconnect + DNS-prefetch to Pabau host so the iframe handshake
+           starts before the iframe element is parsed. React 19 hoists these
+           <link> tags into <head> automatically. */}
+        <link rel="preconnect" href="https://partner.pabau.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://partner.pabau.com" />
+
+        <div className="mx-auto max-w-7xl">
           <div className="text-center mb-10 md:mb-14">
             <p
               className="label-micro mb-3"
@@ -221,22 +228,44 @@ export default function BookingPage() {
             </p>
           </div>
           <div
-            className="overflow-hidden rounded-lg shadow-sm"
+            className="relative overflow-hidden rounded-lg shadow-sm"
             style={{
               border: "1px solid var(--color-outline-variant)",
               backgroundColor: "#fff",
+              minHeight: "1100px",
             }}
           >
+            {/* Skeleton overlay — fades out once the iframe fires onLoad so
+               the user sees something happening instead of a blank white box
+               while Pabau's app boots. */}
+            {!iframeLoaded && (
+              <div
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 transition-opacity duration-500"
+                style={{ backgroundColor: "var(--color-surface)" }}
+              >
+                <div
+                  className="h-10 w-10 animate-spin rounded-full border-2 border-t-transparent"
+                  style={{ borderColor: "var(--color-outline-variant)" }}
+                />
+                <p
+                  className="label-micro"
+                  style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
+                >
+                  Loading Booking
+                </p>
+              </div>
+            )}
             <iframe
               id="pabau-iframe"
               src={bookingUrl}
               title="Book your appointment with MADE Med Spa"
-              loading="lazy"
+              loading="eager"
+              onLoad={() => setIframeLoaded(true)}
               className="block w-full scroll-mt-24"
               style={{
                 border: 0,
-                minHeight: "900px",
-                height: "clamp(900px, 90vh, 1200px)",
+                minHeight: "1100px",
+                height: "clamp(1100px, 95vh, 1600px)",
               }}
               allow="payment; clipboard-write"
             />
