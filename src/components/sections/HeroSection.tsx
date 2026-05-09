@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -54,9 +54,30 @@ interface HeroSectionProps {
 export default function HeroSection({ sectionContent }: HeroSectionProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const videoSrc = HERO_VIDEO;
   const posterSrc = HERO_POSTER;
+
+  // iOS Safari sometimes refuses to autoplay even when all the right attributes
+  // are present (Low Power Mode, battery saver, recent intervention rules).
+  // Explicitly call .play() on mount so we either succeed OR get a rejection
+  // we can catch — on rejection we set videoFailed=true which unmounts the
+  // <video> element entirely, so iOS can't render its native play-button
+  // overlay over a paused poster.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const tryPlay = async () => {
+      try {
+        await video.play();
+        setVideoReady(true);
+      } catch {
+        setVideoFailed(true);
+      }
+    };
+    tryPlay();
+  }, []);
 
   return (
     <section className="relative h-screen w-full flex flex-col overflow-hidden">
@@ -77,11 +98,15 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
 
         {!videoFailed ? (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
             poster={posterSrc}
             title="MADE Med Spa ambient background"
             width={1920}
