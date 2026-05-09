@@ -78,19 +78,201 @@ By priority:
 
 ### Karlyne's 2026-05-09 feedback round — fix-then-verify
 
-> Working through her texted list one item at a time. Check the box once both shipped AND verified on prod.
+> Working through her 11-item texted list one item at a time. Each item below has: her verbatim quote, current state, fix approach, files touched, and how to verify.
+>
+> Check the top-level box only when shipped to `main` AND verified on https://mademedspa.com.
 
-- [x] **#1 Logo in browser tab (favicon)** — _shipped `dadf6a9` 2026-05-09._ Verify per checklist above.
-- [ ] **#2 "Where confidence is made" headline is too big on home hero** — make smaller, match inspiration site she sent.
-- [ ] **#3 Hover state on highlighted button is too red** — needs deeper burgundy (espresso family), not pink/red.
-- [ ] **#4 Header fonts still need to change** — confirm against brand kit; Glacial Indifference may be the issue or a section was missed.
-- [ ] **#5 Testimonial font is too large on homepage** — reduce.
-- [ ] **#6 Services page lists too many services** — collapse to category cards (Botox, Laser, Facial Treatments, Weight Loss, etc.) with top services listed under each. "View more" expands.
-- [ ] **#7 Hero colors are pink** — replace with brand-kit espresso/blush/cream/matcha palette.
-- [ ] **#8 CTA buttons need rounded/softer corners** ("book now", "book your consultation" style).
-- [ ] **#9 Mobile home-page hero shows a play-button overlay over the video** — video isn't auto-playing on mobile. Likely missing `playsinline` / `muted` autoplay attributes for iOS.
-- [ ] **#10 Memberships nav link goes to /services not /memberships** — fix the route or the link target.
-- [ ] **#11 Pabau booking iframe is small / laggy** — investigate sizing (full-page) and load behavior.
+#### #1 — Favicon: logo in browser tab
+
+- [x] **Status:** ✅ Shipped `dadf6a9` (2026-05-09)
+- **Karlyne (verbatim):** _"My logo isn't in the browser tab yet"_
+- **Source she sent:** `assets/MADE.jpg` — square cream-bg "MADE / MED SPA" wordmark
+- **Approach:** Generated icon set from the square logo via Sharp:
+  - `src/app/icon.png` (512×512) — Next.js auto-derives smaller sizes
+  - `src/app/apple-icon.png` (180×180) — iOS home-screen
+  - `src/app/favicon.ico` (multi-size: 16/32/48) — legacy browser-tab fallback
+  - Reusable script at `scripts/generate-favicon.mjs` (rerun if source logo changes)
+- **Files:** `src/app/{icon,apple-icon}.png`, `src/app/favicon.ico`, `scripts/generate-favicon.mjs`
+- **Verify:**
+  - [ ] Hard-refresh prod (`Ctrl+Shift+R`) → tab icon shows MADE wordmark
+  - [ ] Bookmark the page → bookmark shows MADE
+  - [ ] iOS Safari → Add to Home Screen → home-screen icon = MADE
+
+---
+
+#### #2 — Hero headline "where confidence is made" too big
+
+- [x] **Status:** ✅ Shipped `1f5ad36` (2026-05-09) — pending Karlyne approval
+- **Karlyne (verbatim):** _"on the home page 'where confidence is made' is still too big. It needs to be smaller like the inspiration website I send you"_
+- **Inspiration site:** Not yet linked in tracker — ask her for the URL if my reduction misses
+- **Root cause:** Three-line `<h1>` in `HeroSection.tsx` had max desktop sizes of `lg:text-[7rem]` (112px) and `lg:text-[6.5rem]` (104px). Editorial luxury sites typically sit around 60–72px max.
+- **Approach:** ~30% desktop reduction across all three lines, mobile sizes preserved (already calm). Maintains the visual hierarchy (light → focal → dim) but at a quieter scale.
+
+  | Line | Old `lg:` | New `lg:` | Old `md:` | New `md:` |
+  |---|---|---|---|---|
+  | headline_1 (light intro) | 6.5rem (104px) | text-6xl (60px) | text-7xl (72px) | text-5xl (48px) |
+  | headline_2 (focal) | 7rem (112px) | text-7xl (72px) | text-7xl (72px) | text-6xl (60px) |
+  | headline_3 (dim outro) | 5.5rem (88px) | text-5xl (48px) | text-6xl (60px) | text-4xl (36px) |
+
+- **Files:** `src/components/sections/HeroSection.tsx`
+- **Verify:**
+  - [ ] Desktop: focal line reads as substantial editorial, not screaming
+  - [ ] Tablet: still strong but no longer dominating
+  - [ ] Mobile: unchanged (regression check)
+- **Fallback if too small:** bump headline_2 to `lg:text-8xl` (96px). Or get the inspiration link and match exactly.
+
+---
+
+#### #3 — Button hover state too red
+
+- [ ] **Status:** Not started
+- **Karlyne (verbatim):** _"The highlighted button when you hover over it is too red. It needs to be a deeper burgundy."_
+- **Where to look:** `.btn-primary` class in `src/app/globals.css`. Hover token likely uses a desaturated/red-shifted value rather than the brand espresso/burgundy.
+- **Brand palette anchors** (per `feedback_design_style.md` memory): espresso `#391e1e`, burgundy/wine accent. Cream `#f7f6eb`, blush `#e8c8c8`, matcha `#a4a989`.
+- **Approach:** Audit `:hover` on `.btn-primary` (and any sibling button utilities) → swap any pinkish red for a true wine/burgundy in the espresso family. Pull exact hex from `assets/MADE MED SPA - Visual Branding Guide 2026.pdf` if possible.
+- **Files (probable):** `src/app/globals.css` (button utilities), possibly `src/components/sections/HeroSection.tsx` (Book Consultation CTA inline styles)
+- **Verify:**
+  - [ ] Hover over "Book Consultation" CTA on home hero → background transitions to deep burgundy, not pink/red
+  - [ ] Same hover behavior consistent across nav, footer, contact form CTAs
+
+---
+
+#### #4 — Header fonts still need to change
+
+- [ ] **Status:** Not started — needs clarification from Karlyne
+- **Karlyne (verbatim):** _"still need to change header fonts"_
+- **Current state:** H1 = Playfair Display, H2/H3 = Glacial Indifference (free Futura sub) ALL CAPS 0.4em letter-spacing weight 500. Body = Montserrat 400.
+- **Ambiguity:** Is she saying "the change wasn't applied"? Or "the font I see is wrong"? Or "we still owe me the original Futura per brand kit"? The brand spec calls for Futura, which is paid — Glacial Indifference is the free substitute we agreed on _"until she says otherwise"_ (memory: `feedback_design_style.md`).
+- **Approach:** Two-step diagnosis:
+  1. Visually compare prod headers against the Brand Board PDF (`assets/Made Med Spa Brand Board.pdf`). If our render does not match the spec face, fix.
+  2. If the render matches Glacial Indifference but she expected real Futura → ask if she wants to license Futura now ($25/mo Adobe Fonts).
+- **Files (if fix needed):** `src/app/globals.css` (font-family vars), `src/app/layout.tsx` (next/font imports)
+- **Verify:**
+  - [ ] Headers across home, /about, /services, /shop visibly match brand spec
+  - [ ] Karlyne signs off on the font face
+
+---
+
+#### #5 — Testimonial font too large on homepage
+
+- [ ] **Status:** Not started
+- **Karlyne (verbatim):** _"The testimonial font needs to be smaller on the homepage"_
+- **Where to look:** Testimonials section component (likely `src/components/sections/TestimonialsSection.tsx` or similar). The `.accent-quote` utility is the only italic surface and is used for pull-quotes/testimonials.
+- **Approach:** Reduce the quote text size by ~25%. Probably `text-2xl md:text-3xl` → `text-lg md:text-xl`. Keep italic + Playfair styling.
+- **Files:** Testimonials section component, possibly `.accent-quote` rule in `globals.css`
+- **Verify:**
+  - [ ] Testimonial quotes feel intimate/readable, not poster-sized
+  - [ ] Attribution line still smaller than quote (hierarchy preserved)
+
+---
+
+#### #6 — Services page lists too many services
+
+- [ ] **Status:** Not started — bigger refactor than the others
+- **Karlyne (verbatim):** _"Services page lists too many services. I only wanted to show categories such as Botox, laser, facial treatment, weight loss and have the top main services, and then they can click to view more"_
+- **Current state:** `/services` renders the full Pabau-synced flat list. Categories backend exists (`convex/serviceCategories.ts` with `inferCategory()` Pabau auto-bucketing) but the public page doesn't use it as the primary structure.
+- **Approach:** Restructure `/services` into two tiers:
+  1. **Category cards** at top: Botox, Laser, Facial Treatments, Weight Loss, etc. (sourced from `serviceCategories` table)
+  2. **Top 2–3 services per category** shown by default beneath each card
+  3. **"View all in [Category]"** expand or link to a category detail page
+- **Open question:** "Top services" — does she mean (a) marked-as-featured by admin, (b) most-popular by Pabau bookings (no API for this), or (c) a manual ordering she'll set per category? Default to (a) with a `isFeatured` flag on the services table; she ranks via `/admin/services`.
+- **Files:** `src/app/services/page.tsx`, possibly new `src/app/services/[category]/page.tsx`, `convex/services.ts` (add `isFeatured`), `src/app/admin/services/page.tsx` (add featured toggle)
+- **Verify:**
+  - [ ] /services lands on a clean category overview, not a wall of 30+ services
+  - [ ] Each category shows 2–3 featured services + "view all"
+  - [ ] Karlyne can mark services as featured via /admin/services
+
+---
+
+#### #7 — Hero has pink colors, doesn't match brand kit
+
+- [ ] **Status:** Not started — likely related to #3
+- **Karlyne (verbatim):** _"the hero colors are pink, and those need to be changed too match my brand kit."_
+- **Where:** Could be the gradient overlay on `HeroSection.tsx`, the eyebrow accent color, or the CTA button color leaking pink. Inspect current overlay:
+  ```
+  rgba(57,30,30,0.35) → 0.15 → 0.30 → 0.55 → 0.25 → #ede8da
+  ```
+  The espresso `#391e1e` is correct, but `#ede8da` (cream) at the bottom edge could be reading as pinkish on her display, or she could be referring to the button/eyebrow accent.
+- **Approach:** Get a screenshot from her of the "pink" she's seeing. Likely candidates:
+  1. CTA button base color
+  2. Eyebrow/label color on hero
+  3. Hand-off gradient color into the next section
+  4. A blush accent from the broader palette being misused
+- **Files (probable):** `src/components/sections/HeroSection.tsx`, `src/app/globals.css` (CSS vars `--color-*`)
+- **Verify:**
+  - [ ] No pink visible in hero — only espresso, cream, charcoal, and brand accents
+
+---
+
+#### #8 — CTA buttons need rounded/softer corners
+
+- [ ] **Status:** Not started
+- **Karlyne (verbatim):** _"Make the buttons rounded and softer like the book now, book your consultation."_ _(She's pointing to her own buttons as the reference — she likes the current "book your consultation" shape and wants ALL buttons to match that softness.)_
+- **Where:** Button utility classes in `src/app/globals.css` — `.btn-primary`, `.btn-secondary`, `.link-ghost`, plus any inline styles on individual CTAs.
+- **Approach:** Standardize border-radius. Likely move from `rounded-md` (6px) or sharp corners → `rounded-full` for the primary CTA pill shape, or `rounded-2xl` (16px) for a softer rectangle. Match whatever the Book Consultation button currently looks like.
+- **Files:** `src/app/globals.css`, audit any inline `border-radius` on buttons across components
+- **Verify:**
+  - [ ] All CTAs (nav, hero, sections, footer, contact form) have consistent soft-pill or soft-rectangle corners
+
+---
+
+#### #9 — Mobile hero video shows play-button overlay (not autoplaying)
+
+- [ ] **Status:** Not started — iOS Safari autoplay issue
+- **Karlyne (verbatim):** _"On the mobile version on the landing page the play button is showing on the video. It's not actively playing"_
+- **Current state:** `HeroSection.tsx:79-95` has `autoPlay loop muted playsInline preload="metadata"` — the right attributes for iOS autoplay. **But:** Karlyne is still seeing the play button.
+- **Possible causes:**
+  1. iOS Low Power Mode disables autoplay regardless of attributes
+  2. `preload="metadata"` may not load enough for autoplay to fire — try `preload="auto"`
+  3. The `<video>` element is wrapped in styles that hide it until `onCanPlay` fires (`opacity: videoReady ? 1 : 0`) — if `onCanPlay` never fires on her device, the poster + iOS native controls show through
+  4. iOS Safari requires the video element to be visible in viewport at autoplay time
+- **Approach:**
+  1. Add explicit `controls={false}` (defensive)
+  2. Try `preload="auto"` on mobile (or remove `preload` entirely for mobile)
+  3. Test in iOS Simulator or BrowserStack on her device class (iPhone 14/15 Safari)
+  4. If autoplay genuinely can't fire (low power mode), make the poster image so good that a static fallback is acceptable
+- **Files:** `src/components/sections/HeroSection.tsx`
+- **Verify:**
+  - [ ] iPhone Safari (real device): video plays automatically on page load, no play-button overlay
+  - [ ] Android Chrome: same
+  - [ ] Desktop Chrome/Safari/Firefox: regression check
+
+---
+
+#### #10 — Memberships nav link goes to /services
+
+- [ ] **Status:** Not started — quick fix
+- **Karlyne (verbatim):** _"When you go to the memberships, it doesn't link to the memberships. It only takes you to sevices."_
+- **Diagnosis:** Likely the nav item in `src/components/layout/Navigation.tsx` has `href="/services"` instead of `href="/memberships"`. Possible the `/memberships` route doesn't exist yet and we silently fell back.
+- **Approach:**
+  1. Confirm `/memberships` route exists at `src/app/membership/page.tsx` (note: directory is singular `membership`)
+  2. If route exists → fix nav `href`
+  3. If route is plural mismatch → either rename folder or update href to `/membership`
+- **Files:** `src/components/layout/Navigation.tsx`, possibly `src/app/membership/`
+- **Verify:**
+  - [ ] Click Memberships in nav → lands on /memberships (or /membership) page, not /services
+  - [ ] Page renders her membership tiers (admin-managed content)
+
+---
+
+#### #11 — Pabau booking iframe is small / laggy
+
+- [ ] **Status:** Not started — needs investigation
+- **Karlyne (verbatim):** _"and when you go on to book an appointment, the Pabu booking is hidden. It doesn't take up the entire page and it looks like it's lagging. I don't know if we can fix that.."_
+- **Two issues mixed:**
+  1. **Sizing:** Iframe doesn't fill viewport — fixable on our side (CSS `width: 100%; min-height: 100vh` or similar)
+  2. **Lag:** Could be Pabau's iframe being slow to load (their problem) or our iframe loading at low priority
+- **Approach:**
+  1. Inspect `src/app/booking/page.tsx` iframe styles → make it explicit full-width + tall enough that the embedded UI isn't clipped
+  2. Add `loading="eager"` (currently may default to lazy) so it starts fetching immediately
+  3. If lag is on Pabau's end, document it as an upstream limitation in the tracker; nothing further we can do
+  4. Consider a skeleton loader while the iframe boots so the page doesn't feel broken
+- **Files:** `src/app/booking/page.tsx`
+- **Verify:**
+  - [ ] /booking iframe fills the viewport edge-to-edge
+  - [ ] Page doesn't show a tiny iframe with whitespace around it
+  - [ ] Loading state (spinner or skeleton) shown until iframe interactive
+  - [ ] Page auto-scrolls to iframe (already shipped — regression check)
 
 ### Open issues to circle back to
 
