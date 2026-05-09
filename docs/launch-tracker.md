@@ -29,6 +29,94 @@ By priority:
 
 ---
 
+## ✅ Manual Verification Checklist (Philip)
+
+> Things shipped to `main` that I (Philip) need to eyeball or click-test myself before calling them done. Distinct from QA tasks Karlyne reports back on. Check the box when you've actually exercised it on **production** (not localhost).
+
+### Recently shipped — needs verification
+
+- [ ] **Favicon shows MADE logo in browser tab** _(shipped `dadf6a9`, 2026-05-09)_
+  - Open https://mademedspa.com in a fresh window (or hard-refresh `Ctrl+Shift+R`).
+  - Tab shows the cream-bg "MADE / MED SPA" wordmark, not the previous Next.js default.
+  - Bookmark the page → bookmark icon also shows MADE.
+  - On iOS Safari → Add to Home Screen → home-screen icon shows MADE (validates `apple-icon.png`).
+  - Source-of-truth files: `src/app/{icon.png,apple-icon.png,favicon.ico}`. Regenerate with `node scripts/generate-favicon.mjs` if the source logo changes.
+
+- [ ] **Admin image compression actually fires (end-to-end)** _(shipped `7f56e5a`, 2026-05-07)_
+  - Sign in at https://mademedspa.com/admin → go to `/admin/team` (any uploader works).
+  - Open DevTools → Network tab → filter "blob".
+  - Upload a >2MB phone photo (JPG straight off iPhone is ideal).
+  - Expected: the PUT request to `*.public.blob.vercel-storage.com` carries a payload **~300–400 KB** (not the original size) and Content-Type `image/webp`.
+  - Console should be clean — no `[uploadBlob] compression failed` warnings.
+  - Resulting URL should end in `.webp`.
+  - **Known gap**: 6 direct `uploadBlob()` callsites still default to `purpose: "general"` instead of an explicit purpose. Functional but not optimal — see "Open issues" below.
+
+- [ ] **Service categories seeded on production** _(P0 task #10, see below)_
+  - Visit https://mademedspa.com/admin/categories → click "Seed default categories" if list is empty.
+  - Then visit https://mademedspa.com/services → category filter chips render and filter works.
+
+- [ ] **Clerk production secret rolled** _(P0 task #12, see below)_
+  - Old prod secret was pasted in chat 2026-05-04 → must be rotated via Clerk dashboard → updated in Vercel Production env.
+
+- [ ] **`ADMIN_EMAILS` set on Vercel Preview environment** _(P0 task #14, see below)_
+  - Vercel dashboard → Project → Settings → Env Vars → confirm `ADMIN_EMAILS` exists for Preview scope. CLI couldn't add this; must be done via UI.
+
+- [ ] **Logo, footer, booking flow shipped end-of-Apr — re-eyeball on prod**
+  - Nav logo size feels right at desktop + mobile (not "small next to giant CTA")
+  - Footer is the compact alcove-style version, not the old tall one
+  - `/booking` auto-scrolls to the Pabau iframe on page load (not stuck at the top)
+  - Every footer + nav CTA reads "Book Consultation" / "Explore Services" (no leftover "Book Now" / "View All Services")
+
+- [ ] **Shop redesign + product detail pages**
+  - https://mademedspa.com/shop renders 2 cols mobile / 3 tablet / 4 desktop, square cards, no stretched photos
+  - Click any product → `/shop/[slug]` loads with full description and Pabau CTA
+  - No leftover "Provider Favorites" sidebar
+
+- [ ] **Adaptive team section on /about**
+  - With current 1 team member: editorial spotlight layout (image left + bio right, not a tiny lonely card)
+  - When/if a 2nd member is added via `/admin/team`, layout reflows to a 2-up grid
+
+### Karlyne's 2026-05-09 feedback round — fix-then-verify
+
+> Working through her texted list one item at a time. Check the box once both shipped AND verified on prod.
+
+- [x] **#1 Logo in browser tab (favicon)** — _shipped `dadf6a9` 2026-05-09._ Verify per checklist above.
+- [ ] **#2 "Where confidence is made" headline is too big on home hero** — make smaller, match inspiration site she sent.
+- [ ] **#3 Hover state on highlighted button is too red** — needs deeper burgundy (espresso family), not pink/red.
+- [ ] **#4 Header fonts still need to change** — confirm against brand kit; Glacial Indifference may be the issue or a section was missed.
+- [ ] **#5 Testimonial font is too large on homepage** — reduce.
+- [ ] **#6 Services page lists too many services** — collapse to category cards (Botox, Laser, Facial Treatments, Weight Loss, etc.) with top services listed under each. "View more" expands.
+- [ ] **#7 Hero colors are pink** — replace with brand-kit espresso/blush/cream/matcha palette.
+- [ ] **#8 CTA buttons need rounded/softer corners** ("book now", "book your consultation" style).
+- [ ] **#9 Mobile home-page hero shows a play-button overlay over the video** — video isn't auto-playing on mobile. Likely missing `playsinline` / `muted` autoplay attributes for iOS.
+- [ ] **#10 Memberships nav link goes to /services not /memberships** — fix the route or the link target.
+- [ ] **#11 Pabau booking iframe is small / laggy** — investigate sizing (full-page) and load behavior.
+
+### Open issues to circle back to
+
+- [ ] **6 direct `uploadBlob()` callers don't pass `purpose`** — fall back to `"general"` (still compressed, just not the ideal target).
+  - `src/components/admin/SectionEditorCard.tsx:124,134` — section bg / video poster
+  - `src/components/admin/SectionDesignPanel.tsx:292` — section design bg
+  - `src/app/admin/media/page.tsx:222` — media library
+  - `src/app/admin/seo/page.tsx:148` — should be `"og"`
+  - `src/app/admin/settings/page.tsx:209` — should be `"logo"`
+  - `src/app/admin/settings/page.tsx:402` — should be `"background"`
+
+### Production smoke (per-deploy ritual)
+
+Quick happy-path click-through after each push to `main`. Aim for ~5 min.
+
+- [ ] Home page loads, hero video plays (desktop + mobile), no console errors
+- [ ] Nav links: About, Services, Memberships, Shop, Booking — each loads its own page
+- [ ] `/booking` scrolls to Pabau iframe
+- [ ] `/shop` grid + at least one `/shop/[slug]` detail
+- [ ] `/admin` redirects to sign-in if signed out, loads dashboard if signed in
+- [ ] One admin save round-trip (e.g. edit hero subtitle in `/admin/pages/home`, save, reload public site, see change)
+- [ ] Footer renders, social links work, no broken images
+- [ ] `view-source:` shows favicon `<link>` tags pointing at `/icon.png` + `/apple-icon.png`
+
+---
+
 ## 📋 Session Log — 2026-05-04 to 2026-05-07
 
 Captures work shipped to production. Some items here aren't represented in the Asana list (new work that came up mid-session).
