@@ -266,24 +266,22 @@ By priority:
 
 #### #9 — Mobile hero video shows play-button overlay (not autoplaying)
 
-- [ ] **Status:** Not started — iOS Safari autoplay issue
+- [x] **Status:** ✅ Shipped `620a3a6` (2026-05-09) — pending Karlyne approval on a real iPhone
 - **Karlyne (verbatim):** _"On the mobile version on the landing page the play button is showing on the video. It's not actively playing"_
-- **Current state:** `HeroSection.tsx:79-95` has `autoPlay loop muted playsInline preload="metadata"` — the right attributes for iOS autoplay. **But:** Karlyne is still seeing the play button.
-- **Possible causes:**
-  1. iOS Low Power Mode disables autoplay regardless of attributes
-  2. `preload="metadata"` may not load enough for autoplay to fire — try `preload="auto"`
-  3. The `<video>` element is wrapped in styles that hide it until `onCanPlay` fires (`opacity: videoReady ? 1 : 0`) — if `onCanPlay` never fires on her device, the poster + iOS native controls show through
-  4. iOS Safari requires the video element to be visible in viewport at autoplay time
-- **Approach:**
-  1. Add explicit `controls={false}` (defensive)
-  2. Try `preload="auto"` on mobile (or remove `preload` entirely for mobile)
-  3. Test in iOS Simulator or BrowserStack on her device class (iPhone 14/15 Safari)
-  4. If autoplay genuinely can't fire (low power mode), make the poster image so good that a static fallback is acceptable
-- **Files:** `src/components/sections/HeroSection.tsx`
+- **Root cause:** iOS Safari sometimes refuses to autoplay even with the correct attributes (`autoPlay muted playsInline`) due to Low Power Mode, battery saver, or recent autoplay intervention rules. When that happens iOS renders its own play-button overlay on the paused video. The previous code relied entirely on the browser honoring the attributes — no fallback for the rejection case.
+- **Three-part fix shipped:**
+  1. **Explicit `videoRef.current.play()` in useEffect on mount** — wrapped in try/catch. iOS either accepts (video plays) or rejects with a Promise reject (we catch and set `videoFailed=true`).
+  2. **`videoFailed` unmounts the entire `<video>` element** — the existing `{!videoFailed ? <video /> : null}` ternary now does its real job: if play() rejected, the `<video>` doesn't exist, so iOS has nothing to overlay a play button onto. Just the poster image renders, and that's a clean fallback.
+  3. **`preload="metadata"` → `preload="auto"`** so iOS has enough buffered video to honor the autoplay attempt.
+  4. **Defensive attributes** to kill any other native overlays: `disablePictureInPicture`, `disableRemotePlayback`, `controls={false}`.
+- **Bandwidth tradeoff acknowledged:** `preload="auto"` loads the first few seconds of the ~15MB video on initial page load (not the whole thing). At MADE's projected traffic on Vercel Pro's 1 TB Fast Data Transfer bucket, well within budget. If we ever hit ceiling we can swap back to `preload="metadata"` and accept the iOS unreliability.
+- **Files:** `src/components/sections/HeroSection.tsx` (added useRef + useEffect, updated `<video>` props)
 - **Verify:**
-  - [ ] iPhone Safari (real device): video plays automatically on page load, no play-button overlay
-  - [ ] Android Chrome: same
-  - [ ] Desktop Chrome/Safari/Firefox: regression check
+  - [ ] iPhone Safari (real device, normal power): video autoplays, no play-button overlay
+  - [ ] iPhone Safari (Low Power Mode ON): video DOESN'T play, but only the poster shows — no broken play-button overlay
+  - [ ] Android Chrome: video autoplays
+  - [ ] Desktop Chrome/Safari/Firefox: regression check — video still plays as before
+- **If iPhone STILL shows play overlay after this:** Open Safari DevTools (Mac → iPhone via USB → Develop menu → iPhone → Inspect mademedspa.com). Console will show whether `videoRef.play()` rejected. If it rejected, our fallback should have hidden the video. If overlay still shows, something else is wrong — possibly an iOS bug or a browser extension.
 
 ---
 
