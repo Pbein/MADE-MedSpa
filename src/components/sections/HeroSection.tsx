@@ -97,7 +97,9 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
           null
         )}
 
-        {/* Warm overlay — darkened toward bottom for cream text legibility */}
+        {/* Warm overlay — darkened toward bottom for cream text legibility.
+           Hand-off matches the next section's Silk surface so there's no
+           pink-tinted twilight zone where video color can leak through. */}
         <div
           className="absolute inset-0"
           style={{
@@ -107,8 +109,8 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
               "rgba(57,30,30,0.15) 30%,",      // breathes in the middle
               "rgba(57,30,30,0.30) 60%,",      // darkens again for text zone
               "rgba(57,30,30,0.55) 82%,",      // strong contrast behind headline
-              "rgba(57,30,30,0.25) 92%,",      // eases warmth into transition
-              "#ede8da 100%",                   // hands off to editorial section
+              "rgba(57,30,30,0.55) 96%,",      // HOLD the wash, mute video color
+              "#F7F6EB 100%",                   // hand off matches next section Silk
             ].join(" "),
           }}
         />
