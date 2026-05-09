@@ -133,7 +133,7 @@ export default function TestimonialSection({ testimonials: propTestimonials, tes
             {/* Large decorative quote mark */}
             <div className="text-center mb-8">
               <span
-                className="inline-block font-headline text-6xl sm:text-[8rem] md:text-[10rem] leading-none select-none"
+                className="inline-block font-headline text-5xl sm:text-7xl md:text-8xl leading-none select-none"
                 style={{ color: "rgba(215,207,197,0.2)" }}
               >
                 &ldquo;
@@ -152,11 +152,11 @@ export default function TestimonialSection({ testimonials: propTestimonials, tes
                   className="text-center"
                 >
                   <blockquote
-                    className="accent-quote font-light text-2xl sm:text-3xl md:text-4xl leading-relaxed md:leading-relaxed"
+                    className="accent-quote font-light text-xl sm:text-2xl md:text-3xl leading-relaxed md:leading-relaxed"
                     style={{
                       color: "var(--color-primary)",
                       textWrap: "balance",
-                      maxWidth: "52rem",
+                      maxWidth: "48rem",
                       margin: "0 auto",
                     } as React.CSSProperties}
                   >
