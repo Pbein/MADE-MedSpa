@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useQuery } from "convex/react";
+import type { Doc } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import ServiceCard from "@/components/sections/ServiceCard";
@@ -10,6 +11,108 @@ import CTABanner from "@/components/sections/CTABanner";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
+
+// Default landing shows N "top" services per category (sorted by sortOrder ASC).
+// Karlyne controls the order via /admin/services. If a category has more than
+// this, a "View all" link reveals the rest in the existing flat-grid view.
+const TOP_PER_CATEGORY = 3;
+
+type ServiceDoc = Doc<"services">;
+type CategoryDoc = Doc<"serviceCategories">;
+
+function CategoryGroups({
+  services,
+  categories,
+  topN,
+  onViewAll,
+}: {
+  services: ServiceDoc[];
+  categories: CategoryDoc[];
+  topN: number;
+  onViewAll: (categoryName: string) => void;
+}) {
+  // Bucket services by their category string. Anything whose category doesn't
+  // map to an active serviceCategory falls into a synthetic "Other" group at
+  // the end so nothing disappears.
+  const activeCategoryNames = new Set(categories.map((c) => c.name));
+  const buckets = new Map<string, ServiceDoc[]>();
+  for (const cat of categories) buckets.set(cat.name, []);
+  const orphans: ServiceDoc[] = [];
+  for (const s of services) {
+    if (activeCategoryNames.has(s.category)) {
+      buckets.get(s.category)!.push(s);
+    } else {
+      orphans.push(s);
+    }
+  }
+  if (orphans.length > 0) buckets.set("Other", orphans);
+
+  // Render in admin sortOrder, then orphans last.
+  const orderedNames = [
+    ...categories.map((c) => c.name),
+    ...(orphans.length > 0 ? ["Other"] : []),
+  ];
+
+  return (
+    <div className="space-y-24 md:space-y-32">
+      {orderedNames.map((catName) => {
+        const all = buckets.get(catName) ?? [];
+        if (all.length === 0) return null;
+        const top = all.slice(0, topN);
+        const remaining = all.length - top.length;
+
+        return (
+          <div key={catName}>
+            {/* Category header — eyebrow + section headline + divider */}
+            <div className="text-center mb-12 md:mb-16">
+              <span
+                className="label-micro block mb-3"
+                style={{ color: "var(--color-on-surface-variant)" }}
+              >
+                Treatment Category
+              </span>
+              <h2 className="headline-section text-base md:text-lg">{catName}</h2>
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <div
+                  className="w-12 h-px"
+                  style={{ backgroundColor: "var(--color-outline-variant)" }}
+                />
+                <div
+                  className="w-1.5 h-1.5 rotate-45 border"
+                  style={{ borderColor: "var(--color-outline-variant)" }}
+                />
+                <div
+                  className="w-12 h-px"
+                  style={{ backgroundColor: "var(--color-outline-variant)" }}
+                />
+              </div>
+            </div>
+
+            {/* Top-N services in a 3-up grid (mobile stacks). */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {top.map((service) => (
+                <ServiceCard key={service._id} service={service} />
+              ))}
+            </div>
+
+            {/* "View all in [Category]" footer link, only if there's more to show. */}
+            {remaining > 0 && (
+              <div className="text-center mt-12">
+                <button
+                  type="button"
+                  onClick={() => onViewAll(catName)}
+                  className="link-editorial"
+                >
+                  View all {all.length} in {catName} &rarr;
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function ServicesPageClient({
   heroBgUrl,
@@ -106,7 +209,7 @@ export default function ServicesPageClient({
       {/* Services Grid */}
       <section id="section-grid" ref={gridRef} className="bg-[var(--color-surface)] py-32 md:py-40">
         <div className="mx-auto max-w-7xl px-6">
-          {services === undefined ? (
+          {services === undefined || dbCategories === undefined ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse">
@@ -127,6 +230,19 @@ export default function ServicesPageClient({
                 {search ? ` matching "${search}"` : ""}.
               </p>
             </div>
+          ) : activeCategory === "All" && !search ? (
+            // Default landing: category-grouped view. Each active category becomes a
+            // section showing its top-N services by sortOrder. "View all" jumps to
+            // the filter-pill view of just that category.
+            <CategoryGroups
+              services={filteredServices}
+              categories={dbCategories ?? []}
+              topN={TOP_PER_CATEGORY}
+              onViewAll={(catName) => {
+                setActiveCategory(catName);
+                gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
           ) : (
             <LayoutGroup>
               <motion.div
