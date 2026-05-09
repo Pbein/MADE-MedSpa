@@ -219,21 +219,28 @@ By priority:
 
 #### #7 — Hero has pink colors, doesn't match brand kit
 
-- [ ] **Status:** Not started — likely related to #3
+- [x] **Status:** ⚠️ Partial fix shipped `0c67c72` (2026-05-09) — pending Karlyne approval, may need follow-up
 - **Karlyne (verbatim):** _"the hero colors are pink, and those need to be changed too match my brand kit."_
-- **Where:** Could be the gradient overlay on `HeroSection.tsx`, the eyebrow accent color, or the CTA button color leaking pink. Inspect current overlay:
-  ```
-  rgba(57,30,30,0.35) → 0.15 → 0.30 → 0.55 → 0.25 → #ede8da
-  ```
-  The espresso `#391e1e` is correct, but `#ede8da` (cream) at the bottom edge could be reading as pinkish on her display, or she could be referring to the button/eyebrow accent.
-- **Approach:** Get a screenshot from her of the "pink" she's seeing. Likely candidates:
-  1. CTA button base color
-  2. Eyebrow/label color on hero
-  3. Hand-off gradient color into the next section
-  4. A blush accent from the broader palette being misused
-- **Files (probable):** `src/components/sections/HeroSection.tsx`, `src/app/globals.css` (CSS vars `--color-*`)
+- **Investigation:** Audited every CSS surface in the hero render path:
+  - **CTA button** — espresso bg + cream text, no pink. (Fixed in #3 anyway.)
+  - **Eyebrow/headline text** — `#f7f6eb` Silk cream, no pink.
+  - **Decorative divider line** — Silk cream, no pink.
+  - **Pink-adjacent palette tokens** (`--color-rose-dust`, `--gradient-hero-soft`) — defined in globals.css but **not actually applied to hero**. Confirmed via grep: `--gradient-hero-soft` is defined at line 75 and never referenced anywhere else.
+  - **Gradient overlay** — pure espresso (`rgba(57,30,30,*)`) until the bottom hand-off, where it transitioned `0.25 espresso wash 92% → #ede8da solid 100%`. The `#ede8da` is technically yellow-cream (RGB 237,232,218) but **on warm-balanced displays it reads pinkish** — and the meandering 8% twilight zone leaks video color through.
+  - **Video itself** (`/public/videos/hero-v2.mp4`) — possibly contains rose-toned frames. Without re-watching the video on her exact device + display I can't confirm. If pink persists after this fix, this is the cause.
+- **Fix shipped:**
+  1. Hold the espresso wash longer at the bottom (`0.25 → 0.55 alpha at 96%` instead of fading at 92%) — mutes any video color leaking through in the lower band.
+  2. Hand-off color changed from `#ede8da` → `#F7F6EB` to exactly match `GLOBAL_DEFAULTS.surface` (the Silk used by the next section). Clean architectural seam, no pink twilight.
+- **Files:** `src/components/sections/HeroSection.tsx` (lines 100-115)
+- **Did NOT touch:** The unused pink-tinted tokens (`--color-rose-dust`, `--gradient-hero-soft`, `--gradient-warm-atmosphere`). They're not applied to the hero, and removing them risks breaking other future use cases. Documented as an opt-in cleanup if needed later.
 - **Verify:**
-  - [ ] No pink visible in hero — only espresso, cream, charcoal, and brand accents
+  - [ ] Bottom edge of hero hands off cleanly to next section, no pink twilight band
+  - [ ] No rose tones visible at the headline or CTA zone
+- **If pink STILL visible after this fix → it's the video.** Options:
+  1. Re-encode `hero-v2.mp4` with a desaturation/cool-tone filter applied (`ffmpeg -vf "hue=s=0.85,colorbalance=rs=-0.05"`) and bump version to `hero-v3.mp4` per CLAUDE.md procedure
+  2. Replace the video entirely with neutral footage
+  3. Lower the hero overlay opacity even more so video shows through less
+  - **Need from Karlyne:** A screenshot of where she sees pink so we can confirm cause.
 
 ---
 
