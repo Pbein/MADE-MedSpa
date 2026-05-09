@@ -287,17 +287,32 @@ By priority:
 
 #### #10 — Memberships nav link goes to /services
 
-- [ ] **Status:** Not started — quick fix
+- [x] **Status:** ⚠️ Partial fix shipped `989d5e1` (2026-05-09) — needs Karlyne verification on prod with you on a call to identify the actual culprit link
 - **Karlyne (verbatim):** _"When you go to the memberships, it doesn't link to the memberships. It only takes you to sevices."_
-- **Diagnosis:** Likely the nav item in `src/components/layout/Navigation.tsx` has `href="/services"` instead of `href="/memberships"`. Possible the `/memberships` route doesn't exist yet and we silently fell back.
-- **Approach:**
-  1. Confirm `/memberships` route exists at `src/app/membership/page.tsx` (note: directory is singular `membership`)
-  2. If route exists → fix nav `href`
-  3. If route is plural mismatch → either rename folder or update href to `/membership`
-- **Files:** `src/components/layout/Navigation.tsx`, possibly `src/app/membership/`
-- **Verify:**
-  - [ ] Click Memberships in nav → lands on /memberships (or /membership) page, not /services
-  - [ ] Page renders her membership tiers (admin-managed content)
+- **Code audit (couldn't reproduce):** Searched the entire codebase for any "Membership" link or text. Every one points to `/membership` (singular):
+  - `Navigation.tsx:14` — `{ href: "/membership", label: "Membership" }`
+  - `Footer.tsx:47` — `{ href: "/membership", label: "Membership" }`
+  - No homepage CTA or section component links "Membership" to /services
+  - No middleware redirect /membership → /services
+  - No next.config.ts redirect /membership → /services
+  - The `/membership` route exists at `src/app/membership/page.tsx` and renders correctly (membership tier cards from Convex, or "Coming Soon" placeholder if empty)
+- **Most plausible remaining causes:**
+  1. She typed `/memberships` (plural) in the URL bar and got a 404 → may have looked like a redirect to her
+  2. She clicked something on a page we can't see from code — possibly inside the Pabau iframe
+  3. She looked at the home page CTA section ("Explore Services" → /services) and conflated it with a Membership link
+  4. Memorable misremembering — she went to /services first, then tried Membership, but timeline got mixed in retelling
+- **Defensive fix shipped:** Added `/memberships → /membership` permanent redirect in `next.config.ts` (mirrors the existing `/book → /booking` defense). If she or any user types the plural form, it now resolves correctly instead of 404.
+- **Files:** `next.config.ts` (lines 60-69)
+- **What still needs to happen — REAL verify:**
+  - [ ] Get on a call with Karlyne (or screenshare/screen recording from her)
+  - [ ] Have her click the exact link that took her to /services
+  - [ ] Inspect that link's href in DevTools
+  - [ ] If it points to /services with a "Membership" label → that's the bug; fix the href
+  - [ ] If it points to /membership and she lands on /services anyway → there's a runtime redirect we missed (check Vercel function logs, Convex queries, etc.)
+- **Verify (defensive redirect):**
+  - [ ] Type `mademedspa.com/memberships` in URL bar → redirects to `/membership`
+  - [ ] Click Memberships in main nav (desktop + mobile) → lands on /membership page with tiers
+  - [ ] Click Membership in footer → lands on /membership page
 
 ---
 
