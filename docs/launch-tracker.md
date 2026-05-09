@@ -138,32 +138,52 @@ By priority:
 
 ---
 
-#### #4 — Header fonts still need to change
+#### #4 — Header fonts still need to change  ⏸️ DEFERRED — saving for last
 
-- [ ] **Status:** Not started — needs clarification from Karlyne
+- [ ] **Status:** Deferred to end of feedback round (2026-05-09 decision: Philip considering buying real Futura license)
 - **Karlyne (verbatim):** _"still need to change header fonts"_
-- **Current state:** H1 = Playfair Display, H2/H3 = Glacial Indifference (free Futura sub) ALL CAPS 0.4em letter-spacing weight 500. Body = Montserrat 400.
-- **Ambiguity:** Is she saying "the change wasn't applied"? Or "the font I see is wrong"? Or "we still owe me the original Futura per brand kit"? The brand spec calls for Futura, which is paid — Glacial Indifference is the free substitute we agreed on _"until she says otherwise"_ (memory: `feedback_design_style.md`).
-- **Approach:** Two-step diagnosis:
-  1. Visually compare prod headers against the Brand Board PDF (`assets/Made Med Spa Brand Board.pdf`). If our render does not match the spec face, fix.
-  2. If the render matches Glacial Indifference but she expected real Futura → ask if she wants to license Futura now ($25/mo Adobe Fonts).
-- **Files (if fix needed):** `src/app/globals.css` (font-family vars), `src/app/layout.tsx` (next/font imports)
-- **Verify:**
-  - [ ] Headers across home, /about, /services, /shop visibly match brand spec
+- **Current state on prod:** H1 = Playfair Display, H2/H3 = Glacial Indifference (free Futura substitute) ALL CAPS 0.4em letter-spacing weight 500. Body = Montserrat 400.
+- **Why deferred:** Brand spec specifies real Futura. Current implementation uses Glacial Indifference as a free stand-in. Philip wants to evaluate whether to license real Futura before doing any more font work — no point tweaking the substitute if we're going to swap the family entirely.
+- **Licensing options to evaluate:**
+  - **Adobe Fonts** (~$20/mo with Creative Cloud) — includes Futura PT + Futura PT Condensed. Self-serve via `<link>` tag. Cleanest CDN delivery.
+  - **Linotype / Monotype Futura** (one-time desktop license + separate webfont license) — typically $50–200+ per weight. Buy once, host yourself via `next/font/local`. No subscription.
+  - **Futura Now** (Monotype) — newer redrawing; ~$50/mo for the full family on Monotype Fonts service.
+- **Approach when we resume:**
+  1. Confirm with Karlyne that real Futura is what she wants (it's possible she likes Glacial Indifference but a different section's headers are off)
+  2. Pick licensing path
+  3. Replace the cdnfonts.com `@import` in `globals.css:7` with the Futura source (Adobe Fonts CSS or self-hosted woff2)
+  4. Update `--font-label` fallback chain in `globals.css:111` to put real Futura first
+  5. Diff the rendered weight/letter-spacing — Futura's geometric forms may need slightly different tracking than Glacial Indifference
+- **Open question to ask Karlyne:** Is the issue (a) "font is wrong" → switch to real Futura, or (b) "font doesn't appear at all on some section" → bug fix in CSS specificity / load order, or (c) "I want it bigger / smaller" → sizing tweak?
+- **Files (when resumed):** `src/app/globals.css` (lines 7, 111, possibly h2/h3 weight), `src/app/layout.tsx` (if self-hosting via next/font/local)
+- **Verify (when resumed):**
+  - [ ] Headers across home, /about, /services, /shop visibly match brand-spec Futura
   - [ ] Karlyne signs off on the font face
+  - [ ] No FOUT (flash of unstyled text) on slow connections
 
 ---
 
 #### #5 — Testimonial font too large on homepage
 
-- [ ] **Status:** Not started
+- [x] **Status:** ✅ Shipped `b49d860` (2026-05-09) — pending Karlyne approval
 - **Karlyne (verbatim):** _"The testimonial font needs to be smaller on the homepage"_
-- **Where to look:** Testimonials section component (likely `src/components/sections/TestimonialsSection.tsx` or similar). The `.accent-quote` utility is the only italic surface and is used for pull-quotes/testimonials.
-- **Approach:** Reduce the quote text size by ~25%. Probably `text-2xl md:text-3xl` → `text-lg md:text-xl`. Keep italic + Playfair styling.
-- **Files:** Testimonials section component, possibly `.accent-quote` rule in `globals.css`
+- **Root cause:** `<blockquote>` in `TestimonialSection.tsx:155` was sized `text-2xl sm:text-3xl md:text-4xl` (24 → 30 → 36 px). At 36px on tablet/desktop with 200+-char client quotes, it read as billboard copy rather than intimate testimony. The decorative `"` quote mark above (line 136) was also disproportionately large at 160px.
+- **Approach:** Drop both the body and the decorative mark by one tier across all breakpoints. Italic Playfair quotes typically work best 20–30px range. Tightened `maxWidth` from 52rem → 48rem so the column doesn't feel sparse at the smaller size.
+
+  | Element | Old | New | Old `md:` | New `md:` |
+  |---|---|---|---|---|
+  | Quote body | text-2xl sm:text-3xl md:text-4xl | text-xl sm:text-2xl md:text-3xl | 36 px | 30 px |
+  | Decorative `"` mark | text-6xl sm:text-[8rem] md:text-[10rem] | text-5xl sm:text-7xl md:text-8xl | 160 px | 96 px |
+  | maxWidth | 52rem | 48rem | — | — |
+
+- **Kept:** Italic Playfair styling, `.accent-quote` class, `font-light` weight, leading, attribution hierarchy (label-micro for name, smaller for treatment).
+- **Files:** `src/components/sections/TestimonialSection.tsx` (lines 136, 155, 159)
 - **Verify:**
   - [ ] Testimonial quotes feel intimate/readable, not poster-sized
-  - [ ] Attribution line still smaller than quote (hierarchy preserved)
+  - [ ] Decorative `"` mark above each quote still reads as a luxury flourish, just proportional to the text now
+  - [ ] Attribution line (name + treatment) still smaller than quote (hierarchy preserved)
+  - [ ] Mobile: still legible at 20px (regression check)
+- **Fallback if too small:** bump back up by one tier just on `md:` → `md:text-3xl` → `md:text-4xl` (30 → 36 px).
 
 ---
 
