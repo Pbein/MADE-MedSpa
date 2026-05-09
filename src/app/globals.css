@@ -10,7 +10,8 @@
 /* ============================================
    MADE Med Spa — Editorial Design System
    Derived from Google Stitch "Refined Med Spa"
-   Sharp corners · No-line rule · Massive whitespace
+   Pill-rounded buttons · No-line rule · Massive whitespace
+   (Originally sharp corners — softened to pills 2026-05-09 per client.)
    ============================================ */
 
 :root {
@@ -298,7 +299,9 @@ a {
 }
 
 /* ============================================
-   Buttons — Editorial, Sharp
+   Buttons — Editorial, Pill-rounded
+   (Originally sharp — softened to pill shape per Karlyne's 2026-05-09
+   feedback, matching the alcoveaesthetics.com reference she sent.)
    ============================================ */
 
 .btn-primary {
@@ -309,6 +312,7 @@ a {
   background-color: var(--btn-bg, var(--color-espresso));
   color: var(--btn-text, var(--color-on-primary));
   border: none;
+  border-radius: 999px;
   font-family: var(--font-label);
   font-style: normal;
   font-weight: 500;
@@ -338,6 +342,7 @@ a {
   background-color: transparent;
   color: var(--color-primary);
   border: 1px solid var(--color-outline-variant);
+  border-radius: 999px;
   font-family: var(--font-label);
   font-style: normal;
   font-weight: 500;
@@ -362,6 +367,7 @@ a {
   background-color: var(--btn-bg, var(--color-surface));
   color: var(--btn-text, var(--color-primary));
   border: none;
+  border-radius: 999px;
   font-family: var(--font-label);
   font-style: normal;
   font-weight: 500;
