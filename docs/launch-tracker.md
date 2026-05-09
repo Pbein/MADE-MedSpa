@@ -318,22 +318,30 @@ By priority:
 
 #### #11 — Pabau booking iframe is small / laggy
 
-- [ ] **Status:** Not started — needs investigation
+- [x] **Status:** ✅ Shipped `6c27e59` (2026-05-09) — pending Karlyne verification
 - **Karlyne (verbatim):** _"and when you go on to book an appointment, the Pabu booking is hidden. It doesn't take up the entire page and it looks like it's lagging. I don't know if we can fix that.."_
-- **Two issues mixed:**
-  1. **Sizing:** Iframe doesn't fill viewport — fixable on our side (CSS `width: 100%; min-height: 100vh` or similar)
-  2. **Lag:** Could be Pabau's iframe being slow to load (their problem) or our iframe loading at low priority
-- **Approach:**
-  1. Inspect `src/app/booking/page.tsx` iframe styles → make it explicit full-width + tall enough that the embedded UI isn't clipped
-  2. Add `loading="eager"` (currently may default to lazy) so it starts fetching immediately
-  3. If lag is on Pabau's end, document it as an upstream limitation in the tracker; nothing further we can do
-  4. Consider a skeleton loader while the iframe boots so the page doesn't feel broken
-- **Files:** `src/app/booking/page.tsx`
+- **Investigation found 5 distinct issues:**
+  1. **Container too narrow:** `max-w-5xl` capped the iframe wrapper at 1024px even on huge displays — that's the "doesn't take up the entire page" she's seeing
+  2. **`loading="lazy"`** deferred iframe loading until scroll. But since we auto-scroll TO the iframe on page load (#9 fix earlier), `lazy` was actively delaying the load by waiting for the scroll to happen — contributing to "laggy" feel
+  3. **Height too short:** `minHeight: 900px` was getting clipped by Pabau's full UI (it wants 1100+ for service grid + booking calendar)
+  4. **No loading state:** Until iframe paints, user saw a blank white box with a thin border — looked broken
+  5. **No DNS preconnect:** Pabau host (`partner.pabau.com`) DNS+TLS handshake didn't start until the iframe element was parsed
+- **5-part fix shipped:**
+  1. `max-w-5xl` (1024px) → `max-w-7xl` (1280px). Wider so the embed has room to breathe.
+  2. `loading="lazy"` → `loading="eager"`. Booking iframe is THE point of this page — load it immediately.
+  3. `minHeight: 900px` → `1100px`. Ceiling `clamp(900px, 90vh, 1200px)` → `clamp(1100px, 95vh, 1600px)` so it doesn't clip on tall displays.
+  4. **Loading skeleton overlay**: spinner + "Loading Booking" label, absolutely positioned over the iframe. Fades out when iframe fires `onLoad`. Wired via new `iframeLoaded` state.
+  5. `<link rel="preconnect">` + `<link rel="dns-prefetch">` to `partner.pabau.com`. React 19 auto-hoists these into `<head>` so the TLS handshake starts before the iframe element is even parsed.
+- **What we CAN'T fix:** Pabau-side rendering speed is upstream. Their widget bootstrap time (their JS bundle + their backend calls) is in their hands, not ours. If she still finds it slow after this, the next step is contacting Pabau support to ask about widget perf — not a code change on our end.
+- **Files:** `src/app/booking/page.tsx` (added `iframeLoaded` state line 71, preconnect links + skeleton overlay + iframe attrs lines 200-260)
 - **Verify:**
-  - [ ] /booking iframe fills the viewport edge-to-edge
-  - [ ] Page doesn't show a tiny iframe with whitespace around it
-  - [ ] Loading state (spinner or skeleton) shown until iframe interactive
-  - [ ] Page auto-scrolls to iframe (already shipped — regression check)
+  - [ ] /booking iframe fills the editorial 1280px column (was clipped at 1024px)
+  - [ ] On page load, scroll auto-jumps to iframe (regression check — #9 still works)
+  - [ ] During the 1-2 sec Pabau bootstrap, see a spinner + "Loading Booking" instead of blank white box
+  - [ ] Once Pabau widget paints, spinner disappears
+  - [ ] Iframe is tall enough that the booking calendar isn't cut off
+  - [ ] DevTools Network → `partner.pabau.com` connection shown as preconnected (Initiator = "preconnect" or 0ms TLS)
+- **If still slow:** That's Pabau's widget. Options would be (a) ask Pabau support for a perf review of our embed slug `made-med-spa`, (b) consider a custom-built lead form that hits Pabau API directly instead of the iframe (much bigger lift, post-launch).
 
 ### Open issues to circle back to
 
