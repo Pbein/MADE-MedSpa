@@ -189,19 +189,31 @@ By priority:
 
 #### #6 — Services page lists too many services
 
-- [ ] **Status:** Not started — bigger refactor than the others
+- [x] **Status:** ✅ Shipped `534c3ef` (2026-05-09) — pending Karlyne approval
 - **Karlyne (verbatim):** _"Services page lists too many services. I only wanted to show categories such as Botox, laser, facial treatment, weight loss and have the top main services, and then they can click to view more"_
-- **Current state:** `/services` renders the full Pabau-synced flat list. Categories backend exists (`convex/serviceCategories.ts` with `inferCategory()` Pabau auto-bucketing) but the public page doesn't use it as the primary structure.
-- **Approach:** Restructure `/services` into two tiers:
-  1. **Category cards** at top: Botox, Laser, Facial Treatments, Weight Loss, etc. (sourced from `serviceCategories` table)
-  2. **Top 2–3 services per category** shown by default beneath each card
-  3. **"View all in [Category]"** expand or link to a category detail page
-- **Open question:** "Top services" — does she mean (a) marked-as-featured by admin, (b) most-popular by Pabau bookings (no API for this), or (c) a manual ordering she'll set per category? Default to (a) with a `isFeatured` flag on the services table; she ranks via `/admin/services`.
-- **Files:** `src/app/services/page.tsx`, possibly new `src/app/services/[category]/page.tsx`, `convex/services.ts` (add `isFeatured`), `src/app/admin/services/page.tsx` (add featured toggle)
+- **Decision: no schema migration, no new route.** Used existing `services.sortOrder` field (already there, already controlled via /admin/services) as the "featured" ranking instead of adding an `isFeatured` flag. One file change.
+- **Approach implemented:**
+  1. **Default landing** (no filter selected, no search): `/services` renders one section per active category. Each section = eyebrow ("Treatment Category") + headline (category name) + decorative divider + 3-up grid of top services + "View all (N) in [Category] →" link if more remain.
+  2. **Filtered view** (user clicks a category pill or types a search): falls back to the existing flat grid behavior so power-user filtering still works.
+  3. **Top-N logic:** `services.slice(0, 3)` after the existing sortOrder ASC sort. Karlyne reorders in /admin/services to change which services surface as "top 3" per category.
+  4. **Orphan handling:** services whose `category` field doesn't match any active `serviceCategories.name` fall into a synthetic "Other" bucket at the end so nothing disappears (defensive against partial Pabau syncs).
+- **What Karlyne gets to control without a dev:**
+  - Category names + ordering → `/admin/categories` (already shipped)
+  - Which services appear as "top 3" → reorder via sortOrder in `/admin/services` (already shipped)
+  - How many = N → currently hardcoded `TOP_PER_CATEGORY = 3` constant; trivial to expose later if she wants to tune
+- **Files:** `src/app/services/ServicesPageClient.tsx` (added `CategoryGroups` component, branched render based on `activeCategory === "All" && !search`)
 - **Verify:**
-  - [ ] /services lands on a clean category overview, not a wall of 30+ services
-  - [ ] Each category shows 2–3 featured services + "view all"
-  - [ ] Karlyne can mark services as featured via /admin/services
+  - [ ] /services lands on category-grouped view, NOT the wall of 30+ services
+  - [ ] Each active category shows up to 3 services + "View all" if there are more
+  - [ ] Click "View all in [Category]" → page filters to that category and scrolls to grid
+  - [ ] Click a category pill at top → flat grid for that category (existing behavior intact)
+  - [ ] Search input → flat grid filtered by search (existing behavior intact)
+  - [ ] Click a category in the flat-grid view back to "All" → returns to category-grouped view
+  - [ ] No services missing — anything with a non-matching category surfaces under "Other"
+- **Follow-ups if Karlyne wants more:**
+  - Per-category hero image/background → would need `serviceCategories.imageUrl` + admin upload UI
+  - Explicit "feature this service" toggle (instead of relying on sortOrder) → add `isFeatured` boolean + admin checkbox
+  - Configurable N → expose `topPerCategory` as page-settings field
 
 ---
 
