@@ -125,15 +125,16 @@ By priority:
 
 #### #3 — Button hover state too red
 
-- [ ] **Status:** Not started
+- [x] **Status:** ✅ Shipped `1f5f406` (2026-05-09) — pending Karlyne approval
 - **Karlyne (verbatim):** _"The highlighted button when you hover over it is too red. It needs to be a deeper burgundy."_
-- **Where to look:** `.btn-primary` class in `src/app/globals.css`. Hover token likely uses a desaturated/red-shifted value rather than the brand espresso/burgundy.
-- **Brand palette anchors** (per `feedback_design_style.md` memory): espresso `#391e1e`, burgundy/wine accent. Cream `#f7f6eb`, blush `#e8c8c8`, matcha `#a4a989`.
-- **Approach:** Audit `:hover` on `.btn-primary` (and any sibling button utilities) → swap any pinkish red for a true wine/burgundy in the espresso family. Pull exact hex from `assets/MADE MED SPA - Visual Branding Guide 2026.pdf` if possible.
-- **Files (probable):** `src/app/globals.css` (button utilities), possibly `src/components/sections/HeroSection.tsx` (Book Consultation CTA inline styles)
+- **Root cause:** `.btn-primary:hover` swapped from `--color-espresso` (`#391e1e`, very dark warm brown) to `--color-blush` (`#84262c`, much-lighter much-redder brick). That's a huge jump in hue + lightness — reads as red, not burgundy.
+- **Approach:** Added a new `--color-burgundy: #5b2729` palette token (this wine color was already living anonymously inside `--gradient-featured`). Pointed `.btn-primary:hover` at it. Now hover *darkens-into-wine* instead of *jumps-to-brick*.
+- **Scope kept tight:** Focus-visible outlines (`:focus-visible`) still use `--color-blush` because they're a11y attention-grabbers, not aesthetic surfaces. Admin section-preset "Blush" surface unchanged. Only the explicit hover she flagged.
+- **Files:** `src/app/globals.css` (palette token added line 19, `.btn-primary:hover` line 322)
 - **Verify:**
-  - [ ] Hover over "Book Consultation" CTA on home hero → background transitions to deep burgundy, not pink/red
-  - [ ] Same hover behavior consistent across nav, footer, contact form CTAs
+  - [ ] Hover over "Book Consultation" CTA on home hero → background transitions to deep wine, not pink/red
+  - [ ] Same on contact form submit, services CTAs, membership CTAs (anything `.btn-primary`)
+  - [ ] If she still wants it darker, drop to `#4a1f22`. If she wants more red kept, bump to `#6e2629`.
 
 ---
 
