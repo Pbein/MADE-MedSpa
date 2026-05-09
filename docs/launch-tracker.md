@@ -246,13 +246,21 @@ By priority:
 
 #### #8 — CTA buttons need rounded/softer corners
 
-- [ ] **Status:** Not started
-- **Karlyne (verbatim):** _"Make the buttons rounded and softer like the book now, book your consultation."_ _(She's pointing to her own buttons as the reference — she likes the current "book your consultation" shape and wants ALL buttons to match that softness.)_
-- **Where:** Button utility classes in `src/app/globals.css` — `.btn-primary`, `.btn-secondary`, `.link-ghost`, plus any inline styles on individual CTAs.
-- **Approach:** Standardize border-radius. Likely move from `rounded-md` (6px) or sharp corners → `rounded-full` for the primary CTA pill shape, or `rounded-2xl` (16px) for a softer rectangle. Match whatever the Book Consultation button currently looks like.
-- **Files:** `src/app/globals.css`, audit any inline `border-radius` on buttons across components
+- [x] **Status:** ✅ Shipped `49c651a` (2026-05-09) — pending Karlyne approval
+- **Karlyne (verbatim):** _"Make the buttons rounded and softer like the book now, book your consultation."_ _(She's pointing to her own buttons as the reference — she wants ALL buttons to match that softness.)_
+- **Discovered current state:** `.btn-primary`, `.btn-outline`, `.btn-light` had **no border-radius set at all** (defaulted to 0 = sharp). The design system header comment in globals.css explicitly read "Sharp corners · No-line rule · Massive whitespace" — that was the original deliberate aesthetic.
+- **Decision:** Pill shape (`border-radius: 999px`), not soft rectangle. Reasoning: alcoveaesthetics.com (the reference Karlyne sent for the footer redesign) uses pills. Most modern luxury med spa CTAs do (Glossier-adjacent aesthetic). Soft-rectangle would have felt half-hearted.
+- **Approach:** Single CSS file change. Added `border-radius: 999px` to all three button utility classes. All site-wide CTAs (nav, hero, sections, footer, contact form, Pabau iframe link) inherit via class. No per-component changes needed.
+- **Also updated:** Design-system header comment in globals.css now says "Pill-rounded buttons" instead of "Sharp corners" so future devs don't re-impose the old aesthetic.
+- **Files:** `src/app/globals.css` (lines 11-14 comment, 312, 343, 367)
 - **Verify:**
-  - [ ] All CTAs (nav, hero, sections, footer, contact form) have consistent soft-pill or soft-rectangle corners
+  - [ ] Home hero "Book Consultation" CTA — fully pill rounded
+  - [ ] Nav CTA (top-right and mobile menu) — pill rounded
+  - [ ] Footer CTAs — pill rounded
+  - [ ] Contact form submit — pill rounded
+  - [ ] Services CTA banner, About teaser CTA, Memberships CTA — all pill rounded
+  - [ ] No "before/after" mismatch on any page (sharp corner anywhere = missed override)
+- **Fallback if she wanted softer-rect not pill:** swap `999px` to `1rem` (16px) for soft rectangle, or `0.5rem` (8px) for gentle softening.
 
 ---
 
