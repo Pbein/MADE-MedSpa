@@ -285,34 +285,25 @@ By priority:
 
 ---
 
-#### #10 — Memberships nav link goes to /services
+#### #10 — Memberships link goes to services list (REAL ROOT CAUSE FOUND)
 
-- [x] **Status:** ⚠️ Partial fix shipped `989d5e1` (2026-05-09) — needs Karlyne verification on prod with you on a call to identify the actual culprit link
+- [x] **Status:** ✅ Real fix shipped `6ba77a0` (2026-05-09) — verified by Philip via screenshots
 - **Karlyne (verbatim):** _"When you go to the memberships, it doesn't link to the memberships. It only takes you to sevices."_
-- **Code audit (couldn't reproduce):** Searched the entire codebase for any "Membership" link or text. Every one points to `/membership` (singular):
-  - `Navigation.tsx:14` — `{ href: "/membership", label: "Membership" }`
-  - `Footer.tsx:47` — `{ href: "/membership", label: "Membership" }`
-  - No homepage CTA or section component links "Membership" to /services
-  - No middleware redirect /membership → /services
-  - No next.config.ts redirect /membership → /services
-  - The `/membership` route exists at `src/app/membership/page.tsx` and renders correctly (membership tier cards from Convex, or "Coming Soon" placeholder if empty)
-- **Most plausible remaining causes:**
-  1. She typed `/memberships` (plural) in the URL bar and got a 404 → may have looked like a redirect to her
-  2. She clicked something on a page we can't see from code — possibly inside the Pabau iframe
-  3. She looked at the home page CTA section ("Explore Services" → /services) and conflated it with a Membership link
-  4. Memorable misremembering — she went to /services first, then tried Membership, but timeline got mixed in retelling
-- **Defensive fix shipped:** Added `/memberships → /membership` permanent redirect in `next.config.ts` (mirrors the existing `/book → /booking` defense). If she or any user types the plural form, it now resolves correctly instead of 404.
-- **Files:** `next.config.ts` (lines 60-69)
-- **What still needs to happen — REAL verify:**
-  - [ ] Get on a call with Karlyne (or screenshare/screen recording from her)
-  - [ ] Have her click the exact link that took her to /services
-  - [ ] Inspect that link's href in DevTools
-  - [ ] If it points to /services with a "Membership" label → that's the bug; fix the href
-  - [ ] If it points to /membership and she lands on /services anyway → there's a runtime redirect we missed (check Vercel function logs, Convex queries, etc.)
-- **Verify (defensive redirect):**
-  - [ ] Type `mademedspa.com/memberships` in URL bar → redirects to `/membership`
-  - [ ] Click Memberships in main nav (desktop + mobile) → lands on /membership page with tiers
-  - [ ] Click Membership in footer → lands on /membership page
+- **Real root cause (identified via Philip's screenshots):** She wasn't talking about the nav "Membership" link at all. She was on `/membership` and clicked one of the tier cards (In The Making / Well Made / The Reserve). The tier card's CTA (`MembershipCard`'s anchor) had:
+  ```tsx
+  href={tier.pabauLink || BOOKING_URL}
+  ```
+  When admin hadn't set a per-tier `pabauLink` (the seeded tiers don't have one), the fallback was `BOOKING_URL` = `https://partner.pabau.com/online-bookings/made-med-spa`. That URL is Pabau's bare booking landing and renders the **service category picker** (Consultations / Injectables / Skin / Wellness / Facials) — exactly what Karlyne saw and called "services."
+- **What she expected:** Pabau's membership-purchase page at `https://partner.pabau.com/online-bookings/made-med-spa/memberships` which shows the three tier cards with "CHOOSE PLAN" buttons.
+- **Real fix shipped:** Added a derived constant `MEMBERSHIPS_URL = ${BOOKING_URL}/memberships` and changed the tier card fallback from `BOOKING_URL` → `MEMBERSHIPS_URL`. Now clicking any tier on `/membership` lands on the Pabau memberships page she expected.
+- **Files:** `src/app/membership/page.tsx` (lines 16-23 added MEMBERSHIPS_URL constant; line 252 changed fallback)
+- **Earlier defensive fix `989d5e1` still stands:** the `/memberships → /membership` redirect in `next.config.ts` is a different scenario (URL-bar typo) and harmless to keep.
+- **Verify:**
+  - [ ] Visit /membership on prod
+  - [ ] Click "Choose Plan" on any tier — should open `partner.pabau.com/online-bookings/made-med-spa/memberships` in a new tab
+  - [ ] Page shows the "Choose Membership" header + tier cards + CHOOSE PLAN buttons (Pabau's UI, not ours)
+  - [ ] NOT the Pabau services category list (Consultations / Injectables / etc.)
+- **For Karlyne's per-tier control:** if she wants different per-tier CTAs (e.g., gold-tier members go to a private link), she can set `pabauLink` per tier via `/admin/memberships`. The new fallback only kicks in when that field is empty.
 
 ---
 
