@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MADE Med Spa — Launch Readiness Snapshot · 2026-05-09</title>
+<style>
+  :root {
+    --espresso: #391e1e;
+    --burgundy: #5b2729;
+    --blush: #84262c;
+    --silk: #f6f1ea;
+    --glaze: #e8e0d5;
+    --powder: #efe7df;
+    --line: rgba(57,30,30,0.12);
+    --muted: rgba(57,30,30,0.62);
+  }
+
+  @page {
+    size: letter;
+    margin: 0.75in 0.6in 0.75in 0.6in;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: #ffffff;
+    color: var(--espresso);
+    font-family: "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    margin: 0;
+    padding: 0;
+  }
+
+  main {
+    max-width: 7.5in;
+    margin: 0 auto;
+    padding: 0.5in 0.4in 1in;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Playfair Display", Georgia, serif;
+    color: var(--espresso);
+    margin: 0 0 0.4em;
+    letter-spacing: -0.005em;
+  }
+
+  h1 {
+    font-size: 24pt;
+    line-height: 1.05;
+    margin-bottom: 0.1em;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 11pt;
+    margin: 0 0 1.5em;
+    letter-spacing: 0.02em;
+  }
+
+  h2 {
+    font-size: 15pt;
+    margin-top: 1.6em;
+    padding-bottom: 0.35em;
+    border-bottom: 1.5px solid var(--espresso);
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12pt;
+    margin-top: 1.2em;
+    color: var(--burgundy);
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-size: 10.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+    font-family: "Helvetica Neue", sans-serif;
+    font-weight: 600;
+  }
+
+  p { margin: 0 0 0.7em; }
+
+  ul, ol {
+    margin: 0.4em 0 0.9em;
+    padding-left: 1.4em;
+  }
+  li { margin-bottom: 0.45em; }
+
+  .lead {
+    background: var(--silk);
+    border-left: 3px solid var(--espresso);
+    padding: 0.7em 1em;
+    margin: 0.5em 0 1.4em;
+    font-size: 10.5pt;
+  }
+
+  .grid-status {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5em;
+    margin: 0.5em 0 1.2em;
+  }
+  .stat {
+    background: var(--silk);
+    padding: 0.6em 0.7em;
+    border-left: 3px solid var(--burgundy);
+  }
+  .stat .num {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 18pt;
+    line-height: 1;
+    color: var(--espresso);
+    display: block;
+  }
+  .stat .label {
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-top: 0.3em;
+    display: block;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5em 0 1em;
+    font-size: 9.5pt;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5em 0.6em;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    background: var(--glaze);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 8.5pt;
+    color: var(--espresso);
+    font-weight: 600;
+  }
+  td.tight { white-space: nowrap; }
+
+  .pill {
+    display: inline-block;
+    font-size: 8pt;
+    padding: 0.15em 0.55em;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .pill.done    { background: #e2f0d9; color: #2d5016; }
+  .pill.partial { background: #fff4d6; color: #6b4f00; }
+  .pill.todo    { background: var(--silk); color: var(--burgundy); }
+  .pill.deferred{ background: #ece8f5; color: #4a3782; }
+  .pill.philip  { background: var(--espresso); color: #ffffff; }
+  .pill.karlyne { background: var(--burgundy); color: #ffffff; }
+  .pill.both    { background: var(--blush); color: #ffffff; }
+
+  .commit {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 9pt;
+    background: var(--silk);
+    padding: 0.05em 0.4em;
+    border-radius: 3px;
+  }
+
+  .item-card {
+    border: 1px solid var(--line);
+    background: #ffffff;
+    padding: 0.7em 0.9em;
+    margin-bottom: 0.7em;
+    page-break-inside: avoid;
+  }
+  .item-card .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6em;
+    margin-bottom: 0.35em;
+  }
+  .item-card .head strong { font-size: 10.5pt; }
+
+  .quote {
+    font-style: italic;
+    color: var(--burgundy);
+    font-family: Georgia, serif;
+    margin: 0.3em 0 0.5em;
+    border-left: 2px solid var(--burgundy);
+    padding-left: 0.7em;
+    font-size: 10pt;
+  }
+
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+  }
+  .checklist li {
+    padding-left: 1.5em;
+    position: relative;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 12pt;
+    color: var(--espresso);
+  }
+
+  .footer {
+    margin-top: 2em;
+    padding-top: 0.6em;
+    border-top: 1px solid var(--line);
+    font-size: 8.5pt;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .pagebreak { page-break-before: always; }
+
+  @media print {
+    body { font-size: 10pt; }
+    h2 { page-break-after: avoid; }
+    h3 { page-break-after: avoid; }
+    .item-card { page-break-inside: avoid; }
+    a { color: var(--espresso); text-decoration: none; }
+  }
+
+  a { color: var(--burgundy); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>MADE Med Spa — Launch Readiness Snapshot</h1>
+<p class="subtitle">Generated 2026-05-09 · After Karlyne's 11-item feedback round · Pre-launch · Site live at mademedspa.com</p>
+
+<div class="lead">
+  <strong>Where we are:</strong> Site is live on mademedspa.com running on Vercel Pro + Convex + Clerk production. Karlyne's 11-item feedback round (received via text 2026-05-09) has been worked through — 10 fixes shipped to <code>main</code>, 1 deferred pending a font-licensing decision. No real customer traffic yet, so we are using prod as Karlyne's review environment. This document captures everything that still needs to happen before launch.
+</div>
+
+<div class="grid-status">
+  <div class="stat">
+    <span class="num">10/11</span>
+    <span class="label">Karlyne items shipped</span>
+  </div>
+  <div class="stat">
+    <span class="num">1</span>
+    <span class="label">Deferred (Futura)</span>
+  </div>
+  <div class="stat">
+    <span class="num">14</span>
+    <span class="label">P0 launch tasks open</span>
+  </div>
+  <div class="stat">
+    <span class="num">3</span>
+    <span class="label">Quick wins for Philip</span>
+  </div>
+</div>
+
+<h2>1 · Karlyne's Feedback Round — Status</h2>
+
+<p>All 10 in-scope items shipped to <code>main</code> in this session. The verify column is what she (or you on her behalf) needs to eyeball on the live site before we close each item.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 4%">#</th>
+      <th style="width: 28%">Issue</th>
+      <th style="width: 12%">Status</th>
+      <th style="width: 14%">Commit</th>
+      <th style="width: 42%">Verify on prod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Favicon not her logo</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">dadf6a9</span></td>
+      <td>Hard-refresh; bookmark; iOS Add-to-Home-Screen</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Hero headline too big</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">1f5ad36</span></td>
+      <td>Desktop reads as editorial, not screaming</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Button hover too red → burgundy</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">1f5f406</span></td>
+      <td>Hover Book Consultation → wine, not brick</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Header fonts (real Futura?)</td>
+      <td><span class="pill deferred">Deferred</span></td>
+      <td>—</td>
+      <td>Pending Philip's licensing decision</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Testimonial font too large</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">b49d860</span></td>
+      <td>Quotes read intimate, not poster-sized</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Services page lists too many</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">534c3ef</span></td>
+      <td>Default landing = category sections + top 3 + view all</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Hero colors are pink</td>
+      <td><span class="pill partial">Partial</span></td>
+      <td><span class="commit">0c67c72</span></td>
+      <td>Bottom hand-off no longer pink. If pink persists = video itself</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>CTA buttons need rounded</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">49c651a</span></td>
+      <td>All CTAs across site = pill shape (999px)</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Mobile hero shows play button</td>
+      <td><span class="pill partial">Partial</span></td>
+      <td><span class="commit">620a3a6</span></td>
+      <td>iPhone Safari real device test. May need video re-encode</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Memberships link → /services</td>
+      <td><span class="pill partial">Partial</span></td>
+      <td><span class="commit">989d5e1</span></td>
+      <td>Need her on a call to point at the actual link</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Pabau iframe small / laggy</td>
+      <td><span class="pill done">Shipped</span></td>
+      <td><span class="commit">6c27e59</span></td>
+      <td>Iframe wider, eager-loaded, skeleton, preconnect</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Items where Karlyne's preference may still differ</h4>
+<ul>
+  <li><strong>#2 + #5 sizing</strong> — I cut blind. If still off, we tune.</li>
+  <li><strong>#6 services categories</strong> — she named "Botox, laser, facial treatment, weight loss"; the DB has "Injectables, Skin, Body, Wellness". She controls these via <code>/admin/categories</code>. If she wants the new names, she renames there.</li>
+  <li><strong>#8 button shape</strong> — pill (fully rounded). If she wanted soft-rectangle (16px radius), we change one number.</li>
+</ul>
+
+<h2 class="pagebreak">2 · What Philip Needs to Do</h2>
+
+<p>Action items in priority order. Time estimates assume no surprises.</p>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.1 — Send Karlyne the prod URL with a fresh-eyes review request</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~5 min.</strong> Don't ask her to verify each fix individually. Just: "Walk through home, services, booking. Tell me what still feels off." She'll naturally re-flag what's still wrong, and we'll get a list that's filtered by her actual sensitivity instead of asking her to remember her old complaints.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.2 — Roll the Clerk production secret key</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~5 min.</strong> The current secret was pasted in a chat earlier this week — security hygiene says rotate it.</p>
+  <ol>
+    <li>Clerk dashboard → Production instance → API keys → "Roll Secret Key"</li>
+    <li>Copy the new <code>sk_live_...</code> value</li>
+    <li>Vercel dashboard → Project → Settings → Environment Variables → update <code>CLERK_SECRET_KEY</code> on the Production scope</li>
+    <li>Vercel → Deployments → trigger a fresh deploy (or wait for next push)</li>
+  </ol>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.3 — Add ADMIN_EMAILS to Vercel Preview environment</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~3 min.</strong> CLI couldn't do this — must be done via dashboard.</p>
+  <ol>
+    <li>Vercel → Project → Settings → Environment Variables</li>
+    <li>Add new variable: name <code>ADMIN_EMAILS</code>, value <code>philipbein10697@gmail.com,karlyne@mademedspa.com</code> (or whatever Karlyne's admin email is)</li>
+    <li>Scope: <strong>Preview</strong> only (Production already has it)</li>
+  </ol>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.4 — Investigate hero video for iOS autoplay issue (#9 root cause)</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~10 min.</strong> Karlyne reported the play button shows on mobile. We shipped a defensive fix that hides the broken overlay, but the actual root cause may be the video file itself.</p>
+  <ol>
+    <li>Run <code>ffprobe public/videos/hero-v2.mp4</code> (or open in QuickTime → Show Movie Inspector)</li>
+    <li>Confirm: H.264 codec, profile = Baseline / Main / High Levels 3.0–4.2, file size &lt; 25 MB</li>
+    <li>Check whether <code>moov</code> atom is at the start of the file (faststart)</li>
+    <li>If faststart is NOT set, re-encode: <code>ffmpeg -i hero-v2.mp4 -movflags +faststart -c copy hero-v3.mp4</code></li>
+    <li>Bump filename to <code>hero-v3.mp4</code> + matching poster, update <code>HeroSection.tsx</code> constants per CLAUDE.md procedure</li>
+    <li>Test on real iPhone (not simulator)</li>
+  </ol>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.5 — Verify image compression actually fires end-to-end</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~5 min.</strong> We wrote client-side compression (<code>browser-image-compression</code>) in <code>src/lib/admin/blobUpload.ts</code> last week but never tested it with a real upload.</p>
+  <ol>
+    <li>Open <code>/admin/team</code> while signed in</li>
+    <li>DevTools Network tab open, filter "blob"</li>
+    <li>Upload a &gt;2 MB phone JPG</li>
+    <li>Confirm the PUT to <code>*.public.blob.vercel-storage.com</code> is ~300–400 KB and Content-Type <code>image/webp</code></li>
+    <li>Console should be clean — no <code>[uploadBlob] compression failed</code> warnings</li>
+  </ol>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.6 — Decide on Futura licensing for header fonts (#4)</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~30 min research + cost decision.</strong> Three options:</p>
+  <ul>
+    <li><strong>Adobe Fonts</strong> (~$20/mo with Creative Cloud) — Futura PT + Futura PT Condensed via <code>&lt;link&gt;</code> tag. Cleanest, recurring cost.</li>
+    <li><strong>Linotype/Monotype Futura</strong> (one-time, $50–200+ per weight) — buy once, host via <code>next/font/local</code>. No subscription.</li>
+    <li><strong>Stay on Glacial Indifference</strong> — free, already in place. Brand purist may notice.</li>
+  </ul>
+  <p>Once decided, the swap itself is ~30 min of code changes (per tracker dossier).</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.7 — Mobile + cross-browser QA pass</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~45 min.</strong> Once Karlyne signs off on the visual fixes, walk through every public page on:</p>
+  <ul>
+    <li>iPhone Safari (real device, normal power AND Low Power Mode)</li>
+    <li>Android Chrome (real device or BrowserStack)</li>
+    <li>Desktop: Chrome, Safari, Firefox, Edge</li>
+  </ul>
+  <p>File any breakages as new tracker entries. Specifically test: hero video playback, booking iframe interaction, contact form submission, admin sign-in flow.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.8 — Lighthouse + Core Web Vitals + a11y audit</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~30 min.</strong> Open Chrome DevTools → Lighthouse → run on home, services, booking. Target: Performance ≥85, A11y ≥95, SEO ≥95, Best Practices ≥95. Anything below targets → file as a tracker item with the specific failing audit.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.9 — Set up Sentry / error tracking</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~30 min.</strong> Without this, the first time something breaks in production we'll only find out when Karlyne emails. Free tier is plenty for this traffic. Install <code>@sentry/nextjs</code>, run <code>npx @sentry/wizard</code>, paste the DSN into Vercel env. Set release tag to git SHA.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>2.10 — Verify the smoke-test script runs against prod</strong>
+    <span class="pill philip">PHILIP</span>
+  </div>
+  <p><strong>~5 min.</strong> <code>npm run smoke</code> exists. Confirm it works against <code>https://mademedspa.com</code> and add to a README so future deploys can verify. Note: probe 9 creates a real Pabau lead — keep it gated behind <code>--write</code> flag (per existing tracker followup).</p>
+</div>
+
+<h2 class="pagebreak">3 · What Philip Needs From Karlyne</h2>
+
+<p>Decisions, content, and information she owns that block launch progress.</p>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.1 — Walk-through her 2026-05-09 fixes</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>She reviews the live site and tells you what still feels off. No checklist — just impression. Items #7, #9, #10 specifically need her to confirm whether our fix actually solved her issue.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.2 — Screenshot of the "pink" on the hero (#7)</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>If she still sees pink, we need to see what she sees. The fix we shipped addresses the gradient hand-off; if pink persists, the source is the video itself, which needs re-encoding (her hands-off — but we need her screenshot to confirm cause).</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.3 — Identify the exact link that took her to /services instead of /membership (#10)</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>Code audit found zero links pointing /membership → /services. Need her to point at the literal button or word she clicked. Easiest via screenshare or a 30-sec screen recording.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.4 — Test the hero video on her actual iPhone (#9)</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>Specifically with Low Power Mode <strong>off</strong> first. If video plays = autoplay was blocked by Low Power Mode (not our bug, expected iOS behavior). If video still doesn't play = either iOS still rejecting or video file needs re-encoding.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.5 — Provide all "content fill" data</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>Per the existing launch info request, she has these but they need to land in the admin:</p>
+  <ul>
+    <li><strong>Address:</strong> exact street, suite, city, state, zip (already provided per memory; confirm placement in admin)</li>
+    <li><strong>Hours:</strong> open/close times per day (already provided; confirm placement)</li>
+    <li><strong>Phone number:</strong> publish-ready (already provided)</li>
+    <li><strong>Social handles:</strong> Instagram, TikTok, Facebook URLs</li>
+    <li><strong>Headshot:</strong> high-res of Karlyne for the About page team section</li>
+    <li><strong>Real service photos:</strong> currently using stock or placeholder. She uploads via <code>/admin/services</code> for each service.</li>
+    <li><strong>Real before-and-after photos:</strong> consent-released. Uploads via <code>/admin/before-and-after</code>.</li>
+    <li><strong>Real testimonials:</strong> from Pabau reviews or hand-curated. Manage via <code>/admin/testimonials</code>.</li>
+  </ul>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.6 — Seed default service categories on production</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p><strong>~2 min.</strong> She visits <code>https://mademedspa.com/admin/categories</code> while signed in → click "Seed default categories" if the list is empty. Then optionally rename them to her preferred terminology (Botox, Laser, Facial, Weight Loss).</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.7 — Decide on Futura licensing (#4)</strong>
+    <span class="pill both">PHILIP + KARLYNE</span>
+  </div>
+  <p>If she's set on real Futura, Philip licenses it (Adobe ~$20/mo or one-time Monotype). If she's OK with the Glacial Indifference free substitute, no further work needed. Get her to compare side-by-side first.</p>
+</div>
+
+<div class="item-card">
+  <div class="head">
+    <strong>3.8 — Privacy policy / Pabau disclosure copy</strong>
+    <span class="pill karlyne">KARLYNE</span>
+  </div>
+  <p>The /privacy page exists but needs the Pabau-specific data-handling disclosure (Pabau is the EMR storing client data). She or her legal advisor writes this — we paste it in. Required for HIPAA-adjacent posture.</p>
+</div>
+
+<h2 class="pagebreak">4 · General Launch Tasks Remaining</h2>
+
+<p>Beyond Karlyne's feedback round, these are the open P0 items from the broader launch tracker. None are blocked on her — they're work for Philip + the dev environment.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 6%">Pri</th>
+      <th style="width: 38%">Task</th>
+      <th style="width: 14%">Owner</th>
+      <th style="width: 14%">Est.</th>
+      <th style="width: 28%">Why it matters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Verify SSL + redirects post-deploy</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>10 min</td>
+      <td>Bad SSL = browser warnings = no traffic. Test ssllabs.com → A+</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Pabau end-to-end smoke (real lead → arrives in Pabau)</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>15 min</td>
+      <td>If Pabau integration silently broken, every form submit drops on the floor</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Pabau webhook signature verification test</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>20 min</td>
+      <td>Without this we either accept forged events or double-process real ones</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Verify Pabau slug "made-med-spa" + Book Now button works</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>10 min</td>
+      <td>The whole booking funnel depends on this slug routing right</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Delete test lead from Pabau (lead_id 3029083)</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>5 min</td>
+      <td>Smoke-test created a real lead during build verification — clean it up</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Vitest scaffolding + Pabau pipeline tests</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>2 hr</td>
+      <td>Currently zero automated tests on the Pabau integration; first regression bites hard</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Sitemap.xml lists all public pages</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>5 min</td>
+      <td>SEO indexing requires it. Currently auto-generated; just verify the output</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>Document Clerk JWT template requirement in onboarding docs</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>10 min</td>
+      <td>Without the "convex" JWT template in Clerk, all admin auth silently fails. Future devs need to know.</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P0</span></td>
+      <td>User-flow click-test on production (smoke checklist)</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>15 min</td>
+      <td>Last sanity check before "we're live". Per the docs/launch-tracker checklist.</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P1</span></td>
+      <td>Soak verification: 1 week with no error rate spike</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>passive</td>
+      <td>Switch CSP from Report-Only to Enforce after 1 clean week</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P1</span></td>
+      <td>Newsletter table data purge from Convex</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>5 min</td>
+      <td>Schema row was removed but data lingers. <code>npx convex data --prod</code></td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P1</span></td>
+      <td>Wire smoke-test probe 9 (real lead) behind --write flag</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>15 min</td>
+      <td>So future smoke runs don't accidentally pollute Pabau leads</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P1</span></td>
+      <td>Google Analytics + Search Console verification</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>20 min</td>
+      <td>Need to know what visitors actually do. DNS TXT verification preferred</td>
+    </tr>
+    <tr>
+      <td><span class="pill todo">P1</span></td>
+      <td>Fix 6 direct uploadBlob callers to pass purpose</td>
+      <td><span class="pill philip">Philip</span></td>
+      <td>15 min</td>
+      <td>Image compression still works but uses suboptimal targets. SectionEditorCard, SectionDesignPanel, admin/media, admin/seo, admin/settings (×2)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5 · Known Limitations / Won't-Fix-Pre-Launch</h2>
+
+<p>Things we deliberately chose NOT to fix yet. Putting them here so they don't get forgotten.</p>
+
+<ul>
+  <li><strong>Hero video re-encoding</strong> — only re-encode if iPhone Safari testing confirms autoplay still fails after the #9 fix. Don't preemptively re-encode.</li>
+  <li><strong>Per-category hero images on /services</strong> — bare typography sections work for v1. Add admin upload UI for category images post-launch if Karlyne wants visual polish.</li>
+  <li><strong>Explicit isFeatured flag on services</strong> — using sortOrder as ranking is fine for v1. If Karlyne wants a separate "featured" toggle, add it post-launch.</li>
+  <li><strong>Custom Pabau lead form (replace iframe)</strong> — only if Pabau iframe perf turns out to be a sustained issue post-launch. Multi-day rebuild.</li>
+  <li><strong>Mobile-Pabau deep link to native Pabau app</strong> — currently iframe-only. Native handoff is a P3 enhancement.</li>
+  <li><strong>Booking conflict awareness</strong> — Pabau owns availability; we don't pre-validate.</li>
+  <li><strong>Gallery / image lightbox on shop</strong> — single image per product is fine for launch.</li>
+  <li><strong>Auth method beyond email/password</strong> — magic links, social OAuth, etc. Kept simple per Philip's earlier preference.</li>
+</ul>
+
+<h2>6 · Workflow Switch After Launch</h2>
+
+<p>The current "push to main" workflow is correct for now (no real users; live site = staging environment). The day Karlyne starts taking real bookings, the workflow needs to change:</p>
+
+<ol>
+  <li><strong>Local dev for changes</strong> — <code>npm run dev</code>, browser, iterate</li>
+  <li><strong>Push to a feature branch</strong> — Vercel auto-builds a preview URL</li>
+  <li><strong>Karlyne (or you) review on the preview URL</strong></li>
+  <li><strong>Merge to main only after preview looks right</strong> — main = production</li>
+  <li><strong>Hot-fix process</strong> — for genuine emergencies, push to main directly is still allowed; document why in the commit message</li>
+</ol>
+
+<p>The cutover signal: she shares the URL publicly OR runs ads OR books a paying client through the site.</p>
+
+<h2>7 · Current Hosting Architecture (Reference)</h2>
+
+<table>
+  <thead>
+    <tr><th>Layer</th><th>Provider</th><th>Plan</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Frontend hosting</td><td>Vercel</td><td>Pro ($20/mo)</td><td>1 TB Fast Data Transfer; no Hobby (commercial site)</td></tr>
+    <tr><td>Database</td><td>Convex</td><td>Pro ($20/mo cap, $10 warn)</td><td>Goal: drop back to free tier post-migration</td></tr>
+    <tr><td>Admin-uploaded images</td><td>Vercel Blob</td><td>included</td><td>Public access; admin-gated upload route</td></tr>
+    <tr><td>Static assets / video</td><td>Vercel /public/</td><td>included</td><td>1 TB FDT bucket; hero video lives here</td></tr>
+    <tr><td>Auth</td><td>Clerk</td><td>Free tier ok at this MAU</td><td>Production custom domain clerk.mademedspa.com</td></tr>
+    <tr><td>EMR / Booking</td><td>Pabau</td><td>her account</td><td>Iframe embed at /booking + REST API for service sync</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Bandwidth budget watchword:</strong> Convex File Bandwidth was blown out in April 2026 (3.02 GB / 1 GB free tier) because the hero video was on Convex storage. It now lives in <code>/public/</code> and is served by Vercel CDN. <strong>Never put video back on Convex or Vercel Blob.</strong></p>
+
+<div class="footer">
+  Generated 2026-05-09 from <code>docs/launch-tracker.md</code> · Source of truth for this snapshot is the in-repo tracker — when in doubt, check there.<br>
+  To regenerate after future changes: open this HTML in a browser and File → Print → Save as PDF.
+</div>
+
+</main>
+</body>
+</html>
