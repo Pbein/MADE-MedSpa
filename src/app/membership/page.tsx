@@ -17,6 +17,11 @@ const BOOKING_URL =
   process.env.NEXT_PUBLIC_PABAU_BOOKING_URL ||
   "https://partner.pabau.com/online-bookings/made-med-spa";
 
+// Tier "Choose Plan" CTAs need to land on Pabau's memberships purchase page,
+// NOT the bare booking URL (which dumps users on the services category list —
+// the bug Karlyne reported 2026-05-09 as "memberships goes to services").
+const MEMBERSHIPS_URL = `${BOOKING_URL.replace(/\/$/, "")}/memberships`;
+
 export default function MembershipPage() {
   const memberships = useQuery(api.memberships.list);
   const gridRef = useRef(null);
@@ -242,9 +247,11 @@ function MembershipCard({
           ))}
         </ul>
 
-        {/* CTA */}
+        {/* CTA — falls back to MEMBERSHIPS_URL (Pabau's membership-purchase
+           page) so users don't get dumped on the services list when admin
+           hasn't set a per-tier pabauLink. */}
         <a
-          href={tier.pabauLink || BOOKING_URL}
+          href={tier.pabauLink || MEMBERSHIPS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full text-center transition-all duration-300"
