@@ -55,16 +55,19 @@ function buildIco(pngEntries) {
 
 async function main() {
   // Source: 600x600 cream-bg "MADE / MED SPA" wordmark
-  // Strategy: keep aspect, upscale to 512 for high-density screens, sharp resize is high-quality
+  // Strategy: keep aspect, upscale to 512 for high-density screens, sharp resize is high-quality.
+  // ensureAlpha() forces RGBA output even though the source is opaque — Next.js 16's
+  // image processor refuses to decode RGB PNGs embedded in .ico containers, and
+  // strips RGB-only icon.png too.
   const src = sharp(SRC);
 
   // 512x512 master icon — Next.js will derive smaller sizes for <link rel="icon" sizes="...">
-  const icon512 = await src.clone().resize(512, 512, { fit: "contain", background: "#F5F2EA" }).png().toBuffer();
+  const icon512 = await src.clone().resize(512, 512, { fit: "contain", background: "#F5F2EA" }).ensureAlpha().png().toBuffer();
   writeFileSync(OUT_ICON, icon512);
   console.log(`✓ ${OUT_ICON}  (${icon512.length} bytes)`);
 
   // 180x180 apple touch icon
-  const apple180 = await src.clone().resize(180, 180, { fit: "contain", background: "#F5F2EA" }).png().toBuffer();
+  const apple180 = await src.clone().resize(180, 180, { fit: "contain", background: "#F5F2EA" }).ensureAlpha().png().toBuffer();
   writeFileSync(OUT_APPLE, apple180);
   console.log(`✓ ${OUT_APPLE}  (${apple180.length} bytes)`);
 
@@ -73,7 +76,7 @@ async function main() {
   const pngs = await Promise.all(
     sizes.map(async (size) => ({
       size,
-      png: await src.clone().resize(size, size, { fit: "contain", background: "#F5F2EA" }).png().toBuffer(),
+      png: await src.clone().resize(size, size, { fit: "contain", background: "#F5F2EA" }).ensureAlpha().png().toBuffer(),
     }))
   );
   const ico = buildIco(pngs);
