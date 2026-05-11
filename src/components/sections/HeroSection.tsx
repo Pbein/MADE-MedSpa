@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { normalizeBookingHref } from "@/lib/bookingHref";
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
 const containerVariants = {
@@ -141,73 +142,79 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
         />
       </div>
 
-      {/* Content — positioned at bottom of viewport for editorial feel */}
-      <div className="relative z-10 w-full flex-1 flex flex-col px-6 md:px-12 pt-48 pb-12 md:pb-16">
+      {/* Content — vertically centered in the viewport so the block sits between
+         the nav and the cream gradient hand-off (per 2026-05-10 client compare).
+         Inner block nudged right (ml-[12%]) to mirror the reference indent. */}
+      <div className="relative z-10 w-full flex-1 flex flex-col justify-center px-6 md:px-12 pt-20 md:pt-24 pb-32 md:pb-40">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-6xl mx-auto flex flex-col flex-1 w-full items-center md:items-start text-center md:text-left"
+          className="max-w-3xl mx-auto md:mx-0 md:ml-[12%] flex flex-col w-full items-center md:items-start text-center md:text-left"
         >
-          {/* Eyebrow label */}
+          {/* Eyebrow — small all-caps, letter-spaced, intentionally subdued */}
           <motion.span
             variants={fadeUpVariants}
-            className="label-micro block mb-4 md:mb-5"
+            className="label-micro block mb-5 md:mb-6"
             style={{
               color: "var(--color-on-surface, #f7f6eb)",
-              opacity: 0.8,
-              textShadow: "0 1px 8px rgba(57,30,30,0.5)",
+              opacity: 0.7,
+              letterSpacing: "0.22em",
+              textShadow: "0 1px 6px rgba(57,30,30,0.4)",
+              fontSize: "0.72rem",
             }}
           >
-            {sectionContent?.eyebrow || "Luxury Aesthetic Studio"}
+            {sectionContent?.eyebrow || "McLean's Boutique Regenerative Aesthetics Practice"}
           </motion.span>
 
-          {/* Headline — 3-line editorial hierarchy with vertical breathing room */}
+          {/* Headline — single line, "Made." set in Playfair italic for accent.
+             Tightened from initial spec after 2026-05-10 client compare:
+             desktop scale dialed back to ~40–48px (was 48–64px) and max-width
+             expanded so "Where Confidence Is Made." stays on ONE line at md+.
+             Mobile keeps natural wrapping; whitespace-nowrap kicks in at tablet+. */}
           <motion.h1
             variants={fadeUpVariants}
-            className="max-w-5xl"
+            className="max-w-4xl text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.25rem,4vw,2.5rem)] md:whitespace-nowrap lg:text-[clamp(2.5rem,2.6vw,3rem)]"
             style={{
               fontFamily: "var(--font-playfair)",
-              letterSpacing: "-0.02em",
-              textShadow: "0 2px 20px rgba(57,30,30,0.4)",
+              fontWeight: 400,
+              letterSpacing: "-0.015em",
+              lineHeight: 1.1,
+              color: "var(--color-on-surface, #f7f6eb)",
+              textShadow: "0 1px 14px rgba(57,30,30,0.35)",
             }}
           >
-            <span
-              className="block font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-none"
-              style={{ color: "var(--color-on-surface, #f7f6eb)", opacity: 0.9 }}
-            >
-              {sectionContent?.headline_1 || "Beauty,"}
-            </span>
-            <span
-              className="block font-medium text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none mt-2 md:mt-3"
-              style={{ color: "var(--color-on-surface, #f7f6eb)", letterSpacing: "-0.035em" }}
-            >
-              {sectionContent?.headline_2 || "Deeply Personal."}
-            </span>
-            <span
-              className="block font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-none mt-3 md:mt-4"
-              style={{
-                color: "var(--color-on-surface, #f7f6eb)",
-                opacity: 0.6,
-                letterSpacing: "0.01em",
-              }}
-            >
-              {sectionContent?.headline_3 || "Thoughtfully Designed."}
-            </span>
+            {/* CMS schema keeps three headline fields (legacy 3-line layout).
+               In the new restrained typography we render: {h1} {h2} <em>{h3}</em>
+               — so Karlyne's existing values "Where Confidence" / "Is" / "Made."
+               compose into "Where Confidence Is Made." with the last word italicised. */}
+            {sectionContent?.headline_1 || "Where Confidence"}{" "}
+            {sectionContent?.headline_2 || "Is"}{" "}
+            <em style={{ fontStyle: "italic", fontWeight: 400 }}>
+              {sectionContent?.headline_3 || "Made."}
+            </em>
           </motion.h1>
 
-          <div className="flex-grow max-h-24 md:max-h-32" />
-
-          {/* CTA buttons */}
+          {/* Subtle divider — matches the small horizontal line in the reference */}
           <motion.div
             variants={fadeUpVariants}
-            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
+            className="mt-6 md:mt-7 h-px w-10"
+            style={{ backgroundColor: "var(--color-on-surface, #f7f6eb)", opacity: 0.4 }}
+          />
+
+          {/* CTAs — sit just below the headline block, no longer floating at viewport bottom */}
+          <motion.div
+            variants={fadeUpVariants}
+            className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
           >
-            <Link href={sectionContent?.cta_href || "/booking#pabau-iframe"} className="btn-primary">
+            <Link
+              href={normalizeBookingHref(sectionContent?.cta_href) || "/booking#pabau-iframe"}
+              className="btn-primary"
+            >
               {sectionContent?.cta_text || "Book Consultation"}
             </Link>
             <Link
-              href={sectionContent?.secondary_href || "/services"}
+              href={normalizeBookingHref(sectionContent?.secondary_href) || "/services"}
               className="link-ghost"
               style={{
                 color: "var(--color-on-surface, #f7f6eb)",
