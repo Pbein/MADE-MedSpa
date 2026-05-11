@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { normalizeBookingHref } from "@/lib/bookingHref";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
@@ -41,6 +42,11 @@ export default function CTABanner({
 }: CTABannerProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+
+  const primaryHref = normalizeBookingHref(ctaHref);
+  const resolvedSecondaryHref = secondaryHref
+    ? normalizeBookingHref(secondaryHref)
+    : secondaryHref;
 
   return (
     <section
@@ -87,7 +93,7 @@ export default function CTABanner({
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center">
             {ctaExternal ? (
               <a
-                href={ctaHref}
+                href={primaryHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"
@@ -95,14 +101,14 @@ export default function CTABanner({
                 {ctaText}
               </a>
             ) : (
-              <Link href={ctaHref} className="btn-primary">
+              <Link href={primaryHref} className="btn-primary">
                 {ctaText}
               </Link>
             )}
 
-            {secondaryText && secondaryHref && (
+            {secondaryText && resolvedSecondaryHref && (
               <Link
-                href={secondaryHref}
+                href={resolvedSecondaryHref}
                 className="link-ghost"
                 style={{ color: `var(--color-primary, ${DEFAULT_ON_SURFACE})` }}
               >

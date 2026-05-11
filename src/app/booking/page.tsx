@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -69,6 +69,23 @@ const cancellationPolicy = {
 export default function BookingPage() {
   const [videoReady, setVideoReady] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+
+  // Belt-and-suspenders scroll-to-hash. Next.js App Router occasionally fails
+  // to scroll to the target anchor when navigating between client-rendered
+  // pages (it sometimes runs the scroll before the destination element is
+  // mounted). If the URL points at a known anchor on this page, explicitly
+  // scroll to it on mount.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash.replace("#", "");
+    if (!hash) return;
+    // rAF + small timeout to let layout settle (poster, hero video, etc.)
+    const id = window.setTimeout(() => {
+      const el = document.getElementById(hash);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, []);
   const { data: heroText } = useSectionContent("section_booking_hero", {
     eyebrow: "Book Online",
     headline: "Schedule Your Visit",
@@ -193,10 +210,13 @@ export default function BookingPage() {
         </motion.div>
       </section>
 
-      {/* INLINE BOOKING — Pabau iframe */}
+      {/* INLINE BOOKING — Pabau iframe fills the viewport below the nav.
+         Pabau already shows its own header ("Your skin. Your results.") inside
+         the iframe, so we skip duplicate parent chrome and give the widget
+         every pixel between the fixed nav and the bottom of the screen. */}
       <section
         id="section-book-now"
-        className="relative py-20 md:py-28 px-4 md:px-6"
+        className="relative scroll-mt-[60px] lg:scroll-mt-[120px]"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
         {/* Preconnect + DNS-prefetch to Pabau host so the iframe handshake
@@ -205,87 +225,58 @@ export default function BookingPage() {
         <link rel="preconnect" href="https://partner.pabau.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://partner.pabau.com" />
 
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-10 md:mb-14">
-            <p
-              className="label-micro mb-3"
-              style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
+        <div
+          className="relative overflow-hidden"
+          style={{
+            backgroundColor: "#fff",
+          }}
+        >
+          {/* Skeleton overlay — fades out once the iframe fires onLoad so
+             the user sees something happening instead of a blank white box
+             while Pabau's app boots. */}
+          {!iframeLoaded && (
+            <div
+              className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 transition-opacity duration-500"
+              style={{ backgroundColor: "var(--color-surface)" }}
             >
-              Book Now
-            </p>
-            <h2
-              className="headline-section text-2xl md:text-3xl lg:text-4xl"
-              style={{ color: "var(--color-primary)" }}
-            >
-              Choose your service & time.
-            </h2>
-            <p
-              className="body-editorial mt-4 text-sm md:text-base max-w-2xl mx-auto"
-              style={{ color: "var(--color-on-surface-variant)", opacity: 0.8 }}
-            >
-              Browse available services and schedule your visit directly. Booking is
-              secured through our patient management system.
-            </p>
-          </div>
-          <div
-            className="relative overflow-hidden rounded-lg shadow-sm"
-            style={{
-              border: "1px solid var(--color-outline-variant)",
-              backgroundColor: "#fff",
-              minHeight: "1100px",
-            }}
-          >
-            {/* Skeleton overlay — fades out once the iframe fires onLoad so
-               the user sees something happening instead of a blank white box
-               while Pabau's app boots. */}
-            {!iframeLoaded && (
               <div
-                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 transition-opacity duration-500"
-                style={{ backgroundColor: "var(--color-surface)" }}
+                className="h-10 w-10 animate-spin rounded-full border-2 border-t-transparent"
+                style={{ borderColor: "var(--color-outline-variant)" }}
+              />
+              <p
+                className="label-micro"
+                style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
               >
-                <div
-                  className="h-10 w-10 animate-spin rounded-full border-2 border-t-transparent"
-                  style={{ borderColor: "var(--color-outline-variant)" }}
-                />
-                <p
-                  className="label-micro"
-                  style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
-                >
-                  Loading Booking
-                </p>
-              </div>
-            )}
-            <iframe
-              id="pabau-iframe"
-              src={bookingUrl}
-              title="Book your appointment with MADE Med Spa"
-              loading="eager"
-              onLoad={() => setIframeLoaded(true)}
-              className="block w-full scroll-mt-24"
-              style={{
-                border: 0,
-                minHeight: "1100px",
-                height: "clamp(1100px, 95vh, 1600px)",
-              }}
-              allow="payment; clipboard-write"
-            />
-          </div>
-          <p
-            className="text-xs text-center mt-4"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.55 }}
-          >
-            Trouble seeing the booking widget?{" "}
-            <a
-              href={bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-editorial"
-              style={{ color: "var(--color-secondary)" }}
-            >
-              Open booking in a new tab →
-            </a>
-          </p>
+                Loading Booking
+              </p>
+            </div>
+          )}
+          <iframe
+            id="pabau-iframe"
+            src={bookingUrl}
+            title="Book your appointment with MADE Med Spa"
+            loading="eager"
+            onLoad={() => setIframeLoaded(true)}
+            className="block w-full h-[calc(100dvh-60px)] lg:h-[calc(100dvh-120px)] scroll-mt-[60px] lg:scroll-mt-[120px]"
+            style={{ border: 0 }}
+            allow="payment; clipboard-write"
+          />
         </div>
+        <p
+          className="text-xs text-center py-3 px-4"
+          style={{ color: "var(--color-on-surface-variant)", opacity: 0.55 }}
+        >
+          Trouble seeing the booking widget?{" "}
+          <a
+            href={bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-editorial"
+            style={{ color: "var(--color-secondary)" }}
+          >
+            Open booking in a new tab →
+          </a>
+        </p>
       </section>
 
       {/* WHAT TO EXPECT */}

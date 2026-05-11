@@ -12,6 +12,7 @@ import {
   getSectionDesignServer,
 } from "@/lib/pageSettings";
 import { getPageMetadata } from "@/lib/siteSettings";
+import { normalizeBookingHref } from "@/lib/bookingHref";
 
 export async function generateMetadata() {
   return getPageMetadata({
@@ -145,9 +146,9 @@ export default async function Home() {
             dark
             headline={ctaContent.headline}
             ctaText={ctaContent.cta_text}
-            ctaHref={ctaContent.cta_href}
+            ctaHref={normalizeBookingHref(ctaContent.cta_href)}
             secondaryText={ctaContent.secondary_text}
-            secondaryHref={ctaContent.secondary_href}
+            secondaryHref={normalizeBookingHref(ctaContent.secondary_href)}
           />
         </div>
       )}
