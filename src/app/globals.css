@@ -103,8 +103,6 @@
   --shadow-made-button: 0 8px 20px rgba(57, 30, 30, 0.18);
 
   /* --- Typography (MADE Branding spec) --- */
-  /* H1 / page titles / italic accents: Playfair Display */
-  --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
   /* Body: Montserrat */
   --font-body: var(--font-montserrat), "Montserrat", "Inter", "Helvetica Neue", sans-serif;
   /* Labels / H2 / H3 / eyebrows: Glacial Indifference (client preference,
@@ -157,7 +155,10 @@
   --color-rose-dust: var(--color-rose-dust);
   --color-petal-beige: var(--color-petal-beige);
   --font-sans: var(--font-body);
-  --font-headline: var(--font-headline);
+  /* H1 / page titles / italic accents: Playfair Display.
+     Defined here (not in :root) so it doubles as both a CSS variable
+     and a Tailwind v4 theme token powering the `font-headline` utility. */
+  --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
 }
 
 /* ============================================
