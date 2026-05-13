@@ -67,7 +67,6 @@ const cancellationPolicy = {
 };
 
 export default function BookingPage() {
-  const [videoReady, setVideoReady] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   // Belt-and-suspenders scroll-to-hash. Next.js App Router occasionally fails
@@ -86,12 +85,6 @@ export default function BookingPage() {
     }, 80);
     return () => window.clearTimeout(id);
   }, []);
-  const { data: heroText } = useSectionContent("section_booking_hero", {
-    eyebrow: "Book Online",
-    headline: "Schedule Your Visit",
-    body: "Your journey to elevated beauty is just a click away. Book your appointment and we will take care of the rest.",
-    cta_text: "Book Your Appointment",
-  });
   const { data: expectText } = useSectionContent("section_booking_expect", {
     eyebrow: "Your Visit",
     headline: "What to Expect",
@@ -115,108 +108,16 @@ export default function BookingPage() {
 
   return (
     <>
-      {/* HERO — video background with mocha overlay */}
-      <section id="section-hero" className="relative pt-32 md:pt-48 pb-24 px-6 overflow-hidden">
-        <div
-          className="absolute inset-0 z-0"
-          style={{ backgroundColor: "#391e1e" }}
-        >
-          {/* Poster — shows immediately while video loads */}
-          <Image
-            src="/images/booking-hero-poster.webp"
-            alt=""
-            aria-hidden="true"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-
-          {/* Video — fades in once ready */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            poster="/images/booking-hero-poster.webp"
-            onCanPlay={() => setVideoReady(true)}
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-            style={{ opacity: videoReady ? 1 : 0 }}
-          >
-            <source src="/videos/faq-hero.mp4" type="video/mp4" />
-          </video>
-
-          {/* Gradient overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: [
-                "linear-gradient(to bottom,",
-                "rgba(57,30,30,0.75) 0%,",
-                "rgba(57,30,30,0.65) 40%,",
-                "rgba(57,30,30,0.75) 70%,",
-                "rgba(57,30,30,0.85) 100%)",
-              ].join(" "),
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(215,207,197,0.08) 0%, transparent 60%)",
-            }}
-          />
-        </div>
-
-        <motion.div
-          className="relative z-10 max-w-4xl mx-auto text-center"
-          initial="hidden"
-          animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } }}
-        >
-          <motion.span
-            variants={revealUp}
-            className="label-micro block mb-6"
-            style={{ color: "var(--color-surface)", opacity: 0.75 }}
-          >
-            {heroText.eyebrow}
-          </motion.span>
-
-          <motion.h1
-            variants={revealUp}
-            className="headline-editorial text-5xl md:text-8xl"
-            style={{ color: "var(--color-surface)" }}
-          >
-            {heroText.headline}
-          </motion.h1>
-
-          <motion.p
-            variants={revealUp}
-            className="body-editorial mt-8 max-w-2xl mx-auto"
-            style={{ color: "var(--color-surface)", opacity: 0.85 }}
-          >
-            {heroText.body}
-          </motion.p>
-
-          <motion.div variants={revealUp} className="mt-10">
-            <a
-              href="#section-book-now"
-              className="btn-light inline-block"
-            >
-              {heroText.cta_text}
-            </a>
-          </motion.div>
-        </motion.div>
-      </section>
-
       {/* INLINE BOOKING — Pabau iframe fills the viewport below the nav.
          Pabau already shows its own header ("Your skin. Your results.") inside
          the iframe, so we skip duplicate parent chrome and give the widget
          every pixel between the fixed nav and the bottom of the screen. */}
+      {/* Top padding pushes the iframe below the fixed desktop nav (which
+         floats over content with no background-of-its-own on /booking now
+         that the dark hero is gone). Matches the existing scroll-mt offset. */}
       <section
         id="section-book-now"
-        className="relative scroll-mt-[60px] lg:scroll-mt-[120px]"
+        className="relative pt-[60px] lg:pt-[120px] scroll-mt-[60px] lg:scroll-mt-[120px]"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
         {/* Preconnect + DNS-prefetch to Pabau host so the iframe handshake

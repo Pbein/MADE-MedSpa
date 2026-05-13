@@ -37,8 +37,12 @@ export default function Navigation() {
   const logoUrl = logoDoc?.imageUrl;
   const logoAlt = logoDoc?.title ?? "MADE Med Spa";
 
-  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/booking", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
-  const lightTextRoutes = new Set(["/", "/booking"]);
+  // /booking no longer has a dark hero (Karlyne 2026-05-12 — burgundy header
+  // with the radial glow was removed entirely). The Pabau iframe is white,
+  // so the nav needs cream bg + dark text on /booking, same as any other
+  // content-first page.
+  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
+  const lightTextRoutes = new Set(["/"]);
   const isOverlayRoute = heroOverlayRoutes.has(pathname);
   const isHeroOverlay = isOverlayRoute && !isScrolled;
   const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;

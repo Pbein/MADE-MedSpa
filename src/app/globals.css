@@ -1,10 +1,3 @@
-/* Glacial Indifference — client-preferred Futura substitute. Loaded from
-   cdnfonts.com for now; migrate to self-hosted next/font/local once we
-   confirm she's keeping it. Falls back to Jost (already loaded via
-   next/font/google) if the CDN request fails.
-   MUST come before @import "tailwindcss" — Tailwind v4 inlines thousands
-   of rules and any @import after it lands in invalid mid-file position. */
-@import url('https://fonts.cdnfonts.com/css/glacial-indifference-2');
 @import "tailwindcss";
 
 /* ============================================
@@ -104,11 +97,34 @@
 
   /* --- Typography (MADE Branding spec) --- */
   /* Body: Montserrat */
-  --font-body: var(--font-montserrat), "Montserrat", "Inter", "Helvetica Neue", sans-serif;
-  /* Labels / H2 / H3 / eyebrows: Glacial Indifference (client preference,
-     a free geometric Futura-like sans). Falls back to Jost (already loaded
-     via next/font) if the CDN font fails, then to system geometric sans. */
-  --font-label: "Glacial Indifference", var(--font-jost), "Jost", "Futura", "Century Gothic", sans-serif;
+  /* Inline fallback inside each var() so the chain stays valid even when
+     next/font's variable isn't applied (dev-server cache miss, build
+     glitch, network failure during font fetch, etc). Per CSS spec, a
+     nested var() that resolves to invalid invalidates the entire outer
+     custom property value — without the fallback, a missing
+     --font-montserrat collapses --font-body, which collapses every
+     font-family declaration on the site to Tailwind's ui-sans-serif
+     default. Diagnosed 2026-05-12 from DevTools cascade on /membership. */
+  --font-body: var(--font-montserrat, "Montserrat"), "Inter", "Helvetica Neue", sans-serif;
+  /* Labels / H2 / H3 / eyebrows: Jost. Glacial Indifference was tried as
+     the primary (geometric Futura-like) but the client disliked it. Jost
+     also has the full weight range (100-900) so font-weight: 500 renders
+     properly as medium — GI only ships 400 and 700, which silently
+     downgraded 500 to 400 and made section headers look thin. */
+  --font-label: var(--font-jost, "Jost"), "Futura", "Century Gothic", sans-serif;
+  /* H1 / page titles / italic accents: Playfair Display. Lives in :root
+     (NOT only in @theme inline) — @theme inline tokens get build-time
+     inlined into Tailwind utilities but are NOT emitted as runtime CSS
+     variables, so any hand-written var(--font-headline) reference would
+     silently fail. */
+  --font-headline: var(--font-playfair, "Playfair Display"), "Cormorant Garamond", Georgia, serif;
+  /* Tailwind v4 emits an html-level
+       html { font-family: var(--default-font-family, ui-sans-serif, ...); }
+     rule. If --default-font-family is undefined, html inherits Tailwind's
+     generic chain. Pin it to our body font so any element that ends up
+     inheriting from html (rather than body) still lands on the brand
+     family chain. */
+  --default-font-family: var(--font-body);
 }
 
 :root {
@@ -155,10 +171,12 @@
   --color-rose-dust: var(--color-rose-dust);
   --color-petal-beige: var(--color-petal-beige);
   --font-sans: var(--font-body);
-  /* H1 / page titles / italic accents: Playfair Display.
-     Defined here (not in :root) so it doubles as both a CSS variable
-     and a Tailwind v4 theme token powering the `font-headline` utility. */
-  --font-headline: var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  /* H1 / page titles / italic accents. Inline fallback on var(--font-playfair)
+     so the chain doesn't collapse if next/font's variable is missing — same
+     defensive pattern as --font-body and --font-label in :root. The real
+     :root copy is the one hand-written CSS reads from; this @theme version
+     exists so the Tailwind `font-headline` utility class also resolves. */
+  --font-headline: var(--font-playfair, "Playfair Display"), "Cormorant Garamond", Georgia, serif;
 }
 
 /* ============================================

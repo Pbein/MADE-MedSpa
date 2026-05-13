@@ -191,19 +191,29 @@ function MembershipCard({
       )}
 
       <div className={`flex flex-col flex-1 ${tier.isFeatured ? "p-7 lg:p-8" : "p-7"}`}>
-        {/* Tier name */}
         <h3
-          className="headline-section text-xl md:text-2xl mb-5"
-          style={{ color: "var(--color-primary)", fontWeight: 600 }}
+          className="italic text-lg mb-6"
+          style={{
+            color: "var(--color-primary)",
+            fontWeight: 700,
+            fontFamily:
+              "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+          }}
         >
           {tier.name}
         </h3>
 
-        {/* Price */}
+        {/* Price — Montserrat at regular weight. The pre-2026-05-12 look had
+           font-semibold here, but at that time all fonts were silently
+           collapsing to system ui-sans-serif (the --font-body var() chain
+           was breaking on missing next/font vars); the system font at 600
+           still read as a mid-weight numeric. With Montserrat actually
+           loading now, semibold is visibly chunky — drop the weight so the
+           price reads at the same visual register the design called for. */}
         <div className="flex items-baseline gap-1 mb-2">
           <span
-            className="font-headline text-4xl"
-            style={{ color: "var(--color-primary)", lineHeight: 1.1, letterSpacing: "-0.02em" }}
+            className="text-3xl tracking-tight"
+            style={{ color: "var(--color-primary)" }}
           >
             ${tier.price}
           </span>
@@ -267,6 +277,7 @@ function MembershipCard({
             textTransform: "uppercase",
             letterSpacing: "0.25em",
             cursor: "pointer",
+            borderRadius: "999px",
             ...(tier.isFeatured
               ? {
                   background:

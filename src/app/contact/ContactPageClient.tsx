@@ -2,12 +2,10 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
 import LocationMap from "@/components/sections/LocationMap";
 import AreasWeServe from "@/components/sections/AreasWeServe";
-import { hasNavigatedWithinApp } from "@/lib/navigation";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
 // CSS-variable references with hex fallbacks. Lets the customize-design panel
@@ -68,20 +66,12 @@ const DEFAULT_BUSINESS_INFO: BusinessInfo = {
 };
 
 export default function ContactPageClient() {
-  const skipAnimation = hasNavigatedWithinApp();
-  const { data: heroText } = useSectionContent("section_contact_hero", {
-    eyebrow: "Contact",
-    headline: "Let's talk.",
-  });
   const { data: bodyText } = useSectionContent("section_contact_body", {
     info_eyebrow: "Reach Out",
     info_headline: "Direct to the studio",
     form_eyebrow: "Send a Message",
     form_headline: "Tell us a little about you",
     form_subtitle: "We respond within 24 hours, always.",
-  });
-  const heroContent = useQuery(api.siteContent.getByKey, {
-    key: "contact_hero",
   });
   const businessInfoEntry = useQuery(api.siteContent.getByKey, {
     key: "business_info",
@@ -92,78 +82,13 @@ export default function ContactPageClient() {
 
   return (
     <>
-      {/* ──────────────────────────────────────────────
-          HERO — Espresso background, Silk text
-          ────────────────────────────────────────────── */}
-      <section
-        id="section-hero"
-        className="relative pt-44 pb-28 md:pt-52 md:pb-32 px-6 overflow-hidden"
-        style={{ backgroundColor: ESPRESSO }}
-      >
-        {/* Mocha texture background */}
-        <Image
-          src="/images/contact-hero-bg.png"
-          alt=""
-          aria-hidden="true"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* Light overlay for text legibility — keeps texture visible */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(57,30,30,0.15) 0%, rgba(57,30,30,0.05) 50%, rgba(57,30,30,0.2) 100%)",
-          }}
-        />
-        <motion.div
-          className="relative z-10 max-w-3xl mx-auto text-center"
-          initial={skipAnimation ? "visible" : "hidden"}
-          animate="visible"
-          variants={staggerContainer}
-        >
-          <motion.span
-            variants={revealUp}
-            className="label-micro block mb-8"
-            style={{ color: GLAZE }}
-          >
-            {heroText.eyebrow}
-          </motion.span>
-
-          <motion.h1
-            variants={revealUp}
-            className="headline-editorial text-6xl md:text-7xl lg:text-8xl mb-10"
-            style={{ color: SILK }}
-          >
-            {heroText.headline}
-          </motion.h1>
-
-          {/* Glaze hairline */}
-          <motion.div
-            variants={revealUp}
-            className="mx-auto h-px w-16 mb-10"
-            style={{ backgroundColor: GLAZE, opacity: 0.6 }}
-          />
-
-          <motion.p
-            variants={revealUp}
-            className="body-editorial max-w-xl mx-auto"
-            style={{ color: SILK, opacity: 0.7 }}
-          >
-            {heroContent?.body ||
-              "A real conversation about what you want \u2014 and what you don\u2019t. Send a note below, or call the studio direct."}
-          </motion.p>
-        </motion.div>
-      </section>
-
-      {/* ──────────────────────────────────────────────
-          BODY — Silk background, 2-column (info + form)
-          ────────────────────────────────────────────── */}
+      {/* BODY — Silk background, 2-column (info + form).
+         Hero was removed 2026-05-12 per Karlyne — page now starts directly
+         below the nav. pt-32/md:pt-48 reserves room for the fixed desktop
+         nav so the first eyebrow ("Reach Out") isn't hidden behind it. */}
       <section
         id="section-form"
-        className="py-24 md:py-36 px-6"
+        className="pt-32 md:pt-48 pb-24 md:pb-36 px-6"
         style={{ backgroundColor: SILK }}
       >
         <motion.div
@@ -173,7 +98,7 @@ export default function ContactPageClient() {
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
         >
-          {/* ── LEFT: Contact details (2/5) ── */}
+          {/* LEFT: Contact details (2/5) */}
           <motion.div variants={revealUp} className="lg:col-span-2">
             <span
               className="block mb-5"
@@ -299,7 +224,7 @@ export default function ContactPageClient() {
             </div>
           </motion.div>
 
-          {/* ── RIGHT: Form (3/5), glaze divider on lg+ ── */}
+          {/* RIGHT: Form (3/5), glaze divider on lg+ */}
           <motion.div
             variants={revealUp}
             className="lg:col-span-3 lg:pl-16 lg:border-l"
