@@ -2,6 +2,7 @@ import { query, mutation, internalMutation, internalQuery } from "./_generated/s
 import { v } from "convex/values";
 import { assertAdmin } from "./lib/auth";
 import type { Doc } from "./_generated/dataModel";
+import { NON_BOOKABLE_SERVICE_NAMES } from "./data/nonBookableServices";
 
 export const list = query({
   args: {},
@@ -10,7 +11,10 @@ export const list = query({
       .query("services")
       .collect();
     return services
-      .filter((s) => s.isActive)
+      // Hide anything inactive OR explicitly marked not-bookable in Pabau.
+      // bookableOnline === undefined (legacy/manual entries) is treated as
+      // bookable so nothing pre-Pabau-field disappears.
+      .filter((s) => s.isActive && s.bookableOnline !== false)
       .sort((a, b) => a.sortOrder - b.sortOrder);
   },
 });
@@ -31,6 +35,10 @@ export const getBySlug = query({
       .query("services")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .first();
+    if (!service) return null;
+    // Don't expose deactivated or non-bookable services on the public detail
+    // page. Returning null lets the page render its 404/not-found state.
+    if (!service.isActive || service.bookableOnline === false) return null;
     return service;
   },
 });
@@ -43,7 +51,7 @@ export const listByCategory = query({
       .withIndex("by_category", (q) => q.eq("category", args.category))
       .collect();
     return services
-      .filter((s) => s.isActive)
+      .filter((s) => s.isActive && s.bookableOnline !== false)
       .sort((a, b) => a.sortOrder - b.sortOrder);
   },
 });
@@ -107,6 +115,11 @@ export const update = mutation({
     if (fields.category !== undefined && fields.categoryLocked === undefined) {
       updates.categoryLocked = true;
     }
+    // Admin set isActive directly? Mirror the toggleActive semantics so the
+    // hide is sticky against future Pabau syncs.
+    if (fields.isActive !== undefined) {
+      updates.hiddenByAdmin = fields.isActive ? false : true;
+    }
     await ctx.db.patch(id, updates);
     return id;
   },
@@ -116,7 +129,68 @@ export const remove = mutation({
   args: { id: v.id("services") },
   handler: async (ctx, args) => {
     await assertAdmin(ctx);
-    await ctx.db.patch(args.id, { isActive: false });
+    // Set hiddenByAdmin so the next Pabau sync doesn't resurrect it.
+    await ctx.db.patch(args.id, { isActive: false, hiddenByAdmin: true });
+  },
+});
+
+// Match-key normalizer: trim, collapse internal whitespace, lowercase.
+// Used by bulkHideNonBookable so spreadsheet name like "Dermal Fillers " (with
+// trailing space) still matches the synced Pabau record. Em-dash vs en-dash is
+// preserved — if Pabau uses a different dash variant we'll see it in unmatched.
+function normalizeServiceName(name: string): string {
+  return name.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+// One-shot admin sweep: marks every service whose name appears in
+// docs/Client Returned/MADE Med Spa Services.xlsx (Bookable Online: No) as
+// inactive + hiddenByAdmin so the next Pabau sync doesn't resurrect it.
+// Idempotent — running twice produces the same end state. Returns a summary
+// so the operator can verify match coverage before trusting the result.
+export const bulkHideNonBookable = mutation({
+  args: { dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, { dryRun }) => {
+    await assertAdmin(ctx);
+
+    const all = await ctx.db.query("services").collect();
+    const byNormName = new Map<string, Doc<"services">>();
+    for (const s of all) {
+      byNormName.set(normalizeServiceName(s.name), s);
+    }
+
+    let toHide = 0;
+    let alreadyHidden = 0;
+    const unmatched: string[] = [];
+    const hiddenNames: string[] = [];
+
+    for (const targetName of NON_BOOKABLE_SERVICE_NAMES) {
+      const match = byNormName.get(normalizeServiceName(targetName));
+      if (!match) {
+        unmatched.push(targetName);
+        continue;
+      }
+      if (match.hiddenByAdmin && !match.isActive) {
+        alreadyHidden++;
+        continue;
+      }
+      toHide++;
+      hiddenNames.push(match.name);
+      if (!dryRun) {
+        await ctx.db.patch(match._id, {
+          isActive: false,
+          hiddenByAdmin: true,
+        });
+      }
+    }
+
+    return {
+      dryRun: dryRun === true,
+      total: NON_BOOKABLE_SERVICE_NAMES.length,
+      hidden: toHide,
+      alreadyHidden,
+      unmatched,
+      hiddenNames,
+    };
   },
 });
 
@@ -128,7 +202,13 @@ export const toggleActive = mutation({
     if (!service) {
       throw new Error("Service not found");
     }
-    await ctx.db.patch(args.id, { isActive: !service.isActive });
+    const nextActive = !service.isActive;
+    // Toggling to inactive sets the sticky flag; toggling back to active
+    // clears it so Pabau sync can manage isActive normally again.
+    await ctx.db.patch(args.id, {
+      isActive: nextActive,
+      hiddenByAdmin: nextActive ? false : true,
+    });
   },
 });
 
@@ -174,6 +254,8 @@ export const upsertFromPabau = internalMutation({
     duration: v.optional(v.string()),
     priceRange: v.optional(v.string()),
     bookingUrl: v.optional(v.string()),
+    // undefined when Pabau didn't return the field; treated as bookable.
+    bookableOnline: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -203,7 +285,15 @@ export const upsertFromPabau = internalMutation({
         priceRange: args.priceRange ?? existing.priceRange,
         pabauBookingUrl: args.bookingUrl ?? existing.pabauBookingUrl,
         pabauSyncedAt: now,
-        isActive: true,
+        // Don't resurrect services the admin has explicitly hidden — sync
+        // would otherwise flip isActive back to true every 15 min.
+        isActive: existing.hiddenByAdmin ? false : true,
+        // Reflect Pabau's current bookable_online flag. If Pabau omitted it,
+        // preserve whatever we had (don't clobber with undefined).
+        bookableOnline:
+          args.bookableOnline === undefined
+            ? existing.bookableOnline
+            : args.bookableOnline,
       });
       return { id: existing._id, action: "updated" as const };
     }
@@ -224,9 +314,60 @@ export const upsertFromPabau = internalMutation({
       pabauBookingUrl: args.bookingUrl,
       pabauSyncedAt: now,
       isActive: true,
+      bookableOnline: args.bookableOnline,
       sortOrder: maxOrder + 1,
     });
     return { id, action: "created" as const };
+  },
+});
+
+// One-shot: re-runs inferCategory() against every non-categoryLocked service
+// using the current serviceCategories table. Equivalent to a Pabau resync but
+// without hitting the Pabau API — useful when seeding/replacing categories
+// in environments where PABAU_API_KEY isn't configured (e.g. dev Convex), or
+// when admin wants to re-bucket without forcing a sync. Internal-only so it
+// can be invoked from the CLI without an admin session.
+export const rebucketAllInternal = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const allCats = await ctx.db.query("serviceCategories").collect();
+    const activeCats = allCats
+      .filter((c) => c.isActive)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+
+    const services = await ctx.db.query("services").collect();
+    const moves: Record<string, number> = {};
+    let unchanged = 0;
+    let locked = 0;
+
+    for (const s of services) {
+      if (s.categoryLocked) {
+        locked++;
+        continue;
+      }
+      // Re-infer from the existing service.category string. Pabau's original
+      // category string isn't stored on the service row, so we use the current
+      // category as the closest proxy. For services that already match the new
+      // set this is a no-op; for orphans this lets keyword matching catch them
+      // (e.g., a service whose name contains "facial" maps to Facial Treatment
+      // even if its old category was just "Body").
+      const probe = `${s.category} ${s.name}`;
+      const next = inferCategory(probe, activeCats);
+      if (next === s.category) {
+        unchanged++;
+        continue;
+      }
+      const key = `${s.category} -> ${next}`;
+      moves[key] = (moves[key] ?? 0) + 1;
+      await ctx.db.patch(s._id, { category: next });
+    }
+
+    return {
+      total: services.length,
+      unchanged,
+      locked,
+      moves,
+    };
   },
 });
 

@@ -11,6 +11,7 @@
 import type * as beforeAfter from "../beforeAfter.js";
 import type * as contactSubmissions from "../contactSubmissions.js";
 import type * as crons from "../crons.js";
+import type * as data_nonBookableServices from "../data/nonBookableServices.js";
 import type * as faqs from "../faqs.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as memberships from "../memberships.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   beforeAfter: typeof beforeAfter;
   contactSubmissions: typeof contactSubmissions;
   crons: typeof crons;
+  "data/nonBookableServices": typeof data_nonBookableServices;
   faqs: typeof faqs;
   "lib/auth": typeof lib_auth;
   memberships: typeof memberships;

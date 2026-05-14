@@ -40,6 +40,15 @@ export default defineSchema({
     pabauBookingUrl: v.optional(v.string()),
     pabauSyncedAt: v.optional(v.number()),
     isActive: v.boolean(),
+    // Mirrors Pabau's `bookable_online` flag (0/1). Treated as `true` when
+    // undefined so legacy/manually-created services without a Pabau link still
+    // show. Public /services hides anything where this is explicitly false —
+    // those are in-office-only items per Karlyne's spreadsheet (e.g. brand-
+    // specific filler SKUs). Auto-set by upsertFromPabau on every sync.
+    bookableOnline: v.optional(v.boolean()),
+    // When true, Pabau sync will not flip isActive back to true. Set by the
+    // admin "Hide" toggle. Without this, every 15-min cron undoes manual hides.
+    hiddenByAdmin: v.optional(v.boolean()),
     sortOrder: v.number(),
   })
     .index("by_slug", ["slug"])

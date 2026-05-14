@@ -29,6 +29,9 @@ interface PabauServiceRaw {
   price?: string | number;
   booking_url?: string;
   is_active?: number | boolean;
+  // Pabau returns 1 or 0. Karlyne flags in-office-only services with 0 on the
+  // Pabau service config so we hide them from /services.
+  bookable_online?: number | boolean;
 }
 
 interface PabauProductRaw {
@@ -248,6 +251,13 @@ export const syncServices = action({
         continue;
       }
       seenIds.add(idNum);
+      // Coerce Pabau's 0/1 (or boolean) into a tri-state: true / false / undefined.
+      // Undefined when Pabau didn't include the field — upsert defaults that to
+      // bookable so legacy data doesn't disappear.
+      const bookable: boolean | undefined =
+        raw.bookable_online === undefined
+          ? undefined
+          : raw.bookable_online === 1 || raw.bookable_online === true;
       try {
         const result = await ctx.runMutation(internal.services.upsertFromPabau, {
           pabauServiceId: idNum,
@@ -257,6 +267,7 @@ export const syncServices = action({
           duration: formatDuration(raw.duration),
           priceRange: formatPrice(raw.price),
           bookingUrl: raw.booking_url,
+          bookableOnline: bookable,
         });
         if (result.action === "created") summary.created++;
         else summary.updated++;

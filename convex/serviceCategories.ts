@@ -223,3 +223,218 @@ export const seedDefaultsAdmin = mutation({
     return { created };
   },
 });
+
+// Replaces the four seeded buckets (Injectables/Skin/Body/Wellness) with the
+// five Karlyne asked for in her 2026-04 feedback: Botox, Laser, Facial
+// Treatment, Weight Loss, plus a Wellness catch-all for IV/B12/EBOO/etc.
+//
+// Admin-only and idempotent. Re-running it is safe — if the new categories
+// already exist (matched by slug), they're left alone. If the legacy seed
+// categories exist (matched by slug), they're hard-deleted (services keep
+// their string category label, so anything that doesn't re-match falls into
+// the "Other" bucket the /services page already handles).
+//
+// Pabau auto-routing keywords are tuned against the live Pabau category
+// names visible from /services API:
+//   - "Consultations"
+//   - "Injectables & Facial Balancing"
+//   - "Laser Hair Removal"
+//   - "Aerolase Neo Elite — Neohair Laser Hair Removal"
+//   - "Aerolase Neo Elite — Neoclear / Neoskin / Neogenesis"
+//   - "Facials & Skin"
+//   - "Iv Hydration & Wellness"
+//   - "Weight Management"
+// Plus the section names Karlyne uses in MADE Med Spa Services.xlsx.
+//
+// After running, trigger a Pabau sync (action services.syncServices) and
+// every non-categoryLocked service re-buckets via inferCategory().
+export const replaceWithKarlyneCategories = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await assertAdmin(ctx);
+
+    const existing = await ctx.db.query("serviceCategories").collect();
+    const bySlug = new Map(existing.map((c) => [c.slug, c]));
+
+    const legacySlugs = ["injectables", "skin", "body", "wellness"];
+    let removed = 0;
+    for (const slug of legacySlugs) {
+      const cat = bySlug.get(slug);
+      if (cat) {
+        await ctx.db.delete(cat._id);
+        removed++;
+      }
+    }
+
+    // Order matters — first keyword match wins in inferCategory(). Botox
+    // before Facial so "Tox Follow Up" doesn't get caught by "facial"; Laser
+    // before Facial so NeoSkin (laser) doesn't bleed into Facial via the
+    // "skin" keyword.
+    const target = [
+      {
+        slug: "botox",
+        name: "Botox",
+        sortOrder: 1,
+        pabauKeywords: [
+          "inject", "neurotoxin", "tox", "botox", "dysport", "xeomin",
+          "jeuveau", "filler", "restylane", "juvederm", "kysse", "kybella",
+          "sculptra", "radiesse", "belotero", "revanesse", "prp", "prf",
+          "ez gel", "balancing",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "laser",
+        name: "Laser",
+        sortOrder: 2,
+        pabauKeywords: [
+          "laser", "aerolase", "neohair", "neoclear", "neoskin", "neogenesis",
+          "hair removal",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "facial-treatment",
+        name: "Facial Treatment",
+        sortOrder: 3,
+        pabauKeywords: [
+          "facial", "hydra", "dermaplan", "peel", "microneedling", "skinpen",
+          "sylfirm", "rf microneedling",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "weight-loss",
+        name: "Weight Loss",
+        sortOrder: 4,
+        pabauKeywords: ["weight", "semaglutide", "glp"],
+        isDefault: false,
+      },
+      {
+        slug: "wellness",
+        name: "Wellness",
+        sortOrder: 5,
+        pabauKeywords: [
+          "iv", "drip", "vitamin", "b12", "eboo", "ozone", "red light",
+          "hydration", "teeth", "whitening", "latisse", "consultation",
+        ],
+        isDefault: true,
+      },
+    ];
+
+    let created = 0;
+    let updated = 0;
+    for (const t of target) {
+      const cur = bySlug.get(t.slug);
+      if (cur) {
+        await ctx.db.patch(cur._id, {
+          name: t.name,
+          sortOrder: t.sortOrder,
+          pabauKeywords: t.pabauKeywords,
+          isDefault: t.isDefault,
+          isActive: true,
+        });
+        updated++;
+      } else {
+        await ctx.db.insert("serviceCategories", { ...t, isActive: true });
+        created++;
+      }
+    }
+
+    return { removed, created, updated, total: target.length };
+  },
+});
+
+// Internal twin of replaceWithKarlyneCategories — same body, no auth check.
+// Lets the CLI invoke the migration without an admin session. Safe because
+// internalMutation isn't reachable from the public client API.
+export const replaceWithKarlyneCategoriesInternal = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const existing = await ctx.db.query("serviceCategories").collect();
+    const bySlug = new Map(existing.map((c) => [c.slug, c]));
+
+    const legacySlugs = ["injectables", "skin", "body", "wellness"];
+    let removed = 0;
+    for (const slug of legacySlugs) {
+      const cat = bySlug.get(slug);
+      if (cat) {
+        await ctx.db.delete(cat._id);
+        removed++;
+      }
+    }
+
+    const target = [
+      {
+        slug: "botox",
+        name: "Botox",
+        sortOrder: 1,
+        pabauKeywords: [
+          "inject", "neurotoxin", "tox", "botox", "dysport", "xeomin",
+          "jeuveau", "filler", "restylane", "juvederm", "kysse", "kybella",
+          "sculptra", "radiesse", "belotero", "revanesse", "prp", "prf",
+          "ez gel", "balancing",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "laser",
+        name: "Laser",
+        sortOrder: 2,
+        pabauKeywords: [
+          "laser", "aerolase", "neohair", "neoclear", "neoskin", "neogenesis",
+          "hair removal",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "facial-treatment",
+        name: "Facial Treatment",
+        sortOrder: 3,
+        pabauKeywords: [
+          "facial", "hydra", "dermaplan", "peel", "microneedling", "skinpen",
+          "sylfirm", "rf microneedling",
+        ],
+        isDefault: false,
+      },
+      {
+        slug: "weight-loss",
+        name: "Weight Loss",
+        sortOrder: 4,
+        pabauKeywords: ["weight", "semaglutide", "glp"],
+        isDefault: false,
+      },
+      {
+        slug: "wellness",
+        name: "Wellness",
+        sortOrder: 5,
+        pabauKeywords: [
+          "iv", "drip", "vitamin", "b12", "eboo", "ozone", "red light",
+          "hydration", "teeth", "whitening", "latisse", "consultation",
+        ],
+        isDefault: true,
+      },
+    ];
+
+    let created = 0;
+    let updated = 0;
+    for (const t of target) {
+      const cur = bySlug.get(t.slug);
+      if (cur) {
+        await ctx.db.patch(cur._id, {
+          name: t.name,
+          sortOrder: t.sortOrder,
+          pabauKeywords: t.pabauKeywords,
+          isDefault: t.isDefault,
+          isActive: true,
+        });
+        updated++;
+      } else {
+        await ctx.db.insert("serviceCategories", { ...t, isActive: true });
+        created++;
+      }
+    }
+
+    return { removed, created, updated, total: target.length };
+  },
+});
