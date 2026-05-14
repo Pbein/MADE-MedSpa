@@ -64,11 +64,11 @@ export default function ShopProductPage({
       <div
         className="relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/shop-atmosphere-bg.webp')",
+          backgroundImage: "url('/images/shop-atmosphere-green-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
-          backgroundColor: "#f0e8e1",
+          backgroundColor: "#DDE3D3",
         }}
       >
         {/* Breadcrumb / back */}

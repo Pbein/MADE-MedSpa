@@ -43,7 +43,9 @@ export default function Navigation() {
   // content-first page.
   const heroOverlayRoutes = new Set(["/", "/services", "/about", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
   const lightTextRoutes = new Set(["/"]);
-  const isOverlayRoute = heroOverlayRoutes.has(pathname);
+  // /shop/[slug] product detail pages share the same atmospheric background
+  // as /shop, so the nav should overlay there too (Karlyne 2026-05-13).
+  const isOverlayRoute = heroOverlayRoutes.has(pathname) || pathname.startsWith("/shop/");
   const isHeroOverlay = isOverlayRoute && !isScrolled;
   const useLightNavText = lightTextRoutes.has(pathname) && !isScrolled;
 
@@ -84,6 +86,10 @@ export default function Navigation() {
       document.body.style.left = "0";
       document.body.style.right = "0";
       document.body.style.width = "100%";
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setIsMobileMenuOpen(false);
+      };
+      document.addEventListener("keydown", onKey);
       return () => {
         document.documentElement.style.overflow = "";
         document.body.style.overflow = "";
@@ -92,6 +98,7 @@ export default function Navigation() {
         document.body.style.left = "";
         document.body.style.right = "";
         document.body.style.width = "";
+        document.removeEventListener("keydown", onKey);
         if (isNavigatingRef.current) {
           window.scrollTo(0, 0);
         } else {
@@ -159,8 +166,10 @@ export default function Navigation() {
                     style={{
                       color: useLightNavText
                         ? "var(--color-on-primary)"
-                        : "var(--color-primary)",
-                      opacity: isActive ? 1 : 0.6,
+                        : isActive
+                          ? "var(--color-primary)"
+                          : "#4a4040",
+                      opacity: 1,
                       borderBottom: isActive
                         ? useLightNavText
                           ? "1px solid var(--color-on-primary)"
@@ -215,8 +224,10 @@ export default function Navigation() {
                 style={{
                   color: useLightNavText
                     ? "var(--color-on-primary)"
-                    : "var(--color-primary)",
-                  opacity: exploreLinks.some((l) => pathname === l.href) ? 1 : 0.6,
+                    : exploreLinks.some((l) => pathname === l.href)
+                      ? "var(--color-primary)"
+                      : "#4a4040",
+                  opacity: 1,
                   background: "none",
                   border: "none",
                   cursor: "pointer",
@@ -267,8 +278,8 @@ export default function Navigation() {
                           display: "block",
                           padding: "0.6rem 1.5rem",
                           fontSize: "1rem",
-                          color: "var(--color-primary)",
-                          opacity: pathname === link.href ? 1 : 0.65,
+                          color: pathname === link.href ? "var(--color-primary)" : "#4a4040",
+                          opacity: 1,
                           textDecoration: "none",
                         }}
                         onClick={() => setExploreOpen(false)}
@@ -401,13 +412,14 @@ export default function Navigation() {
             />
 
             <motion.div
-              className="fixed top-0 left-0 w-full z-[70]"
+              className="fixed top-0 left-0 w-full z-[70] flex flex-col"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Main navigation"
               style={{
                 height: "100dvh",
                 minHeight: "-webkit-fill-available",
                 backgroundColor: "#fbfaef",
-                touchAction: "none",
-                overscrollBehavior: "none",
               }}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -418,16 +430,29 @@ export default function Navigation() {
                 ease: [0.16, 1, 0.3, 1] as const,
               }}
             >
-              {/* Inner content — safe area padded */}
+              {/* Scrollable inner — content centers when it fits the viewport
+                 (e.g. iPad/large phone) and scrolls vertically when it
+                 doesn't (e.g. iPhone SE 375x667, where 10 menu items at
+                 text-3xl + gap-8 + CTA exceed the viewport). The my-auto
+                 wrapper handles both states with no JS measurement.
+                 - overscrollBehavior: contain prevents iOS rubber-band
+                   from leaking scroll to the body once you hit the ends.
+                 - paddingTop of 5rem clears the fixed hamburger X
+                   (top-5 right-6, ~64px tall) so menu items never sit
+                   under the close affordance when the user scrolls. */}
               <div
-                className="flex flex-col justify-center h-full px-8 sm:px-12"
+                className="flex-1 overflow-y-auto px-8 sm:px-12"
                 style={{
-                  paddingTop: "env(safe-area-inset-top, 0px)",
-                  paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                  paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)",
+                  paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 2rem)",
+                  overscrollBehavior: "contain",
+                  WebkitOverflowScrolling: "touch",
                 }}
               >
+              <div className="flex flex-col min-h-full">
+              <div className="my-auto">
 
-              <ul className="flex flex-col gap-8">
+              <ul className="flex flex-col gap-7">
                 <motion.li
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -442,8 +467,8 @@ export default function Navigation() {
                     onClick={handleMobileNavClick}
                     className="font-headline text-3xl tracking-tight transition-opacity duration-500"
                     style={{
-                      color: "var(--color-primary)",
-                      opacity: pathname === "/" ? 1 : 0.5,
+                      color: pathname === "/" ? "var(--color-primary)" : "#4a4040",
+                      opacity: 1,
                     }}
                   >
                     Home
@@ -467,8 +492,8 @@ export default function Navigation() {
                         onClick={handleMobileNavClick}
                         className="font-headline text-3xl tracking-tight transition-opacity duration-500"
                         style={{
-                          color: "var(--color-primary)",
-                          opacity: isActive ? 1 : 0.5,
+                          color: isActive ? "var(--color-primary)" : "#4a4040",
+                          opacity: 1,
                         }}
                       >
                         {link.label}
@@ -496,6 +521,8 @@ export default function Navigation() {
                   Book Consultation
                 </Link>
               </motion.div>
+              </div>
+              </div>
               </div>
             </motion.div>
           </>

@@ -40,8 +40,11 @@ export default function PageHero({
   const skipAnimation = hasNavigatedWithinApp();
 
   return (
+    // Padding tightened with the smaller H1 (Karlyne 2026-05-13). Previous
+    // pt-48 (192px) / pb-24 (96px) was scaled for 96px hero type; the
+    // smaller text + same padding made the hero feel cavernous.
     <section
-      className="relative pt-48 pb-24 px-6 overflow-hidden"
+      className="relative pt-36 md:pt-40 pb-16 md:pb-20 px-6 overflow-hidden"
       style={{
         backgroundColor: hasBackground
           ? backgroundFallback
@@ -72,7 +75,7 @@ export default function PageHero({
       )}
 
       <motion.div
-        className="relative max-w-4xl mx-auto text-center"
+        className="relative max-w-2xl mx-auto text-center"
         initial={skipAnimation ? "visible" : "hidden"}
         animate="visible"
         variants={staggerContainer}
@@ -90,9 +93,16 @@ export default function PageHero({
           {eyebrow}
         </motion.span>
 
+        {/* Restrained editorial scale (Karlyne 2026-05-13 / senior-UI pass).
+           Was text-5xl md:text-8xl (48 -> 96px) which made every inner
+           page hero LOUDER than the homepage hero (~48px). Inner pages
+           should anchor BELOW the home hero, not above. Now matches the
+           PageHeaderCompact scale used on /membership, /testimonials,
+           /before-and-after so all inner-page hero typography is one
+           system. */}
         <motion.h1
           variants={revealUp}
-          className="headline-editorial text-5xl md:text-8xl"
+          className="headline-editorial text-3xl md:text-5xl"
           style={{
             color: useLightText
               ? "var(--color-surface)"
@@ -105,7 +115,7 @@ export default function PageHero({
         {subtitle && (
           <motion.p
             variants={revealUp}
-            className="body-editorial mt-8 max-w-2xl mx-auto"
+            className="body-editorial mt-5 max-w-xl mx-auto text-sm md:text-base"
             style={{
               color: useLightText
                 ? "var(--color-surface)"

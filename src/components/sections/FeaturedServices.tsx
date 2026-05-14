@@ -115,7 +115,7 @@ export default function FeaturedServices({ services, featuredImageUrls, sectionC
 
           <p
             className="body-editorial max-w-xl mx-auto"
-            style={{ color: "var(--color-on-surface-variant)", opacity: 0.8 }}
+            style={{ color: "var(--color-on-surface)" }}
           >
             {sectionContent?.body || "Each treatment is thoughtfully designed to enhance your natural beauty with precision, artistry, and care."}
           </p>

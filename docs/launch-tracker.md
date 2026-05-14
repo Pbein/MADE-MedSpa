@@ -189,7 +189,7 @@ By priority:
 
 #### #6 — Services page lists too many services
 
-- [x] **Status:** ✅ Shipped `534c3ef` (2026-05-09) — pending Karlyne approval
+- [ ] **Status:** Layout shipped `534c3ef` (2026-05-09), but **does not actually satisfy Karlyne's ask**. See `docs/services-categories-rework.md` (2026-05-10) for the root-cause analysis and the rework plan. Two gaps: (a) seeded category labels (Injectables/Skin/Body/Wellness) don't match her vocabulary (Botox/Laser/Facial/Weight Loss); (b) non-bookable Pabau services aren't filtered, so each category is still bloated with brand-variant SKUs Karlyne flagged in `MADE Med Spa Services.xlsx` as in-office only. Pending Karlyne sign-off on category set + non-bookable hide before re-implementing.
 - **Karlyne (verbatim):** _"Services page lists too many services. I only wanted to show categories such as Botox, laser, facial treatment, weight loss and have the top main services, and then they can click to view more"_
 - **Decision: no schema migration, no new route.** Used existing `services.sortOrder` field (already there, already controlled via /admin/services) as the "featured" ranking instead of adding an `isFeatured` flag. One file change.
 - **Approach implemented:**

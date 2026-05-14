@@ -53,19 +53,26 @@ export default function ShopPage() {
     <div style={styleOverrides} className="min-h-screen text-[var(--color-espresso)]">
       {isPreview && <PreviewBanner />}
 
-      {/* ═══ SHOP WRAPPER — Silk per brand kit (Karlyne 2026-05-12).
-           The previous shop-atmosphere-bg.webp gave the whole page a
-           pink/rosy cast that didn't match the MADE aesthetic. Swapped
-           for flat Silk (#F7F6EB) per her email guidance. ═══ */}
+      {/* ═══ SHOP WRAPPER — Pale-sage atmospheric background image (matches
+           /shop/[slug] detail page for visual continuity). Vignette +
+           grain kept as independent finishes layered over the image. ═══ */}
       <div
         className="relative overflow-hidden"
         style={{
-          backgroundColor: "var(--color-silk, #F7F6EB)",
+          backgroundImage: "url('/images/shop-atmosphere-green-bg.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#DDE3D3",
         }}
       >
+        <div className="pointer-events-none absolute inset-0 bg-editorial-vignette" />
+        <div className="pointer-events-none absolute inset-0 made-noise" style={{ opacity: 0.04 }} />
 
-        {/* ═══ HEADER ═══ */}
-        <section id="section-hero" className="relative pt-36 md:pt-44 pb-10 px-6 md:px-8">
+        {/* ═══ HEADER — top padding matches PageHero (services/about) so
+             all three inner-page heroes share the same nav-to-eyebrow
+             gap. Was pt-36 md:pt-44; aligned to pt-36 md:pt-40. ═══ */}
+        <section id="section-hero" className="relative pt-36 md:pt-40 pb-10 px-6 md:px-8">
           <div className="mx-auto max-w-[1280px] text-center">
             <motion.p
               className="mb-6 text-[11px] uppercase text-[var(--color-soft-taupe)]"
@@ -77,9 +84,15 @@ export default function ShopPage() {
               Treatments
             </motion.p>
 
+            {/* H1 scaled down from clamp(2.5rem,5vw,5rem) [=40-80px] to
+               text-3xl md:text-5xl [=30-48px] to match the rest of the
+               inner-page hero system (PageHero, PageHeaderCompact).
+               max-width tightened from 4xl -> 2xl since the headline no
+               longer needs to span the full content width at the smaller
+               size. Karlyne 2026-05-13 — senior UI pass. */}
             <motion.h1
-              className="mx-auto max-w-4xl font-headline text-[clamp(2.5rem,5vw,5rem)] leading-[0.95] text-[var(--color-espresso)]"
-              style={{ letterSpacing: "-0.03em" }}
+              className="mx-auto max-w-2xl font-headline text-3xl md:text-5xl leading-tight text-[var(--color-espresso)]"
+              style={{ letterSpacing: "-0.02em" }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: luxuryEase, delay: 0.05 }}
@@ -89,8 +102,10 @@ export default function ShopPage() {
               <span className="font-light">in every treatment.</span>
             </motion.h1>
 
+            {/* Subtitle dropped from text-lg (18px) -> text-base (16px)
+               so it stays proportional to the smaller H1. */}
             <motion.p
-              className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[var(--color-soft-taupe)]"
+              className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[var(--color-soft-taupe)]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: luxuryEase, delay: 0.15 }}
@@ -180,7 +195,11 @@ export default function ShopPage() {
                 No products in this category yet.
               </p>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 lg:gap-8">
+              // Mobile-first stack: 1 card on phones (<640px), 2 on phablet/
+              // large mobile (sm), 3 on tablet (md), 4 on desktop (xl).
+              // Karlyne 2026-05-13 — 2 cards on small screens read as
+              // cluttered; single column lets each product breathe.
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-5 md:gap-6 lg:gap-8">
                 {filteredProducts.map((product, i) => {
                   const slug = product.name
                     .toLowerCase()
@@ -220,7 +239,7 @@ export default function ShopPage() {
                               src={product.imageUrl}
                               alt={product.name}
                               fill
-                              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
                               className="object-contain transition-transform duration-1000 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
                               style={{ padding: "12%" }}
                             />
@@ -248,8 +267,11 @@ export default function ShopPage() {
                               {product.category}
                             </p>
                             <h3
-                              className="font-headline text-base md:text-lg leading-tight text-[var(--color-espresso)]"
-                              style={{ letterSpacing: "-0.01em" }}
+                              className="text-sm md:text-base leading-tight text-[var(--color-espresso)]"
+                              style={{
+                                fontFamily: "var(--font-body)",
+                                letterSpacing: "-0.01em",
+                              }}
                             >
                               {product.name}
                             </h3>
@@ -259,7 +281,10 @@ export default function ShopPage() {
                             className="flex items-end justify-between gap-3 pt-3 border-t"
                             style={{ borderColor: "var(--border-soft)" }}
                           >
-                            <span className="font-headline text-lg md:text-xl leading-none text-[var(--color-espresso)]">
+                            <span
+                              className="text-base md:text-lg leading-none text-[var(--color-espresso)]"
+                              style={{ fontFamily: "var(--font-label)" }}
+                            >
                               ${product.price.toFixed(0)}
                             </span>
                             <span
