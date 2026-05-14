@@ -53,15 +53,14 @@ export default function ShopPage() {
     <div style={styleOverrides} className="min-h-screen text-[var(--color-espresso)]">
       {isPreview && <PreviewBanner />}
 
-      {/* ═══ ATMOSPHERE WRAPPER — one continuous background ═══ */}
+      {/* ═══ SHOP WRAPPER — Silk per brand kit (Karlyne 2026-05-12).
+           The previous shop-atmosphere-bg.webp gave the whole page a
+           pink/rosy cast that didn't match the MADE aesthetic. Swapped
+           for flat Silk (#F7F6EB) per her email guidance. ═══ */}
       <div
         className="relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/shop-atmosphere-bg.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "#f0e8e1",
+          backgroundColor: "var(--color-silk, #F7F6EB)",
         }}
       >
 

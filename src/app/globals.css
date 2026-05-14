@@ -297,6 +297,17 @@ a {
   line-height: 1.2;
 }
 
+/* Mobile letter-spacing dialed back so long unbreakable words like
+   "TRANSFORMATION" don't overflow narrow viewports (Karlyne 2026-05-12).
+   "REFINEMENT OVER TRANSFORMATION" and "READY FOR YOUR TRANSFORMATION?"
+   were both clipping past the right edge on iPhone. Brand-spec 0.4em
+   tracking still applies at 640px+ where there's room. */
+@media (max-width: 640px) {
+  .headline-section {
+    letter-spacing: 0.12em;
+  }
+}
+
 /* Body text — Montserrat, line-height 1.8, no letter-spacing. */
 .body-editorial {
   font-family: var(--font-body);
