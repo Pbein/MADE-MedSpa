@@ -106,12 +106,12 @@
      font-family declaration on the site to Tailwind's ui-sans-serif
      default. Diagnosed 2026-05-12 from DevTools cascade on /membership. */
   --font-body: var(--font-montserrat, "Montserrat"), "Inter", "Helvetica Neue", sans-serif;
-  /* Labels / H2 / H3 / eyebrows: Jost. Glacial Indifference was tried as
-     the primary (geometric Futura-like) but the client disliked it. Jost
-     also has the full weight range (100-900) so font-weight: 500 renders
-     properly as medium — GI only ships 400 and 700, which silently
-     downgraded 500 to 400 and made section headers look thin. */
-  --font-label: var(--font-jost, "Jost"), "Futura", "Century Gothic", sans-serif;
+  /* Labels / H2 / H3 / eyebrows: Montserrat (Karlyne 2026-05-15 — replaced
+     Jost across all category/eyebrow/section labels for a cleaner editorial
+     read). Montserrat ships the full 100-900 weight range so font-weight:
+     500 renders properly as medium. Jost is left as a final fallback in case
+     Montserrat fails to load. */
+  --font-label: var(--font-montserrat, "Montserrat"), var(--font-jost, "Jost"), "Helvetica Neue", sans-serif;
   /* H1 / page titles / italic accents: Playfair Display. Lives in :root
      (NOT only in @theme inline) — @theme inline tokens get build-time
      inlined into Tailwind utilities but are NOT emitted as runtime CSS
