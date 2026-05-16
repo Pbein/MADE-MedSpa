@@ -107,7 +107,7 @@ export default function ShopPage() {
                color for proper contrast while staying soft (Karlyne 2026-05-15). */}
             <motion.p
               className="mx-auto mt-5 max-w-xl text-base leading-relaxed"
-              style={{ color: "rgba(57, 30, 30, 0.65)" }}
+              style={{ color: "rgba(57, 30, 30, 0.72)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: luxuryEase, delay: 0.15 }}
@@ -159,7 +159,7 @@ export default function ShopPage() {
           <div className="relative px-6 md:px-8 pt-2 pb-6">
             <motion.p
               className="accent-quote mx-auto max-w-[1280px] text-center text-base md:text-lg"
-              style={{ color: "rgba(57, 30, 30, 0.55)" }}
+              style={{ color: "rgba(57, 30, 30, 0.75)" }}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={viewportOnce}
