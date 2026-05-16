@@ -76,8 +76,8 @@ export default function ShopProductPage({
           <div className="mx-auto max-w-[1180px]">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 text-[11px] uppercase text-[var(--color-soft-taupe)] transition-opacity duration-300 hover:opacity-70"
-              style={{ letterSpacing: "0.14em" }}
+              className="inline-flex items-center gap-2 text-[11px] uppercase transition-opacity duration-300 hover:opacity-70"
+              style={{ letterSpacing: "0.14em", color: "rgba(57, 30, 30, 0.6)" }}
             >
               <span aria-hidden>←</span>
               <span>Back to shop</span>
@@ -134,7 +134,7 @@ export default function ShopProductPage({
               >
                 <p
                   className="label-micro mb-5"
-                  style={{ color: "var(--color-soft-taupe)" }}
+                  style={{ color: "rgba(57, 30, 30, 0.55)" }}
                 >
                   {product.category}
                 </p>
@@ -164,7 +164,7 @@ export default function ShopProductPage({
                     <p
                       key={i}
                       className="body-editorial text-[15px] md:text-base"
-                      style={{ color: "var(--color-soft-taupe)" }}
+                      style={{ color: "rgba(57, 30, 30, 0.7)" }}
                     >
                       {paragraph}
                     </p>

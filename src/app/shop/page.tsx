@@ -102,10 +102,12 @@ export default function ShopPage() {
               <span className="font-light">in every treatment.</span>
             </motion.h1>
 
-            {/* Subtitle dropped from text-lg (18px) -> text-base (16px)
-               so it stays proportional to the smaller H1. */}
+            {/* Subtitle: espresso at 0.65 opacity (was soft-taupe). Soft-taupe
+               vanishes on the sage atmosphere bg — needs espresso-derived
+               color for proper contrast while staying soft (Karlyne 2026-05-15). */}
             <motion.p
-              className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[var(--color-soft-taupe)]"
+              className="mx-auto mt-5 max-w-xl text-base leading-relaxed"
+              style={{ color: "rgba(57, 30, 30, 0.65)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: luxuryEase, delay: 0.15 }}
@@ -156,10 +158,10 @@ export default function ShopPage() {
         {hasProducts && (
           <div className="relative px-6 md:px-8 pt-2 pb-6">
             <motion.p
-              className="accent-quote mx-auto max-w-[1280px] text-center text-base md:text-lg text-[var(--color-soft-taupe)]"
-              style={{ opacity: 0.7 }}
+              className="accent-quote mx-auto max-w-[1280px] text-center text-base md:text-lg"
+              style={{ color: "rgba(57, 30, 30, 0.55)" }}
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 0.7 }}
+              whileInView={{ opacity: 1 }}
               viewport={viewportOnce}
               transition={{ duration: 0.6, ease: luxuryEase }}
             >
