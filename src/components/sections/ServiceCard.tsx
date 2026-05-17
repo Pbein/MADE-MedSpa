@@ -33,7 +33,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     >
       <Link href={`/services/${service.slug}`} className="block">
         {/* Image */}
-        <div className="overflow-hidden relative aspect-[4/3]">
+        <div className="overflow-hidden relative aspect-[4/5]">
           <Image
             src={service.imageUrl || "/images/placeholder-service.svg"}
             alt={service.name}

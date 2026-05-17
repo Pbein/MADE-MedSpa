@@ -213,7 +213,7 @@ export default function ServicesPageClient({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="aspect-[4/3] bg-[var(--color-surface-high)]" />
+                  <div className="aspect-[4/5] bg-[var(--color-surface-high)]" />
                   <div className="mt-6 space-y-3">
                     <div className="h-3 w-16 bg-[var(--color-surface-high)]" />
                     <div className="h-5 w-48 bg-[var(--color-surface-high)]" />

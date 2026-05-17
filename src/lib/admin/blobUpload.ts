@@ -15,7 +15,7 @@ export function isBlobUrl(url: string | null | undefined): boolean {
 // loads fast no matter what she gives us. WebP wins on size unless we need
 // a lossless logo (PNG with transparency).
 export type UploadPurpose =
-  | "service"     // 1600×1000  — service photos
+  | "service"     // 1200×1500  — service photos (4:5 portrait, matches all render surfaces)
   | "product"     // 1200×1200  — shop product photos
   | "headshot"    // 900×1200   — team headshots (vertical)
   | "avatar"      // 400×400    — testimonial avatars
