@@ -36,6 +36,22 @@ export default defineSchema({
         })
       )
     ),
+    // Richer content for the public /services/[slug] detail page. All optional
+    // so legacy services keep rendering — the page hides each section when
+    // its field is empty.
+    benefits: v.optional(v.array(v.string())),
+    whoItsFor: v.optional(v.string()),
+    whatToExpect: v.optional(
+      v.array(
+        v.object({
+          title: v.string(),
+          description: v.string(),
+        })
+      )
+    ),
+    preCareNotes: v.optional(v.string()),
+    postCareNotes: v.optional(v.string()),
+    downtime: v.optional(v.string()),
     pabauServiceId: v.optional(v.number()),
     pabauBookingUrl: v.optional(v.string()),
     pabauSyncedAt: v.optional(v.number()),
