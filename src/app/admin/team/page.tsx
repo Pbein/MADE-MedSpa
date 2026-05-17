@@ -2,6 +2,7 @@
 
 import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import ImageUpload from "@/components/admin/ImageUpload";
@@ -222,8 +223,10 @@ export default function AdminTeamPage() {
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
+      toast.success(`Added "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to create team member:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't add team member: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -241,8 +244,10 @@ export default function AdminTeamPage() {
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
+      toast.success(`Saved "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to update team member:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save team member: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -253,8 +258,10 @@ export default function AdminTeamPage() {
     try {
       await removeTeamMember({ id });
       setEditingId(null);
+      toast.success("Team member removed");
     } catch (err) {
-      console.error("Failed to delete team member:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't remove team member: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -264,7 +271,8 @@ export default function AdminTeamPage() {
     try {
       await toggleActive({ id });
     } catch (err) {
-      console.error("Failed to toggle team member status:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change status: ${message}`);
     }
   }
 

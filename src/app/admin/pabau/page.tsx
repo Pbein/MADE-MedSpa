@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 
 type SyncEntityType = "reviews" | "services" | "products" | "memberships";
@@ -183,8 +184,10 @@ export default function AdminPabauPage() {
         sortOrder: nextSortOrder + index,
       });
       setImported((prev) => new Set(prev).add(pabau.id));
+      toast.success(`Imported "${pabau.service_name}"`);
     } catch (err) {
-      console.error("Failed to import:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't import "${pabau.service_name}": ${message}`);
     } finally {
       setImporting((prev) => {
         const next = new Set(prev);

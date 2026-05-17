@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import ImageUpload from "@/components/admin/ImageUpload";
@@ -274,8 +275,10 @@ export default function AdminShopPage() {
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
+      toast.success(`Created "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to create product:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create product: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -295,8 +298,10 @@ export default function AdminShopPage() {
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
+      toast.success(`Saved "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to update product:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save product: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -307,8 +312,10 @@ export default function AdminShopPage() {
     try {
       await removeProduct({ id });
       setEditingId(null);
+      toast.success("Product deleted");
     } catch (err) {
-      console.error("Failed to delete product:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete product: ${message}`);
     } finally {
       setSaving(false);
     }

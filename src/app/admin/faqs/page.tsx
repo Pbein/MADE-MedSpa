@@ -2,6 +2,7 @@
 
 import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -216,8 +217,10 @@ export default function AdminFaqsPage() {
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
+      toast.success("FAQ created");
     } catch (err) {
-      console.error("Failed to create FAQ:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create FAQ: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -234,8 +237,10 @@ export default function AdminFaqsPage() {
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
+      toast.success("FAQ saved");
     } catch (err) {
-      console.error("Failed to update FAQ:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save FAQ: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -246,8 +251,10 @@ export default function AdminFaqsPage() {
     try {
       await removeFaq({ id });
       setEditingId(null);
+      toast.success("FAQ deleted");
     } catch (err) {
-      console.error("Failed to delete FAQ:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete FAQ: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -257,7 +264,8 @@ export default function AdminFaqsPage() {
     try {
       await toggleActive({ id });
     } catch (err) {
-      console.error("Failed to toggle FAQ status:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change status: ${message}`);
     }
   }
 

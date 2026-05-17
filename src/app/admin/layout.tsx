@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
+import { Toaster } from "sonner";
 import { api } from "../../../convex/_generated/api";
 
 interface NavItem {
@@ -355,6 +356,8 @@ export default function AdminLayout({
         {/* Page content */}
         <div className="admin-content" style={{ flex: 1, padding: 24 }}>{children}</div>
       </div>
+
+      <Toaster position="top-right" richColors closeButton />
     </div>
   );
 }

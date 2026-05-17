@@ -2,6 +2,7 @@
 
 import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -169,9 +170,10 @@ export default function AdminCategoriesPage() {
         isDefault: data.isDefault,
       });
       setShowCreate(false);
+      toast.success(`Created "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to create category:", err);
-      alert("Failed to create category. See console.");
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create category: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -190,9 +192,10 @@ export default function AdminCategoriesPage() {
         isDefault: data.isDefault,
       });
       setEditingId(null);
+      toast.success(`Saved "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to update category:", err);
-      alert("Failed to update category. See console.");
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save category: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -202,7 +205,8 @@ export default function AdminCategoriesPage() {
     try {
       await update({ id, isActive: !current });
     } catch (err) {
-      console.error("Failed to toggle category:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change status: ${message}`);
     }
   }
 
@@ -211,9 +215,10 @@ export default function AdminCategoriesPage() {
     try {
       await hardDelete({ id });
       setConfirmDeleteId(null);
+      toast.success("Category deleted");
     } catch (err) {
-      console.error("Failed to delete category:", err);
-      alert("Failed to delete category. See console.");
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete category: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -235,7 +240,8 @@ export default function AdminCategoriesPage() {
         ],
       });
     } catch (err) {
-      console.error("Failed to reorder:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't reorder: ${message}`);
     }
   }
 
@@ -243,10 +249,10 @@ export default function AdminCategoriesPage() {
     setSaving(true);
     try {
       const result = await seed({});
-      alert(`Seeded ${result.created} default categories.`);
+      toast.success(`Seeded ${result.created} default categories`);
     } catch (err) {
-      console.error("Failed to seed:", err);
-      alert("Failed to seed defaults. See console.");
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't seed defaults: ${message}`);
     } finally {
       setSaving(false);
     }

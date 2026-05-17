@@ -2,6 +2,7 @@
 
 import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import ImageUpload from "@/components/admin/ImageUpload";
@@ -266,8 +267,10 @@ export default function AdminBeforeAfterPage() {
         isFeatured: data.isFeatured,
       });
       setShowCreate(false);
+      toast.success(`Created "${data.title.trim()}"`);
     } catch (err) {
-      console.error("Failed to create:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create case: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -289,8 +292,10 @@ export default function AdminBeforeAfterPage() {
         isFeatured: data.isFeatured,
       });
       setEditingId(null);
+      toast.success(`Saved "${data.title.trim()}"`);
     } catch (err) {
-      console.error("Failed to update:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save case: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -301,8 +306,10 @@ export default function AdminBeforeAfterPage() {
     try {
       await removeCase({ id });
       setEditingId(null);
+      toast.success("Case deleted");
     } catch (err) {
-      console.error("Failed to delete:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete case: ${message}`);
     } finally {
       setSaving(false);
     }

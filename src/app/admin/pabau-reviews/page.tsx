@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -31,7 +32,8 @@ export default function AdminPabauReviewsPage() {
     try {
       await setFeatured({ id, isFeatured: !current });
     } catch (err) {
-      console.error("Failed to update feature flag:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change featured flag: ${message}`);
     }
   }
 
@@ -39,7 +41,8 @@ export default function AdminPabauReviewsPage() {
     try {
       await setHidden({ id, isHidden: !current });
     } catch (err) {
-      console.error("Failed to update hidden flag:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change hidden flag: ${message}`);
     }
   }
 
@@ -49,7 +52,8 @@ export default function AdminPabauReviewsPage() {
     try {
       await setDisplayOrder({ id, displayOrder: n });
     } catch (err) {
-      console.error("Failed to update sort order:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't update sort order: ${message}`);
     }
   }
 

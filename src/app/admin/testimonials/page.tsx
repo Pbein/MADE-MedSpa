@@ -2,6 +2,7 @@
 
 import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -210,8 +211,10 @@ export default function AdminTestimonialsPage() {
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
+      toast.success(`Added testimonial from "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to create testimonial:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create testimonial: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -228,8 +231,10 @@ export default function AdminTestimonialsPage() {
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
+      toast.success("Testimonial saved");
     } catch (err) {
-      console.error("Failed to update testimonial:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save testimonial: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -240,8 +245,10 @@ export default function AdminTestimonialsPage() {
     try {
       await removeTestimonial({ id });
       setEditingId(null);
+      toast.success("Testimonial deleted");
     } catch (err) {
-      console.error("Failed to delete testimonial:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete testimonial: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -251,7 +258,8 @@ export default function AdminTestimonialsPage() {
     try {
       await toggleActive({ id });
     } catch (err) {
-      console.error("Failed to toggle testimonial status:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't change status: ${message}`);
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -261,8 +262,10 @@ export default function AdminMembershipsPage() {
         sortOrder: data.sortOrder,
       });
       setShowCreateForm(false);
+      toast.success(`Created "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to create membership:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't create membership: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -283,8 +286,10 @@ export default function AdminMembershipsPage() {
         sortOrder: data.sortOrder,
       });
       setEditingId(null);
+      toast.success(`Saved "${data.name.trim()}"`);
     } catch (err) {
-      console.error("Failed to update membership:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't save membership: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -295,8 +300,10 @@ export default function AdminMembershipsPage() {
     try {
       await removeMembership({ id });
       setEditingId(null);
+      toast.success("Membership deleted");
     } catch (err) {
-      console.error("Failed to delete membership:", err);
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't delete membership: ${message}`);
     } finally {
       setSaving(false);
     }
