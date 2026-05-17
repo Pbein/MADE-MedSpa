@@ -29,6 +29,95 @@ By priority:
 
 ---
 
+## 🎯 Current Focus — Work by Effort Type
+
+> *Triage view added 2026-05-17. Same backlog as the P0/P1/P2/P3 sections below, but bucketed by **what unblocks each task** rather than by raw priority. Use this when picking your next thing to do. Each item references the detailed entry further down for context.*
+
+### 💬 Decisions to make first (unblocks downstream work)
+- **Futura license** — buy real Futura, or stay on Montserrat? *(see Karlyne #4 — DEFERRED)*
+- **'Manage Admins' page** — paid feature, decide if/when before handoff *(P1 Future-paid)*
+- **Reviews vs Testimonials display strategy** — confirm with Karlyne *(Discuss)*
+- **Webhook activity scope beyond logging** — define then build *(Discuss)*
+- **Ownership transfer plan** — 2-4 weeks post-launch handoff session *(P0 Operational)*
+- **Post-launch maintenance + paid update offering** — pricing + scope *(P1 Operational)*
+
+### 🔧 External dashboards — quick wins (15 min each, no code)
+> Vercel / Pabau / Clerk / Convex dashboard clicks. Most can be knocked out in a coffee break.
+- **Seed service categories on prod** — visit `/admin/categories` → "Seed default" *(P0 #10)*
+- **Roll Clerk production secret** — Clerk dashboard → roll → update Vercel env *(P0 #12)*
+- **`ADMIN_EMAILS` on Vercel Preview env** — Vercel dashboard → Env Vars *(P0 #14)*
+- **Update `NEXT_PUBLIC_PABAU_BOOKING_URL` on Vercel** — new slug `made-med-spa` *(P0 Vercel cutover)*
+- **Delete test lead in Pabau** — lead_id 3029083 "SMOKETEST DELETE-ME" *(P0 Cleanup)*
+- **Register live webhook URL in Pabau, retire dev secret** *(P0 Pabau)*
+- **Verify packages widget + Book Now with new slug** *(P0 Pabau)*
+- **Confirm Vercel env vars match local** *(Other / Operations)*
+
+### 👤 Philip click-tests (verify already-shipped work on prod)
+> No code work — just eyeball / click-test on production. Pair these with the manual verification checklist at the top of this doc.
+- **Favicon in browser tab + iOS home-screen** *(Verification checklist)*
+- **Admin image compression end-to-end** — upload >2MB photo, verify Blob payload *(Verification checklist)*
+- **Logo, footer, booking flow re-eyeball** *(Verification checklist)*
+- **Shop redesign + /shop/[slug] detail pages + sage atmosphere bg** *(Verification checklist + recent UI work)*
+- **Adaptive team section on /about** *(Verification checklist)*
+- **Tier 1-6 test plan on dev** *(P0 Personal — Philip)*
+- **Cross-check site services vs `MADE Med Spa Services.xlsx`** *(P0 Cross-check)*
+- **Sanity-check 'Look up IDs' at `/admin/pabau`** *(Other / Operations)*
+- **Trigger 3 Pabau webhook tests** *(Other / Operations)*
+- **Submit test lead from production URL** *(Other / Operations)*
+- **Mobile + cross-browser QA pass** *(P0 Pre-launch)*
+- **User-flow click-test on production smoke** *(P0)*
+- **Daily `/admin/pabau/webhooks` soak check (next ~1 week)** *(Other / Operations)*
+- **Verify /contact eyebrow readability on localhost** *(Other / Operations)*
+
+### 📞 Client blockers (waiting on Karlyne — track + nudge)
+- **Privacy policy Pabau processor disclosure** — her legal copy, not yours to draft *(P0 Compliance + Followups)*
+- **Clarify admin About section claim** *(P0 Discuss)*
+- **Fill remaining admin content** — any leftover after the April content fill *(P0 Content)*
+- **Marketing team SEO controls scope** *(Discuss)*
+- **Visual Branding Guide PDF content review** *(Followups)* — 21 MB PDF, extract any spec pages beyond colors/typography
+
+### 🤖 Code-only — autonomous Claude sessions
+> Well-scoped tasks I can ship in a focused session with no extra input from you.
+
+**Quick wins (<1 hour each):**
+- **6 `uploadBlob()` callers default to `purpose: "general"`** — pass explicit purpose *(Open issues)*
+- **Make smoke-test probe 9 opt-in** — env-flag the real-lead creation probe *(P1 Followup)*
+- **Areas We Serve content review** *(P1)*
+
+**Medium lifts (half-day to multi-day):**
+- **Vitest + test scaffolding** *(P0 Testing)*
+- **Critical-path tests: Pabau webhook receiver + lead pipeline** *(P0 Testing × 2)*
+- **Smoke-test script for post-deploy validation** *(P0 Testing)*
+- **Error tracking setup (Sentry or Vercel)** *(P0 Monitoring)*
+- **Schema validation + OG preview check** *(P0 Pre-launch)*
+- **Backfill compression for existing Vercel Blob photos** — one-shot migration script *(Followups)*
+- **Real handlers for `client.create` / `lead.create` webhooks** *(P1)*
+- **Lead form double-submit protection (idempotency)** *(P2)*
+- **Contact form honeypot spam protection** *(P2)*
+- **ADA accessibility statement page** *(P1 Compliance)*
+
+### 🎨 Design dev — UI judgment + my code
+> Need your design call (or a Stitch round), then I implement.
+- **Header fonts decision + implementation** — pending Futura license *(Karlyne #4)*
+- **'About' as top-level admin nav item** — discoverability fix *(P1 UX)*
+- **Audit all file upload surfaces for type-validation messaging** *(P1 UX audit)*
+- **Branded map embed (Mapbox or styled Google)** *(P2)*
+- **Service-page lead form variants with source tagging** *(P2)*
+- **Admin font-size override controls per section** *(P3)*
+- **Admin font picker in customize design** *(P3)*
+
+### 💤 Wait-for-soak (don't start until 1+ week stable in prod)
+- **Switch CSP from Report-Only to enforced** *(Followups)*
+- **Remove orphan `newsletterSubscribers` table + code** *(P2 Cleanup)*
+- **Drop `contactSubmissions` table, retire /admin/contacts** *(Other / Operations)*
+
+### 🗑️ Likely obsolete — verify and drop
+- ~~**Migrate Glacial Indifference to self-hosted**~~ *(Followups)* — superseded: client moved to Montserrat 2026-05-15
+- ~~**P1 Performance: Hero video — Convex storage stutters**~~ *(P1)* — hero video now lives in `/public/videos/`, served by Vercel CDN per CLAUDE.md guardrails. Should be marked done.
+- **Karlyne #1–#11 verification sub-checkboxes** — all 11 items shipped; many sub-checkboxes still `[ ]`. Mass-tick after Karlyne's 2026-05-15 round of approvals comes in.
+
+---
+
 ## ✅ Manual Verification Checklist (Philip)
 
 > Things shipped to `main` that I (Philip) need to eyeball or click-test myself before calling them done. Distinct from QA tasks Karlyne reports back on. Check the box when you've actually exercised it on **production** (not localhost).
