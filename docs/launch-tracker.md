@@ -14,13 +14,14 @@
 
 ## Quick stats
 
-- **81 tasks** imported from Asana
+- **81 tasks** imported from Asana (2026-05-08)
+- **+12 tasks** added 2026-05-11 from deepsec security calibration (26 confirmed findings consolidated into 12 remediation buckets) → **93 total**
 - **11 marked done** in 2026-05-04 → 2026-05-07 session
 - **2 marked partial** (see notes)
-- **67 still open**
+- **79 still open**
 
 By priority:
-- **P0**: 40 total, 9 done
+- **P0**: 52 total, 9 done (40 imported + 12 deepsec security buckets)
 - **P1**: 18 total, 2 done
 - **P2**: 7 total, 0 done
 - **P3**: 4 total, 0 done
@@ -31,10 +32,41 @@ By priority:
 
 ## 🎯 Current Focus — Work by Effort Type
 
-> *Triage view added 2026-05-17. Same backlog as the P0/P1/P2/P3 sections below, but bucketed by **what unblocks each task** rather than by raw priority. Use this when picking your next thing to do. Each item references the detailed entry further down for context.*
+> *Triage view refreshed 2026-05-17. Same backlog as the P0/P1/P2/P3 sections below, but bucketed by **what unblocks each task** rather than by raw priority. Use this when picking your next thing to do. Each item references the detailed entry further down for context.*
+>
+> **Reading order:** start at 🚀 In-flight, then 💬 Decisions (because those unblock others), then pick a lane based on what kind of work you have time for.
+
+### ⭐ Recommended next 3 (start here)
+
+> *If you have one focused session right now, these three pay back fastest. Picked across categories so you're not blocked waiting on a dashboard click or a Karlyne reply for any one of them.*
+
+1. **🤖 Body-text opacity rollout (~30 min, code-only)** — finish what the FeaturedServices fix started on 2026-05-13. 4 confirmed primary-content offenders still fail WCAG AA on cream/sage:
+   - `src/components/sections/CTABanner.tsx:86` — banner subtitle
+   - `src/app/before-and-after/page.tsx:179` — case caption
+   - `src/app/membership/page.tsx:103` — "6-month commitment" disclosure (legally significant)
+   - `src/components/forms/ContactForm.tsx:434` — "by submitting, you agree to be contacted" disclaimer (legally significant)
+
+   Pattern is identical to the FeaturedServices fix — drop inline `opacity`, switch `color: var(--color-on-surface-variant)` → `var(--color-on-surface)`, leave weight 400. Audited 2026-05-13; 5 PRIMARY found, 1 shipped. *(See "Code-only" bucket below.)*
+2. **🔧 One Vercel/Pabau/Clerk dashboard click** — pick *any one* of the 11 untouched dashboard items in the 🔧 bucket below. Each is ~15 minutes, no code, no review. Doing one a day clears the backlog by end of week. Top 3 by downstream unblock: (a) replace seeded categories with Karlyne's set + run `pabauSync.syncServices` on prod (unblocks `/services` cutover); (b) roll Clerk prod secret; (c) set `ADMIN_EMAILS` on Vercel Preview env.
+3. **💬 Confirm Karlyne #4 status** — Montserrat swap shipped `c65889a` on 2026-05-15. The pending "Futura license — buy or stay?" decision may already be moot. Send Karlyne a quick "do these section headers look right now?" check; if she signs off, you save ~$50–200 and remove an open P0 decision. *(Cross-listed: Decisions bucket + Design dev "Header fonts" line item likely now dead.)*
+
+### 🚀 In-flight / mid-sprint (finish before starting new things)
+
+> Work that's been started but isn't fully shipped. Closing these out beats adding new ones.
+
+- **Services page category rework** *(see `docs/services-categories-rework.md`; supersedes launch tracker #6)*
+  - ✅ Engineering shipped to dev Convex 2026-05-10 (schema fields, sticky hide, Pabau `bookable_online` plumb-through, Karlyne's 5 categories seeded + re-bucketed locally)
+  - ⏳ **Send Karlyne the 6 open questions** (E3.S1) — draft message lives in the rework doc, ready to paste. *Client blocker — top of that bucket.*
+  - ⏳ **Run prod cutover:** verify `PABAU_API_KEY` on prod Convex env → invoke `serviceCategories.replaceWithKarlyneCategories` (or the `…Internal` variant via CLI) → invoke `pabauSync.syncServices` → click-test prod `/services`. *Dashboard work — see 🔧 below.*
+  - ⏳ **Commit + deploy** once Karlyne signs off (nothing committed yet — `git diff` shows 8 changed/new files)
+- **Karlyne's 2026-05-09 feedback round (#1–#11)** — all shipped, all `pending Karlyne approval`. Awaiting her next round of look-overs to mass-tick sub-checkboxes.
 
 ### 💬 Decisions to make first (unblocks downstream work)
-- **Futura license** — buy real Futura, or stay on Montserrat? *(see Karlyne #4 — DEFERRED)*
+- **Futura license** — likely moot (Montserrat / Jost swap shipped `c65889a` 2026-05-15). Send Karlyne the "do these section headers look right now?" check first — see ⭐ Recommended next #3. *(Karlyne #4)*
+- **🛡️ Deepsec: verify $15.24 calibration cost on Anthropic console** — was it subscription-absorbed or metered? Decision gates whether to run the full pass on the remaining 79 files. *(see P0 Security § B0)*
+- **🛡️ Deepsec F12: SVG uploads** — drop `image/svg+xml` from `allowedContentTypes`, or keep + add server-side sanitizer? I lean drop. *(P0 Security § B5)*
+- **🛡️ Deepsec F14: contact-form abuse defense** — per-email dedup only, or also add Vercel BotID / CAPTCHA? *(P0 Security § B6)*
+- **🛡️ Deepsec F23: Preview button fix shape** — align customize page params with PreviewOverlay reader, or extend PreviewOverlay to recognize a page-wide `_preview` param? *(P0 Security § B12)*
 - **'Manage Admins' page** — paid feature, decide if/when before handoff *(P1 Future-paid)*
 - **Reviews vs Testimonials display strategy** — confirm with Karlyne *(Discuss)*
 - **Webhook activity scope beyond logging** — define then build *(Discuss)*
@@ -43,7 +75,10 @@ By priority:
 
 ### 🔧 External dashboards — quick wins (15 min each, no code)
 > Vercel / Pabau / Clerk / Convex dashboard clicks. Most can be knocked out in a coffee break.
-- **Seed service categories on prod** — visit `/admin/categories` → "Seed default" *(P0 #10)*
+- **Confirm `PABAU_API_KEY` is set on prod Convex env** — `npx convex env list --prod` *(needed for syncServices to work in cron + manual)*
+- **Set `PABAU_API_KEY` on dev Convex env** — currently missing (sync action errors on dev). Optional but recommended for dev parity *(uncovered 2026-05-10)*
+- **Replace seeded categories with Karlyne's set on prod** — Convex dashboard → run `serviceCategories.replaceWithKarlyneCategoriesInternal` *(supersedes the old "Seed default categories" — see services-categories-rework.md)*
+- **Run `pabauSync.syncServices` on prod** — after category replace, picks up `bookable_online` flags and re-buckets *(services-categories-rework.md step 2)*
 - **Roll Clerk production secret** — Clerk dashboard → roll → update Vercel env *(P0 #12)*
 - **`ADMIN_EMAILS` on Vercel Preview env** — Vercel dashboard → Env Vars *(P0 #14)*
 - **Update `NEXT_PUBLIC_PABAU_BOOKING_URL` on Vercel** — new slug `made-med-spa` *(P0 Vercel cutover)*
@@ -60,7 +95,8 @@ By priority:
 - **Shop redesign + /shop/[slug] detail pages + sage atmosphere bg** *(Verification checklist + recent UI work)*
 - **Adaptive team section on /about** *(Verification checklist)*
 - **Tier 1-6 test plan on dev** *(P0 Personal — Philip)*
-- **Cross-check site services vs `MADE Med Spa Services.xlsx`** *(P0 Cross-check)*
+- **After prod cutover: prod `/services` renders 5 sections** — Botox / Laser / Facial Treatment / Weight Loss / Wellness, top-3 + "View all". Confirm no Bookable Online: No services leak through (e.g. brand-specific filler SKUs) *(services-categories-rework.md)*
+- **xlsx cross-check is now automated** — Pabau's `bookable_online` flag drives the hide via sync. After cutover spot-check a few names known to be `Bookable Online: No` and confirm they don't appear on the public `/services` page. *(supersedes the old P0 manual sweep)*
 - **Sanity-check 'Look up IDs' at `/admin/pabau`** *(Other / Operations)*
 - **Trigger 3 Pabau webhook tests** *(Other / Operations)*
 - **Submit test lead from production URL** *(Other / Operations)*
@@ -68,8 +104,20 @@ By priority:
 - **User-flow click-test on production smoke** *(P0)*
 - **Daily `/admin/pabau/webhooks` soak check (next ~1 week)** *(Other / Operations)*
 - **Verify /contact eyebrow readability on localhost** *(Other / Operations)*
+- **Mobile menu scroll on iPhone SE (375×667)** — shipped `3c6c91c` 2026-05-13. Open the hamburger on a real or DevTools-emulated SE and confirm: (a) Home is visible at the top (not clipped by the X), (b) you can scroll down to Contact + Book Consultation, (c) body underneath does not scroll when you over-scroll, (d) Escape key closes the menu.
+- **Nav inactive-link color (#4a4040 warm dark grey)** — shipped `3c6c91c` 2026-05-13. On `/`, `/services`, `/about`, etc., confirm inactive nav links read as warm dark grey (not feathery grey) and the active link is visibly darker espresso + underlined.
+- **Shop card font sizing (smaller name + price)** — shipped `3c6c91c` 2026-05-13. On `/shop`, confirm product cards aren't oversized; name reads `text-sm md:text-base`, price `text-base md:text-lg`.
+- **FeaturedServices body text on home** — shipped `3c6c91c` 2026-05-13. On `/`, the paragraph under "CARE THAT GOES FURTHER" should read at full espresso color (no grey wash). WCAG AA verified.
+- **Shop body + quote contrast on sage atmosphere** — shipped `7480de0` + `834c56c` 2026-05-16. On `/shop`, the subtitle and the "Used in our treatments..." quote line should be sharp espresso, not muted taupe.
 
 ### 📞 Client blockers (waiting on Karlyne — track + nudge)
+- **🔥 Services-page rework — 6 open questions** *(top priority; unblocks E3.S1 and the production cutover above)*. Copy/paste draft message lives in `docs/services-categories-rework.md` → "Draft message for Karlyne". The six:
+  1. Category names — confirm Botox · Laser · Facial Treatment · Weight Loss · Wellness or reword
+  2. Add a 5th "Wellness" tile for IV/B12/EBOO/etc, or fold elsewhere
+  3. Split Laser into Skin vs Hair Removal, or keep one section (~39 services)
+  4. Weight Loss as a 1-tile section, or fold consult elsewhere
+  5. Confirm hiding 55 in-office-only services (brand filler SKUs, etc.)
+  6. Top 3 vs top 4 services per category
 - **Privacy policy Pabau processor disclosure** — her legal copy, not yours to draft *(P0 Compliance + Followups)*
 - **Clarify admin About section claim** *(P0 Discuss)*
 - **Fill remaining admin content** — any leftover after the April content fill *(P0 Content)*
@@ -80,9 +128,39 @@ By priority:
 > Well-scoped tasks I can ship in a focused session with no extra input from you.
 
 **Quick wins (<1 hour each):**
+- **Body-text opacity WCAG rollout (4 sites)** — see ⭐ Recommended next #1 above for the file/line list and the exact pattern. *(Audit 2026-05-13.)*
+- **Remove `fonts.cdnfonts.com` from CSP** — Glacial Indifference dropped 2026-05-12; `next.config.ts` still allows the host in `style-src` and `font-src`. Harmless leftover, safe cleanup. *(Memory `feedback_typography_fonts.md`.)*
 - **6 `uploadBlob()` callers default to `purpose: "general"`** — pass explicit purpose *(Open issues)*
 - **Make smoke-test probe 9 opt-in** — env-flag the real-lead creation probe *(P1 Followup)*
 - **Areas We Serve content review** *(P1)*
+- **Commit + deploy the services-categories rework** — once Karlyne signs off on the 6 questions. Engineering already done; this is `git add` + `git commit` + push *(see in-flight bucket)*
+
+**🛡️ Deepsec security remediation (2026-05-11 calibration, 26 confirmed findings → 12 buckets)**
+
+> Full plan + per-bucket scope in `.deepsec/data/KarlyneMedSpaWebsite/reports/REMEDIATION_PLAN.md` (gitignored). Each bucket = one focused subagent run, scoped by file to avoid merge conflicts. Run in phases. Four gating decisions live in 💬 Decisions above.
+
+*Phase 1 — CRITICAL + HIGH (parallel, 3 worktrees):*
+- **B1: Convex auth gates** — add `assertAdmin` to `contactSubmissions.{list,countNew,updateStatus}`, `pabauSync.sync{Reviews,Services,Products,Entity}`, `pabauWebhookEvents.{list,stats,findByEventId}`, `beforeAfter.listAll`. Convert `pabauWebhookEvents.{markProcessed,markFailed,markIgnored}` to `internalMutation`. Add server-side cooldown to sync actions. Fold in F18 API-key redaction (same file). *(F1 CRITICAL, F2/F3 HIGH, F4/F18/F19 MEDIUM)*
+- **B2: Convex auth helper fail-closed** — `convex/lib/auth.ts:46-54` currently allows any signed-in user when `ADMIN_EMAILS` is empty. Make it throw unless an explicit `CONVEX_ALLOW_ANY_SIGNED_IN=1` opt-in is set. *(F5 MEDIUM)*
+- **B3: JSON-LD XSS helper + apply** — new `src/lib/safeJsonLd.ts`, swap into `src/app/layout.tsx` (L148-169, L222-223) and `src/app/faq/page.tsx:117`. Escapes `</`, `<!--`, `-->`, U+2028/U+2029. *(F-layout HIGH — scope expanded during verification to include FAQ page)*
+
+*Phase 2 — MEDIUM (parallel, 5 worktrees, after Phase 1 merges):*
+- **B4: Blob delete hardening** — in-handler `auth.protect()`, `new URL().hostname.endsWith(...)` instead of `.includes()`, generic error to client. *(F6, F7, F24)*
+- **B5: Blob upload hardening** — drop `image/svg+xml` (pending F12 decision), drop max from 100 MB → 25 MB, replace `error.message.startsWith('Forbidden')` ladder with typed errors. *(F12, F25)*
+- **B6: Pabau leads route** — fix XFF rate-limit (use last entry, not first), add per-email 24h dedup, `delete` empty `ipHits` buckets. *(F13, F14, F26)*
+- **B7: Pabau read-only endpoints** — `/api/pabau/services` use `pabau.services.list()` not raw fetch; `/api/pabau/lead-sources` add admin auth + 1h cache + scrub error response. *(F15, F16, F17)*
+- **B11: pabauLink scheme validation** — `src/lib/safeHref.ts` helper, apply at `/membership` + `/shop/[slug]`, plus server-side validation in `convex/memberships.ts` + `convex/shopProducts.ts`. *(F22)*
+
+*Phase 3 — MEDIUM + BUG (parallel, after Phase 1 merges):*
+- **B8: Pabau webhook receiver** — cap body size before `req.text()`, add in-memory per-IP rate limit. Depends on B1's internalMutation refactor. *(F20)*
+- **B9: Pabau client custom_fields** — replace object spread with `Object.create(null)` + explicit key allowlist. *(F27)*
+- **B10: Admin contacts CSV + mailto + email validation** — `papaparse` (or inline cell helper) + tighten `contactSubmissions.create` email regex. Depends on B1 (same Convex file). *(F10, F11)*
+- **B12: Preview button** — see F23 decision in 💬 Decisions. *(F23)*
+
+*Phase 4 — re-scan + revalidate:*
+- Re-run `pnpm deepsec scan` + `process` on the full 129 files (79 not yet processed). Most matchers should drop since we'll have fixed the structural patterns.
+- `pnpm deepsec revalidate --min-severity HIGH` to drop any leftover FPs.
+- `pnpm deepsec export --format md-dir --out ./findings` for the final per-finding handoff.
 
 **Medium lifts (half-day to multi-day):**
 - **Vitest + test scaffolding** *(P0 Testing)*
@@ -98,7 +176,8 @@ By priority:
 
 ### 🎨 Design dev — UI judgment + my code
 > Need your design call (or a Stitch round), then I implement.
-- **Header fonts decision + implementation** — pending Futura license *(Karlyne #4)*
+- **Header fonts decision + implementation** — pending Futura license *(Karlyne #4)*. ⚠️ **May already be resolved** — Montserrat swap shipped `c65889a` 2026-05-15. Awaiting Karlyne approval; if she signs off, this whole line item drops.
+- **Per-category hero treatment for /services sections** *(optional, surfaced by services-categories rework)*. Currently each section is a text-only header (eyebrow + headline + divider). If you want visual differentiation per Botox / Laser / Facial / Weight Loss / Wellness, design call needed first: per-category background image? Subtle color tint? Icon? Then I add `serviceCategories.imageUrl` + admin upload UI.
 - **'About' as top-level admin nav item** — discoverability fix *(P1 UX)*
 - **Audit all file upload surfaces for type-validation messaging** *(P1 UX audit)*
 - **Branded map embed (Mapbox or styled Google)** *(P2)*
@@ -123,6 +202,17 @@ By priority:
 > Things shipped to `main` that I (Philip) need to eyeball or click-test myself before calling them done. Distinct from QA tasks Karlyne reports back on. Check the box when you've actually exercised it on **production** (not localhost).
 
 ### Recently shipped — needs verification
+
+- [ ] **H1 + `font-headline` rendering as Playfair Display site-wide** _(shipped `dfd0420`, 2026-05-17)_
+  - Pre-fix bug: `@theme inline` in `globals.css` declared `--font-headline: var(--font-headline)` — a circular self-reference that overrode the real Playfair stack. Every `<h1>` (`.headline-editorial`) and every Tailwind `font-headline` utility was silently falling back to Tailwind's `ui-sans-serif` default. Site-wide invisible regression that had been live for the entire Tailwind v4 era. Caught 2026-05-17 by DevTools Computed → Rendered Fonts after Philip noticed `/about` headline didn't look like Playfair.
+  - Fix: removed the duplicate `:root` declaration; defined `--font-headline` exactly once inside `@theme inline` with the real `var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif` stack. Same source-of-truth pattern already used for `--font-body`/`--font-sans`.
+  - Verify on prod after Vercel deploys:
+    - Hard-refresh https://mademedspa.com/about → "The Story of MADE" reads as serif Playfair (high stroke contrast, didone-ish), not sans.
+    - Same on `/services` ("Our Services. The Art of Self-Care."), `/faq`, `/membership`, `/booking`, `/contact`, plus legal pages.
+    - Nav wordmark "MADE", accordion question titles, testimonial decorative quote marks → all serif Playfair.
+    - DevTools sanity: pick any `.headline-editorial` `<h1>` → Computed → scroll to **Rendered Fonts** → should say `Playfair Display` or `Playfair Display Fallback`. **Not** `Inter`, `Arial`, or any `ui-sans-serif` family.
+    - Bonus: `/admin/typography-spec` Spec #01 sample now matches the live hero (they were drifting silently before).
+  - Files: `src/app/globals.css` (4 insertions, 3 deletions).
 
 - [ ] **Favicon shows MADE logo in browser tab** _(shipped `dadf6a9`, 2026-05-09)_
   - Open https://mademedspa.com in a fresh window (or hard-refresh `Ctrl+Shift+R`).
@@ -448,7 +538,7 @@ Quick happy-path click-through after each push to `main`. Aim for ~5 min.
 
 ---
 
-## 📋 Session Log — 2026-05-04 to 2026-05-07
+## 📋 Session Log — 2026-05-04 to 2026-05-17
 
 Captures work shipped to production. Some items here aren't represented in the Asana list (new work that came up mid-session).
 
@@ -504,6 +594,13 @@ Captures work shipped to production. Some items here aren't represented in the A
 - Added `/assets/` to `.gitignore` (32MB local-only brand reference PDFs)
 - Fixed CSS @import order — Tailwind v4 inlines its ruleset, so font @imports must come before `@import "tailwindcss"`
 - Set `images.unoptimized` in dev mode (large blob photos were timing out the dev image proxy — production unchanged)
+
+### 2026-05-17 — H1 / `font-headline` site-wide font regression fixed (`dfd0420`)
+- Root cause: `@theme inline` block in `globals.css` had `--font-headline: var(--font-headline)` — a circular self-reference. Tailwind v4 emits `@theme inline` declarations into `:root` after the source-of-truth `:root` block, so the cycle overrode the real Playfair stack and `var(--font-headline)` resolved to invalid. Every page hero, every `<h1>`, every `font-headline` Tailwind utility (Navigation wordmark, Accordion titles, Testimonial quote marks, AreasWeServe, Contact, Shop, Membership, About) was silently rendering Tailwind preflight's `ui-sans-serif` default. The bug was invisible to anyone who hadn't side-by-side compared against `/admin/typography-spec` (which uses its own `.spec-h1 !important` rule and so kept rendering correctly).
+- Caught when Philip's DevTools Computed pane on `/about` showed `font-family: ui-sans-serif, system-ui, sans-serif, ...` on the "The Story of MADE" `<h1>` instead of Playfair Display.
+- Fix (one-file, two-line net): removed the duplicate `--font-headline: ...` declaration from the plain `:root` block (line 107); replaced the circular `--font-headline: var(--font-headline)` inside `@theme inline` with the real `var(--font-playfair), "Playfair Display", "Cormorant Garamond", Georgia, serif` stack. Single source of truth; matches the existing `--font-body` → `--font-sans` pattern.
+- No component code changes needed. `.headline-editorial`, `.accent-quote`, `h1 { ... }`, `.spec-h1`, `.spec-accent`, and every `className="font-headline"` consumer all keep working — and now correctly render Playfair Display. Also silently fixes `/admin/typography-spec` Spec #01 and #04 (which were drifting against the live site).
+- Verification entry added to "Recently shipped — needs verification" above. Tracker awaits Philip's prod click-test.
 
 ---
 
@@ -1841,7 +1938,7 @@ These came up during 2026-05-04 → 2026-05-07 work and need ongoing tracking:
 - [ ] **Backfill compression for existing Vercel Blob photos** — new uploads get compressed automatically, but ~30+ already-uploaded full-size JPGs are still in Blob. Either ask Karlyne to re-upload through admin, or write a one-shot migration script (download → compress with sharp → upload → update siteContent URLs).
 - [ ] **Roll Clerk production secret key** — `sk_live_...` was pasted in chat during cutover. Best practice: roll via Clerk dashboard → API keys → Roll secret. Re-push to Vercel via `vercel env rm CLERK_SECRET_KEY production -y` + `vercel env add`.
 - [ ] **`ADMIN_EMAILS` on Vercel Preview environment** — CLI silently failed during cutover. Add via dashboard so preview deploys can access /admin without auth wall.
-- [ ] **Seed default service categories on production** — `/admin/categories` is live but empty. Click "Seed default categories" once to install Injectables/Skin/Body/Wellness with their Pabau keyword rules.
+- [ ] ~~**Seed default service categories on production**~~ — ⚠️ Superseded 2026-05-10 by the services-categories rework. Don't seed the old Injectables/Skin/Body/Wellness set on prod — those don't match Karlyne's vocabulary. Use `serviceCategories.replaceWithKarlyneCategoriesInternal` instead (creates Botox / Laser / Facial Treatment / Weight Loss / Wellness). See `docs/services-categories-rework.md`.
 - [ ] **Visual Branding Guide PDF** — `assets/MADE MED SPA - Visual Branding Guide 2026.pdf` is 21MB, exceeds in-tool read limit. Extract specific pages if there's spec content beyond colors/typography (image treatments, voice/tone, photography style, social templates).
 - [ ] **Privacy policy Pabau processor disclosure** — defer to Karlyne. Don't draft legal copy as a developer.
 - [ ] **Switch CSP from Report-Only to enforced** — `Content-Security-Policy-Report-Only` in `next.config.ts`. After 1 week soak with no console violations, flip to `Content-Security-Policy`.
