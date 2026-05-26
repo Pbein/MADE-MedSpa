@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Jost, Montserrat } from "next/font/google";
+import { Playfair_Display, Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import PublicShell from "@/components/layout/PublicShell";
@@ -8,7 +9,8 @@ import "./globals.css";
 
 // Brand spec fonts (per MADE Branding spec sheet):
 // - H1 / page titles & accents: Playfair Display (regular + italic)
-// - H2 / H3 / labels / eyebrows: Jost (free Futura substitute)
+// - H2 / H3 / labels / eyebrows: Futura PT Book (licensed webfont from
+//   fonts.com / MyFonts — Karlyne is the licensed website owner)
 // - Body: Montserrat
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -18,11 +20,13 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
-const jost = Jost({
-  variable: "--font-jost",
-  subsets: ["latin"],
+const futura = localFont({
+  variable: "--font-futura",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  src: [
+    { path: "./fonts/futura-pt-book/FuturaPTBook.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/futura-pt-book/FuturaPTBook.woff", weight: "400", style: "normal" },
+  ],
 });
 
 const montserrat = Montserrat({
@@ -224,7 +228,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${playfair.variable} ${jost.variable} ${montserrat.variable} antialiased`}
+        className={`${playfair.variable} ${futura.variable} ${montserrat.variable} antialiased`}
       >
         <ClerkProvider>
           <ConvexClientProvider>

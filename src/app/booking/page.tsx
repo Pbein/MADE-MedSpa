@@ -254,7 +254,7 @@ export default function BookingPage() {
         >
           <motion.div className="text-center mb-20" variants={revealUp}>
             <p className="label-micro mb-4">{expectText.eyebrow}</p>
-            <h2 className="headline-section text-3xl md:text-5xl">
+            <h2 className="headline-narrative text-3xl md:text-5xl">
               {expectText.headline}
             </h2>
           </motion.div>
@@ -304,7 +304,7 @@ export default function BookingPage() {
           <motion.p className="label-micro mb-4" variants={revealLeft}>
             {prepText.eyebrow}
           </motion.p>
-          <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealLeft}>
+          <motion.h2 className="headline-narrative text-3xl md:text-5xl mb-12" variants={revealLeft}>
             {prepText.headline}
           </motion.h2>
 
@@ -339,7 +339,7 @@ export default function BookingPage() {
           <motion.p className="label-micro mb-4" variants={revealUp}>
             {policyText.eyebrow}
           </motion.p>
-          <motion.h2 className="headline-section text-3xl md:text-5xl mb-12" variants={revealUp}>
+          <motion.h2 className="headline-narrative text-3xl md:text-5xl mb-12" variants={revealUp}>
             {policyText.headline}
           </motion.h2>
 

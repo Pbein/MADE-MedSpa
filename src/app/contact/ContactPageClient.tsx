@@ -114,7 +114,7 @@ export default function ContactPageClient() {
               {bodyText.info_eyebrow}
             </span>
             <h2
-              className="headline-section text-3xl md:text-4xl mb-14"
+              className="headline-narrative text-3xl md:text-4xl mb-14"
               style={{ color: ESPRESSO }}
             >
               {bodyText.info_headline}
@@ -244,7 +244,7 @@ export default function ContactPageClient() {
               {bodyText.form_eyebrow}
             </span>
             <h2
-              className="headline-section text-3xl md:text-4xl mb-4"
+              className="headline-narrative text-3xl md:text-4xl mb-4"
               style={{ color: ESPRESSO }}
             >
               {bodyText.form_headline}

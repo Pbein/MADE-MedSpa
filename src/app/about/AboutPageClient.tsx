@@ -176,7 +176,7 @@ export default function AboutPageClient({
 
             <motion.h2
               variants={revealRight}
-              className="headline-section text-3xl md:text-5xl mb-8"
+              className="headline-narrative text-3xl md:text-5xl mb-8"
               style={{ color: "var(--color-primary)" }}
             >
               {story?.title || "Founded on Passion"}
@@ -276,7 +276,7 @@ export default function AboutPageClient({
           className="relative max-w-4xl mx-auto text-center"
         >
           <p
-            className="headline-section text-3xl md:text-5xl leading-tight"
+            className="headline-narrative text-3xl md:text-5xl leading-tight"
             style={{
               color: "var(--color-surface)",
               textWrap: "balance",
@@ -310,7 +310,7 @@ export default function AboutPageClient({
 
           <motion.h2
             variants={revealUp}
-            className="headline-section text-3xl md:text-5xl mb-8"
+            className="headline-narrative text-3xl md:text-5xl mb-8"
             style={{ color: "var(--color-primary)" }}
           >
             {mission?.title || "Elevating Natural Beauty"}
@@ -380,7 +380,7 @@ export default function AboutPageClient({
               {valuesText.eyebrow}
             </span>
             <h2
-              className="headline-section text-3xl md:text-5xl"
+              className="headline-narrative text-3xl md:text-5xl"
               style={{ color: "var(--color-primary)" }}
             >
               {valuesText.headline}
@@ -447,7 +447,7 @@ export default function AboutPageClient({
             </motion.span>
             <motion.h2
               variants={revealUp}
-              className="headline-section text-3xl md:text-5xl"
+              className="headline-narrative text-3xl md:text-5xl"
               style={{ color: "var(--color-primary)" }}
             >
               {teamText.headline}

@@ -106,12 +106,12 @@
      font-family declaration on the site to Tailwind's ui-sans-serif
      default. Diagnosed 2026-05-12 from DevTools cascade on /membership. */
   --font-body: var(--font-montserrat, "Montserrat"), "Inter", "Helvetica Neue", sans-serif;
-  /* Labels / H2 / H3 / eyebrows: Montserrat (Karlyne 2026-05-15 — replaced
-     Jost across all category/eyebrow/section labels for a cleaner editorial
-     read). Montserrat ships the full 100-900 weight range so font-weight:
-     500 renders properly as medium. Jost is left as a final fallback in case
-     Montserrat fails to load. */
-  --font-label: var(--font-montserrat, "Montserrat"), var(--font-jost, "Jost"), "Helvetica Neue", sans-serif;
+  /* Labels / H2 / H3 / eyebrows: Futura PT Book (licensed webfont from
+     fonts.com / MyFonts — Karlyne is the licensed website owner; license
+     proof in fonts/06395dc4-…). Exact match for the MADE brand kit. Falls
+     back to Montserrat then a system geometric stack if the WOFF2 fails
+     to load. */
+  --font-label: var(--font-futura, "Futura PT Book"), "Futura", var(--font-montserrat, "Montserrat"), "Helvetica Neue", sans-serif;
   /* H1 / page titles / italic accents: Playfair Display. Lives in :root
      (NOT only in @theme inline) — @theme inline tokens get build-time
      inlined into Tailwind utilities but are NOT emitted as runtime CSS
@@ -217,7 +217,7 @@ body::before {
 
 /* --- Headings: brand spec ---
    H1  → Playfair Display, regular/medium, sentence case, NOT italic
-   H2/H3 → Futura (Jost substitute), ALL CAPS, letter-spacing 0.4em
+   H2/H3 → Futura PT Book, ALL CAPS, letter-spacing 0.4em
    Italics live ONLY on .accent-quote (testimonials/captions). */
 h1 {
   font-family: var(--font-headline);
@@ -287,13 +287,27 @@ a {
 }
 
 /* H2 / H3 — Section Headers & Labels
-   Glacial Indifference (Futura substitute), ALL CAPS, letter-spacing 0.4em. */
+   Futura PT Book, ALL CAPS, letter-spacing 0.4em. */
 .headline-section {
   font-family: var(--font-label);
   font-style: normal;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.4em;
+  line-height: 1.2;
+}
+
+/* Narrative section title — Futura PT Book, mixed case (NOT all caps).
+   Used for admin-managed prose-style titles like "The Vision Behind MADE"
+   that read better in sentence/title case than the eyebrow-style ALL CAPS
+   treatment. Pair with .label-micro above it for the editorial
+   "eyebrow → narrative title → body" rhythm. */
+.headline-narrative {
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.01em;
   line-height: 1.2;
 }
 

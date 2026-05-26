@@ -43,7 +43,7 @@ export default function AccessibilityPage() {
           transition={{ duration: 0.6, delay: 0.2, ease: editorialEase }}
         >
           {/* Our commitment */}
-          <h2 className="headline-section text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
+          <h2 className="headline-narrative text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
             Our commitment
           </h2>
           <p className="body-editorial text-[var(--color-on-surface-variant)] mb-6 leading-relaxed">
@@ -70,7 +70,7 @@ export default function AccessibilityPage() {
           </p>
 
           {/* What we do */}
-          <h2 className="headline-section text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
+          <h2 className="headline-narrative text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
             What we do
           </h2>
           <p className="body-editorial text-[var(--color-on-surface-variant)] mb-4 leading-relaxed">
@@ -115,7 +115,7 @@ export default function AccessibilityPage() {
           </ul>
 
           {/* Known limitations */}
-          <h2 className="headline-section text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
+          <h2 className="headline-narrative text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
             Known limitations
           </h2>
           <p className="body-editorial text-[var(--color-on-surface-variant)] mb-4 leading-relaxed">
@@ -156,7 +156,7 @@ export default function AccessibilityPage() {
           </p>
 
           {/* Reporting issues / contact */}
-          <h2 className="headline-section text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
+          <h2 className="headline-narrative text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
             Reporting an issue
           </h2>
           <p className="body-editorial text-[var(--color-on-surface-variant)] mb-4 leading-relaxed">
@@ -193,7 +193,7 @@ export default function AccessibilityPage() {
           </p>
 
           {/* Third-party content */}
-          <h2 className="headline-section text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
+          <h2 className="headline-narrative text-2xl md:text-3xl mb-6 text-[var(--color-primary)]">
             Third-party content
           </h2>
           <p className="body-editorial text-[var(--color-on-surface-variant)] mb-6 leading-relaxed">

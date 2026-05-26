@@ -200,7 +200,7 @@ export default function TypographySpecPage() {
       >
         {[
           { label: "Playfair Display", role: "Hero / page titles · accents", className: "spec-h1", char: "Aa" },
-          { label: "Jost (Futura sub)", role: "Section headers · labels · buttons", className: "spec-h2", char: "Aa" },
+          { label: "Futura PT Book", role: "Section headers · labels · buttons", className: "spec-h2", char: "Aa" },
           { label: "Montserrat", role: "Body copy", className: "spec-body", char: "Aa" },
         ].map((f) => (
           <div key={f.label} style={{ textAlign: "center" }}>
@@ -229,9 +229,9 @@ export default function TypographySpecPage() {
           fontStyle: "italic",
         }}
       >
-        Note: Futura is a paid commercial font. The site uses Jost — a free Google Fonts substitute
-        with very similar geometry. If we license Futura PT (≈$10/mo via Adobe Fonts), it can be
-        swapped without touching any markup.
+        Note: Futura PT Book is the licensed webfont from fonts.com / MyFonts (ParaType cut).
+        Karlyne is the licensed website owner — license proof archived in the project font
+        folder. Exact match for the MADE brand kit.
       </p>
 
       {/* H1 — Hero & Page Titles */}
@@ -259,7 +259,7 @@ export default function TypographySpecPage() {
         number="02"
         role="H2 & H3 — Section Headers & Labels"
         appearsIn='"Curated Services", "Our Expertise", section titles on /about and /booking, service card titles, membership tier names, CTA banner headlines.'
-        font="Jost (Futura substitute)"
+        font="Futura PT Book"
         weight="Medium (500)"
         casing="ALL CAPS · No italic"
         size="1.25rem → 3rem (responsive)"
@@ -325,7 +325,7 @@ export default function TypographySpecPage() {
         number="05"
         role="Micro Label / Eyebrow"
         appearsIn='Tiny ALL CAPS labels above section headlines (e.g. "OUR EXPERTISE", "TREATMENTS", "BOOK NOW"), category tags on service cards, footer column headers.'
-        font="Jost (Futura substitute)"
+        font="Futura PT Book"
         weight="Medium (500)"
         casing="ALL CAPS"
         size="10px (fixed, intentionally small)"
@@ -346,7 +346,7 @@ export default function TypographySpecPage() {
         number="06"
         role="Buttons (Primary, Outline, Light)"
         appearsIn="Every CTA: Book Consultation, Contact Us, Choose This Plan, View Services, etc."
-        font="Jost (Futura substitute)"
+        font="Futura PT Book"
         weight="Medium (500)"
         casing="ALL CAPS"
         size="0.875rem (14px)"
@@ -380,7 +380,7 @@ export default function TypographySpecPage() {
         </div>
         <Annotation>
           CSS classes: <code>.btn-primary</code>, <code>.btn-outline</code>, <code>.btn-light</code>. All three share the
-          same Jost ALL CAPS treatment for consistency.
+          same Futura ALL CAPS treatment for consistency.
         </Annotation>
       </Spec>
 

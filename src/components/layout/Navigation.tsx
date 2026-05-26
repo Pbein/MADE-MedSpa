@@ -465,8 +465,9 @@ export default function Navigation() {
                   <Link
                     href="/"
                     onClick={handleMobileNavClick}
-                    className="font-headline text-3xl tracking-tight transition-opacity duration-500"
+                    className="text-3xl tracking-tight transition-opacity duration-500"
                     style={{
+                      fontFamily: "var(--font-label)",
                       color: pathname === "/" ? "var(--color-primary)" : "#4a4040",
                       opacity: 1,
                     }}
@@ -490,8 +491,9 @@ export default function Navigation() {
                       <Link
                         href={link.href}
                         onClick={handleMobileNavClick}
-                        className="font-headline text-3xl tracking-tight transition-opacity duration-500"
+                        className="text-3xl tracking-tight transition-opacity duration-500"
                         style={{
+                          fontFamily: "var(--font-label)",
                           color: isActive ? "var(--color-primary)" : "#4a4040",
                           opacity: 1,
                         }}
