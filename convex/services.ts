@@ -1,4 +1,5 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { assertAdmin } from "./lib/auth";
 import type { Doc } from "./_generated/dataModel";
@@ -338,52 +339,106 @@ export const upsertFromPabau = internalMutation({
   },
 });
 
-// One-shot: re-runs inferCategory() against every non-categoryLocked service
-// using the current serviceCategories table. Equivalent to a Pabau resync but
-// without hitting the Pabau API — useful when seeding/replacing categories
-// in environments where PABAU_API_KEY isn't configured (e.g. dev Convex), or
-// when admin wants to re-bucket without forcing a sync. Internal-only so it
-// can be invoked from the CLI without an admin session.
+// Re-runs inferCategory() against every non-categoryLocked service using the
+// current serviceCategories table. Equivalent to a Pabau resync but without
+// hitting the Pabau API — so the owner can edit categories/keywords in
+// /admin/categories and immediately re-tag services for accurate filtering,
+// without waiting for the 15-min sync. Shared by the internal (CLI) and admin
+// wrappers below.
+async function rebucketServices(ctx: MutationCtx) {
+  const allCats = await ctx.db.query("serviceCategories").collect();
+  const activeCats = allCats
+    .filter((c) => c.isActive)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  const services = await ctx.db.query("services").collect();
+  const moves: Record<string, number> = {};
+  let moved = 0;
+  let unchanged = 0;
+  let locked = 0;
+
+  for (const s of services) {
+    if (s.categoryLocked) {
+      locked++;
+      continue;
+    }
+    // Re-infer from the existing service.category string. Pabau's original
+    // category string isn't stored on the service row, so we use the current
+    // category as the closest proxy. For services that already match the new
+    // set this is a no-op; for orphans this lets keyword matching catch them
+    // (e.g., a service whose name contains "facial" maps to Facial Treatment
+    // even if its old category was just "Body").
+    const probe = `${s.category} ${s.name}`;
+    const next = inferCategory(probe, activeCats);
+    if (next === s.category) {
+      unchanged++;
+      continue;
+    }
+    const key = `${s.category} -> ${next}`;
+    moves[key] = (moves[key] ?? 0) + 1;
+    moved++;
+    await ctx.db.patch(s._id, { category: next });
+  }
+
+  return { total: services.length, moved, unchanged, locked, moves };
+}
+
+// Internal twin — invokable from the CLI without an admin session.
 export const rebucketAllInternal = internalMutation({
   args: {},
+  handler: async (ctx) => rebucketServices(ctx),
+});
+
+// Admin-callable: powers the "Re-apply category rules to all services" button
+// in /admin/categories so the owner can re-tag after editing categories.
+export const rebucketAll = mutation({
+  args: {},
   handler: async (ctx) => {
-    const allCats = await ctx.db.query("serviceCategories").collect();
-    const activeCats = allCats
-      .filter((c) => c.isActive)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
+    await assertAdmin(ctx);
+    return rebucketServices(ctx);
+  },
+});
 
-    const services = await ctx.db.query("services").collect();
-    const moves: Record<string, number> = {};
-    let unchanged = 0;
-    let locked = 0;
+// Known slugs of the demo/dummy services shipped in convex/seed.ts. Used by
+// deleteSeedServicesInternal to purge leftover seed rows without touching real
+// Pabau-synced or admin-created services.
+const SEED_SERVICE_SLUGS: ReadonlySet<string> = new Set([
+  "botox-dysport", "dermal-fillers", "lip-enhancement", "cheek-augmentation",
+  "jawline-contouring", "under-eye-filler", "sculptra", "hyperdilute-radiesse",
+  "kybella", "prp-face", "lip-flip", "masseter-tmj", "brow-lift",
+  "lip-filler-dissolve", "hydrafacial-md", "hydrafacial-booster", "vi-peel",
+  "cosmelan-peel", "signature-facial", "dermaplaning", "led-light-therapy",
+  "microneedling", "microneedling-prp", "aerolase-neo-elite", "sylfirm-x",
+  "lasemd-ultra", "iv-hydration", "im-iv-boosters", "eboo-ozone-therapy",
+  "red-light-therapy-body", "peptide-therapy", "weight-loss-consult",
+  "glp1-program", "body-composition",
+]);
 
-    for (const s of services) {
-      if (s.categoryLocked) {
-        locked++;
+// One-shot cleanup: deletes the dummy seed services (matched by the known seed
+// slugs) so the public site shows only real Pabau-synced services. Skips any
+// row carrying a pabauServiceId — a real synced service that happens to share
+// a slug is never deleted. Pass { dryRun: true } to preview. Run via
+// `npx convex run services:deleteSeedServicesInternal`.
+export const deleteSeedServicesInternal = internalMutation({
+  args: { dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, { dryRun }) => {
+    const all = await ctx.db.query("services").collect();
+    const deletedNames: string[] = [];
+    const skippedPabau: string[] = [];
+    for (const s of all) {
+      if (!SEED_SERVICE_SLUGS.has(s.slug)) continue;
+      if (s.pabauServiceId !== undefined) {
+        skippedPabau.push(s.name);
         continue;
       }
-      // Re-infer from the existing service.category string. Pabau's original
-      // category string isn't stored on the service row, so we use the current
-      // category as the closest proxy. For services that already match the new
-      // set this is a no-op; for orphans this lets keyword matching catch them
-      // (e.g., a service whose name contains "facial" maps to Facial Treatment
-      // even if its old category was just "Body").
-      const probe = `${s.category} ${s.name}`;
-      const next = inferCategory(probe, activeCats);
-      if (next === s.category) {
-        unchanged++;
-        continue;
-      }
-      const key = `${s.category} -> ${next}`;
-      moves[key] = (moves[key] ?? 0) + 1;
-      await ctx.db.patch(s._id, { category: next });
+      deletedNames.push(s.name);
+      if (!dryRun) await ctx.db.delete(s._id);
     }
-
     return {
-      total: services.length,
-      unchanged,
-      locked,
-      moves,
+      dryRun: dryRun === true,
+      deleted: deletedNames.length,
+      deletedNames,
+      skippedPabau,
     };
   },
 });

@@ -143,7 +143,8 @@ export default function AdminCategoriesPage() {
   const update = useMutation(api.serviceCategories.update);
   const hardDelete = useMutation(api.serviceCategories.hardDelete);
   const reorder = useMutation(api.serviceCategories.reorder);
-  const seed = useMutation(api.serviceCategories.seedDefaultsAdmin);
+  const seed = useMutation(api.serviceCategories.replaceWithKarlyneCategories);
+  const rebucket = useMutation(api.services.rebucketAll);
 
   const [showCreate, setShowCreate] = useState(false);
   const [editingId, setEditingId] = useState<Id<"serviceCategories"> | null>(null);
@@ -249,10 +250,27 @@ export default function AdminCategoriesPage() {
     setSaving(true);
     try {
       const result = await seed({});
-      toast.success(`Seeded ${result.created} default categories`);
+      toast.success(
+        `Set up ${result.total} recommended categories (${result.created} added, ${result.updated} updated)`,
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
-      toast.error(`Couldn't seed defaults: ${message}`);
+      toast.error(`Couldn't set up categories: ${message}`);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleRebucket() {
+    setSaving(true);
+    try {
+      const result = await rebucket({});
+      toast.success(
+        `Re-tagged services: ${result.moved} moved, ${result.unchanged} unchanged, ${result.locked} locked`,
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Couldn't re-tag services: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -288,7 +306,25 @@ export default function AdminCategoriesPage() {
                 cursor: "pointer",
               }}
             >
-              {saving ? "Seeding..." : "Seed default categories"}
+              {saving ? "Setting up..." : "Set up recommended categories"}
+            </button>
+          )}
+          {categories && categories.length > 0 && (
+            <button
+              onClick={handleRebucket}
+              disabled={saving}
+              title="Re-runs the keyword rules against every service so the filter buttons reflect your latest category changes. Manually-assigned services are left alone."
+              style={{
+                backgroundColor: "#fff",
+                color: "#374151",
+                border: "1px solid #e5e7eb",
+                padding: "8px 14px",
+                borderRadius: 6,
+                fontSize: 14,
+                cursor: "pointer",
+              }}
+            >
+              {saving ? "Re-tagging..." : "Re-apply category rules to all services"}
             </button>
           )}
           <button
@@ -334,8 +370,8 @@ export default function AdminCategoriesPage() {
         <div style={{ padding: 48, textAlign: "center", border: "1px dashed #e5e7eb", borderRadius: 8, color: "#6b7280" }}>
           <p style={{ marginBottom: 12 }}>No categories yet.</p>
           <p style={{ fontSize: 13 }}>
-            Click &ldquo;Seed default categories&rdquo; to add the original four (Injectables, Skin, Body, Wellness),
-            or &ldquo;+ Add category&rdquo; to create your own.
+            Click &ldquo;Set up recommended categories&rdquo; to add the five we recommend (Botox, Laser,
+            Facial Treatment, Weight Loss, Wellness), or &ldquo;+ Add category&rdquo; to create your own.
           </p>
         </div>
       )}
@@ -498,6 +534,10 @@ export default function AdminCategoriesPage() {
         <br /><br />
         Manually editing a service&rsquo;s category in <a href="/admin/services" style={{ color: "#1e40af", textDecoration: "underline" }}>Services</a> locks
         it from future Pabau overrides for that one service.
+        <br /><br />
+        After adding, removing, or editing categories here, click <strong>&ldquo;Re-apply category
+        rules to all services&rdquo;</strong> to re-tag every service immediately — otherwise the new
+        rules only take effect on the next Pabau sync.
       </div>
     </div>
   );

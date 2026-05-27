@@ -458,9 +458,11 @@ export const insertSeedData = internalMutation({
       },
     ];
 
-    for (const service of services) {
-      await ctx.db.insert("services", service);
-    }
+    // Services are sourced from Pabau (the source of truth), not seeded. The
+    // demo definitions above are retained only for local design reference and
+    // are intentionally NOT inserted. Remove any dummy service rows already in
+    // a deployment with `npx convex run services:deleteSeedServicesInternal`.
+    void services;
 
     // ────────────────────────────────────────────────────────────────────────
     // FAQS (from client's returned launch info doc)
