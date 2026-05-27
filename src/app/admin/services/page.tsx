@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { normalizePabauBookingUrl } from "@/lib/pabauBookingUrl";
 
 interface FaqItem {
   question: string;
@@ -26,6 +27,7 @@ interface ServiceFormData {
   duration: string;
   priceRange: string;
   imageUrl: string;
+  pabauBookingUrl: string;
   sortOrder: number;
   // Detail-page enrichment (all optional on the schema)
   downtime: string;
@@ -47,6 +49,7 @@ const emptyForm: ServiceFormData = {
   duration: "",
   priceRange: "",
   imageUrl: "",
+  pabauBookingUrl: "",
   sortOrder: 0,
   downtime: "",
   whoItsFor: "",
@@ -263,6 +266,45 @@ function ServiceForm({
             aspect="4/5"
             purpose="service"
           />
+        </div>
+
+        {/* Booking URL (Pabau deep link) */}
+        <div className="sm:col-span-2">
+          <label
+            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
+            style={{ color: "#111827" }}
+          >
+            Booking URL
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={form.pabauBookingUrl}
+              onChange={(e) =>
+                setForm({ ...form, pabauBookingUrl: e.target.value })
+              }
+              placeholder="https://partner.pabau.com/online-bookings/made-med-spa?category=…&services=…"
+              className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
+              style={{ borderColor: "#e5e7eb" }}
+            />
+            {form.pabauBookingUrl.trim() && (
+              <a
+                href={form.pabauBookingUrl.trim()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 rounded-md border px-3 py-2 text-[13px]"
+                style={{ borderColor: "#c7d2fe", color: "#4f46e5" }}
+              >
+                Test ↗
+              </a>
+            )}
+          </div>
+          <p style={{ fontSize: 12, color: "#6b7280", marginTop: 4, lineHeight: 1.5 }}>
+            Where the <strong>Book Now</strong> button sends visitors. Synced
+            services fill this from Pabau automatically. Leave blank to use the
+            general booking page. The site rewrites old Pabau slugs to the
+            current one on save.
+          </p>
         </div>
 
         {/* Short Description */}
@@ -761,6 +803,9 @@ export default function AdminServicesPage() {
         duration: data.duration.trim() || undefined,
         priceRange: data.priceRange.trim() || undefined,
         imageUrl: data.imageUrl.trim() || undefined,
+        pabauBookingUrl: data.pabauBookingUrl.trim()
+          ? normalizePabauBookingUrl(data.pabauBookingUrl) ?? data.pabauBookingUrl.trim()
+          : undefined,
         sortOrder: data.sortOrder,
         downtime: data.downtime.trim() || undefined,
         whoItsFor: data.whoItsFor.trim() || undefined,
@@ -803,6 +848,9 @@ export default function AdminServicesPage() {
         duration: data.duration.trim() || undefined,
         priceRange: data.priceRange.trim() || undefined,
         imageUrl: data.imageUrl.trim() || undefined,
+        pabauBookingUrl: data.pabauBookingUrl.trim()
+          ? normalizePabauBookingUrl(data.pabauBookingUrl) ?? data.pabauBookingUrl.trim()
+          : undefined,
         sortOrder: data.sortOrder,
         downtime: data.downtime.trim() || undefined,
         whoItsFor: data.whoItsFor.trim() || undefined,
@@ -1165,6 +1213,7 @@ export default function AdminServicesPage() {
                             duration: service.duration || "",
                             priceRange: service.priceRange || "",
                             imageUrl: service.imageUrl || "",
+                            pabauBookingUrl: service.pabauBookingUrl || "",
                             sortOrder: service.sortOrder,
                             downtime: service.downtime || "",
                             whoItsFor: service.whoItsFor || "",

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
+import { normalizePabauBookingUrl } from "@/lib/pabauBookingUrl";
 
 type SyncEntityType = "reviews" | "services" | "products" | "memberships";
 
@@ -180,7 +181,7 @@ export default function AdminPabauPage() {
         duration: formatDuration(pabau.duration),
         priceRange: `$${parseFloat(pabau.price).toFixed(0)}`,
         pabauServiceId: pabau.id,
-        pabauBookingUrl: pabau.booking_url,
+        pabauBookingUrl: normalizePabauBookingUrl(pabau.booking_url) ?? undefined,
         sortOrder: nextSortOrder + index,
       });
       setImported((prev) => new Set(prev).add(pabau.id));
@@ -204,7 +205,7 @@ export default function AdminPabauPage() {
     if (match) {
       await updateService({
         id: match._id,
-        pabauBookingUrl: pabau.booking_url,
+        pabauBookingUrl: normalizePabauBookingUrl(pabau.booking_url) ?? undefined,
       });
     }
   }

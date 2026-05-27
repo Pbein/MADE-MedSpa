@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Accordion from "@/components/ui/Accordion";
 import ServiceCard from "@/components/sections/ServiceCard";
 import { hasNavigatedWithinApp } from "@/lib/navigation";
+import { normalizePabauBookingUrl } from "@/lib/pabauBookingUrl";
 
 const editorialEase = [0.2, 0, 0, 1] as const;
 
@@ -24,8 +25,11 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
   const service = useQuery(api.services.getBySlug, { slug });
   const allServices = useQuery(api.services.list);
 
+  // Deep-link to this exact service in Pabau (canonical slug + its category/
+  // service params). Falls back to the generic booking entry point when the
+  // service has no usable Pabau link.
   const bookingUrl =
-    service?.pabauBookingUrl ||
+    normalizePabauBookingUrl(service?.pabauBookingUrl) ||
     process.env.NEXT_PUBLIC_PABAU_BOOKING_URL ||
     "/booking";
   const skipAnimation = hasNavigatedWithinApp();

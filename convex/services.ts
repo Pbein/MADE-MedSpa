@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { assertAdmin } from "./lib/auth";
 import type { Doc } from "./_generated/dataModel";
 import { NON_BOOKABLE_SERVICE_NAMES } from "./data/nonBookableServices";
+import { normalizePabauBookingUrl } from "./lib/pabauBookingUrl";
 
 export const list = query({
   args: {},
@@ -280,6 +281,10 @@ export const upsertFromPabau = internalMutation({
       .filter((c) => c.isActive)
       .sort((a, b) => a.sortOrder - b.sortOrder);
 
+    // Rewrite Pabau's booking_url onto our canonical slug — Pabau still emits
+    // the dead `made-51g64` slug, so storing it verbatim breaks Book Now.
+    const normalizedBookingUrl = normalizePabauBookingUrl(args.bookingUrl);
+
     const now = Date.now();
     if (existing) {
       // Respect admin-locked category overrides; otherwise re-infer from Pabau.
@@ -295,7 +300,7 @@ export const upsertFromPabau = internalMutation({
         category: nextCategory,
         duration: args.duration ?? existing.duration,
         priceRange: args.priceRange ?? existing.priceRange,
-        pabauBookingUrl: args.bookingUrl ?? existing.pabauBookingUrl,
+        pabauBookingUrl: normalizedBookingUrl ?? existing.pabauBookingUrl,
         pabauSyncedAt: now,
         // Don't resurrect services the admin has explicitly hidden — sync
         // would otherwise flip isActive back to true every 15 min.
@@ -323,7 +328,7 @@ export const upsertFromPabau = internalMutation({
       duration: args.duration,
       priceRange: args.priceRange,
       pabauServiceId: args.pabauServiceId,
-      pabauBookingUrl: args.bookingUrl,
+      pabauBookingUrl: normalizedBookingUrl ?? undefined,
       pabauSyncedAt: now,
       isActive: true,
       bookableOnline: args.bookableOnline,
@@ -380,6 +385,29 @@ export const rebucketAllInternal = internalMutation({
       locked,
       moves,
     };
+  },
+});
+
+// One-shot: rewrites any stored pabauBookingUrl onto the canonical booking
+// slug. Fixes rows synced before slug normalization landed (e.g. the dead
+// `made-51g64` deep links). Idempotent — re-running is a no-op. Run via
+// `npx convex run services:normalizeBookingUrlsInternal`.
+export const normalizeBookingUrlsInternal = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const services = await ctx.db.query("services").collect();
+    let changed = 0;
+    let unchanged = 0;
+    for (const s of services) {
+      const next = normalizePabauBookingUrl(s.pabauBookingUrl);
+      if (next && next !== s.pabauBookingUrl) {
+        await ctx.db.patch(s._id, { pabauBookingUrl: next });
+        changed++;
+      } else {
+        unchanged++;
+      }
+    }
+    return { total: services.length, changed, unchanged };
   },
 });
 
