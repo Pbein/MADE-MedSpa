@@ -148,64 +148,83 @@ export const remove = mutation({
   },
 });
 
-// Match-key normalizer: trim, collapse internal whitespace, lowercase.
-// Used by bulkHideNonBookable so spreadsheet name like "Dermal Fillers " (with
-// trailing space) still matches the synced Pabau record. Em-dash vs en-dash is
-// preserved — if Pabau uses a different dash variant we'll see it in unmatched.
+// Match-key normalizer: trim, collapse whitespace, lowercase, and fold every
+// dash variant (–, —, hyphen-minus) to a single ASCII hyphen so the spreadsheet's
+// en-dashes match Pabau's em-dashes (e.g. "NeoHair – Series of 6" matches the
+// synced "NeoHair — Series of 6"). Without this fold, every spreadsheet entry
+// using en-dash silently misses its DB row.
 function normalizeServiceName(name: string): string {
-  return name.trim().replace(/\s+/g, " ").toLowerCase();
+  return name
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[‐-―−]/g, "-")
+    .toLowerCase();
 }
 
-// One-shot admin sweep: marks every service whose name appears in
-// docs/Client Returned/MADE Med Spa Services.xlsx (Bookable Online: No) as
-// inactive + hiddenByAdmin so the next Pabau sync doesn't resurrect it.
-// Idempotent — running twice produces the same end state. Returns a summary
-// so the operator can verify match coverage before trusting the result.
+// Shared body for the admin + internal twins below. Marks every service whose
+// name appears in docs/Client Returned/MADE Med Spa Services.xlsx (Bookable
+// Online: No) as inactive + hiddenByAdmin so the next Pabau sync doesn't
+// resurrect it. Idempotent — running twice produces the same end state.
+async function bulkHideNonBookableImpl(
+  ctx: MutationCtx,
+  dryRun: boolean | undefined,
+) {
+  const all = await ctx.db.query("services").collect();
+  const byNormName = new Map<string, Doc<"services">>();
+  for (const s of all) {
+    byNormName.set(normalizeServiceName(s.name), s);
+  }
+
+  let toHide = 0;
+  let alreadyHidden = 0;
+  const unmatched: string[] = [];
+  const hiddenNames: string[] = [];
+
+  for (const targetName of NON_BOOKABLE_SERVICE_NAMES) {
+    const match = byNormName.get(normalizeServiceName(targetName));
+    if (!match) {
+      unmatched.push(targetName);
+      continue;
+    }
+    if (match.hiddenByAdmin && !match.isActive) {
+      alreadyHidden++;
+      continue;
+    }
+    toHide++;
+    hiddenNames.push(match.name);
+    if (!dryRun) {
+      await ctx.db.patch(match._id, {
+        isActive: false,
+        hiddenByAdmin: true,
+      });
+    }
+  }
+
+  return {
+    dryRun: dryRun === true,
+    total: NON_BOOKABLE_SERVICE_NAMES.length,
+    hidden: toHide,
+    alreadyHidden,
+    unmatched,
+    hiddenNames,
+  };
+}
+
+// One-shot admin sweep. Returns a summary so the operator can verify match
+// coverage before trusting the result.
 export const bulkHideNonBookable = mutation({
   args: { dryRun: v.optional(v.boolean()) },
   handler: async (ctx, { dryRun }) => {
     await assertAdmin(ctx);
-
-    const all = await ctx.db.query("services").collect();
-    const byNormName = new Map<string, Doc<"services">>();
-    for (const s of all) {
-      byNormName.set(normalizeServiceName(s.name), s);
-    }
-
-    let toHide = 0;
-    let alreadyHidden = 0;
-    const unmatched: string[] = [];
-    const hiddenNames: string[] = [];
-
-    for (const targetName of NON_BOOKABLE_SERVICE_NAMES) {
-      const match = byNormName.get(normalizeServiceName(targetName));
-      if (!match) {
-        unmatched.push(targetName);
-        continue;
-      }
-      if (match.hiddenByAdmin && !match.isActive) {
-        alreadyHidden++;
-        continue;
-      }
-      toHide++;
-      hiddenNames.push(match.name);
-      if (!dryRun) {
-        await ctx.db.patch(match._id, {
-          isActive: false,
-          hiddenByAdmin: true,
-        });
-      }
-    }
-
-    return {
-      dryRun: dryRun === true,
-      total: NON_BOOKABLE_SERVICE_NAMES.length,
-      hidden: toHide,
-      alreadyHidden,
-      unmatched,
-      hiddenNames,
-    };
+    return bulkHideNonBookableImpl(ctx, dryRun);
   },
+});
+
+// Internal twin — invokable from the CLI without an admin session. Run via
+// `npx convex run services:bulkHideNonBookableInternal '{"dryRun":true}'`.
+export const bulkHideNonBookableInternal = internalMutation({
+  args: { dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, { dryRun }) => bulkHideNonBookableImpl(ctx, dryRun),
 });
 
 export const toggleActive = mutation({
@@ -399,10 +418,16 @@ export const rebucketAll = mutation({
   },
 });
 
-// Known slugs of the demo/dummy services shipped in convex/seed.ts. Used by
-// deleteSeedServicesInternal to purge leftover seed rows without touching real
-// Pabau-synced or admin-created services.
+// Known slugs of the demo/dummy services that have ever been seeded into a
+// deployment. Used by deleteSeedServicesInternal to purge leftover seed rows
+// without touching real Pabau-synced or admin-created services. The list
+// covers both the current convex/seed.ts definitions AND the older seed
+// iteration whose rows are still in the dev/prod database (botox-cosmetic,
+// hydrafacial-signature, etc.) — keeping both means the one-shot can be
+// re-run safely on any deployment regardless of which seed it was hydrated
+// from.
 const SEED_SERVICE_SLUGS: ReadonlySet<string> = new Set([
+  // Current convex/seed.ts slugs
   "botox-dysport", "dermal-fillers", "lip-enhancement", "cheek-augmentation",
   "jawline-contouring", "under-eye-filler", "sculptra", "hyperdilute-radiesse",
   "kybella", "prp-face", "lip-flip", "masseter-tmj", "brow-lift",
@@ -412,6 +437,10 @@ const SEED_SERVICE_SLUGS: ReadonlySet<string> = new Set([
   "lasemd-ultra", "iv-hydration", "im-iv-boosters", "eboo-ozone-therapy",
   "red-light-therapy-body", "peptide-therapy", "weight-loss-consult",
   "glp1-program", "body-composition",
+  // Older seed iteration — rows still present in dev/prod Convex
+  "botox-cosmetic", "hydrafacial-signature", "chemical-peel",
+  "coolsculpting-elite", "laser-hair-removal", "iv-vitamin-therapy",
+  "hormone-optimization",
 ]);
 
 // One-shot cleanup: deletes the dummy seed services (matched by the known seed

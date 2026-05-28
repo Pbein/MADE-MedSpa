@@ -14,6 +14,7 @@ import type * as crons from "../crons.js";
 import type * as data_nonBookableServices from "../data/nonBookableServices.js";
 import type * as faqs from "../faqs.js";
 import type * as lib_auth from "../lib/auth.js";
+import type * as lib_pabauBookingUrl from "../lib/pabauBookingUrl.js";
 import type * as memberships from "../memberships.js";
 import type * as pabauActivityLog from "../pabauActivityLog.js";
 import type * as pabauApiUsage from "../pabauApiUsage.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   "data/nonBookableServices": typeof data_nonBookableServices;
   faqs: typeof faqs;
   "lib/auth": typeof lib_auth;
+  "lib/pabauBookingUrl": typeof lib_pabauBookingUrl;
   memberships: typeof memberships;
   pabauActivityLog: typeof pabauActivityLog;
   pabauApiUsage: typeof pabauApiUsage;
