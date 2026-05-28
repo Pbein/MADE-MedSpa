@@ -192,12 +192,10 @@ function MembershipCard({
 
       <div className={`flex flex-col flex-1 ${tier.isFeatured ? "p-7 lg:p-8" : "p-7"}`}>
         <h3
-          className="italic text-lg mb-6"
+          className="text-lg mb-6"
           style={{
             color: "var(--color-primary)",
             fontWeight: 700,
-            fontFamily:
-              "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
           }}
         >
           {tier.name}
