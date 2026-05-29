@@ -1,6 +1,7 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import HeroSection from "@/components/sections/HeroSection";
+import EditorialMoment from "@/components/sections/EditorialMoment";
 import FeaturedServices from "@/components/sections/FeaturedServices";
 import AboutTeaser from "@/components/sections/AboutTeaser";
 import TestimonialSection from "@/components/sections/TestimonialSection";
@@ -106,6 +107,14 @@ export default async function Home() {
           <HeroSection sectionContent={heroContent} />
         </div>
       )}
+
+      {/* Editorial moment — Karlyne 2026-05-28 design feedback. Deliberately
+          not yet wired into the section visibility registry; once Karlyne
+          approves the placement we can add `editorial` to sectionDefinitions
+          so admin can toggle/restyle it. */}
+      <div id="section-editorial">
+        <EditorialMoment />
+      </div>
 
       {show("featured") && (
         <div id="section-featured" style={design("featured")}>
