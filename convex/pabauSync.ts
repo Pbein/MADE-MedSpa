@@ -105,6 +105,57 @@ async function pabauGet<T>(path: string): Promise<T | { error: string }> {
   return data;
 }
 
+// Pabau's list endpoints paginate at 20 rows/page and report `total: 20` as the
+// PAGE size — NOT a grand total. A single GET therefore silently caps a sync at
+// the first 20 rows (the original bug: 100 services in Pabau, only 20 synced).
+// We walk `?page=N` accumulating rows until a page yields nothing new. The
+// dedupe-and-stop guard is load-bearing: Pabau clamps an out-of-range page to
+// the LAST page (repeating it) instead of returning empty, so "page not empty"
+// is not a safe end signal — "page added no unseen ids" is.
+//
+// `pick` extracts the row array from the wrapper; `idOf` returns the row's
+// stable id for dedupe. A page-1 error propagates; a later-page error stops
+// paging but keeps what we already have. MAX_PAGES caps a pathological loop
+// (e.g. an endpoint that never repeats) at 2000 rows — far above this clinic's
+// real catalog, and ~100 GETs is still well inside the rate limit.
+async function pabauGetAllPages<T>(
+  path: string,
+  pick: (data: unknown) => T[] | undefined,
+  idOf: (item: T) => number | string | undefined,
+): Promise<{ items: T[] } | { error: string }> {
+  const items: T[] = [];
+  const seen = new Set<string>();
+  const PAGE_SIZE = 20;
+  const MAX_PAGES = 100;
+  const sep = path.includes("?") ? "&" : "?";
+
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const data = await pabauGet<unknown>(`${path}${sep}page=${page}`);
+    if (data && typeof data === "object" && "error" in data) {
+      if (page === 1) return { error: (data as { error: string }).error };
+      break; // later-page failure: return what we have rather than nothing
+    }
+
+    const batch = pick(data) ?? [];
+    if (batch.length === 0) break;
+
+    let added = 0;
+    for (const item of batch) {
+      const id = idOf(item);
+      const key = id === undefined ? JSON.stringify(item) : String(id);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      items.push(item);
+      added++;
+    }
+
+    if (added === 0) break; // page repeated prior rows → past the end
+    if (batch.length < PAGE_SIZE) break; // partial final page
+  }
+
+  return { items };
+}
+
 function normalizeReview(raw: PabauReviewRaw): {
   pabauReviewId: string;
   name: string;
@@ -138,38 +189,17 @@ export const syncReviews = action({
       errors: [],
     };
 
-    const apiKey = process.env.PABAU_API_KEY;
-    const baseUrl = process.env.PABAU_API_BASE_URL ?? "https://api.oauth.pabau.com";
-    if (!apiKey) {
-      summary.errors.push("PABAU_API_KEY not set on Convex deployment.");
+    const data = await pabauGetAllPages<PabauReviewRaw>(
+      "/reviews",
+      (d) => (d as { reviews?: PabauReviewRaw[] })?.reviews,
+      (r) => r.id ?? r.review_id,
+    );
+    if ("error" in data) {
+      summary.errors.push(data.error);
       return summary;
     }
 
-    let res: Response;
-    try {
-      res = await fetch(`${baseUrl}/${apiKey}/reviews`, {
-        method: "GET",
-        headers: { Accept: "application/json" },
-      });
-    } catch (err) {
-      summary.errors.push(`Network error: ${err instanceof Error ? err.message : String(err)}`);
-      return summary;
-    }
-
-    if (res.status === 429) {
-      summary.errors.push("Rate limited by Pabau (429).");
-      return summary;
-    }
-    if (!res.ok) {
-      summary.errors.push(`Pabau returned ${res.status} ${res.statusText}.`);
-      return summary;
-    }
-
-    const data = (await res.json().catch(() => null)) as
-      | { reviews?: PabauReviewRaw[] }
-      | null;
-
-    const incoming = Array.isArray(data?.reviews) ? data!.reviews : [];
+    const incoming = data.items;
     summary.fetched = incoming.length;
 
     const seenIds = new Set<string>();
@@ -233,13 +263,17 @@ export const syncServices = action({
       errors: [],
     };
 
-    const data = await pabauGet<{ services?: PabauServiceRaw[] }>("/services");
+    const data = await pabauGetAllPages<PabauServiceRaw>(
+      "/services",
+      (d) => (d as { services?: PabauServiceRaw[] })?.services,
+      (s) => s.id,
+    );
     if ("error" in data) {
       summary.errors.push(data.error);
       return summary;
     }
 
-    const incoming = Array.isArray(data.services) ? data.services : [];
+    const incoming = data.items;
     summary.fetched = incoming.length;
 
     const seenIds = new Set<number>();
@@ -322,13 +356,17 @@ export const syncProducts = action({
       errors: [],
     };
 
-    const data = await pabauGet<{ products?: PabauProductRaw[] }>("/products");
+    const data = await pabauGetAllPages<PabauProductRaw>(
+      "/products",
+      (d) => (d as { products?: PabauProductRaw[] })?.products,
+      (p) => p.id,
+    );
     if ("error" in data) {
       summary.errors.push(data.error);
       return summary;
     }
 
-    const incoming = Array.isArray(data.products) ? data.products : [];
+    const incoming = data.items;
     summary.fetched = incoming.length;
 
     const seenIds = new Set<number>();
