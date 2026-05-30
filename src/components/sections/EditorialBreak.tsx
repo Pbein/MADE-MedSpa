@@ -59,7 +59,7 @@ export default function EditorialBreak({
       <div className="relative py-36 md:py-48 px-8 md:px-16">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 44 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.2, ease: luxuryEase }}
             className="flex flex-col items-center"

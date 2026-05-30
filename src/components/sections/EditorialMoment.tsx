@@ -1,18 +1,9 @@
-// Full-width editorial moment — bold Playfair Display headline on Espresso.
-// Karlyne 2026-05-28: "I want a section between the hero and services that's
-// just a bold statement in large Playfair Display on an Espresso background.
-// One line: 'REFINEMENT OVER TRANSFORMATION.' This is the kind of moment Aesop
-// and Violet Grey nail."
-//
-// Deliberately unornamented (no diamond rules, no eyebrow, no subhead) so the
-// statement carries the section by itself. For ornamented pull-quotes use
-// EditorialBreak.tsx instead.
-//
-// Title case ("Refinement Over Transformation") is the home treatment. The
-// existing /about page uses an all-caps Futura PT Book h2 of the same phrase —
-// keeping different visual registers on each page is intentional so the moment
-// reads as a callback rather than a duplicate.
-
+// Full-width editorial "moment" — a single bold Playfair statement on deep
+// espresso, the brand beat between hero and services (client 2026-05-30,
+// Aesop / Violet Grey style). Sized as a compact DIVIDER. Carries the client's
+// rocky-wall (marble) texture, blended over the espresso for subtle stone depth.
+// Server component; heading styles inline to override the global all-caps
+// Futura <h2> with sentence-case Playfair Display.
 interface EditorialMomentProps {
   headline?: string;
 }
@@ -22,25 +13,43 @@ export default function EditorialMoment({
 }: EditorialMomentProps) {
   return (
     <section
-      className="py-32 md:py-44 lg:py-52 px-6 text-center"
+      className="relative w-full px-6 py-24 md:py-32 flex items-center justify-center text-center overflow-hidden"
       style={{
-        backgroundColor: "var(--color-primary, #391e1e)",
+        background: "radial-gradient(circle at 50% 45%, #4a2929 0%, #391e1e 72%)",
         color: "var(--color-on-primary, #f7f6eb)",
       }}
     >
-      <div className="max-w-4xl mx-auto">
-        <h2
-          className="headline-editorial"
-          style={{
-            color: "var(--color-on-primary, #f7f6eb)",
-            fontSize: "clamp(2.25rem, 5.5vw, 4.5rem)",
-            lineHeight: 1.1,
-            textWrap: "balance",
-          }}
-        >
-          {headline}
-        </h2>
-      </div>
+      {/* Stone/marble texture (client's rocky-wall.png, self-hosted at
+          /public/textures) blended over the espresso so it reads as subtle
+          stone depth without a flat tint. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url(/textures/rocky-wall.png)",
+          backgroundSize: "500px 500px",
+          backgroundRepeat: "repeat",
+          mixBlendMode: "overlay",
+          opacity: 0.9,
+        }}
+      />
+
+      <h2
+        className="relative z-10 max-w-4xl mx-auto"
+        style={{
+          fontFamily: "var(--font-headline)",
+          fontWeight: 400,
+          fontStyle: "normal",
+          textTransform: "none",
+          letterSpacing: "-0.01em",
+          lineHeight: 1.1,
+          color: "var(--color-on-primary, #f7f6eb)",
+          fontSize: "clamp(1.75rem, 4vw, 3rem)",
+          textWrap: "balance",
+        }}
+      >
+        {headline}
+      </h2>
     </section>
   );
 }

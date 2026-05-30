@@ -6,7 +6,6 @@ import type { Doc } from "../../../convex/_generated/dataModel";
 import { api } from "../../../convex/_generated/api";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import ServiceCard from "@/components/sections/ServiceCard";
-import PageHero from "@/components/sections/PageHero";
 import CTABanner from "@/components/sections/CTABanner";
 import { useSectionContent } from "@/hooks/useSectionContent";
 
@@ -63,50 +62,44 @@ function CategoryGroups({
 
         return (
           <div key={catName}>
-            {/* Category header — eyebrow + section headline + divider */}
-            <div className="text-center mb-12 md:mb-16">
-              <span
-                className="label-micro block mb-3"
-                style={{ color: "var(--color-on-surface-variant)" }}
-              >
-                Treatment Category
-              </span>
-              <h2 className="headline-section text-base md:text-lg">{catName}</h2>
-              <div className="mt-6 flex items-center justify-center gap-4">
+            {/* Category header — left-aligned editorial title with a Matcha
+                accent rule + a top-right "view all" (Stitch services flow) */}
+            <div className="mb-10 md:mb-14 flex items-end justify-between gap-6">
+              <div>
+                <h2
+                  className="headline-editorial text-3xl md:text-4xl"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  {catName}
+                </h2>
                 <div
-                  className="w-12 h-px"
-                  style={{ backgroundColor: "var(--color-outline-variant)" }}
-                />
-                <div
-                  className="w-1.5 h-1.5 rotate-45 border"
-                  style={{ borderColor: "var(--color-outline-variant)" }}
-                />
-                <div
-                  className="w-12 h-px"
-                  style={{ backgroundColor: "var(--color-outline-variant)" }}
+                  className="mt-4 w-16 h-px"
+                  style={{ backgroundColor: "var(--color-matcha)" }}
                 />
               </div>
+              {remaining > 0 && (
+                <button
+                  type="button"
+                  onClick={() => onViewAll(catName)}
+                  className="shrink-0 uppercase transition-opacity duration-500 hover:opacity-70"
+                  style={{
+                    fontFamily: "var(--font-label)",
+                    fontSize: "11px",
+                    letterSpacing: "0.2em",
+                    color: "var(--color-matcha)",
+                  }}
+                >
+                  View all {all.length} &rarr;
+                </button>
+              )}
             </div>
 
             {/* Top-N services in a 3-up grid (mobile stacks). */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
               {top.map((service) => (
                 <ServiceCard key={service._id} service={service} />
               ))}
             </div>
-
-            {/* "View all in [Category]" footer link, only if there's more to show. */}
-            {remaining > 0 && (
-              <div className="text-center mt-12">
-                <button
-                  type="button"
-                  onClick={() => onViewAll(catName)}
-                  className="link-editorial"
-                >
-                  View all {all.length} in {catName} &rarr;
-                </button>
-              </div>
-            )}
           </div>
         );
       })}
@@ -123,11 +116,6 @@ export default function ServicesPageClient({
 }) {
   const sections = (pageSettings as { sections?: Record<string, boolean> } | undefined)?.sections;
   const show = (key: string) => !sections || sections[key] !== false;
-  const { data: heroText } = useSectionContent("section_services_hero", {
-    eyebrow: "Treatments",
-    headline: "Our Services. The Art of Self-Care.",
-    subtitle: "Personalized treatments designed to enhance your natural beauty with precision, science, and artistry.",
-  });
   const { data: ctaText } = useSectionContent("section_services_cta", {
     headline: "The path to effortless maintenance begins with a conversation.",
     subtitle: "Book a consultation and let us craft a personalized treatment plan just for you.",
@@ -154,16 +142,12 @@ export default function ServicesPageClient({
 
   return (
     <div>
-      {/* Hero */}
-      {show("hero") && <div id="section-hero"><PageHero
-        eyebrow={heroText.eyebrow}
-        headline={heroText.headline}
-        subtitle={heroText.subtitle}
-        backgroundImage={heroBgUrl}
-      /></div>}
-
+      {/* No hero (Karlyne 2026-05-30 — opens straight on the filter bar). The
+          nav-clearance padding lives on the filter bar itself so its surface-low
+          bg fills behind the fixed nav (no off-colored gap strip); the small
+          bottom padding keeps the bar thin. */}
       {/* Filter Bar */}
-      <section className="bg-[var(--color-surface-low)] py-8">
+      <section className="texture-linen bg-[var(--color-surface-low)] pt-28 md:pt-32 pb-3">
         <div className="mx-auto max-w-7xl px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <motion.div
             className="flex flex-wrap gap-2"
@@ -177,9 +161,10 @@ export default function ServicesPageClient({
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
+                  style={{ fontSize: "13px" }}
                   className={`label-micro px-5 py-2.5 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] border-b-2 ${
                     isActive
-                      ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
+                      ? "bg-[var(--color-olive)] text-[var(--color-on-primary)] border-transparent"
                       : "bg-transparent text-[var(--color-on-surface-variant)] border-transparent hover:border-[var(--color-on-surface-variant)]"
                   }`}
                 >
@@ -207,7 +192,7 @@ export default function ServicesPageClient({
       </section>
 
       {/* Services Grid */}
-      <section id="section-grid" ref={gridRef} className="bg-[var(--color-surface)] py-32 md:py-40">
+      <section id="section-grid" ref={gridRef} className="texture-linen bg-[var(--color-surface)] pt-4 md:pt-6 pb-28 md:pb-36">
         <div className="mx-auto max-w-7xl px-6">
           {services === undefined || dbCategories === undefined ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

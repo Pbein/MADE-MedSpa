@@ -202,24 +202,9 @@ function ServiceForm({
           </select>
         </div>
 
-        {/* Sort Order */}
-        <div>
-          <label
-            className="mb-1 block text-[13px] font-medium uppercase tracking-wider"
-            style={{ color: "#111827" }}
-          >
-            Sort Order
-          </label>
-          <input
-            type="number"
-            value={form.sortOrder}
-            onChange={(e) =>
-              setForm({ ...form, sortOrder: parseInt(e.target.value) || 0 })
-            }
-            className="w-full rounded-md border px-3 py-2 text-[15px] outline-none focus:border-[#4f46e5]"
-            style={{ borderColor: "#e5e7eb" }}
-          />
-        </div>
+        {/* Sort Order is now controlled by the up/down arrows in the list — no
+            manual number entry. The value is still carried in form state
+            (preserved on edit, auto-assigned on create) so saves are unaffected. */}
 
         {/* Duration */}
         <div>
@@ -740,6 +725,43 @@ export default function AdminServicesPage() {
   const [editingId, setEditingId] = useState<Id<"services"> | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // ── Reorder within category (up/down arrows, no manual sort-order numbers) ──
+  // Swaps the SET of existing sortOrder values among same-category services, so
+  // the public per-category order changes without disturbing other categories.
+  // `update` patches only provided fields, so this just moves the two items.
+  const moveWithinCategory = async (
+    service: { _id: Id<"services">; category: string; sortOrder: number },
+    direction: "up" | "down"
+  ) => {
+    if (!services) return;
+    const group = services
+      .filter((s) => s.category === service.category)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+    const idx = group.findIndex((s) => s._id === service._id);
+    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (idx < 0 || swapIdx < 0 || swapIdx >= group.length) return;
+    const values = group.map((s) => s.sortOrder).sort((a, b) => a - b);
+    const reordered = [...group];
+    [reordered[idx], reordered[swapIdx]] = [reordered[swapIdx], reordered[idx]];
+    await Promise.all(
+      reordered
+        .map((s, i) =>
+          s.sortOrder === values[i]
+            ? null
+            : updateService({ id: s._id, sortOrder: values[i] })
+        )
+        .filter(Boolean)
+    );
+  };
+
+  // Position of a service among its same-category peers (for arrow disabling).
+  const categoryIndex = (service: { _id: Id<"services">; category: string }) => {
+    const group = (services ?? [])
+      .filter((s) => s.category === service.category)
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+    return { pos: group.findIndex((s) => s._id === service._id), len: group.length };
+  };
+
   // Categories shown in the form's dropdown — admin-managed list, not derived
   // from existing services (so a brand-new category is selectable immediately).
   const formCategories = useMemo(
@@ -1183,7 +1205,37 @@ export default function AdminServicesPage() {
                         {service.isActive ? "Active" : "Inactive"}
                       </button>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                      {(() => {
+                        const { pos, len } = categoryIndex(service);
+                        return (
+                          <span
+                            className="mr-3 inline-flex items-center gap-1 align-middle"
+                            title="Reorder within this category"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => moveWithinCategory(service, "up")}
+                              disabled={pos <= 0}
+                              aria-label="Move up within category"
+                              className="rounded p-1 text-[12px] leading-none transition-opacity hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-20"
+                              style={{ color: "#374151" }}
+                            >
+                              ▲
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveWithinCategory(service, "down")}
+                              disabled={pos === len - 1}
+                              aria-label="Move down within category"
+                              className="rounded p-1 text-[12px] leading-none transition-opacity hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-20"
+                              style={{ color: "#374151" }}
+                            >
+                              ▼
+                            </button>
+                          </span>
+                        );
+                      })()}
                       <button
                         onClick={() => {
                           setEditingId(

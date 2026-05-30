@@ -50,6 +50,10 @@ public/images/demo/
 media/originals/
 public/videos/*-original.mp4
 
+# local media backups — physical copies kept to restore design assets without
+# git, deliberately excluded from the build so duplicates don't ship to Vercel
+/backups/
+
 # Font purchase source materials (license proofs, original kits, .otf desktop
 # files). Shipped webfonts live in src/app/fonts/ and DO get committed.
 # This root /fonts/ folder is the raw archive of what the foundry sent us.

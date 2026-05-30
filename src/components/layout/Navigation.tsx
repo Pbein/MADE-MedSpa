@@ -41,7 +41,9 @@ export default function Navigation() {
   // with the radial glow was removed entirely). The Pabau iframe is white,
   // so the nav needs cream bg + dark text on /booking, same as any other
   // content-first page.
-  const heroOverlayRoutes = new Set(["/", "/services", "/about", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
+  // /services no longer has a hero (opens on the filter bar), so the nav uses
+  // its solid cream bar there instead of a transparent overlay.
+  const heroOverlayRoutes = new Set(["/", "/about", "/testimonials", "/shop", "/membership", "/faq", "/before-and-after"]);
   const lightTextRoutes = new Set(["/"]);
   // /shop/[slug] product detail pages share the same atmospheric background
   // as /shop, so the nav should overlay there too (Karlyne 2026-05-13).
@@ -162,7 +164,7 @@ export default function Navigation() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="font-headline tracking-wide text-lg transition-all duration-500"
+                    className="font-headline tracking-wide text-xl transition-all duration-500"
                     style={{
                       color: useLightNavText
                         ? "var(--color-on-primary)"
@@ -220,7 +222,7 @@ export default function Navigation() {
                     setExploreOpen(true);
                   }
                 }}
-                className="font-headline tracking-wide text-lg transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-secondary)]"
+                className="font-headline tracking-wide text-xl transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-secondary)]"
                 style={{
                   color: useLightNavText
                     ? "var(--color-on-primary)"
@@ -293,9 +295,12 @@ export default function Navigation() {
             </li>
           </ul>
 
+          {/* Over the dark home hero the espresso button vanished into the video,
+             so it adopts the same silk/matcha treatment as the hero CTA. On
+             cream pages (and once scrolled) it stays espresso for contrast. */}
           <Link
             href="/booking#pabau-iframe"
-            className="btn-primary"
+            className={useLightNavText ? "btn-hero" : "btn-primary"}
             style={{ padding: "0.75rem 2rem", fontSize: "0.95rem" }}
           >
             Book Consultation

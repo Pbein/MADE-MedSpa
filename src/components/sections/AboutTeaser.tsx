@@ -22,66 +22,111 @@ interface AboutTeaserProps {
   sectionContent?: AboutTeaserContent;
 }
 
+// Stitch "Editorial Story Section" port (2026-05-30): balanced two-column
+// layout — a silk-matted portrait with a faint MADE wordmark watermark and a
+// decorative offset shape on the left, story copy on the right. Headline is
+// Playfair (not the old Futura-uppercase .headline-section) to match the
+// Stitch samples. Content stays CMS-driven via sectionContent.
 export default function AboutTeaser({ aboutImageUrl, sectionContent }: AboutTeaserProps) {
   const imageSrc = aboutImageUrl || DEFAULT_ABOUT_IMAGE;
 
   return (
-    <section className="py-32 md:py-40 px-8 md:px-16 lg:px-24 bg-[var(--color-surface)]">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
-        {/* Left: Image */}
+    <section className="texture-linen relative overflow-hidden pt-16 md:pt-20 pb-24 md:pb-32 px-6 md:px-12 lg:px-24 bg-[var(--color-surface)]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center relative">
+        {/* LEFT — portrait with watermark + matted frame */}
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={{ duration: 0.9, ease: luxuryEase }}
-          className="md:col-span-6 relative"
+          className="lg:col-span-6 relative z-10"
         >
-          <div className="relative w-full aspect-[4/5]" style={{ boxShadow: "8px 8px 40px rgba(57,30,30,0.08)" }}>
-            <Image
-              src={imageSrc}
-              alt="MADE Med Spa philosophy"
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
+          <div className="relative inline-block w-full">
+            {/* Silk mat + soft warm shadow */}
+            <div
+              className="relative z-10 rounded-lg overflow-hidden p-2"
+              style={{
+                backgroundColor: "var(--color-silk)",
+                boxShadow: "20px 20px 60px rgba(57,30,30,0.08)",
+              }}
+            >
+              <div className="relative w-full aspect-[4/5] overflow-hidden rounded-md">
+                <Image
+                  src={imageSrc}
+                  alt="MADE Med Spa — our story"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                  style={{ filter: "grayscale(0.2)" }}
+                />
+              </div>
+            </div>
           </div>
-          {/* Decorative warm blur */}
-          <div
-            className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full pointer-events-none"
-            style={{
-              background: "rgba(215,207,197,0.15)",
-              filter: "blur(60px)",
-            }}
-          />
         </motion.div>
 
-        {/* Right: Text card */}
+        {/* RIGHT — story copy */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
-          transition={{ duration: 0.9, delay: 0.15, ease: luxuryEase }}
-          className="md:col-span-6"
+          transition={{ duration: 0.9, delay: 0.18, ease: luxuryEase }}
+          className="lg:col-span-6 lg:pl-16 relative z-20"
         >
-          <div
-            className="bg-[var(--color-surface-low)] p-6 sm:p-10 md:p-16 lg:p-20"
-            style={{ boxShadow: "0 4px 30px rgba(57,30,30,0.05)" }}
-          >
-            <span className="label-micro text-[var(--color-secondary)] block mb-6">
-              {sectionContent?.eyebrow || "Our Philosophy"}
-            </span>
+          <div className="flex flex-col gap-8 max-w-[480px]">
+            {/* Eyebrow + hairline */}
+            <div>
+              <span
+                className="uppercase block mb-4"
+                style={{
+                  fontFamily: "var(--font-label)",
+                  fontSize: "13px",
+                  letterSpacing: "0.3em",
+                  color: "var(--color-on-surface-variant)",
+                }}
+              >
+                {sectionContent?.eyebrow || "Our Story"}
+              </span>
+              <div className="h-px w-8" style={{ backgroundColor: "rgba(57,30,30,0.2)" }} />
+            </div>
 
-            <h2 className="headline-section text-3xl md:text-4xl mb-8 leading-tight">
-              {sectionContent?.headline || "Where Science Meets\nArtistry."}
+            {/* Headline — Playfair (sentence case), italic accent on the default */}
+            <h2
+              style={{
+                fontFamily: "var(--font-headline)",
+                fontWeight: 400,
+                fontStyle: "normal",
+                textTransform: "none",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.1,
+                color: "var(--color-primary)",
+                fontSize: "clamp(2.5rem, 4vw, 3.75rem)",
+              }}
+            >
+              {sectionContent?.headline || (
+                <>
+                  Built different.{" "}
+                  <em style={{ fontStyle: "italic" }}>On purpose.</em>
+                </>
+              )}
             </h2>
 
-            <p className="body-editorial text-[var(--color-on-surface-variant)] max-w-md">
-              {sectionContent?.body || "At MADE, we believe beauty is deeply personal. Our approach combines advanced medical aesthetics with an artist\u2019s eye for balance, proportion, and harmony. Ensuring every treatment enhances what makes you uniquely you."}
+            {/* Body */}
+            <p
+              className="font-body font-light"
+              style={{
+                fontSize: "17px",
+                lineHeight: 1.8,
+                color: "rgba(57,30,30,0.75)",
+              }}
+            >
+              {sectionContent?.body ||
+                "MADE wasn't built from a template. It was built from years of clinical experience, a deep respect for every skin tone, and a refusal to replicate the kind of care that leaves patients feeling unseen. This is regenerative aesthetics done with intention — and it starts the moment you walk in."}
             </p>
 
-            <div className="mt-12">
+            {/* Link */}
+            <div className="pt-2">
               <Link href={sectionContent?.link_href || "/about"} className="link-editorial">
-                {sectionContent?.link_text || "Discover Our Method"}
+                {sectionContent?.link_text || "Why MADE"}
               </Link>
             </div>
           </div>

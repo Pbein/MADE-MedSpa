@@ -253,15 +253,38 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: editorialEase, delay: 0.1 }}
             >
-              <div className="relative w-full max-w-[460px] mx-auto lg:max-w-none aspect-[4/5] lg:aspect-auto lg:h-[clamp(380px,58vh,520px)]">
-                <Image
-                  src={service.imageUrl || "/images/placeholder-service.svg"}
-                  alt={service.name}
-                  fill
-                  sizes="(max-width: 1024px) 80vw, 40vw"
-                  className="object-cover image-editorial"
-                  priority
-                />
+              <div
+                className="relative w-full max-w-[460px] mx-auto lg:max-w-none aspect-[4/5] lg:aspect-auto lg:h-[clamp(380px,58vh,520px)] overflow-hidden rounded-[12px]"
+                style={{ backgroundColor: "var(--color-surface-high)" }}
+              >
+                {service.imageUrl ? (
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.name}
+                    fill
+                    sizes="(max-width: 1024px) 80vw, 40vw"
+                    className="object-cover image-editorial"
+                    priority
+                  />
+                ) : (
+                  // No photo uploaded yet — show an intentional MADE-wordmark
+                  // glaze block instead of the featureless SVG square, matching
+                  // the services-list card empty state. Karlyne adds real photos
+                  // via /admin (no stock fallback by design).
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      aria-hidden
+                      style={{
+                        fontFamily: "var(--font-headline)",
+                        fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                        letterSpacing: "0.06em",
+                        color: "rgba(57,30,30,0.18)",
+                      }}
+                    >
+                      MADE
+                    </span>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

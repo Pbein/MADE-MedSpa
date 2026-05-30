@@ -68,171 +68,173 @@ export default function TestimonialSection({ testimonials: propTestimonials, tes
 
   if (propTestimonials && propTestimonials.length === 0) return null;
 
+  const CREAM = "var(--color-on-primary, #f7f6eb)";
+
   return (
-    <section className="relative overflow-hidden">
-      {/* ── Background texture image ── */}
+    <section
+      className="relative overflow-hidden"
+      style={{ backgroundColor: "var(--color-primary, #391e1e)" }}
+    >
+      {/* ── Optional background image, held dark with a heavy espresso wash ── */}
       {testimonialBgUrl && (
-        <Image
-          src={testimonialBgUrl}
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+        <>
+          <Image
+            src={testimonialBgUrl}
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundColor: "rgba(57,30,30,0.88)" }}
+          />
+        </>
       )}
 
-      {/* ── Fallback base color (shown while image loads) ── */}
-      {!testimonialBgUrl && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ backgroundColor: "var(--color-surface)" }}
-        />
-      )}
+      {/* ── Fabric-plaid texture (client's fabric-plaid.png, self-hosted at
+           /public/textures) tinted CREAM via CSS mask so the woven grid reads
+           as subtle fabric depth on the dark espresso. ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundColor: "var(--color-on-primary, #f7f6eb)",
+          opacity: 0.07,
+          WebkitMaskImage: "url(/textures/fabric-plaid.png)",
+          maskImage: "url(/textures/fabric-plaid.png)",
+          WebkitMaskRepeat: "repeat",
+          maskRepeat: "repeat",
+          WebkitMaskSize: "200px 200px",
+          maskSize: "200px 200px",
+        }}
+      />
 
       {/* ── Content ── */}
-      <div className="relative py-32 md:py-44 lg:py-52 px-8 md:px-16">
+      <div className="relative z-10 py-28 md:py-40 lg:py-48 px-8 md:px-16">
         <div className="max-w-4xl mx-auto">
-          {/* Section label */}
+          {/* Eyebrow — hairlines + diamonds both sides */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewportOnce}
             transition={{ duration: 0.8, ease: luxuryEase }}
-            className="text-center mb-16"
+            className="flex items-center justify-center gap-4 mb-16"
           >
+            <div className="h-px w-10" style={{ backgroundColor: "rgba(247,246,235,0.3)" }} />
+            <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: "rgba(247,246,235,0.5)" }} />
             <span
-              className="label-micro block mb-4"
-              style={{ color: "var(--color-on-surface-variant)" }}
+              className="uppercase whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-label)",
+                fontSize: "13px",
+                letterSpacing: "0.3em",
+                color: "rgba(247,246,235,0.7)",
+              }}
             >
-              {sectionContent?.eyebrow || "What Our Clients Say"}
+              {sectionContent?.eyebrow || "Heard From Our Clients"}
             </span>
-            <div className="flex items-center justify-center gap-4">
-              <div
-                className="w-16 h-px"
-                style={{ backgroundColor: "rgba(215,207,197,0.4)" }}
-              />
-              <div
-                className="w-1.5 h-1.5 rotate-45 border"
-                style={{ borderColor: "rgba(215,207,197,0.5)" }}
-              />
-              <div
-                className="w-16 h-px"
-                style={{ backgroundColor: "rgba(215,207,197,0.4)" }}
-              />
-            </div>
+            <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: "rgba(247,246,235,0.5)" }} />
+            <div className="h-px w-10" style={{ backgroundColor: "rgba(247,246,235,0.3)" }} />
           </motion.div>
 
-          {/* Quote carousel */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 1, ease: luxuryEase }}
-          >
-            {/* Large decorative quote mark */}
-            <div className="text-center mb-8">
-              <span
-                className="inline-block font-headline text-5xl sm:text-7xl md:text-8xl leading-none select-none"
-                style={{ color: "rgba(215,207,197,0.2)" }}
+          {/* Quote + attribution */}
+          <div className="relative min-h-[260px] md:min-h-[220px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -24 }}
+                transition={{ duration: 0.7, ease: luxuryEase }}
+                className="text-center"
               >
-                &ldquo;
-              </span>
-            </div>
-
-            {/* Quote text */}
-            <div className="relative min-h-[240px] md:min-h-[200px]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.6, ease: luxuryEase }}
-                  className="text-center"
+                <blockquote
+                  style={{
+                    fontFamily: "var(--font-headline)",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    fontSize: "clamp(1.5rem, 2.8vw, 2.5rem)",
+                    lineHeight: 1.4,
+                    color: CREAM,
+                    textWrap: "balance",
+                    maxWidth: "52rem",
+                    margin: "0 auto",
+                  } as React.CSSProperties}
                 >
-                  <blockquote
-                    className="accent-quote font-light text-xl sm:text-2xl md:text-3xl leading-relaxed md:leading-relaxed"
+                  &ldquo;{testimonials[current].quote}&rdquo;
+                </blockquote>
+
+                {/* Attribution */}
+                <div className="mt-12 flex flex-col items-center gap-3">
+                  <div className="w-12 h-px" style={{ backgroundColor: "rgba(247,246,235,0.3)" }} />
+                  <span
+                    className="uppercase"
                     style={{
-                      color: "var(--color-primary)",
-                      textWrap: "balance",
-                      maxWidth: "48rem",
-                      margin: "0 auto",
-                    } as React.CSSProperties}
-                  >
-                    {testimonials[current].quote}
-                  </blockquote>
-
-                  {/* Attribution */}
-                  <div className="mt-10 flex flex-col items-center gap-3">
-                    <div
-                      className="w-8 h-px"
-                      style={{ backgroundColor: "var(--color-secondary)" }}
-                    />
-                    <span
-                      className="label-micro"
-                      style={{ color: "var(--color-secondary)" }}
-                    >
-                      {testimonials[current].name.toUpperCase()}
-                    </span>
-                    <span
-                      className="font-body text-xs uppercase tracking-wider"
-                      style={{
-                        color: "var(--color-on-surface-variant)",
-                        opacity: 0.6,
-                      }}
-                    >
-                      {testimonials[current].treatment}
-                    </span>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-center gap-8 mt-14">
-              <button
-                onClick={prev}
-                aria-label="Previous testimonial"
-                className="transition-colors duration-500 hover:text-[var(--color-secondary)]"
-                style={{ color: "var(--color-outline)" }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <div className="flex gap-2.5">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrent(i)}
-                    aria-label={`Go to testimonial ${i + 1}`}
-                    className="transition-all duration-500"
-                    style={{
-                      width: i === current ? 24 : 8,
-                      height: 3,
-                      backgroundColor:
-                        i === current
-                          ? "var(--color-secondary)"
-                          : "var(--color-outline-variant)",
+                      fontFamily: "var(--font-label)",
+                      fontWeight: 600,
+                      fontSize: "14px",
+                      letterSpacing: "0.2em",
+                      color: CREAM,
                     }}
-                  />
-                ))}
-              </div>
+                  >
+                    {testimonials[current].name.toUpperCase()}
+                  </span>
+                  <span
+                    className="font-body uppercase"
+                    style={{
+                      fontSize: "12px",
+                      letterSpacing: "0.08em",
+                      color: "rgba(247,246,235,0.6)",
+                    }}
+                  >
+                    {testimonials[current].treatment}
+                  </span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-              <button
-                onClick={next}
-                aria-label="Next testimonial"
-                className="transition-colors duration-500 hover:text-[var(--color-secondary)]"
-                style={{ color: "var(--color-outline)" }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
+          {/* Controls — circular arrows + dots */}
+          <div className="flex items-center justify-center gap-8 md:gap-12 mt-20">
+            <button
+              onClick={prev}
+              aria-label="Previous testimonial"
+              className="flex items-center justify-center w-12 h-12 rounded-full transition-all duration-500 active:scale-90 hover:bg-white/5"
+              style={{ border: "1px solid rgba(247,246,235,0.2)", color: "rgba(247,246,235,0.7)" }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+
+            <div className="flex gap-3">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: i === current ? 22 : 6,
+                    height: 6,
+                    backgroundColor: i === current ? CREAM : "rgba(247,246,235,0.25)",
+                  }}
+                />
+              ))}
             </div>
-          </motion.div>
+
+            <button
+              onClick={next}
+              aria-label="Next testimonial"
+              className="flex items-center justify-center w-12 h-12 rounded-full transition-all duration-500 active:scale-90 hover:bg-white/5"
+              style={{ border: "1px solid rgba(247,246,235,0.2)", color: "rgba(247,246,235,0.7)" }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>
