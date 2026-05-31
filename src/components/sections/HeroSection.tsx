@@ -18,7 +18,7 @@ const containerVariants = {
 };
 
 const fadeUpVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 44 },
   visible: {
     opacity: 1,
     y: 0,
@@ -135,8 +135,8 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
               "rgba(57,30,30,0.15) 30%,",      // breathes in the middle
               "rgba(57,30,30,0.30) 60%,",      // darkens again for text zone
               "rgba(57,30,30,0.55) 82%,",      // strong contrast behind headline
-              "rgba(57,30,30,0.55) 96%,",      // HOLD the wash, mute video color
-              "#F7F6EB 100%",                   // hand off matches next section Silk
+              "rgba(57,30,30,0.82) 95%,",      // deepen toward the espresso band below
+              "#391e1e 100%",                   // hand off into the dark Editorial Moment (espresso, not silk)
             ].join(" "),
           }}
         />
@@ -150,7 +150,7 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-3xl mx-auto md:mx-0 md:ml-[12%] flex flex-col w-full items-center md:items-start text-center md:text-left"
+          className="max-w-3xl mx-auto flex flex-col w-full items-center text-center"
         >
           {/* Eyebrow — small all-caps, letter-spaced, intentionally subdued */}
           <motion.span
@@ -158,9 +158,9 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
             className="label-micro block mb-5 md:mb-6"
             style={{
               color: "var(--color-on-surface, #f7f6eb)",
-              opacity: 0.7,
+              opacity: 0.85,
               letterSpacing: "0.22em",
-              textShadow: "0 1px 6px rgba(57,30,30,0.4)",
+              textShadow: "0 2px 10px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.45)",
               fontSize: "0.72rem",
             }}
           >
@@ -209,13 +209,13 @@ export default function HeroSection({ sectionContent }: HeroSectionProps) {
           >
             <Link
               href={normalizeBookingHref(sectionContent?.cta_href) || "/booking#pabau-iframe"}
-              className="btn-primary"
+              className="btn-hero"
             >
               {sectionContent?.cta_text || "Book Consultation"}
             </Link>
             <Link
               href={normalizeBookingHref(sectionContent?.secondary_href) || "/services"}
-              className="link-ghost"
+              className="link-hero-secondary"
               style={{
                 color: "var(--color-on-surface, #f7f6eb)",
                 textShadow: "0 1px 6px rgba(57,30,30,0.4)",

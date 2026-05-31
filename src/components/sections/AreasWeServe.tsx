@@ -58,7 +58,7 @@ export default function AreasWeServe({
     >
       <div className="mx-auto max-w-5xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={{ duration: 0.7, ease: luxuryEase }}
@@ -88,10 +88,10 @@ export default function AreasWeServe({
           {areas.map((area, i) => (
             <motion.div
               key={area.name}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportOnce}
-              transition={{ duration: 0.5, ease: luxuryEase, delay: (i % 6) * 0.05 }}
+              transition={{ duration: 0.6, ease: luxuryEase, delay: (i % 6) * 0.07 }}
             >
               <h3
                 className="font-headline text-lg md:text-xl mb-1"

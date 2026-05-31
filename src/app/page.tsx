@@ -1,6 +1,7 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import HeroSection from "@/components/sections/HeroSection";
+import EditorialMoment from "@/components/sections/EditorialMoment";
 import FeaturedServices from "@/components/sections/FeaturedServices";
 import AboutTeaser from "@/components/sections/AboutTeaser";
 import TestimonialSection from "@/components/sections/TestimonialSection";
@@ -34,6 +35,7 @@ export default async function Home() {
           "featured_service_image_3",
           "about_philosophy_image",
           "testimonial_bg",
+          "cta_bg",
         ],
       }),
       fetchQuery(api.services.list),
@@ -90,7 +92,10 @@ export default async function Home() {
   );
 
   const ctaContent = getSectionContent(sectionData.section_home_cta, {
+    eyebrow: "Begin Your Journey",
     headline: "Begin Your Journey to Refined Radiance.",
+    subtitle:
+      "Book a consultation and let's design results that look like you — only more rested.",
     cta_text: "Book Your Consult",
     cta_href: "/booking",
     secondary_text: "Explore Services",
@@ -106,6 +111,12 @@ export default async function Home() {
           <HeroSection sectionContent={heroContent} />
         </div>
       )}
+
+      {/* Editorial moment — full-bleed espresso brand statement between the
+          hero and services (client request 2026-05-30). */}
+      <div id="section-editorial">
+        <EditorialMoment />
+      </div>
 
       {show("featured") && (
         <div id="section-featured" style={design("featured")}>
@@ -144,7 +155,10 @@ export default async function Home() {
         <div id="section-cta" style={design("cta")}>
           <CTABanner
             dark
+            eyebrow={ctaContent.eyebrow}
             headline={ctaContent.headline}
+            subtitle={ctaContent.subtitle}
+            bgImageUrl={content.cta_bg?.imageUrl}
             ctaText={ctaContent.cta_text}
             ctaHref={normalizeBookingHref(ctaContent.cta_href)}
             secondaryText={ctaContent.secondary_text}

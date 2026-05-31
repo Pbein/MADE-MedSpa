@@ -426,6 +426,71 @@ a {
   background-color: var(--color-surface-high);
 }
 
+/* Hero primary CTA — silk/white pill with brand-green (matcha) label.
+   Built specifically to stand out on the dark hero video, where the espresso
+   .btn-primary disappeared into the background (Karlyne 2026-05-30). Elevation
+   shadow + hover lift give it presence against the moving footage. */
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  background-color: var(--color-silk);
+  color: var(--color-espresso);
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  transition: background-color var(--duration-hover) var(--ease-editorial),
+    box-shadow var(--duration-hover) var(--ease-editorial),
+    transform var(--duration-hover) var(--ease-editorial);
+}
+
+.btn-hero:hover {
+  background-color: #ffffff;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.34);
+  transform: translateY(-1px);
+}
+
+.btn-hero:focus-visible {
+  outline: 2px solid var(--color-silk);
+  outline-offset: 3px;
+}
+
+/* Hero secondary action — sits beside .btn-hero and matches its label size
+   (was the tiny .link-ghost). Underline grows in on hover/focus so it reads
+   as an interactive control, not decoration. Color is set inline by the
+   component so it inherits the cream-on-dark treatment + text shadow. */
+.link-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-hover) var(--ease-editorial),
+    opacity var(--duration-hover) var(--ease-editorial);
+}
+
+.link-hero-secondary:hover {
+  border-bottom-color: currentColor;
+}
+
+.link-hero-secondary:focus-visible {
+  outline: 2px solid var(--color-silk);
+  outline-offset: 3px;
+}
+
 /* Underline link — editorial secondary action */
 .link-editorial {
   display: inline-block;
@@ -457,6 +522,21 @@ a {
 
 .link-ghost:hover {
   opacity: 1;
+}
+
+/* ============================================
+   Texture — subtle depth on flat surfaces (client 2026-05-30:
+   "every section feels like a flat digital surface")
+   ============================================ */
+
+/* Linen / paper grain for light Silk sections. A faint desaturated noise tile
+   layered as a background-image, so it composes OVER the element's existing
+   background-color and sits BEHIND content automatically (no overlay needed).
+   Reads as warm-paper depth, not a visible pattern. */
+.texture-linen {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ln'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ln)' opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
 }
 
 /* ============================================

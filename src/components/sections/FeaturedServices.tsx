@@ -6,13 +6,7 @@ import { motion } from "framer-motion";
 
 const luxuryEase = [0.16, 1, 0.3, 1] as const;
 
-const DEFAULT_IMAGES = [
-  "/images/placeholder-service.svg",
-  "/images/placeholder-service.svg",
-  "/images/placeholder-service.svg",
-];
-
-const FALLBACK_LABELS = ["REGENERATION", "TEXTURE", "GLOW"];
+const PLACEHOLDER_IMAGE = "/images/placeholder-service.svg";
 
 const viewportOnce = { once: true, margin: "-50px" } as const;
 
@@ -39,13 +33,15 @@ interface FeaturedServicesProps {
 }
 
 export default function FeaturedServices({ services, featuredImageUrls, sectionContent }: FeaturedServicesProps) {
-  const featuredImages = [
-    featuredImageUrls?.[0] || DEFAULT_IMAGES[0],
-    featuredImageUrls?.[1] || DEFAULT_IMAGES[1],
-    featuredImageUrls?.[2] || DEFAULT_IMAGES[2],
-  ];
+  // Stitch redesign: a 6-tile image grid (was 3 panel cards). Each tile is a
+  // full-bleed service photo with an espresso gradient and the name set in
+  // Playfair over the image, with an underline that grows in on hover.
+  const featured = services?.slice(0, 6);
 
-  const featured = services?.slice(0, 3);
+  // Per-tile image: prefer the service's own photo, then fall back to the
+  // three admin "featured_service_image_*" slots (cycled), then a placeholder.
+  const imageFor = (service: ServiceData, i: number) =>
+    service.imageUrl || featuredImageUrls?.[i % 3] || PLACEHOLDER_IMAGE;
 
   return (
     <section
@@ -90,138 +86,141 @@ export default function FeaturedServices({ services, featuredImageUrls, sectionC
         }}
       />
 
+      {/* ── Botanical leaf texture (client's xv.png laurel pattern, self-hosted
+           at /public/textures) tinted to brand MATCHA green via CSS mask, so it
+           brings the green in as a subtle leaf accent. Low opacity = depth, not
+           a loud pattern. ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundColor: "var(--color-matcha)",
+          opacity: 0.68,
+          WebkitMaskImage: "url(/textures/xv.png)",
+          maskImage: "url(/textures/xv.png)",
+          WebkitMaskRepeat: "repeat",
+          maskRepeat: "repeat",
+          WebkitMaskSize: "294px 235px",
+          maskSize: "294px 235px",
+        }}
+      />
+
       {/* ── Section header ── */}
-      <div className="relative pt-32 md:pt-40 pb-20 md:pb-28 px-8 md:px-16">
+      <div className="relative pt-32 md:pt-40 pb-16 md:pb-20 px-8 md:px-16">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 44 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={{ duration: 1, ease: luxuryEase }}
-          className="max-w-3xl mx-auto text-center"
+          className="max-w-3xl mx-auto flex flex-col items-center text-center"
         >
+          {/* Eyebrow — 14px so it reads clearly (was a too-small 10px label) */}
           <span
-            className="label-micro block mb-6"
-            style={{ color: "var(--color-on-surface-variant)" }}
+            className="uppercase block mb-8"
+            style={{
+              fontFamily: "var(--font-label)",
+              fontSize: "14px",
+              letterSpacing: "0.3em",
+              lineHeight: 1,
+              color: "var(--color-primary)",
+            }}
           >
             {sectionContent?.eyebrow || "Our Expertise"}
           </span>
 
           <h2
-            className="headline-section text-4xl md:text-5xl lg:text-6xl mb-6"
+            className="headline-editorial text-5xl md:text-6xl lg:text-7xl mb-8 leading-[1.1] tracking-tight"
             style={{ color: "var(--color-primary)" }}
           >
             {sectionContent?.headline || "Curated Services"}
           </h2>
 
           <p
-            className="body-editorial max-w-xl mx-auto"
-            style={{ color: "var(--color-on-surface)" }}
+            className="font-body font-light max-w-[520px] mb-10"
+            style={{
+              fontSize: "18px",
+              lineHeight: 1.6,
+              color: "rgba(57,30,30,0.75)",
+            }}
           >
             {sectionContent?.body || "Each treatment is thoughtfully designed to enhance your natural beauty with precision, artistry, and care."}
           </p>
 
-          {/* Ornamental divider */}
-          <div className="flex items-center justify-center gap-3 mt-10">
-            <div
-              className="w-12 h-px"
-              style={{ backgroundColor: "var(--color-outline-variant)" }}
-            />
-            <div
-              className="w-1.5 h-1.5 rotate-45"
-              style={{ backgroundColor: "rgba(215,207,197,0.5)" }}
-            />
-            <div
-              className="w-12 h-px"
-              style={{ backgroundColor: "var(--color-outline-variant)" }}
-            />
+          {/* Ornamental divider — hairline rules + center diamond (Stitch sample) */}
+          <div className="flex items-center justify-center gap-4 w-full max-w-[240px]">
+            <div className="flex-1 h-px" style={{ backgroundColor: "rgba(57,30,30,0.2)" }} />
+            <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: "var(--color-primary)" }} />
+            <div className="flex-1 h-px" style={{ backgroundColor: "rgba(57,30,30,0.2)" }} />
           </div>
         </motion.div>
       </div>
 
-      {/* ── Service cards ── */}
-      <div className="relative px-8 md:px-16 pb-32 md:pb-40">
+      {/* ── Service image tiles ── */}
+      <div className="relative px-8 md:px-16 pb-16 md:pb-20">
         {featured ? (
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {featured.map((service, i) => {
-              const label = `0${i + 1} / ${service.category?.toUpperCase() || FALLBACK_LABELS[i]}`;
-              const imageUrl = service.imageUrl || featuredImages[i];
-
+              const imageUrl = imageFor(service, i);
               return (
                 <motion.div
                   key={service._id}
-                  initial={{ opacity: 0, y: 35 }}
+                  initial={{ opacity: 0, y: 48 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={viewportOnce}
                   transition={{
                     duration: 0.9,
-                    delay: 0.1 + i * 0.15,
+                    delay: 0.1 + (i % 3) * 0.14,
                     ease: luxuryEase,
                   }}
                 >
                   <Link
                     href={`/services/${service.slug}`}
-                    className="group block relative"
+                    className="group block relative overflow-hidden rounded-[12px] aspect-[4/5]"
+                    style={{
+                      backgroundColor: "var(--color-primary)",
+                      boxShadow: "0 2px 24px rgba(57,30,30,0.06)",
+                    }}
                   >
+                    <Image
+                      src={imageUrl}
+                      alt={service.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0,0,1)]"
+                    />
+
+                    {/* Espresso gradient so the title stays legible over any photo */}
                     <div
-                      className="relative overflow-hidden transition-all duration-700"
+                      className="absolute inset-0 pointer-events-none"
                       style={{
-                        backgroundColor: "var(--color-surface-low)",
-                        boxShadow: "0 2px 20px rgba(57,30,30,0.04)",
+                        background:
+                          "linear-gradient(to top, rgba(57,30,30,0.85) 0%, rgba(57,30,30,0.20) 48%, rgba(57,30,30,0.04) 75%, transparent 100%)",
                       }}
-                    >
-                      <div className="overflow-hidden relative aspect-[4/5]">
-                        <Image
-                          src={imageUrl}
-                          alt={service.name}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover group-hover:scale-[1.03] transition-transform duration-1000"
-                          style={{ filter: "brightness(0.97) contrast(1.02)" }}
-                        />
-                        <div
-                          className="absolute inset-0 pointer-events-none"
-                          style={{
-                            background:
-                              "linear-gradient(to bottom, transparent 50%, rgba(57,30,30,0.08) 100%)",
-                          }}
-                        />
-                      </div>
+                    />
 
-                      <div className="p-8 md:p-10">
-                        <p
-                          className="text-[10px] tracking-[0.3em] uppercase mb-4"
-                          style={{ color: "var(--color-on-surface-variant)", opacity: 0.6 }}
-                        >
-                          {label}
-                        </p>
+                    <div className="absolute bottom-0 left-0 w-full p-7 md:p-8">
+                      <p
+                        className="text-[11px] tracking-[0.3em] uppercase mb-3"
+                        style={{
+                          color: "var(--color-on-primary, #f7f6eb)",
+                          opacity: 0.7,
+                          fontFamily: "var(--font-label)",
+                        }}
+                      >
+                        {service.category || "Treatment"}
+                      </p>
 
-                        <h3
-                          className="headline-section text-xl md:text-2xl mb-4"
-                          style={{ color: "var(--color-primary)" }}
-                        >
-                          {service.name}
-                        </h3>
+                      <h3
+                        className="font-headline text-2xl md:text-[1.75rem] leading-tight"
+                        style={{ color: "var(--color-on-primary, #f7f6eb)" }}
+                      >
+                        {service.name}
+                      </h3>
 
-                        <p
-                          className="font-body text-sm leading-relaxed mb-8"
-                          style={{ color: "var(--color-on-surface-variant)", opacity: 0.75 }}
-                        >
-                          {service.shortDescription}
-                        </p>
-
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="w-8 h-px group-hover:w-12 transition-all duration-700"
-                            style={{ backgroundColor: "var(--color-secondary)" }}
-                          />
-                          <span
-                            className="text-xs tracking-[0.2em] uppercase"
-                            style={{ color: "var(--color-secondary)" }}
-                          >
-                            Explore
-                          </span>
-                        </div>
-                      </div>
+                      {/* Underline grows in on hover */}
+                      <div
+                        className="mt-4 h-px w-0 group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.2,0,0,1)]"
+                        style={{ backgroundColor: "var(--color-on-primary, #f7f6eb)" }}
+                      />
                     </div>
                   </Link>
                 </motion.div>
@@ -229,26 +228,13 @@ export default function FeaturedServices({ services, featuredImageUrls, sectionC
             })}
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-            {[0, 1, 2].map((i) => (
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                style={{
-                  backgroundColor: "var(--color-surface-low)",
-                  boxShadow: "0 2px 20px rgba(57,30,30,0.04)",
-                }}
-              >
-                <div
-                  className="w-full aspect-[4/5] animate-pulse"
-                  style={{ backgroundColor: "var(--color-surface-high)" }}
-                />
-                <div className="p-8 md:p-10">
-                  <div className="h-3 w-24 bg-[var(--color-outline-variant)]/20 mb-4 animate-pulse" />
-                  <div className="h-7 w-40 bg-[var(--color-outline-variant)]/20 mb-4 animate-pulse" />
-                  <div className="h-4 w-full bg-[var(--color-outline-variant)]/10 mb-2 animate-pulse" />
-                  <div className="h-4 w-3/4 bg-[var(--color-outline-variant)]/10 animate-pulse" />
-                </div>
-              </div>
+                className="rounded-[12px] aspect-[4/5] animate-pulse"
+                style={{ backgroundColor: "var(--color-surface-high)" }}
+              />
             ))}
           </div>
         )}
@@ -258,9 +244,9 @@ export default function FeaturedServices({ services, featuredImageUrls, sectionC
           whileInView={{ opacity: 1 }}
           viewport={viewportOnce}
           transition={{ duration: 0.8, delay: 0.6, ease: luxuryEase }}
-          className="text-center mt-20"
+          className="text-center mt-16 md:mt-20"
         >
-          <Link href="/services" className="link-editorial">
+          <Link href="/services" className="btn-primary">
             {sectionContent?.link_text || "View All Services"}
           </Link>
         </motion.div>
