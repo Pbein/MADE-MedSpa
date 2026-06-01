@@ -351,11 +351,16 @@ export default function Navigation() {
         aria-expanded={isMobileMenuOpen}
         className="lg:hidden fixed top-5 right-6 z-[80] w-11 h-11 flex flex-col justify-center items-center gap-0 transition-all duration-500"
         style={{
-          backgroundColor: isMobileMenuOpen
-            ? "transparent"
-            : isScrolled
-              ? "#221010"
-              : "transparent",
+          // No background square — just the lines. Espresso/black lines when
+          // scrolled (light pages), white over the dark hero. A whisper-subtle
+          // shadow keeps the lines legible if a dark section scrolls under the
+          // fixed button (client 2026-05-31).
+          backgroundColor: "transparent",
+          filter: isMobileMenuOpen
+            ? "none"
+            : useLightNavText
+              ? "drop-shadow(0 1px 3px rgba(0,0,0,0.45))"
+              : "drop-shadow(0 0 2px rgba(247,246,235,0.65))",
         }}
       >
         {/* Top line — rotates to form X */}
@@ -364,9 +369,7 @@ export default function Navigation() {
           style={{
             backgroundColor: isMobileMenuOpen
               ? "var(--color-primary)"
-              : isScrolled
-                ? "#f7f6eb"
-                : useLightNavText ? "#ffffff" : "#391e1e",
+              : useLightNavText ? "#ffffff" : "#391e1e",
             transform: isMobileMenuOpen
               ? "translateY(0.5px) rotate(45deg)"
               : "translateY(-4px)",
@@ -378,9 +381,7 @@ export default function Navigation() {
           style={{
             backgroundColor: isMobileMenuOpen
               ? "var(--color-primary)"
-              : isScrolled
-                ? "#f7f6eb"
-                : useLightNavText ? "#ffffff" : "#391e1e",
+              : useLightNavText ? "#ffffff" : "#391e1e",
             opacity: isMobileMenuOpen ? 0 : 1,
           }}
         />
@@ -390,9 +391,7 @@ export default function Navigation() {
           style={{
             backgroundColor: isMobileMenuOpen
               ? "var(--color-primary)"
-              : isScrolled
-                ? "#f7f6eb"
-                : useLightNavText ? "#ffffff" : "#391e1e",
+              : useLightNavText ? "#ffffff" : "#391e1e",
             transform: isMobileMenuOpen
               ? "translateY(-0.5px) rotate(-45deg)"
               : "translateY(4px)",
