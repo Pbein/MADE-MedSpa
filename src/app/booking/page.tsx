@@ -117,7 +117,7 @@ export default function BookingPage() {
          that the dark hero is gone). Matches the existing scroll-mt offset. */}
       <section
         id="section-book-now"
-        className="relative pt-[60px] lg:pt-[120px] scroll-mt-[60px] lg:scroll-mt-[120px]"
+        className="relative pt-[76px] lg:pt-[120px] scroll-mt-[76px] lg:scroll-mt-[120px]"
         style={{ backgroundColor: "var(--color-surface)" }}
       >
         {/* Preconnect + DNS-prefetch to Pabau host so the iframe handshake
@@ -158,7 +158,7 @@ export default function BookingPage() {
             title="Book your appointment with MADE Med Spa"
             loading="eager"
             onLoad={() => setIframeLoaded(true)}
-            className="block w-full h-[calc(100dvh-60px)] lg:h-[calc(100dvh-120px)] scroll-mt-[60px] lg:scroll-mt-[120px]"
+            className="block w-full h-[calc(100dvh-76px)] lg:h-[calc(100dvh-120px)] scroll-mt-[76px] lg:scroll-mt-[120px]"
             style={{ border: 0 }}
             allow="payment; clipboard-write"
           />
