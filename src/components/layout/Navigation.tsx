@@ -309,8 +309,12 @@ export default function Navigation() {
       </nav>
 
       {/* ═══════════════════════════════════════════
-          MOBILE — MADE logo (scrolls with page)
+          MOBILE — MADE logo (scrolls with page).
+          Hidden on /booking so the site logo doesn't stack above the Pabau
+          iframe's own MADE logo on mobile (client 2026-05-31). The hamburger
+          stays; the booking page adds top padding so the iframe clears it.
           ═══════════════════════════════════════════ */}
+      {pathname !== "/booking" && (
       <div className="lg:hidden relative z-10 px-6 py-5" style={{ marginBottom: "-100px" }}>
         <Link
           href="/"
@@ -340,6 +344,7 @@ export default function Navigation() {
           />
         </Link>
       </div>
+      )}
 
       {/* ═══════════════════════════════════════════
           MOBILE — Single fixed hamburger with animated X
